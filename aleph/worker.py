@@ -56,7 +56,7 @@ def op_index(collection_id: str, batch: List[Task], worker: Worker):
         # acknowledge batched tasks
         log.info(
             f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} (done)"
+            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
         )
         # avoid data race with the main thread by using a copy of the task
         channel = task._channel
@@ -151,7 +151,7 @@ class AlephWorker(Worker):
     def dispatch_task(self, task: Task) -> Task:
         log.info(
             f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} (started)"
+            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (started)"
         )
         handler = OPERATIONS[task.operation]
         collection = None
@@ -172,7 +172,7 @@ class AlephWorker(Worker):
                 else:
                     log.info(
                         f"Task [collection:{task.collection_id}]: "
-                        f"op:{task.operation} task_id:{task.task_id} (batched)"
+                        f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (batched)"
                     )
                 # skip acknowledgment for batched task; the batch processing function
                 # will acknowledge tasks after execution is complete
@@ -182,7 +182,7 @@ class AlephWorker(Worker):
         handler(collection, task)
         log.info(
             f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} (done)"
+            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
         )
         return task
 

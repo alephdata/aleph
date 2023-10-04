@@ -1,7 +1,9 @@
 import logging
 import json
 import threading
-
+import json
+import threading
+from random import randrange
 
 import pika
 from servicelayer.rate_limit import RateLimit
@@ -74,6 +76,20 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         "payload": payload,
     }
 
+
+# ToDo: Move this to servicelayer??
+def queue_task(collection, stage, job_id=None, context=None, **payload):
+    task_id = random_id()
+    priority = randrange(1, SETTINGS.RABBITMQ_MAX_PRIORITY + 1)
+    body = {
+        "collection_id": dataset_from_collection(collection),
+        "job_id": job_id or random_id(),
+        "task_id": task_id,
+        "operation": stage,
+        "context": context,
+        "payload": payload,
+        "priority": priority,
+    }
     try:
         channel = rabbitmq_conn.channel()
         channel.basic_publish(
@@ -81,7 +97,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
             routing_key=get_routing_key(stage),
             body=json.dumps(body),
             properties=pika.BasicProperties(
-                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
+                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE, priority=priority
             ),
         )
         dataset = Dataset(conn=kv, name=dataset_from_collection(collection))

@@ -1,3 +1,4 @@
+import pika
 import logging
 from urllib.parse import urlencode, urljoin
 
@@ -11,10 +12,10 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+
 from followthemoney import set_model_locale
 
 from elasticsearch import Elasticsearch, TransportError
-import pika
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
@@ -208,9 +209,21 @@ def get_rmq_connection():
                 SETTINGS._rmq_connection = connection
             if SETTINGS._rmq_connection.is_open:
                 channel = SETTINGS._rmq_connection.channel()
-                channel.queue_declare(queue=sls.QUEUE_ALEPH, durable=True)
-                channel.queue_declare(queue=sls.QUEUE_INGEST, durable=True)
-                channel.queue_declare(queue=sls.QUEUE_INDEX, durable=True)
+                channel.queue_declare(
+                    queue=sls.QUEUE_ALEPH,
+                    durable=True,
+                    arguments={"x-max-priority": sls.RABBITMQ_MAX_PRIORITY},
+                )
+                channel.queue_declare(
+                    queue=sls.QUEUE_INGEST,
+                    durable=True,
+                    arguments={"x-max-priority": sls.RABBITMQ_MAX_PRIORITY},
+                )
+                channel.queue_declare(
+                    queue=sls.QUEUE_INDEX,
+                    durable=True,
+                    arguments={"x-max-priority": sls.RABBITMQ_MAX_PRIORITY},
+                )
                 channel.close()
                 return SETTINGS._rmq_connection
         except (pika.exceptions.AMQPConnectionError, pika.exceptions.AMQPError) as exc:

@@ -204,10 +204,12 @@ class Settings:
         self.INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
             "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
         )
-
         self.INDEXING_BATCH_SIZE = env.to_int(
             "ALEPH_INDEXING_BATCH_SIZE", 100
         )  # run indexing jobs in a batch of 100 for better performance
+
+        # TODO, document
+        self.RABBITMQ_MAX_PRIORITY = env.to_int("ALEPH_RABBITMQ_MAX_PRIORITY", 10)
 
         ###############################################################################
         # XREF Model Selection
