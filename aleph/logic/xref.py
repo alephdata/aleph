@@ -146,6 +146,8 @@ def _iter_mentions(collection):
         collection_id=collection.id,
         schemata=["Mention"],
         sort={"properties.resolved": "desc"},
+        es_scroll=SETTINGS.XREF_SCROLL,
+        es_scroll_size=SETTINGS.XREF_SCROLL_SIZE,
     ):
         resolved_id = mention.first("resolved")
         if resolved_id != proxy.id:
