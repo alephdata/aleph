@@ -114,7 +114,7 @@
     "@types/d3-scale": "^4.0.3",
     "@types/dagre": "^0.7.50",
     "@types/google-libphonenumber": "^7.4.24",
-    "@types/lodash": "^4.14.195",
+    "@types/lodash": "^4.14.199",
     "@types/numeral": "^2.0.3"
   }
 }
