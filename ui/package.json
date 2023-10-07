@@ -22,7 +22,7 @@
     "@types/node": "^18.18.1",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
-    "axios": "^0.27.2",
+    "axios": "^1.5.1",
     "bezier-js": "^6.1.4",
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
