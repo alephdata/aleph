@@ -27,7 +27,9 @@
       @include rtl(right, null, ($aleph-grid-size * 0.5));
       top: 3px;
       opacity: 0.1;
-      transition: opacity 0.2s ease-out, color 0.2s ease-out;
+      transition:
+        opacity 0.2s ease-out,
+        color 0.2s ease-out;
     }
 
     &.active {

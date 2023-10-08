@@ -85,7 +85,10 @@
   transform: translateY(-50%);
   padding-left: 0.25 * $aleph-grid-size;
   color: var(--timeline-item-color);
-  text-shadow: 0 0 1px white, 0 0 2px white, 0 0 3px white;
+  text-shadow:
+    0 0 1px white,
+    0 0 2px white,
+    0 0 3px white;
 }
 
 .TimelineChartItem--singleDay.TimelineChartItem--muted {
