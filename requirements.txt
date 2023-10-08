@@ -16,7 +16,7 @@ Flask-Migrate==4.0.5
 Flask-Cors==4.0.0
 Flask-Babel==3.1.0
 flask-talisman==1.1.0
-SQLAlchemy==2.0.20
+SQLAlchemy==2.0.21
 alembic==1.12.0
 authlib==1.2.1
 
