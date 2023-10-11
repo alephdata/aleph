@@ -324,6 +324,10 @@ def status(foreign_id=None):
         status = {"datasets": {foreign_id: status}}
     else:
         status = get_active_dataset_status()
+        import pprint
+
+        print(f"ALEPH status:\n")
+        pprint.pprint(status)
     headers = ["Collection", "Job", "Stage", "Pending", "Running", "Finished"]
     rows = []
     for foreign_id, dataset in status.get("datasets").items():
