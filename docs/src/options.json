@@ -13,7 +13,8 @@
     "defaultLanguageName": "English",
     "languages": {
       "es": "Español",
-      "pt": "Português"
+      "pt": "Português",
+      "fr": "Français"
     }
   },
   "header": {
