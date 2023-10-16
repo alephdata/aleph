@@ -1,12 +1,23 @@
 import logging
 from banal import ensure_list
 from flask import Blueprint, request
+from prometheus_client import Counter
 
 from aleph.index.entities import iter_entities, PROXY_INCLUDES
 from aleph.views.util import require, stream_ijson
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("bulk_api", __name__)
+
+STREAMED_ENTITIES = Counter(
+    "aleph_streamed_entities_total",
+    "Total number of streamed entities",
+)
+
+STREAMS = Counter(
+    "aleph_streams_total",
+    "Total number of entity streaming requests",
+)
 
 
 @blueprint.route("/api/2/entities/_stream")
@@ -53,4 +64,21 @@ def entities(collection_id=None):
         schemata=schemata,
         includes=includes,
     )
-    return stream_ijson(entities)
+
+    STREAMS.inc()
+
+    def generator(entities):
+        count = 0
+
+        for entity in entities:
+            count += 1
+
+            if count == 1000:
+                STREAMED_ENTITIES.inc(count)
+                count = 0
+
+            yield entity
+
+        STREAMED_ENTITIES.inc(count)
+
+    return stream_ijson(generator(entities))
