@@ -10,6 +10,7 @@ import getEntityLink from 'util/getEntityLink';
 
 import './EntityToolbar.scss';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
+import { EntityAddToButton } from 'components/Toolbar/EntityAddToButton';
 
 const messages = defineMessages({
   add_to: {
@@ -21,7 +22,7 @@ const messages = defineMessages({
 class EntityToolbar extends React.Component {
   render() {
     const { entity, profile = true, intl } = this.props;
-    
+
     if (!entity || !entity.schema) {
       return null;
     }
@@ -48,21 +49,14 @@ class EntityToolbar extends React.Component {
           {showDownloadButton && <DownloadButton document={entity} />}
           <BookmarkButton entity={entity} />
           {entity?.collection?.writeable && (
-          <>
-            <DialogToggleButton
-              buttonProps={{
-                text: intl.formatMessage(messages.add_to),
-                icon: 'add-to-artifact',
-              }}
-              Dialog={EntitySetSelector}
-              dialogProps={{
-                collection: entity.collection,
-                entities: [entity],
-                showTimelines: entity.schema.isA('Interval'),
-              }}
-            />
-          </>
-        )}
+            <>
+              <EntityAddToButton
+                entity={[entity]}
+                collection={entity.collection}
+                schema={entity.schema}
+              />
+            </>
+          )}
         </ButtonGroup>
       </div>
     );
