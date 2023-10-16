@@ -3,7 +3,7 @@ from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 from followthemoney import __version__ as ftm_version
 
 from aleph import __version__ as aleph_version
-from aleph.core import create_app
+from aleph.core import create_app as create_flask_app
 from aleph.queues import get_active_dataset_status
 from aleph.model import Role, Collection, EntitySet, Bookmark
 
@@ -24,7 +24,7 @@ class DatabaseCollector(object):
     PREFIX = "aleph_"
 
     def __init__(self):
-        self._flask_app = create_app()
+        self._flask_app = create_flask_app()
 
     def collect(self):
         with self._flask_app.app_context():

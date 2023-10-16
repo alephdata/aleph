@@ -26,7 +26,7 @@ from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 from aleph.util import LoggingTransport
-from aleph.metrics import PrometheusExtension
+from aleph.metrics.flask import PrometheusExtension
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
