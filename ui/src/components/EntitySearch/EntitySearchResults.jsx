@@ -24,7 +24,7 @@ class EntitySearchResults extends Component {
     );
   }
 
-  renderHeaderCell = (field) => {
+  renderHeaderCell(field) {
     const { query } = this.props;
     const { field: sortedField, direction } = query.getSort();
     const fieldName = field.isProperty
@@ -46,6 +46,25 @@ class EntitySearchResults extends Component {
       </SortableTH>
     );
   };
+
+  /**
+   * Group Page entities into their respective "Pages" entity
+   */ 
+  groupPageResults(entities) {
+    const pages = entities
+      .filter(entity => entity.schema.name === 'Page')
+
+    return entities
+      // Return only non-page entities
+      .filter(entity => entity.schema.name !== "Page")
+      // Embed pages in `Pages` entities
+      .map(entity => {
+        if(entity.schema.name === 'Pages') {
+          entity.pages = pages.filter(page => page.getFirst('document').id == entity.id)
+        }
+        return entity
+      })
+  }
 
   render() {
     const {
@@ -75,11 +94,12 @@ class EntitySearchResults extends Component {
             <thead>
               <tr>
                 {writeable && updateSelection && <th className="select" />}
-                {columns.map(this.renderHeaderCell)}
+                {columns.map(this.renderHeaderCell.bind(this))}
               </tr>
             </thead>
+
             <tbody className={c({ updating: result.isPending })}>
-              {result.results.map((entity) => (
+              {this.groupPageResults(result.results).map(entity => (
                 <EntitySearchResultsRow
                   key={entity.id}
                   entity={entity}
