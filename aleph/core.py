@@ -25,7 +25,6 @@ from aleph import __version__ as aleph_version
 from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
-from aleph.settings import SETTINGS
 from aleph.util import LoggingTransport
 
 import sentry_sdk

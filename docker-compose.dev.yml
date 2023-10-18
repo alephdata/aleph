@@ -139,7 +139,7 @@ services:
       - aleph.env
 
   worker:
-    image: alephdata/aleph:${ALEPH_TAG:-3.13.2-rc3}
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph worker
     restart: on-failure
     depends_on:

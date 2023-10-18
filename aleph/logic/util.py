@@ -1,7 +1,6 @@
 import jwt
 from normality import ascii_text
-from urllib.parse import urlencode
-from werkzeug.urls import url_join
+from urllib.parse import urlencode, urljoin
 from datetime import datetime, timedelta
 
 from aleph.core import url_for
@@ -24,7 +23,7 @@ def ui_url(resource, id=None, _relative=False, **query):
     if id is not None:
         resource = "%s/%s" % (resource, id)
     url = "/" if _relative else SETTINGS.APP_UI_URL
-    url = url_join(url, resource)
+    url = urljoin(url, resource)
     query = [(q, v) for q, v in query.items() if v is not None]
     query_string = urlencode(query, doseq=True)
     if len(query_string):
