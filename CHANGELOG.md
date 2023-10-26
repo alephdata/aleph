@@ -1,3 +1,21 @@
+## 3.15.3 (26-10-2023)
+- Reduced docker image size
+- Updated SECURITY.md
+- New user guide
+- Make it possible to manually trigger a docs deployment by @tillprochaska in #3226
+- Added redirects for the old user guide
+- Updates to the dev environment (note the postgres container version upgrade)
+- Fix multiple token highlighting in search results
+- Updated dependencies
+
+## 3.15.1 (08-09-2023)
+- Document how to enable IAM role-based auth between EC2 and S3
+- Add a simple script to generate test emails
+- Derive "safeHtml" from all "bodyHtml" values
+- Fix user guide link
+- Recommend ingest-file 3.19.2
+- Updated dependencies
+
 ## 3.14.3 (28-06-2023)
 - Introduced two new Settings which controll the scroll window of ElasticSearch queries made during xref operations:
     - ALEPH_XREF_SCROLL (defaults to 5m) is the 'scroll' parameter used on ES scan() calls for xref operations and configures how long a consistent view of the index should be maintained for scrolled search
