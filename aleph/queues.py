@@ -1,8 +1,6 @@
 import logging
 import json
 import threading
-import json
-import threading
 from random import randrange
 
 import pika
@@ -62,19 +60,6 @@ def dataset_from_collection(collection):
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
-
-
-# ToDo: Move this to servicelayer??
-def queue_task(collection, stage, job_id=None, context=None, **payload):
-    task_id = random_id()
-    body = {
-        "collection_id": dataset_from_collection(collection),
-        "job_id": job_id or random_id(),
-        "task_id": task_id,
-        "operation": stage,
-        "context": context,
-        "payload": payload,
-    }
 
 
 # ToDo: Move this to servicelayer??
