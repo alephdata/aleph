@@ -38,7 +38,9 @@ $inner-padding: 15px;
     border-top: 1px solid rgba(white, 0.7);
     margin: auto;
     width: 0;
-    transition: width $transition-duration ease-in-out, margin 1s ease-in-out;
+    transition:
+      width $transition-duration ease-in-out,
+      margin 1s ease-in-out;
 
     .metadata-shown & {
       width: 100%;
@@ -92,7 +94,8 @@ $inner-padding: 15px;
     }
 
     &__title {
-      transition: font-size $transition-duration ease-in-out,
+      transition:
+        font-size $transition-duration ease-in-out,
         font-weight $transition-duration ease-in-out;
 
       .#{$bp-ns}-icon {
