@@ -8,10 +8,6 @@ on:
       - "**"
   workflow_dispatch: {}
 
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,6 +29,10 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
     needs: build
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: pages
+      cancel-in-progress: true
 
     permissions:
       pages: write
