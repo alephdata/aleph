@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: aleph-ingress-staging
   namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     - host: aleph.staging
