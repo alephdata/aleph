@@ -28,8 +28,8 @@ install-postgres: update-helm
 
 install-elasticsearch: update-helm
 	@echo "🔴 Installing Elasticsearch cluster ..."
-	helm install aleph-index-master elastic/elasticsearch -f values/elasticsearch-master.yml -n $(ENV)
-	helm install aleph-index-data elastic/elasticsearch -f values/elasticsearch-data.yml -n $(ENV)
+	helm install aleph-index-master elastic/elasticsearch --version 7 -f values/elasticsearch-master.yml -n $(ENV)
+	helm install aleph-index-data elastic/elasticsearch --version 7 -f values/elasticsearch-data.yml -n $(ENV)
 
 install-redis: update-helm
 	@echo "🔴 Installing Redis ..."
