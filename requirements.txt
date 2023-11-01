@@ -23,7 +23,7 @@ authlib==0.15.5
 elasticsearch==7.17.0
 marshmallow==2.19.2
 gunicorn[eventlet]==21.2.0
-jsonschema==4.19.1
+jsonschema==4.19.2
 apispec==6.3.0
 apispec-webframeworks==0.5.2
 blinker==1.6.2
