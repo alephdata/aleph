@@ -62,6 +62,7 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: SENTRY_DSN
+                  optional: true
             {{ if .Values.global.google }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/service-account.json
