@@ -1,3 +1,4 @@
-postgresqlUsername: aleph
-postgresqlPassword: aleph
-postgresqlDatabase: aleph
+auth:
+  username: aleph
+  password: aleph
+  database: aleph
