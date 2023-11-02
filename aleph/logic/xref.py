@@ -146,6 +146,8 @@ def _iter_mentions(collection):
         collection_id=collection.id,
         schemata=["Mention"],
         sort={"properties.resolved": "desc"},
+        es_scroll=SETTINGS.XREF_SCROLL,
+        es_scroll_size=SETTINGS.XREF_SCROLL_SIZE,
     ):
         resolved_id = mention.first("resolved")
         if resolved_id != proxy.id:
@@ -212,12 +214,15 @@ def xref_entity(collection, proxy):
 
 def xref_collection(collection):
     """Cross-reference all the entities and documents in a collection."""
-    log.info("[%s] Clearing previous xref state....", collection)
+    log.info(
+        f"[{collection}] xref_collection scroll settings: scroll={SETTINGS.XREF_SCROLL}, scroll_size={SETTINGS.XREF_SCROLL_SIZE}"
+    )
+    log.info(f"[{collection}] Clearing previous xref state....")
     delete_xref(collection, sync=True)
     delete_entities(collection.id, origin=ORIGIN, sync=True)
     index_matches(collection, _query_entities(collection))
     index_matches(collection, _query_mentions(collection))
-    log.info("[%s] Xref done, re-indexing to reify mentions...", collection)
+    log.info(f"[{collection}] Xref done, re-indexing to reify mentions...")
     reindex_collection(collection, sync=False)
 
 
