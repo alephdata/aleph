@@ -11,7 +11,7 @@
     "@blueprintjs/select": "^4.9.21",
     "@blueprintjs/table": "^4.10.8",
     "@formatjs/intl-locale": "^3.3.4",
-    "@formatjs/intl-pluralrules": "^5.2.6",
+    "@formatjs/intl-pluralrules": "^5.2.8",
     "@formatjs/intl-relativetimeformat": "^11.2.6",
     "@formatjs/intl-utils": "^3.8.4",
     "axios": "^0.27.2",
