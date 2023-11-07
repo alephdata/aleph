@@ -9,6 +9,8 @@ on:
       - "mappings/**"
       - "site/**"
       - "docs/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
 
 permissions:
   packages: write
