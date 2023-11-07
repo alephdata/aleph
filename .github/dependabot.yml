@@ -22,7 +22,7 @@ updates:
           - "@types/*"
       i18n:
         patterns:
-          - "@format-js/*"
+          - "@formatjs/*"
           - "react-intl"
       blueprint:
         patterns:
