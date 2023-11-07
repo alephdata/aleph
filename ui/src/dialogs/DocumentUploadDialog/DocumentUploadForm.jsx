@@ -86,7 +86,7 @@ export class DocumentUploadForm extends PureComponent {
             }}
           />
         </p>
-        <p className="DocumentUploadForm__info">
+        <p>
           <FormattedMessage
             id="document.upload.info"
             defaultMessage="If you need to upload a large amount of files (100+) consider {link}."
