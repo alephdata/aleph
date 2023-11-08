@@ -40,7 +40,14 @@ def after_request(response):
 
     method = request.method
     status = response.status_code
-    logged_in = request.authz.logged_in
+
+    logged_in = False
+
+    # In theory, there should always be an Authz object. However in practice,
+    # this isn’t always the case, but I haven’t been able to reliably reproduce that.
+    if hasattr(request, "authz"):
+        logged_in = request.authz.logged_in
+
     duration = max(0, default_timer() - request.prometheus_start_time)
 
     REQUEST.labels(method, status, endpoint, logged_in).inc()
