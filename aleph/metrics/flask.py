@@ -17,13 +17,13 @@ METRICS_ENDPOINT_NAME = "metrics"
 REQUEST_DURATION = Histogram(
     "http_request_duration_seconds",
     "Duration of requests to the Aleph API in seconds",
-    ["method", "status", "endpoint"],
+    ["method", "status", "api_endpoint"],
 )
 
 REQUEST = Counter(
     "http_request_total",
     "Total number of Aleph API requests",
-    ["method", "status", "endpoint", "logged_in"],
+    ["method", "status", "api_endpoint", "logged_in"],
 )
 
 
@@ -32,10 +32,10 @@ def before_request():
 
 
 def after_request(response):
-    endpoint = request.endpoint
+    api_endpoint = request.endpoint
 
-    # Do not track request duration for the metrics endpoint
-    if endpoint == METRICS_ENDPOINT_NAME:
+    # Do not track request duration for the metrics and healthz endpoints
+    if api_endpoint == METRICS_ENDPOINT_NAME or api_endpoint == "base_api.healthz":
         return response
 
     method = request.method
@@ -50,8 +50,8 @@ def after_request(response):
 
     duration = max(0, default_timer() - request.prometheus_start_time)
 
-    REQUEST.labels(method, status, endpoint, logged_in).inc()
-    REQUEST_DURATION.labels(method, status, endpoint).observe(duration)
+    REQUEST.labels(method, status, api_endpoint, logged_in).inc()
+    REQUEST_DURATION.labels(method, status, api_endpoint).observe(duration)
 
     return response
 
