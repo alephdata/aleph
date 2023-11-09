@@ -1,0 +1,140 @@
+aleph:
+  global:
+    commonEnv:
+      REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
+      ARCHIVE_TYPE: s3
+      ARCHIVE_BUCKET: aleph-archive
+      ARCHIVE_ENDPOINT_URL: http://aleph-minio.default.svc.cluster.local:9000
+    env:
+      ALEPH_UI_URL: http://aleph.local
+      ALEPH_ELASTICSEARCH_URI: http://aleph-index-master.default.svc.cluster.local:9200
+
+  ui:
+    replicas: 1
+
+  api:
+    hpa:
+      minReplicas: 1
+      maxReplicas: 1
+
+    containerResources:
+      requests:
+        memory: 1000Mi
+      limits:
+        memory: 1000Mi
+
+  ingestfile:
+    hpa:
+      minReplicas: 1
+      maxreplicas: 1
+
+    containerResources:
+      requests:
+        memory: 1000Mi
+      limits:
+        memory: 1000Mi
+
+  worker:
+    replicas: 1
+
+    containerResources:
+      requests:
+        cpu: 30m
+        memory: 500Mi
+      limits:
+        memory: 500Mi
+
+postgresql:
+  auth:
+    database: aleph
+    username: aleph
+    existingSecret: aleph-secrets
+    secretKeys:
+      adminPasswordKey: POSTGRES_ADMIN_PASSWORD
+      userPasswordKey: POSTGRES_USER_PASSWORD
+
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 500Mi
+
+elasticsearch:
+  clusterName: "aleph-index"
+    
+  replicas: 1
+  minimumMasterNodes: 1
+
+  image: "ghcr.io/alephdata/aleph-elasticsearch"
+  imageTag: "3bb5dbed97cfdb9955324d11e5c623a5c5bbc410"
+  imagePullPolicy: "IfNotPresent"
+
+  esJavaOpts: "-Xmx2g -Xms2g"
+  esConfig:
+    elasticsearch.yml: |
+      xpack:
+        graph:
+          enabled: "false"
+        ml:
+          enabled: "false"
+        security:
+          enabled: "false"
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 3Gi
+    limits:
+      memory: 3Gi
+
+  volumeClaimTemplate:
+    accessModes:
+      - "ReadWriteOnce"
+    resources:
+      requests:
+        storage: 5Gi
+
+  clusterHealthCheckParams: "wait_for_status=red&timeout=1s"
+
+minio:
+  mode: standalone
+
+  replicas: 1
+
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 500Mi
+
+  extraVolumes:
+    - name: minio-secrets
+      projected:
+        sources:
+        - secret:
+            name: aleph-secrets
+            items:
+              - key: AWS_ACCESS_KEY_ID
+                path: MINIO_ACCESS_KEY
+              - key: AWS_SECRET_ACCESS_KEY
+                path: MINIO_SECRET_KEY
+
+  extraVolumeMounts:
+    - name: minio-secrets
+      readOnly: true
+      mountOath: /var/secrets
+  environment:
+    MINIO_ACCESS_KEY_FILE: /var/secrets/MINIO_SECRET_KEY
+    MINIO_SECRET_KEY_FILE: /var/secrets/MINIO_SECRET_KEY
+
+redis:
+  architecture: standalone
+
+  auth:
+    enabled: false
+
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 500Mi

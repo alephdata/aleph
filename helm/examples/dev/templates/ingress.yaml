@@ -1,13 +1,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aleph-ingress-staging
-  namespace: staging
+  name: aleph-ingress
+  namespace: default
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: aleph.staging
+    - host: kubernetes.docker.internal
       http:
         paths:
           - path: /

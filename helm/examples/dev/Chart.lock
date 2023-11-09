@@ -1,0 +1,21 @@
+dependencies:
+- name: aleph
+  repository: file://../../charts/aleph
+  version: 3.15.4
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.8.3
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.10.1
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.17.3
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.10
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 18.0.2
+digest: sha256:cfaa9778a9da148217fe65d2bc9eebed248436f932e35b7ac9414321eb7e8f4d
+generated: "2023-11-10T12:47:21.424991+01:00"
