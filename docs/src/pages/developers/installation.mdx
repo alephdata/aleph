@@ -404,7 +404,7 @@ ELASTICSEARCH_TLS_VERIFY_CERTS=1
 
 ### Scaling workers
 
-Workers in Aleph (the `aleph-worker` as well as `ingest-file`) are based off common code in [servicelayer](https://github.com/alephdata/servicelayer). These workers are able to run in threads, but for the purposes of better scaling and more predictable performance Aleph's defaults disable threading by setting the `WORKER_THREADS` setting to 0, thus running one worker per process. This way one would scale the amount of necessary workers by spinning up more of the respective container.
+Workers in Aleph (the `aleph-worker` as well as `ingest-file`) are based off common code in [servicelayer](https://github.com/alephdata/servicelayer). Based on the `WORKER_THREADS` setting these workers are able to run either in-process or in threads. The default value will start as many threads as Python's [multiprocessing.cpu_count()](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count) reports. For the purpose of scaling workers and getting more predictable performance Aleph's disable threading by setting the `WORKER_THREADS=0`, thus running one worker per process. This way one would scale the amount of necessary workers by scaling up the container count.
 
 ## Troubleshooting
 
