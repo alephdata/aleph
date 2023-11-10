@@ -12,6 +12,8 @@ The example in this directory shows how to install Aleph using Kubernetes on you
   kubectl config use-context docker-desktop
   ```
 
+* Running this example may require up to 8GB of memory, so make sure to [update the resource settings](https://docs.docker.com/desktop/settings/mac/#resources) in Docker Desktop if necessary.
+
 * You also need Helm, a tool for packaging Kubernetes resources. Please refer to the [Helm documentation](https://helm.sh/docs/intro/install/) for instructions on how to install Helm on your machine.
 
 ## Installation
