@@ -58,3 +58,10 @@ This will create all Kubernetes resources for Aleph itself and runs SQL and Elas
 ### Open the Aleph UI
 
 Wait until all pods are running and ready, then open `http://kubernetes.docker.internal` in your web browser. You should see the Aleph homepage.
+
+> [!NOTE]
+> Usually Docker Desktop should automatically add an entry to `/etc/hosts` to resolve `kubernetes.docker.internal`. If `kubernetes.docker.internal` can’t be resolved, you may need to manually add an entry to `/etc/hosts`:
+>
+> ```
+> 127.0.0.1 kubernetes.docker.internal
+> ```
