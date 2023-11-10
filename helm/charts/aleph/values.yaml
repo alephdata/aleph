@@ -260,4 +260,4 @@ worker:
       memory: 800Mi
 
   env:
-    WORKER_THREADS: 5
+    WORKER_THREADS: 0
