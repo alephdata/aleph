@@ -6,6 +6,12 @@ The example in this directory shows how to install Aleph using Kubernetes on you
 
 * You need to run a Kuberentes cluster on your development machine. A simple way to run a single-node Kubernetes cluster on Linux, macOS, and Windows is using Docker Desktop. Follow the steps outlined in the [Docker Desktop documentation](https://docs.docker.com/desktop/kubernetes/) to enable Kubernetes.
 
+* If you’re already using the `kubectl` CLI with other clusters, make sure to switch to the `docker-dekstop` context:
+  
+  ```
+  kubectl config use-context docker-desktop
+  ```
+
 * You also need Helm, a tool for packaging Kubernetes resources. Please refer to the [Helm documentation](https://helm.sh/docs/intro/install/) for instructions on how to install Helm on your machine.
 
 ## Installation
