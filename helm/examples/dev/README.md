@@ -75,3 +75,21 @@ In order to upgrade your installation after you’ve made changes to the Aleph H
 ```
 helm upgrade --set "aleph.enabled=true" --dependency-update aleph .
 ```
+
+## Creating a user
+
+Run the following command to open a shell inside of the Aleph API container:
+
+```
+kubectl exec -it svc/aleph-api -- bash
+```
+
+In order to create a new (admin) user run:
+
+```
+aleph createuser --name "Test User" --password "12345678" --admin mail@example.org
+```
+
+## Viewing and downloading files
+
+Because the MinIO endpoint is only accessible from within the cluster network, you won’t be able to preview or download files from the Aleph UI.
