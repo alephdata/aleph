@@ -65,3 +65,11 @@ Wait until all pods are running and ready, then open `http://kubernetes.docker.i
 > ```
 > 127.0.0.1 kubernetes.docker.internal
 > ```
+
+## Upgrading
+
+In order to upgrade your installation after you’ve made changes to the Aleph Helm chart run:
+
+```
+helm upgrade --set "aleph.enabled=true" --dependency-update aleph .
+```
