@@ -6,7 +6,7 @@ aleph:
       ARCHIVE_BUCKET: aleph-archive
       ARCHIVE_ENDPOINT_URL: http://aleph-minio.default.svc.cluster.local:9000
     env:
-      ALEPH_UI_URL: http://aleph.local
+      ALEPH_UI_URL: http://kubernetes.docker.internal/
       ALEPH_ELASTICSEARCH_URI: http://aleph-index-master.default.svc.cluster.local:9200
 
   ui:
@@ -48,10 +48,10 @@ postgresql:
   auth:
     database: aleph
     username: aleph
-    existingSecret: aleph-secrets
+    existingSecret: postgresql-secrets
     secretKeys:
-      adminPasswordKey: POSTGRES_ADMIN_PASSWORD
-      userPasswordKey: POSTGRES_USER_PASSWORD
+      adminPasswordKey: adminPassword
+      userPasswordKey: userPassword
 
   resources:
     requests:
@@ -98,34 +98,14 @@ elasticsearch:
 
 minio:
   mode: standalone
-
   replicas: 1
+  existingSecret: minio-secrets
 
   resources:
     requests:
       memory: 500Mi
     limits:
       memory: 500Mi
-
-  extraVolumes:
-    - name: minio-secrets
-      projected:
-        sources:
-        - secret:
-            name: aleph-secrets
-            items:
-              - key: AWS_ACCESS_KEY_ID
-                path: MINIO_ACCESS_KEY
-              - key: AWS_SECRET_ACCESS_KEY
-                path: MINIO_SECRET_KEY
-
-  extraVolumeMounts:
-    - name: minio-secrets
-      readOnly: true
-      mountOath: /var/secrets
-  environment:
-    MINIO_ACCESS_KEY_FILE: /var/secrets/MINIO_SECRET_KEY
-    MINIO_SECRET_KEY_FILE: /var/secrets/MINIO_SECRET_KEY
 
 redis:
   architecture: standalone

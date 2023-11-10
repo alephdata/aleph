@@ -27,10 +27,12 @@ Some sensitive configuration options should be stored using Kubernetes secrets. 
 > [!IMPORTANT]  
 > In a production setting, you have to encrypt the secret files, e.g. using [git-crypt](https://github.com/AGWA/git-crypt). Alternatively, you can configure an external service to retrieve secrets from. For more information, refer to [Secrets Best Practices](https://kubernetes.io/docs/concepts/security/secrets-good-practices/).
 
-Use the `kubectl` CLI to create a `Secret` object based on the files in the `secrets` directory:
+Use the `kubectl` CLI to create `Secret` objects based on the files in the `secrets` directory:
 
 ```
 kubectl create secret generic aleph-secrets --from-file=./secrets/aleph
+kubectl create secret generic postgresql-secrets --from-file=./secrets/postgresql
+kubectl create secret generic minio-secrets --from-file=./secrets/minio
 ```
 
 ### Install services
