@@ -27,9 +27,6 @@ spec:
           command:
             - ingestors
             - process
-          ports:
-            - containerPort: 3000
-              name: http
           volumeMounts:
             {{ if .Values.global.google }}
             - mountPath: /var/secrets/google
@@ -107,17 +104,6 @@ spec:
   minReplicas: {{.Values.ingestfile.hpa.minReplicas}}
   maxReplicas: {{.Values.ingestfile.hpa.maxReplicas}}
   metrics: {{- toYaml .Values.ingestfile.hpa.scalingMetrics | nindent 4}}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file-policy
-spec:
-  podSelector:
-    matchLabels:
-      app: {{ .Values.global.namingPrefix }}-ingest-file
-  policyTypes:
-    - Ingress
 ---
 {{ if .Values.global.prometheus.enabled }}
 apiVersion: v1
