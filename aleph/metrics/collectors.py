@@ -21,8 +21,6 @@ class InfoCollector(object):
 
 
 class DatabaseCollector(object):
-    PREFIX = "aleph_"
-
     def __init__(self):
         self._flask_app = create_flask_app()
 
@@ -38,14 +36,14 @@ class DatabaseCollector(object):
 
     def _users(self):
         return GaugeMetricFamily(
-            self.PREFIX + "users",
+            "aleph_users",
             "Total number of users",
             value=Role.all_users().count(),
         )
 
     def _collections(self):
         gauge = GaugeMetricFamily(
-            self.PREFIX + "collections",
+            "aleph_collections",
             "Total number of collections by category",
             labels=["category"],
         )
@@ -63,7 +61,7 @@ class DatabaseCollector(object):
 
     def _collection_users(self):
         gauge = GaugeMetricFamily(
-            self.PREFIX + "collection_users",
+            "aleph_collection_users",
             "Total number of users that have created at least one collection",
             labels=["category"],
         )
@@ -84,7 +82,7 @@ class DatabaseCollector(object):
 
     def _entitysets(self):
         gauge = GaugeMetricFamily(
-            self.PREFIX + "entitysets",
+            "aleph_entitysets",
             "Total number of entity set by type",
             labels=["type"],
         )
@@ -102,7 +100,7 @@ class DatabaseCollector(object):
 
     def _entityset_users(self):
         gauge = GaugeMetricFamily(
-            self.PREFIX + "entityset_users",
+            "aleph_entityset_users",
             "Number of users that have created at least on entity set of the given type",
             labels=["type"],
         )
@@ -123,27 +121,25 @@ class DatabaseCollector(object):
 
     def _bookmarks(self):
         return GaugeMetricFamily(
-            self.PREFIX + "bookmarks",
+            "aleph_bookmarks",
             "Total number of bookmarks",
             value=Bookmark.query.count(),
         )
 
     def _bookmark_users(self):
         return GaugeMetricFamily(
-            self.PREFIX + "bookmark_users",
+            "aleph_bookmark_users",
             "Number of users that have created at least one bookmark",
             value=Bookmark.query.distinct(Bookmark.role_id).count(),
         )
 
 
 class QueuesCollector(object):
-    PREFIX = "queues_"
-
     def collect(self):
         status = get_active_dataset_status()
 
         yield GaugeMetricFamily(
-            self.PREFIX + "active_datasets",
+            "aleph_active_datasets",
             "Total number of active datasets",
             value=status["total"],
         )
@@ -169,7 +165,7 @@ class QueuesCollector(object):
                     }
 
         tasks_gauge = GaugeMetricFamily(
-            self.PREFIX + "tasks",
+            "aleph_tasks",
             "Total number of pending or running tasks in a given stage",
             labels=["stage", "status"],
         )

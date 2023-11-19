@@ -136,17 +136,17 @@ class MetricsTestCase(TestCase):
         assert count == 2, count
         assert users == 1, users
 
-    def test_queue_tasks(self):
+    def test_tasks(self):
         reg = CollectorRegistry()
         reg.register(QueuesCollector())
 
         reg.collect()
         count = reg.get_sample_value(
-            "queue_tasks", {"stage": "index", "status": "pending"}
+            "aleph_tasks", {"stage": "index", "status": "pending"}
         )
         assert count is None, count
         count = reg.get_sample_value(
-            "queue_tasks", {"stage": "index", "status": "pending"}
+            "aleph_tasks", {"stage": "index", "status": "pending"}
         )
         assert count is None, count
 
@@ -158,7 +158,7 @@ class MetricsTestCase(TestCase):
 
         reg.collect()
         count = reg.get_sample_value(
-            "queues_tasks", {"stage": "index", "status": "pending"}
+            "aleph_tasks", {"stage": "index", "status": "pending"}
         )
         assert count == 1, count
 
@@ -168,10 +168,10 @@ class MetricsTestCase(TestCase):
 
         reg.collect()
         count = reg.get_sample_value(
-            "queues_tasks", {"stage": "index", "status": "pending"}
+            "aleph_tasks", {"stage": "index", "status": "pending"}
         )
         assert count == 0, count
         count = reg.get_sample_value(
-            "queues_tasks", {"stage": "index", "status": "running"}
+            "aleph_tasks", {"stage": "index", "status": "running"}
         )
         assert count == 1, count
