@@ -79,6 +79,10 @@ spec:
                   name: aleph-secrets
                   key: AWS_SECRET_ACCESS_KEY
             {{ end }}
+            {{ if .Values.global.prometheus.enabled }}
+            - name: PROMETHEUS_ENABLED
+              value: "true"
+            {{ end }}
       volumes:
         {{ if .Values.global.google }}
         - name: service-account-aleph
@@ -114,3 +118,36 @@ spec:
       app: {{ .Values.global.namingPrefix }}-ingest-file
   policyTypes:
     - Ingress
+---
+{{ if .Values.global.prometheus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+spec:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+  ports:
+    - port: 9090
+      targetPort: 9090 # TODO: Set to 9100 once servicelayer fix is released
+      protocol: "TCP"
+      name: metrics
+{{ end }}
+---
+{{ if .Values.global.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-ingest-file
+  endpoints:
+    - interval: "30s"
+      port: metrics
+{{ end }}
