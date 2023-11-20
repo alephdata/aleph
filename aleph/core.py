@@ -2,7 +2,6 @@ import logging
 from urllib.parse import urlencode, urljoin
 
 from banal import clean_dict
-from elasticsearch import Elasticsearch, TransportError
 from flask import Flask, request
 from flask import url_for as flask_url_for
 from flask_babel import Babel
