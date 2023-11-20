@@ -50,8 +50,18 @@ def after_request(response):
 
     duration = max(0, default_timer() - request.prometheus_start_time)
 
-    REQUEST.labels(method, status, api_endpoint, logged_in).inc()
-    REQUEST_DURATION.labels(method, status, api_endpoint).observe(duration)
+    REQUEST.labels(
+        method=method,
+        status=status,
+        api_endpoint=api_endpoint,
+        logged_in=logged_in,
+    ).inc()
+
+    REQUEST_DURATION.labels(
+        method=method,
+        status=status,
+        api_endpoint=api_endpoint,
+    ).observe(duration)
 
     return response
 

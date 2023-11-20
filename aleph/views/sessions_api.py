@@ -65,12 +65,12 @@ def password_login():
     data = parse_request("Login")
     role = Role.login(data.get("email"), data.get("password"))
     if role is None:
-        AUTH_ATTEMPS.labels("password", "failed").inc()
+        AUTH_ATTEMPS.labels(method="password", result="failed").inc()
         raise BadRequest(gettext("Invalid user or password."))
 
     role.touch()
     db.session.commit()
-    AUTH_ATTEMPS.labels("password", "success").inc()
+    AUTH_ATTEMPS.labels(method="password", result="success").inc()
     update_role(role)
     authz = Authz.from_role(role)
     return jsonify({"status": "ok", "token": authz.to_token()})
@@ -104,7 +104,7 @@ def oauth_callback():
     err = Unauthorized(gettext("Authentication has failed."))
     state = cache.get_complex(_oauth_session(request.args.get("state")))
     if state is None:
-        AUTH_ATTEMPS.labels("oauth", "failed").inc()
+        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
         raise err
 
     try:
@@ -112,22 +112,22 @@ def oauth_callback():
         uri = state.get("redirect_uri")
         oauth_token = oauth.provider.authorize_access_token(redirect_uri=uri)
     except AuthlibBaseError as err:
-        AUTH_ATTEMPS.labels("oauth", "failed").inc()
+        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
         log.warning("Failed OAuth: %r", err)
         raise err
     if oauth_token is None or isinstance(oauth_token, AuthlibBaseError):
-        AUTH_ATTEMPS.labels("oauth", "failed").inc()
+        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
         log.warning("Failed OAuth: %r", oauth_token)
         raise err
 
     role = handle_oauth(oauth.provider, oauth_token)
     if role is None:
-        AUTH_ATTEMPS.labels("oauth", "failed").inc()
+        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
         raise err
 
     db.session.commit()
     update_role(role)
-    AUTH_ATTEMPS.labels("oauth", "success").inc()
+    AUTH_ATTEMPS.labels(method="oauth", result="success").inc()
     log.debug("Logged in: %r", role)
     request.authz = Authz.from_role(role)
     token = request.authz.to_token()
