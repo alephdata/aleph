@@ -116,8 +116,8 @@ spec:
   selector:
     app: {{ .Values.global.namingPrefix }}-ingest-file
   ports:
-    - port: 9090
-      targetPort: 9090 # TODO: Set to 9100 once servicelayer fix is released
+    - port: 9100
+      targetPort: 9100
       protocol: "TCP"
       name: metrics
 {{ end }}
