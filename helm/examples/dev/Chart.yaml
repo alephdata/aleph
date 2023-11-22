@@ -1,0 +1,30 @@
+apiVersion: v2
+type: application
+name: aleph-dev
+version: 0.1.0
+dependencies: 
+  - name: aleph
+    repository: file://../../charts/aleph
+    version: 3.15.4
+    condition: aleph.enabled
+
+  - name: ingress-nginx
+    repository: https://kubernetes.github.io/ingress-nginx
+    version: 4.8.3
+
+  - name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: v12.10.1
+
+  - name: elasticsearch
+    alias: elasticsearch
+    repository: https://helm.elastic.co
+    version: v7.17.3
+
+  - name: minio
+    repository: https://helm.min.io/
+    version: v8.0.10
+
+  - name: redis
+    repository: https://charts.bitnami.com/bitnami
+    version: v18.0.2
