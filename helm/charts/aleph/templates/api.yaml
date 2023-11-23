@@ -140,7 +140,8 @@ spec:
         {{ end }}
         {{ if .Values.global.prometheus.enabled }}
         - name: prometheus-multiproc-dir
-          emptyDir: {}
+          emptyDir:
+            sizeLimit: 1Gi
         {{ end }}
         - name: tmp-volume
           emptyDir: {}
