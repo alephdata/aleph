@@ -68,17 +68,8 @@ def entities(collection_id=None):
     STREAMS.inc()
 
     def generator(entities):
-        count = 0
-
         for entity in entities:
-            count += 1
-
-            if count == 1000:
-                STREAMED_ENTITIES.inc(count)
-                count = 0
-
+            STREAMED_ENTITIES.inc()
             yield entity
-
-        STREAMED_ENTITIES.inc(count)
 
     return stream_ijson(generator(entities))
