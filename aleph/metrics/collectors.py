@@ -1,5 +1,6 @@
 from sqlalchemy import func
 from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
+from prometheus_client.registry import Collector
 from followthemoney import __version__ as ftm_version
 
 from aleph import __version__ as aleph_version
@@ -8,7 +9,7 @@ from aleph.queues import get_active_dataset_status
 from aleph.model import Role, Collection, EntitySet, Bookmark
 
 
-class InfoCollector(object):
+class InfoCollector(Collector):
     def collect(self):
         yield InfoMetricFamily(
             "aleph_system",
@@ -20,7 +21,7 @@ class InfoCollector(object):
         )
 
 
-class DatabaseCollector(object):
+class DatabaseCollector(Collector):
     def __init__(self):
         self._flask_app = create_flask_app()
 
@@ -134,7 +135,7 @@ class DatabaseCollector(object):
         )
 
 
-class QueuesCollector(object):
+class QueuesCollector(Collector):
     def collect(self):
         status = get_active_dataset_status()
 
