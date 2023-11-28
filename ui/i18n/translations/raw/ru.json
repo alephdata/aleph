@@ -623,6 +623,15 @@
   "document.pdf.search.page": {
     "defaultMessage": "Страница {page}"
   },
+  "document.report_problem": {
+    "defaultMessage": "Report a problem"
+  },
+  "document.report_problem.text": {
+    "defaultMessage": "You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents."
+  },
+  "document.report_problem.title": {
+    "defaultMessage": "Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?"
+  },
   "document.search.no_match": {
     "defaultMessage": "Искомых слов в документе не найдено."
   },
@@ -646,6 +655,9 @@
   },
   "document.upload.folder-toggle": {
     "defaultMessage": "нажмите здесь"
+  },
+  "document.upload.info": {
+    "defaultMessage": "If you need to upload a large amount of files (100+) consider {link}."
   },
   "document.upload.notice": {
     "defaultMessage": "Загрузка завершена. После индексирования документы станут доступны для полнотекстового поиска."
