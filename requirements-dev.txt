@@ -1,6 +1,6 @@
 bump2version==1.0.1
 Babel==2.12.1
-black==23.9.1
+black==23.11.0
 playwright==1.40.0
 pytest-playwright==0.4.3
 ruff===0.0.292
