@@ -46,7 +46,7 @@
     "react-router-dom": "^6.18.0",
     "react-truncate": "^2.4.0",
     "react-waypoint": "^10.1.0",
-    "recharts": "^2.8.0",
+    "recharts": "^2.10.3",
     "redux": "^4.2.1",
     "redux-act": "^1.7.4",
     "redux-thunk": "^2.4.2",
