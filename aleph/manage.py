@@ -254,7 +254,12 @@ def xref(foreign_id):
     default=False,
     help="Mark entities mutable.",
 )
-def load_entities(foreign_id, infile, safe=False, mutable=False):
+@click.option(
+    "--clean/--unclean",
+    default=False,
+    help="Allow to disable (if --clean) server-side values validation for all types.",
+)
+def load_entities(foreign_id, infile, safe=True, mutable=False, clean=True):
     """Load FtM entities from the specified iJSON file."""
     collection = ensure_collection(foreign_id, foreign_id)
 
@@ -271,7 +276,7 @@ def load_entities(foreign_id, infile, safe=False, mutable=False):
 
     role = Role.load_cli_user()
     for _ in bulk_write(
-        collection, read_entities(), safe=safe, mutable=mutable, role_id=role.id
+        collection, read_entities(), safe=safe, mutable=mutable, clean=clean, role_id=role.id
     ):
         pass
     reindex_collection(collection)
