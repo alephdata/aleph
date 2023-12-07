@@ -27,7 +27,9 @@ def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE)
     refresh_collection(collection.id)
 
 
-def bulk_write(collection, entities, safe=False, role_id=None, mutable=True, clean=True):
+def bulk_write(
+    collection, entities, safe=False, role_id=None, mutable=True, clean=True
+):
     """Write a set of entities - given as dicts - to the index."""
     # This is called mainly by the /api/2/collections/X/_bulk API.
     aggregator = get_aggregator(collection)

@@ -284,7 +284,12 @@ def bulk(collection_id):
     entities = ensure_list(request.get_json(force=True))
     entity_ids = list()
     for entity_id in bulk_write(
-        collection, entities, safe=safe, mutable=mutable, clean=clean, role_id=request.authz.id
+        collection,
+        entities,
+        safe=safe,
+        mutable=mutable,
+        clean=clean,
+        role_id=request.authz.id,
     ):
         entity_ids.append(entity_id)
         if entityset is not None:
