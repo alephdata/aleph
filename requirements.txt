@@ -4,7 +4,7 @@ followthemoney==3.5.4
 followthemoney-store[postgresql]==3.0.6
 followthemoney-compare==0.4.4
 fingerprints==1.2.3
-git+https://github.com/alephdata/servicelayer@feature/rabbitmq-priorities
+servicelayer[google,amazon] @ git+https://github.com/alephdata/servicelayer.git@feature/rabbitmq-priorities
 normality==2.4.0
 pantomime==0.6.1
 
