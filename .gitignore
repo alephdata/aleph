@@ -17,7 +17,6 @@ services/elasticsearch/secrets
 
 celerybeat-schedule*
 aleph.env
-test_settings.py
 .coverage
 
 npm-debug.log*
