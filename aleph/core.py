@@ -10,6 +10,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+from elasticsearch import Elasticsearch, TransportError
 
 from followthemoney import set_model_locale
 from servicelayer.cache import get_redis
