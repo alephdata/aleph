@@ -6,6 +6,14 @@ updates:
       interval: monthly
     open-pull-requests-limit: 99
     target-branch: develop
+    groups:
+      dev-dependencies:
+        patterns:
+          - "bump2version"
+          - "black"
+          - "playwright"
+          - "pytest*"
+          - "ruff"
 
   - package-ecosystem: npm
     directory: "/ui"
