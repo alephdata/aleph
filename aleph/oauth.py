@@ -10,6 +10,10 @@ oauth = OAuth()
 log = logging.getLogger(__name__)
 
 
+class OAuthError(Exception):
+    pass
+
+
 def configure_oauth(app, cache):
     if SETTINGS.OAUTH:
         authorize_params = {}
@@ -81,7 +85,7 @@ def handle_oauth(provider, oauth_token):
 
     token = provider.parse_id_token(oauth_token)
     if token is None:
-        return None
+        raise OAuthError()
     name = token.get("name", token.get("given_name"))
     email = token.get("email", token.get("upn"))
     role_id = "%s:%s" % (SETTINGS.OAUTH_HANDLER, token.get("sub", email))
@@ -96,7 +100,7 @@ def handle_oauth(provider, oauth_token):
             role_id, Role.USER, name, email=email, is_admin=is_auto_admin(email)
         )
     if not role.is_actor:
-        return None
+        raise OAuthError()
     role.clear_roles()
 
     for group in _get_groups(provider, oauth_token, token):

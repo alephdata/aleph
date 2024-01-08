@@ -9,8 +9,8 @@ from prometheus_client import Counter
 from aleph.settings import SETTINGS
 from aleph.core import db, url_for, cache
 from aleph.authz import Authz
-from aleph.oauth import oauth, handle_oauth
-from aleph.model import Role
+from aleph.oauth import oauth, handle_oauth, OAuthError
+from aleph.model import Role, PasswordCredentialsError
 from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
 from aleph.views.util import get_url_path, parse_request
@@ -63,8 +63,9 @@ def password_login():
     """
     require(SETTINGS.PASSWORD_LOGIN)
     data = parse_request("Login")
-    role = Role.login(data.get("email"), data.get("password"))
-    if role is None:
+    try:
+        role = Role.login(data.get("email"), data.get("password"))
+    except PasswordCredentialsError:
         AUTH_ATTEMPS.labels(method="password", result="failed").inc()
         raise BadRequest(gettext("Invalid user or password."))
 
@@ -120,8 +121,9 @@ def oauth_callback():
         log.warning("Failed OAuth: %r", oauth_token)
         raise err
 
-    role = handle_oauth(oauth.provider, oauth_token)
-    if role is None:
+    try:
+        role = handle_oauth(oauth.provider, oauth_token)
+    except OAuthError:
         AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
         raise err
 
