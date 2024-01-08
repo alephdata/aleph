@@ -43,6 +43,7 @@ export class AuthenticationDialog extends Component {
       submitted: false,
       firstSection: '',
       secondSection: 'hide',
+      userBlocked: false,
     };
 
     this.state = this.initialState;
@@ -83,8 +84,14 @@ export class AuthenticationDialog extends Component {
     try {
       await loginWithPassword(data.email, data.password);
       window.location.replace(nextPath || '/');
-    } catch (e) {
-      showResponseToast(e.response, intl);
+    } catch (error) {
+      if (error.response.status === 403) {
+        // User authenticated successfully but access is forbidden. This happens
+        // when a user account has been blocked.
+        this.setState({ userBlocked: true });
+      } else {
+        showResponseToast(error.response, intl);
+      }
     }
   }
 
@@ -136,16 +143,19 @@ export class AuthenticationDialog extends Component {
             : intl.formatMessage(messages.registration_title)
         }
       >
-        <div className={Classes.DIALOG_BODY}>
-          {this.renderContent()}
-        </div>
+        <div className={Classes.DIALOG_BODY}>{this.renderContent()}</div>
       </Dialog>
     );
   }
 
   renderContent() {
+    const { userBlocked } = this.state;
     const { metadata } = this.props;
     const { auth } = metadata;
+
+    if (userBlocked) {
+      return this.renderBlockedMessage();
+    }
 
     return (
       <>
@@ -153,6 +163,18 @@ export class AuthenticationDialog extends Component {
         {this.renderSecondSection()}
         {auth.oauth_uri && this.renderOAuthButton()}
       </>
+    );
+  }
+
+  renderBlockedMessage() {
+    return (
+      <p>
+        Your user account has been deactivated and you cannot sign in until it
+        is reactivated. We deactivate accounts if they have been inactive for
+        more than 24 months or violate our terms of service. In order to
+        reactivate your account please contact us using{' '}
+        <a href="#">this form</a>.
+      </p>
     );
   }
 
