@@ -113,8 +113,7 @@ export class AuthenticationDialog extends Component {
   render() {
     const { metadata, intl, isOpen, toggleDialog } = this.props;
     const { auth } = metadata;
-    const { submitted, firstSection, secondSection } = this.state;
-    const passwordLogin = auth.password_login_uri;
+    const { firstSection } = this.state;
 
     if (!isOpen) {
       return null;
@@ -138,71 +137,105 @@ export class AuthenticationDialog extends Component {
         }
       >
         <div className={Classes.DIALOG_BODY}>
-          <section className={firstSection}>
-            {passwordLogin && (
-              <PasswordAuthLogin
-                buttonClassName="signin-button"
-                onSubmit={this.onLogin}
-              />
-            )}
-            {passwordLogin && (
-              <div className="link-box">
-                <a key="oauth" href="/" onClick={this.onRegisterClick}>
-                  <FormattedMessage
-                    id="signup.register.question"
-                    defaultMessage="Don't have account? Register!"
-                  />
-                </a>
-              </div>
-            )}
-          </section>
-          <section className={secondSection}>
-            {submitted ? (
-              <Callout
-                intent={Intent.SUCCESS}
-                icon="tick"
-                title={
-                  <FormattedMessage
-                    id="signup.inbox.title"
-                    defaultMessage="Check your inbox"
-                  />
-                }
-              >
-                <FormattedMessage
-                  id="signup.inbox.desc"
-                  defaultMessage="We've sent you an email, please follow the link to complete your registration"
-                />
-              </Callout>
-            ) : (
-              <span>
-                <PasswordAuthSignup
-                  buttonClassName="signin-button"
-                  onSubmit={this.onSignup}
-                />
-              </span>
-            )}
-            <div className="link-box">
-              <a key="oauth" href="/" onClick={this.onSignInClick}>
-                <FormattedMessage
-                  id="signup.login"
-                  defaultMessage="Already have account? Sign in!"
-                />
-              </a>
-            </div>
-          </section>
-          {auth.oauth_uri && (
-            <>
-              <MenuDivider className="menu-divider" />
-              <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
-                <FormattedMessage
-                  id="login.oauth"
-                  defaultMessage="Sign in via OAuth"
-                />
-              </Button>
-            </>
-          )}
+          {this.renderContent()}
         </div>
       </Dialog>
+    );
+  }
+
+  renderContent() {
+    const { metadata } = this.props;
+    const { auth } = metadata;
+
+    return (
+      <>
+        {this.renderFirstSection()}
+        {this.renderSecondSection()}
+        {auth.oauth_uri && this.renderOAuthButton()}
+      </>
+    );
+  }
+
+  renderFirstSection() {
+    const { metadata } = this.props;
+    const { auth } = metadata;
+    const { firstSection } = this.state;
+    const passwordLogin = auth.password_login_uri;
+
+    return (
+      <section className={firstSection}>
+        {passwordLogin && (
+          <PasswordAuthLogin
+            buttonClassName="signin-button"
+            onSubmit={this.onLogin}
+          />
+        )}
+        {passwordLogin && (
+          <div className="link-box">
+            <a key="oauth" href="/" onClick={this.onRegisterClick}>
+              <FormattedMessage
+                id="signup.register.question"
+                defaultMessage="Don't have account? Register!"
+              />
+            </a>
+          </div>
+        )}
+      </section>
+    );
+  }
+
+  renderSecondSection() {
+    const { submitted, secondSection } = this.state;
+
+    return (
+      <section className={secondSection}>
+        {submitted ? (
+          <Callout
+            intent={Intent.SUCCESS}
+            icon="tick"
+            title={
+              <FormattedMessage
+                id="signup.inbox.title"
+                defaultMessage="Check your inbox"
+              />
+            }
+          >
+            <FormattedMessage
+              id="signup.inbox.desc"
+              defaultMessage="We've sent you an email, please follow the link to complete your registration"
+            />
+          </Callout>
+        ) : (
+          <span>
+            <PasswordAuthSignup
+              buttonClassName="signin-button"
+              onSubmit={this.onSignup}
+            />
+          </span>
+        )}
+        <div className="link-box">
+          <a key="oauth" href="/" onClick={this.onSignInClick}>
+            <FormattedMessage
+              id="signup.login"
+              defaultMessage="Already have account? Sign in!"
+            />
+          </a>
+        </div>
+      </section>
+    );
+  }
+
+  renderOAuthButton() {
+    return (
+      <>
+        <MenuDivider className="menu-divider" />
+        <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
+          <FormattedMessage
+            id="login.oauth"
+            defaultMessage="Sign in via OAuth"
+          />
+        </Button>
+      </>
     );
   }
 }
