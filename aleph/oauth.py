@@ -81,7 +81,7 @@ def _get_groups(provider, oauth_token, id_token):
 
 
 def handle_oauth(provider, oauth_token):
-    from aleph.model import Role
+    from aleph.model import Role, RoleBlockedError
 
     token = provider.parse_id_token(oauth_token)
     if token is None:
@@ -99,6 +99,8 @@ def handle_oauth(provider, oauth_token):
         role = Role.load_or_create(
             role_id, Role.USER, name, email=email, is_admin=is_auto_admin(email)
         )
+    if role.is_blocked:
+        raise RoleBlockedError()
     if not role.is_actor:
         raise OAuthError()
     role.clear_roles()

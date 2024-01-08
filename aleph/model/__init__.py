@@ -1,5 +1,5 @@
 from aleph.core import db  # noqa
-from aleph.model.role import Role, PasswordCredentialsError  # noqa
+from aleph.model.role import Role, PasswordCredentialsError, RoleBlockedError  # noqa
 from aleph.model.alert import Alert  # noqa
 from aleph.model.permission import Permission  # noqa
 from aleph.model.entity import Entity  # noqa

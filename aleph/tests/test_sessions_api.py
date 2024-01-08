@@ -88,10 +88,15 @@ class SessionsApiTestCase(TestCase):
         db.session.add(self.role)
         db.session.commit()
 
-        data = {"email": self.role.email, "password": secret}
+        data = {"email": self.role.email, "password": "this is not the password"}
         res = self.client.post("/api/2/sessions/login", data=data)
         assert res.status_code == 400, res
         assert res.json["message"] == "Invalid user or password."
+
+        data = {"email": self.role.email, "password": secret}
+        res = self.client.post("/api/2/sessions/login", data=data)
+        assert res.status_code == 403, res
+        assert res.json["message"] == "Your account has been blocked."
 
 
 class SessionsApiOAuthTestCase(TestCase):
@@ -150,8 +155,11 @@ class SessionsApiOAuthTestCase(TestCase):
         # After a successful auth flow the users is redirected to the frontend and the users API auth token
         # is included in the URL fragment
         location = urlparse(res.headers["Location"])
-        query = parse_qs(location.fragment)
-        auth_token = query["token"][0]
+        assert location.netloc == "aleph.ui"
+        assert location.path == "/oauth"
+
+        fragment_query = parse_qs(location.fragment)
+        auth_token = fragment_query["token"][0]
 
         role_id, _ = auth_token.split(".")
         res = self.client.get(
@@ -202,7 +210,15 @@ class SessionsApiOAuthTestCase(TestCase):
                 },
             )
 
-        assert res.status_code == 401
+        assert res.status_code == 302
+
+        location = urlparse(res.headers["Location"])
+        assert location.netloc == "aleph.ui"
+        assert location.path == "/oauth"
+
+        query = parse_qs(location.query)
+        assert query["status"] == ["error"]
+        assert query["code"] == ["403"]
 
 
 @contextmanager
