@@ -1,0 +1,43 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Install the ftm CLI
+---
+
+# How To Install the ftm CLI
+
+<p class="lead">ftm is a command-line tool that helps you handle data in the FollowTheMoney format. This guide describes how to install the ftm CLI on your computer.</p>
+
+<Steps>
+  <Step>
+    The ftm CLI is written in Python and in order to use it you need to have Python 3 installed on your computer. Please refer to the [Python documentation](https://wiki.python.org/moin/BeginnersGuide/Download) for instructions on how to install Python.
+  </Step>
+
+  <Step>
+    The ftm CLI comes bundled with the FollowTheMoney Python package. Install the package using pip:
+
+    ```bash
+    pip3 install followthemoney
+    ```
+  </Step>
+
+  <Step>
+    <strong>Optional:</strong> One of the jobs of the ftm CLI is to transliterate text from various alphabets into the latin script to support the comparison of names. The normal tool used for this is prone to fail with certain alphabets, e.g. the Azeri language. For that reason, we recommend also installing ICU (International components for Unicode).
+
+    On a Debian-based Linux system, installing ICU is relatively simple:
+
+    ```bash
+    apt install libicu-dev
+    pip install pyicu
+    ```
+
+    The macOS version of installing ICU is a bit more complicated, and requires you to have [Homebrew](https://brew.sh) installed:
+
+    ```bash
+    brew install icu4c
+    env CFLAGS=-I/usr/local/opt/icu4c/include
+    env LDFLAGS=-L/usr/local/opt/icu4c/lib
+    PATH=$PATH:/usr/local/opt/icu4c/bin
+    pip install pyicu
+    ```
+  </Step>
+</Steps>

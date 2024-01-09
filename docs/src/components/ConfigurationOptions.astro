@@ -1,0 +1,42 @@
+---
+import Markdown from '@astrojs/markdown-component';
+const { options } = Astro.props;
+---
+
+<style>
+  dt {
+    font-size: var(--font-size-gamma);
+  }
+
+  dd + dt {
+    margin-top: var(--space);
+  }
+
+  dd {
+    padding-left: var(--space);
+  }
+
+  dd > p {
+    margin-top: var(--space-sm);
+  }
+</style>
+
+<dl>
+  {
+    options.map(({ name, description, defaultValue }) => (
+      <>
+        <dt id={name}>
+          <code>{name}</code>
+        </dt>
+        <dd>
+          <Markdown>{description}</Markdown>
+          {defaultValue && (
+            <p>
+              <strong>Default:</strong> <code>{defaultValue}</code>
+            </p>
+          )}
+        </dd>
+      </>
+    ))
+  }
+</dl>

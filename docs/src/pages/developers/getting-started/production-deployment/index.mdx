@@ -1,0 +1,78 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Production Deployment
+---
+
+# Production Deployment
+
+<p class="lead">Aleph can be deployed to production using multiple different methods. Which one is best depends on your use case and requirements. This page contains helpful information if you plan to deploy Aleph to production.</p>
+
+## Services
+
+Before you deploy Aleph, make yourself familiar with [Aleph’s architecture](/developers/explanation/architecture). An Aleph instance requires multiple different services to serve Aleph’s API and user interface, as well as worker services to process tasks such as document ingestion or indexing.
+
+Aleph also requires PostgreSQL and Elasticsearch to store and search data, and it needs a way to store files uploaded to Aleph. If you have limited technical resources, we recommend using managed services instead of self-hosting such commodity services. For example, consider using [GCP Cloud SQL](https://cloud.google.com/sql/) or [AWS RDS](https://aws.amazon.com/rds/) instead of managing your own PostgreSQL database cluster, and [GCP Cloud Storage](https://cloud.google.com/storage/) or [AWS S3](https://aws.amazon.com/de/s3/) (or any other S3-compatible service) for file storage.
+
+## Deployment methods
+
+### Docker Compose
+
+For small instances, Aleph can be deployed on a single server using Docker Compose. We provide a `docker-compose.yml` configuration file as a starting point. As your instance grows, it may make sense to run some services (e.g. Elasticsearch) on a separate server.
+
+### Kubernetes
+
+For larger instances, you may want to consider deploying Aleph using Kubernetes. We provide a Helm Chart that you can use.
+
+## System requirements
+
+* You need a domain name for your Aleph instance. Aleph cannot be run at a subpath (e.g. `http://example.org/aleph`).
+* You need an SMTP mail server or an account with an email service provider that supports sending outbound email via SMTP.
+* 8 GB RAM or more. While Aleph will start with much less, we recommend providing ample memory to ensure everything runs smoothly.
+
+## HTTPS / TLS
+
+In most cases, you will want to run Aleph behind a reverse proxy that terminates TLS. You can choose any reverse proxy, for example nginx or Caddy. Please refer to ["How to run Aleph behind a reverse proxy"](/developers/how-to/operations/reverse-proxy) for instructions on how to configure Aleph in this case.
+
+## Firewalls and ports
+
+Make sure to only ever expose your TLS reverse proxy to the internet. Ports for databases, Elasticsearch, the API, or anything else must not be exposed to the internet!
+
+<Callout theme="danger">
+  Make sure to thoroughly test your firewall configuration and open ports, especially if you deploy Aleph using Docker Compose as Docker is known to override some firewall rules.
+</Callout>
+
+## Configure Aleph
+
+### Aleph version
+
+In `aleph.env` set the `ALEPH_TAG` configuration option to specify the Aleph version you want to deploy. If `ALEPH_TAG` is not set, the stable version specified in `docker-compose.yml` is deployed.
+
+### Secret key
+
+Next, you need to generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a 24-character random string:
+
+```sh
+openssl rand -hex 24
+```
+
+Copy the generated string and paste it as the value for `ALEPH_SECRET_KEY`.
+
+### User Interface
+
+Set `ALEPH_UI_URL` to the URL where the user interface will be made available. For example, if you plan to use `example.org` as the domain name for your Aleph instance, set `ALEPH_UI_URL=https://example.org`. You can also configure the user interface to use a custom title, logo, and more. Refer to the the [configuration options reference](/developers/reference/configuration-options#user-interface) for details.
+
+### Email
+
+Aleph needs to be able to send emails to users, for example to notify them of new search results for saved search queries. Configure an SMTP server using the [`ALEPH_MAIL_*` configuration options](/developers/reference/configuration-options#email).
+
+### Storage (optional)
+
+By default, Aleph stores uploaded files on the local file system. However, Aleph also supports storing files using [AWS S3](https://aws.amazon.com/s3/) (or an S3-compatible service) or [Google Cloud Storage](https://cloud.google.com/storage/). Refer to ["How to configure a storage provider"](/developers/how-to/operations/blob-storage) for instructions.
+
+### Authentication (optional)
+
+By default, Aleph allows users to sign up and authenticate using password authentication. However, Aleph also supports OAuth/OpenID Connect identity providers, and we do recommend that you delegate authentication to a separate identity rather than using the built-in password authentication system. Aleph supports Microsoft Azure, Google, Keycloak, AWS Cognito and others out of the box. Refer to ["How to configure OAuth"](/developers/how-to/operations/oauth) for details.
+
+### Other configuration options
+
+Most configuration options use sensible defaults which means you do not need to adjust them unless you have specific requirements. You can find a list of all available configuration options in the [reference section](/developers/reference/configuration-options) of the documentation.

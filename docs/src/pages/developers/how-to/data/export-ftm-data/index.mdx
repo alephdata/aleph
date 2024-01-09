@@ -1,0 +1,56 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Export FollowTheMoney Data
+---
+
+# How To Export FollowTheMoney Data
+
+<p class="lead">In some cases you may want to process FollowTheMoney entities outside of Aleph. This guide describes how you can use the alephclient CLI to export all entities or a subset of entities in the FollowTheMoney format or as a CSV or Excel file.</p>
+
+<Steps>
+  <Step>
+    This guide uses the alephclient CLI to export FollowTheMoney data from Aleph and the ftm CLI to convert FollowTheMoney data to CSV or Excel files. If you don’t have these two CLIs installed, please refer to [How to install the ftm CLI](/developers/how-to/data/install-ftm) and [How to install the alephclient CLI](/developers/how-to/data/install-alephclient) for installation instructions.
+  </Step>
+
+  <Step>
+    Using the alephclient CLI, you can stream entities from an Aleph collection and write them to a file:
+
+    ```bash
+    alephclient stream-entities --foreign-id 0bdf... --outfile entities.json
+    ```
+
+    Replace `0bdf...` with the foreign ID of your collection. You can find a collection’s foreign ID in the Aleph UI. Navigate to the collection homepage. The foreign ID is listed in the sidebar on the right.
+
+    <Callout theme="danger">
+      Streaming very large collections from an Aleph instance is a resource-consuming activity on the server side. Please only stream collections with more than 100,000 entities after making sure that the server administrators are OK with it.
+    </Callout>
+
+    You can also filter entities by one or more schemata. The following command exports only `Company` entities:
+
+    ```bash
+    alephclient stream-entities --foreign-id 0bdf... --schema Company --outfile companies.json
+    ```
+  </Step>
+
+  <Step>
+    Optionally, you can now use the ftm CLI to convert the FollowTheMoney data exported in the previous step to CSV or Excel file formats:
+
+    ```bash
+    # Generates one CSV file per schema
+    ftm export-csv --infile entities.json --outdir ./entities
+
+    # Generates one Excel file with one sheet per schema
+    ftm export-excel --infile entities.json --outfile entities.xlsx
+    ```
+
+    <Callout theme="danger">
+      When exporting to the Excel format, it’s easy to generate a workbook larger than what Microsoft Excel and similar office programs can actually open. Only export small and mid-size datasets.
+    </Callout>
+
+    You can also combine both commands in a single step:
+
+    ```bash
+    alephclient stream-entities -f 0bdf... -s Company | ftm export-excel -o entities.xlsx
+    ```
+  </Step>
+</Steps>

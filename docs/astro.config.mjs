@@ -1,6 +1,7 @@
 import path from 'node:path';
 import url from 'node:url';
 import { defineConfig } from 'astro/config';
+import yaml from '@rollup/plugin-yaml';
 import theme, { injectComponent } from 'astro-theme-docs';
 
 const root = path.dirname(url.fileURLToPath(import.meta.url));
@@ -40,4 +41,7 @@ export default defineConfig({
       ],
     }),
   ],
+  vite: {
+    plugins: [yaml()],
+  },
 });
