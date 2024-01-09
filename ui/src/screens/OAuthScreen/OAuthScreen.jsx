@@ -5,7 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, DialogBody } from '@blueprintjs/core';
+import { Dialog, DialogBody, AnchorButton, Intent } from '@blueprintjs/core';
+import { RoleBlockedMessage } from 'components/common';
 
 import withRouter from 'app/withRouter';
 
@@ -20,7 +21,8 @@ class OAuthScreen extends React.Component {
   }
 
   render() {
-    const { location, navigate } = this.props;
+    const { location, navigate, metadata } = this.props;
+    const { message, link, link_label } = metadata.auth.role_blocked;
     const query = queryString.parse(location.search);
 
     if (query.status === 'error' && query.code === '403') {
@@ -38,13 +40,11 @@ class OAuthScreen extends React.Component {
           canOutsideClickClose={false}
         >
           <DialogBody>
-            <p>
-              Your user account has been deactivated and you cannot sign in
-              until it is reactivated. We deactivate accounts if they have been
-              inactive for more than 24 months or violate our terms of service.
-              In order to reactivate your account please contact us using{' '}
-              <a href="#">this form</a>.
-            </p>
+            <RoleBlockedMessage
+              message={message}
+              link={link}
+              linkLabel={link_label}
+            />
           </DialogBody>
         </Dialog>
       );
@@ -55,7 +55,7 @@ class OAuthScreen extends React.Component {
   }
 }
 
-const mapStateToProps = ({ session }) => ({ session });
+const mapStateToProps = ({ metadata }) => ({ metadata });
 
 const mapDispatchToProps = { loginWithToken };
 

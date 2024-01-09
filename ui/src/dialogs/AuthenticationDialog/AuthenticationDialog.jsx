@@ -16,6 +16,7 @@ import {
   PasswordAuthLogin,
   PasswordAuthSignup,
 } from 'components/auth/PasswordAuth';
+import { RoleBlockedMessage } from 'components/common';
 import {
   loginWithPassword as loginWithPasswordAction,
   loginWithToken as loginWithTokenAction,
@@ -167,14 +168,15 @@ export class AuthenticationDialog extends Component {
   }
 
   renderBlockedMessage() {
+    const { metadata } = this.props;
+    const { message, link, link_label } = metadata.auth.role_blocked;
+
     return (
-      <p>
-        Your user account has been deactivated and you cannot sign in until it
-        is reactivated. We deactivate accounts if they have been inactive for
-        more than 24 months or violate our terms of service. In order to
-        reactivate your account please contact us using{' '}
-        <a href="#">this form</a>.
-      </p>
+      <RoleBlockedMessage
+        message={message}
+        link={link}
+        linkLabel={link_label}
+      />
     );
   }
 
