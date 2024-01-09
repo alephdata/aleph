@@ -15,13 +15,13 @@ from aleph.settings import SETTINGS
 METRICS_ENDPOINT_NAME = "metrics"
 
 REQUEST_DURATION = Histogram(
-    "http_request_duration_seconds",
+    "aleph_http_request_duration_seconds",
     "Duration of requests to the Aleph API in seconds",
     ["method", "status", "api_endpoint"],
 )
 
 REQUEST = Counter(
-    "http_request_total",
+    "aleph_http_request_total",
     "Total number of Aleph API requests",
     ["method", "status", "api_endpoint", "logged_in"],
 )
