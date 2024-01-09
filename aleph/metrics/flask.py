@@ -20,8 +20,8 @@ REQUEST_DURATION = Histogram(
     ["method", "status", "api_endpoint"],
 )
 
-REQUEST = Counter(
-    "aleph_http_request_total",
+REQUESTS = Counter(
+    "aleph_http_requests_total",
     "Total number of Aleph API requests",
     ["method", "status", "api_endpoint", "logged_in"],
 )
@@ -50,7 +50,7 @@ def after_request(response):
 
     duration = max(0, default_timer() - request.prometheus_start_time)
 
-    REQUEST.labels(
+    REQUESTS.labels(
         method=method,
         status=status,
         api_endpoint=api_endpoint,
