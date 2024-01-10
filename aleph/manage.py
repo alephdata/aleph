@@ -69,8 +69,9 @@ def ensure_collection(foreign_id, label):
     authz = Authz.from_role(Role.load_cli_user())
     config = {
         "foreign_id": foreign_id,
-        "label": label,
     }
+    if label is not None:
+        config["label"] = label
     create_collection(config, authz)
     return Collection.by_foreign_id(foreign_id)
 
@@ -123,12 +124,13 @@ def worker(blocking=True, threads=None):
 @click.argument("path", type=click.Path(exists=True))
 @click.option("-l", "--language", multiple=True, help="ISO language codes for OCR")
 @click.option("-f", "--foreign_id", help="Foreign ID of the collection")
-def crawldir(path, language=None, foreign_id=None):
+@click.option("-n", "--name", help="Name of collection")
+def crawldir(path, language=None, foreign_id=None, name=None):
     """Crawl the given directory."""
     path = Path(path)
     if foreign_id is None:
         foreign_id = "directory:%s" % slugify(path)
-    collection = ensure_collection(foreign_id, path.name)
+    collection = ensure_collection(foreign_id, name)
     log.info("Crawling %s to %s (%s)...", path, foreign_id, collection.id)
     crawl_directory(collection, path)
     log.info("Complete. Make sure a worker is running :)")
