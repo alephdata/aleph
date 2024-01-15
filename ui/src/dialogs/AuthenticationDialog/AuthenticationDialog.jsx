@@ -16,6 +16,7 @@ import {
   PasswordAuthLogin,
   PasswordAuthSignup,
 } from 'components/auth/PasswordAuth';
+import { RoleBlockedMessage } from 'components/common';
 import {
   loginWithPassword as loginWithPasswordAction,
   loginWithToken as loginWithTokenAction,
@@ -43,6 +44,7 @@ export class AuthenticationDialog extends Component {
       submitted: false,
       firstSection: '',
       secondSection: 'hide',
+      userBlocked: false,
     };
 
     this.state = this.initialState;
@@ -83,8 +85,14 @@ export class AuthenticationDialog extends Component {
     try {
       await loginWithPassword(data.email, data.password);
       window.location.replace(nextPath || '/');
-    } catch (e) {
-      showResponseToast(e.response, intl);
+    } catch (error) {
+      if (error.response.status === 403) {
+        // User authenticated successfully but access is forbidden. This happens
+        // when a user account has been blocked.
+        this.setState({ userBlocked: true });
+      } else {
+        showResponseToast(error.response, intl);
+      }
     }
   }
 
@@ -113,8 +121,7 @@ export class AuthenticationDialog extends Component {
   render() {
     const { metadata, intl, isOpen, toggleDialog } = this.props;
     const { auth } = metadata;
-    const { submitted, firstSection, secondSection } = this.state;
-    const passwordLogin = auth.password_login_uri;
+    const { firstSection } = this.state;
 
     if (!isOpen) {
       return null;
@@ -137,72 +144,122 @@ export class AuthenticationDialog extends Component {
             : intl.formatMessage(messages.registration_title)
         }
       >
-        <div className={Classes.DIALOG_BODY}>
-          <section className={firstSection}>
-            {passwordLogin && (
-              <PasswordAuthLogin
-                buttonClassName="signin-button"
-                onSubmit={this.onLogin}
-              />
-            )}
-            {passwordLogin && (
-              <div className="link-box">
-                <a key="oauth" href="/" onClick={this.onRegisterClick}>
-                  <FormattedMessage
-                    id="signup.register.question"
-                    defaultMessage="Don't have account? Register!"
-                  />
-                </a>
-              </div>
-            )}
-          </section>
-          <section className={secondSection}>
-            {submitted ? (
-              <Callout
-                intent={Intent.SUCCESS}
-                icon="tick"
-                title={
-                  <FormattedMessage
-                    id="signup.inbox.title"
-                    defaultMessage="Check your inbox"
-                  />
-                }
-              >
-                <FormattedMessage
-                  id="signup.inbox.desc"
-                  defaultMessage="We've sent you an email, please follow the link to complete your registration"
-                />
-              </Callout>
-            ) : (
-              <span>
-                <PasswordAuthSignup
-                  buttonClassName="signin-button"
-                  onSubmit={this.onSignup}
-                />
-              </span>
-            )}
-            <div className="link-box">
-              <a key="oauth" href="/" onClick={this.onSignInClick}>
-                <FormattedMessage
-                  id="signup.login"
-                  defaultMessage="Already have account? Sign in!"
-                />
-              </a>
-            </div>
-          </section>
-          {auth.oauth_uri && (
-            <>
-              <MenuDivider className="menu-divider" />
-              <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
-                <FormattedMessage
-                  id="login.oauth"
-                  defaultMessage="Sign in via OAuth"
-                />
-              </Button>
-            </>
-          )}
-        </div>
+        <div className={Classes.DIALOG_BODY}>{this.renderContent()}</div>
       </Dialog>
+    );
+  }
+
+  renderContent() {
+    const { userBlocked } = this.state;
+    const { metadata } = this.props;
+    const { auth } = metadata;
+
+    if (userBlocked) {
+      return this.renderBlockedMessage();
+    }
+
+    return (
+      <>
+        {this.renderFirstSection()}
+        {this.renderSecondSection()}
+        {auth.oauth_uri && this.renderOAuthButton()}
+      </>
+    );
+  }
+
+  renderBlockedMessage() {
+    const { metadata } = this.props;
+    const { message, link, link_label } = metadata.auth.role_blocked;
+
+    return (
+      <RoleBlockedMessage
+        message={message}
+        link={link}
+        linkLabel={link_label}
+      />
+    );
+  }
+
+  renderFirstSection() {
+    const { metadata } = this.props;
+    const { auth } = metadata;
+    const { firstSection } = this.state;
+    const passwordLogin = auth.password_login_uri;
+
+    return (
+      <section className={firstSection}>
+        {passwordLogin && (
+          <PasswordAuthLogin
+            buttonClassName="signin-button"
+            onSubmit={this.onLogin}
+          />
+        )}
+        {passwordLogin && (
+          <div className="link-box">
+            <a key="oauth" href="/" onClick={this.onRegisterClick}>
+              <FormattedMessage
+                id="signup.register.question"
+                defaultMessage="Don't have account? Register!"
+              />
+            </a>
+          </div>
+        )}
+      </section>
+    );
+  }
+
+  renderSecondSection() {
+    const { submitted, secondSection } = this.state;
+
+    return (
+      <section className={secondSection}>
+        {submitted ? (
+          <Callout
+            intent={Intent.SUCCESS}
+            icon="tick"
+            title={
+              <FormattedMessage
+                id="signup.inbox.title"
+                defaultMessage="Check your inbox"
+              />
+            }
+          >
+            <FormattedMessage
+              id="signup.inbox.desc"
+              defaultMessage="We've sent you an email, please follow the link to complete your registration"
+            />
+          </Callout>
+        ) : (
+          <span>
+            <PasswordAuthSignup
+              buttonClassName="signin-button"
+              onSubmit={this.onSignup}
+            />
+          </span>
+        )}
+        <div className="link-box">
+          <a key="oauth" href="/" onClick={this.onSignInClick}>
+            <FormattedMessage
+              id="signup.login"
+              defaultMessage="Already have account? Sign in!"
+            />
+          </a>
+        </div>
+      </section>
+    );
+  }
+
+  renderOAuthButton() {
+    return (
+      <>
+        <MenuDivider className="menu-divider" />
+        <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
+          <FormattedMessage
+            id="login.oauth"
+            defaultMessage="Sign in via OAuth"
+          />
+        </Button>
+      </>
     );
   }
 }

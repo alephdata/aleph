@@ -114,6 +114,14 @@ class Settings:
         # Roles that haven't logged in since X months will stop receiving notifications.
         self.ROLE_INACTIVE = timedelta(days=env.to_int("ALEPH_ROLE_INACTIVE", 6 * 30))
 
+        # Displayed when a blocked user tries to log in
+        self.ROLE_BLOCKED_MESSAGE = env.get(
+            "ALEPH_ROLE_BLOCKED_MESSAGE",
+            "Your account has been blocked.",
+        )
+        self.ROLE_BLOCKED_LINK = env.get("ALEPH_ROLE_BLOCKED_LINK", None)
+        self.ROLE_BLOCKED_LINK_LABEL = env.get("ALEPH_ROLE_BLOCKED_LINK_LABEL", None)
+
         # Delete notifications after N days.
         self.NOTIFICATIONS_DELETE = timedelta(
             days=env.to_int("ALEPH_NOTIFICATIONS_DELETE", 3 * 30)

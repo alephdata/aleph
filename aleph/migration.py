@@ -34,7 +34,7 @@ def destroy_db():
     while len(tables):
         for table in tables:
             try:
-                table.drop(checkfirst=True)
+                table.drop(bind=db.engine, checkfirst=True)
                 tables.remove(table)
             except InternalError:
                 pass

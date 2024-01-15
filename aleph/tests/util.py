@@ -85,7 +85,6 @@ class TestCase(unittest.TestCase):
         SETTINGS.TESTING = True
         SETTINGS.DEBUG = True
         SETTINGS.CACHE = True
-        SETTINGS.OAUTH = False
         SETTINGS.SECRET_KEY = "batman"
         SETTINGS.APP_UI_URL = UI_URL
         SETTINGS.ARCHIVE_TYPE = "file"
@@ -220,6 +219,17 @@ class TestCase(unittest.TestCase):
             aggregator.put(sample, fragment="sample")
         reindex_collection(self.private_coll, sync=True)
 
+    def init_app(self):
+        self.app = self.create_app()
+
+        self._orig_response_class = self.app.response_class
+        self.app.response_class = _make_test_response(self.app.response_class)
+
+        self.client = self.app.test_client()
+
+        self._ctx = self.app.test_request_context()
+        self._ctx.push()
+
     def setUp(self):
         if not hasattr(SETTINGS, "_global_test_state"):
             SETTINGS._global_test_state = True
@@ -274,15 +284,7 @@ class TestCase(unittest.TestCase):
             self._post_teardown()
 
     def _pre_setup(self):
-        self.app = self.create_app()
-
-        self._orig_response_class = self.app.response_class
-        self.app.response_class = _make_test_response(self.app.response_class)
-
-        self.client = self.app.test_client()
-
-        self._ctx = self.app.test_request_context()
-        self._ctx.push()
+        self.init_app()
 
     def _post_teardown(self):
         if getattr(self, "_ctx", None) is not None:
