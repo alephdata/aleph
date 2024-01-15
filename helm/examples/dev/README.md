@@ -93,3 +93,27 @@ aleph createuser --name "Test User" --password "12345678" --admin mail@example.o
 ## Viewing and downloading files
 
 Because the MinIO endpoint is only accessible from within the cluster network, you won’t be able to preview or download files from the Aleph UI.
+
+## Prometheus
+
+In order to collect Prometheus metrics, install the the Kubernetes Prometheus Stack in your cluster:
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install -f prometheusValues.yaml kube-prometheus-stack prometheus-community/kube-prometheus-stack
+```
+
+Now enable Aleph’s Prometheus integration:
+
+```
+helm upgrade --set "aleph.enabled=true" --set "global.prometheus.enabled=true" --set "global.serviceMonitor.enabled=true" aleph .
+```
+
+In order to access the Prometheus dashboard forward the respective port…
+
+```
+kubectl port-forward svc/aleph-api 9100
+```
+
+… and open `http://kubernetes.docker.internal:9100` in your browser.
