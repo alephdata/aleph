@@ -99,7 +99,12 @@ elasticsearch:
 minio:
   mode: standalone
   replicas: 1
-  existingSecret: minio-secrets
+
+  auth:
+    existingSecret: minio-secrets
+
+  persistence:
+    enabled: false
 
   resources:
     requests:
