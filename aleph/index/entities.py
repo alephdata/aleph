@@ -27,6 +27,16 @@ PROXY_INCLUDES = [
     "updated_at",
 ]
 ENTITY_SOURCE = {"includes": PROXY_INCLUDES}
+FACET_PROPERTY_TYPE_GROUPS = [
+    "dates",
+    "countries",
+    "languages",
+    "emails",
+    "phones",
+    "names",
+    "addresses",
+    "mimetypes",
+]
 
 
 def _source_spec(includes, excludes):
@@ -193,6 +203,12 @@ def format_proxy(proxy, collection):
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
     data["fingerprints"] = [fp for fp in fps if fp is not None]
+
+    # Populate property type groups used in search facets
+    for group in FACET_PROPERTY_TYPE_GROUPS:
+        values = proxy.get_type_values(registry.groups[group])
+        if values:
+            data[group] = values
 
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
