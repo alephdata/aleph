@@ -4,6 +4,7 @@ import typing
 from pprint import pformat, pprint  # noqa
 from tempfile import mkdtemp
 from dataclasses import dataclass
+from timeit import default_timer
 
 import followthemoney
 from followthemoney import model
@@ -15,6 +16,7 @@ from followthemoney import compare
 from followthemoney_compare.models import GLMBernoulli2EEvaluator
 from followthemoney.proxy import EntityProxy
 from servicelayer.archive.util import ensure_path
+from prometheus_client import Counter, Histogram
 
 from aleph.core import es, db
 from aleph.settings import SETTINGS
@@ -40,6 +42,36 @@ log = logging.getLogger(__name__)
 ORIGIN = "xref"
 MODEL = None
 FTM_VERSION_STR = f"ftm-{followthemoney.__version__}"
+SCORE_CUTOFF = 0.5
+
+XREF_ENTITIES = Counter(
+    "aleph_xref_entities_total",
+    "Total number of entities and mentions that have been xref'ed",
+)
+
+XREF_MATCHES = Histogram(
+    "aleph_xref_matches",
+    "Number of matches per xref'ed entitiy or mention",
+    buckets=[
+        # Listing 0 as a separate bucket size because it's interesting to know
+        # what percentage of entities result in no matches at all
+        0,
+        5,
+        10,
+        25,
+        50,
+    ],
+)
+
+XREF_CANDIDATES_QUERY_DURATION = Histogram(
+    "aleph_xref_candidates_query_duration_seconds",
+    "Processing duration of the candidates query (excl. network, serialization etc.)",
+)
+
+XREF_CANDIDATES_QUERY_ROUNDTRIP_DURATION = Histogram(
+    "aleph_xref_candidates_query_roundtrip_duration_seconds",
+    "Roundtrip duration of the candidates query (incl. network, serialization etc.)",
+)
 
 
 @dataclass
@@ -102,7 +134,15 @@ def _query_item(entity, entitysets=True):
     query = {"query": query, "size": 50, "_source": ENTITY_SOURCE}
     schemata = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=schemata, expand=False)
+
+    start_time = default_timer()
     result = es.search(index=index, body=query)
+    roundtrip_duration = max(0, default_timer() - start_time)
+    query_duration = result.get("took")
+    if query_duration is not None:
+        # ES returns milliseconds, but we track query time in seconds
+        query_duration = result.get("took") / 1000
+
     candidates = []
     for result in result.get("hits").get("hits"):
         result = unpack_result(result)
@@ -116,7 +156,9 @@ def _query_item(entity, entitysets=True):
         entity.caption,
         len(candidates),
     )
+
     results = _bulk_compare([(entity, c) for c in candidates])
+    match_count = 0
     for match, (score, doubt, method) in zip(candidates, results):
         log.debug(
             "Match: %s: %s <[%.2f]@%0.2f> %s",
@@ -136,6 +178,17 @@ def _query_item(entity, entitysets=True):
                 match=match,
                 entityset_ids=entityset_ids,
             )
+        if score > SCORE_CUTOFF:
+            # While we store all xref matches with a score > 0, we only count matches
+            # with a score above a threshold. This is in line with the user-facing behavior
+            # which also only shows matches above the threshold.
+            match_count += 1
+
+    XREF_ENTITIES.inc()
+    XREF_MATCHES.observe(match_count)
+    XREF_CANDIDATES_QUERY_ROUNDTRIP_DURATION.observe(roundtrip_duration)
+    if query_duration:
+        XREF_CANDIDATES_QUERY_DURATION.observe(query_duration)
 
 
 def _iter_mentions(collection):
