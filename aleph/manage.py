@@ -66,13 +66,16 @@ def get_collection(foreign_id):
 
 
 def ensure_collection(foreign_id, label):
-    authz = Authz.from_role(Role.load_cli_user())
-    config = {
-        "foreign_id": foreign_id,
-        "label": label,
-    }
-    create_collection(config, authz)
-    return Collection.by_foreign_id(foreign_id)
+    collection = Collection.by_foreign_id(foreign_id, deleted=True)
+    if collection is None:
+        authz = Authz.from_role(Role.load_cli_user())
+        config = {
+            "foreign_id": foreign_id,
+            "label": label,
+        }
+        create_collection(config, authz)
+        return Collection.by_foreign_id(foreign_id)
+    return collection
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)
