@@ -13,7 +13,6 @@ from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import validate_entity, check_write_entity
 from aleph.logic.profiles import pairwise_judgements
 from aleph.logic.expand import entity_tags, expand_proxies
-from aleph.logic.html import sanitize_html
 from aleph.logic.export import create_export
 from aleph.model.entityset import EntitySet, Judgement
 from aleph.model.bookmark import Bookmark
@@ -305,12 +304,6 @@ def view(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ, excludes=excludes)
     tag_request(collection_id=entity.get("collection_id"))
     proxy = model.get_proxy(entity)
-    html = proxy.get("bodyHtml", quiet=True)
-    source_url = proxy.first("sourceUrl", quiet=True)
-    encoding = proxy.first("encoding", quiet=True)
-    entity["safeHtml"] = [
-        sanitize_html(value, source_url, encoding=encoding) for value in html
-    ]
     entity["shallow"] = False
 
     if request.authz.logged_in:

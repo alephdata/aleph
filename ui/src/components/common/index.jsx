@@ -53,6 +53,7 @@ import WidthBoundary from './WidthBoundary';
 import DeleteDialog from './DeleteDialog';
 import FeedbackButton from './FeedbackButton';
 import HintPopover from './HintPopover';
+import SafeHtmlDocument from './SafeHtmlDocument';
 
 export {
   AnimatedCount,
@@ -110,6 +111,7 @@ export {
   DeleteDialog,
   FeedbackButton,
   HintPopover,
+  SafeHtmlDocument,
 };
 
 export * from './types';
