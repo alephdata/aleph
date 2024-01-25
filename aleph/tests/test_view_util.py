@@ -36,6 +36,11 @@ class ViewUtilTest(TestCase):
         assert html.find(".//a").get("target") == "_blank", html
         assert "nofollow" in html.find(".//a").get("rel"), html
 
+    def test_sanitize_html_no_self_closing_tags(self):
+        html_str = '<html><body><noscript><script src="https://example.org></script></noscript></body></html>'
+        processed = sanitize_html(html_str, "https://example.org")
+        assert processed == "<html><body><div><noscript></noscript></div></body></html>"
+
     def test_validate_returns_errors_for_paths(self):
         # given
         schema = "RoleCreate"  # name min length 4, password min length 6
