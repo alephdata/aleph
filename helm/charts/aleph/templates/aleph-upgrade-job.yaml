@@ -77,6 +77,12 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: FTM_STORE_URI
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: RABBITMQ_PASSWORD
+                  optional: true
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:
