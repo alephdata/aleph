@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright/python:v1.40.0-focal
+FROM mcr.microsoft.com/playwright/python:v1.41.0-focal
 COPY entrypoint.sh wait-for ./
 RUN apt update -y \
     && apt install -y netcat wget \

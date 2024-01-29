@@ -28,6 +28,7 @@ from aleph.settings import SETTINGS
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 from aleph.util import LoggingTransport
+from aleph.metrics.flask import PrometheusExtension
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -41,6 +42,7 @@ migrate = Migrate()
 mail = Mail()
 babel = Babel()
 talisman = Talisman()
+prometheus = PrometheusExtension()
 
 
 def determine_locale():
@@ -96,6 +98,7 @@ def create_app(config=None):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app, locale_selector=determine_locale)
+    prometheus.init_app(app)
     CORS(
         app,
         resources=r"/api/*",

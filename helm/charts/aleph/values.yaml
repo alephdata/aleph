@@ -6,7 +6,7 @@ global:
 
   image:
     repository: ghcr.io/alephdata/aleph
-    tag: "3.15.5-rc1"
+    tag: "3.16.0-rc3"
     pullPolicy: Always
 
   commonEnv:
@@ -14,6 +14,12 @@ global:
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
     RABBITMQ_URL: aleph-rabbitmq.default.svc.cluster.local
     RABBITMQ_USERNAME: user
+
+  prometheus:
+    enabled: false
+
+  serviceMonitor:
+    enabled: false
 
   env:
     ALEPH_DEBUG: "false"
@@ -263,3 +269,30 @@ worker:
 
   env:
     WORKER_THREADS: 0
+
+# Aleph Prometheus Exporter - templates/exporter.yaml
+exporter:
+  enabled: false
+
+  podAnnotations: {}
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image:
+    pullPolicy: Always
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  containerResources:
+    requests:
+      memory: 250Mi
+      cpu: 10m
+    limits:
+      memory: 500Mi

@@ -27,9 +27,6 @@ spec:
           command:
             - ingestors
             - process
-          ports:
-            - containerPort: 3000
-              name: http
           volumeMounts:
             {{ if .Values.global.google }}
             - mountPath: /var/secrets/google
@@ -47,11 +44,11 @@ spec:
             {{- range $key, $value := .Values.global.commonEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}
-            {{- end }}  
+            {{- end }}
             {{- range $key, $value := .Values.ingestfile.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
-            {{- end }} 
+            {{- end }}
             - name: FTM_STORE_URI
               valueFrom:
                 secretKeyRef:
@@ -62,6 +59,7 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: RABBITMQ_PASSWORD
+                  optional: true
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:
@@ -83,6 +81,10 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: AWS_SECRET_ACCESS_KEY
+            {{ end }}
+            {{ if .Values.global.prometheus.enabled }}
+            - name: PROMETHEUS_ENABLED
+              value: "true"
             {{ end }}
       volumes:
         {{ if .Values.global.google }}
@@ -109,13 +111,35 @@ spec:
   maxReplicas: {{.Values.ingestfile.hpa.maxReplicas}}
   metrics: {{- toYaml .Values.ingestfile.hpa.scalingMetrics | nindent 4}}
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+{{ if .Values.global.prometheus.enabled }}
+apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file-policy
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
 spec:
-  podSelector:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+  ports:
+    - port: 9100
+      targetPort: 9100
+      protocol: "TCP"
+      name: metrics
+{{ end }}
+---
+{{ if .Values.global.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.namingPrefix }}-ingest-file
+  labels:
+    app: {{ .Values.global.namingPrefix }}-ingest-file
+spec:
+  selector:
     matchLabels:
       app: {{ .Values.global.namingPrefix }}-ingest-file
-  policyTypes:
-    - Ingress
+  endpoints:
+    - interval: "30s"
+      port: metrics
+{{ end }}

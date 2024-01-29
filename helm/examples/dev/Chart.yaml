@@ -22,8 +22,8 @@ dependencies:
     version: v7.17.3
 
   - name: minio
-    repository: https://helm.min.io/
-    version: v8.0.10
+    repository: https://charts.bitnami.com/bitnami
+    version: v12.13.1
 
   - name: redis
     repository: https://charts.bitnami.com/bitnami

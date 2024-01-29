@@ -46,7 +46,7 @@ services:
       - aleph.env
 
   worker:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.5-rc1}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.16.0-rc3}
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -62,7 +62,7 @@ services:
       - aleph.env
 
   shell:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.5-rc1}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.16.0-rc3}
     command: /bin/bash
     depends_on:
       - postgres
@@ -80,8 +80,7 @@ services:
       - aleph.env
 
   api:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.5-rc1}
-    command: gunicorn -w 6 -b 0.0.0.0:8000 --timeout 3600 --log-level debug --log-file - aleph.wsgi:app
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.16.0-rc3}
     expose:
       - 8000
     depends_on:
@@ -98,7 +97,7 @@ services:
       - aleph.env
 
   ui:
-    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-3.15.5-rc1}
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-3.16.0-rc3}
     depends_on:
       - api
     ports:

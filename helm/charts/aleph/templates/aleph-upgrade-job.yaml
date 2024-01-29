@@ -82,6 +82,7 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: RABBITMQ_PASSWORD
+                  optional: true
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

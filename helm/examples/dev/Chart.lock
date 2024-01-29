@@ -12,10 +12,10 @@ dependencies:
   repository: https://helm.elastic.co
   version: 7.17.3
 - name: minio
-  repository: https://helm.min.io/
-  version: 8.0.10
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.13.1
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 18.0.2
-digest: sha256:cfaa9778a9da148217fe65d2bc9eebed248436f932e35b7ac9414321eb7e8f4d
-generated: "2023-11-10T12:47:21.424991+01:00"
+digest: sha256:155a857326e8e8735fd0dec366c3242e36f62a77f8aaa9b978982941976c2e5b
+generated: "2024-01-09T22:09:30.35161+01:00"
