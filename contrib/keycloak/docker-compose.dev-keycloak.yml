@@ -35,7 +35,7 @@ services:
   ingest-file:
     build:
       context: services/ingest-file
-    image: ghcr.io/alephdata/ingest-file:3.19.3
+    image: ghcr.io/alephdata/ingest-file:3.20.0
     hostname: ingest
     tmpfs: /tmp
     volumes:
