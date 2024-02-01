@@ -113,7 +113,7 @@ helm upgrade --set "aleph.enabled=true" --set "global.prometheus.enabled=true" -
 In order to access the Prometheus dashboard forward the respective port…
 
 ```
-kubectl port-forward svc/aleph-api 9100
+kubectl port-forward svc/kube-prometheus-stack-prometheus 9090
 ```
 
-… and open `http://kubernetes.docker.internal:9100` in your browser.
+… and open `http://localhost:9090` in your browser.
