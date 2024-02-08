@@ -4,7 +4,7 @@ followthemoney==3.5.8
 followthemoney-store[postgresql]==3.0.6
 followthemoney-compare==0.4.4
 fingerprints==1.2.3
-servicelayer[google,amazon] @ git+https://github.com/alephdata/servicelayer.git@release/1.23.0
+servicelayer[google,amazon]==1.23.0rc3
 normality==2.5.0
 pantomime==0.6.1
 
