@@ -178,6 +178,19 @@ class Document(db.Model, DatedModel):
         q = q.yield_per(5000)
         return q
 
+    @classmethod
+    def by_collection_and_mimetype(
+        cls, collection_id=None, include_mimetypes=[], exclude_mimetypes=[]
+    ):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        if include_mimetypes:
+            q = q.filter(cls.meta["mime_type"].astext.in_(include_mimetypes))
+        if exclude_mimetypes:
+            q = q.filter(~cls.meta["mime_type"].astext.in_(exclude_mimetypes))
+        q = q.yield_per(5000)
+        return q
+
     def to_proxy(self, ns=None):
         ns = ns or self.collection.ns
         proxy = model.get_proxy(

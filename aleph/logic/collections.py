@@ -131,13 +131,21 @@ def index_aggregator(
 
 
 def reingest_collection(
-    collection, job_id=None, index=False, flush=True, include_ingest=False
+    collection,
+    job_id=None,
+    index=False,
+    flush=True,
+    include_ingest=False,
+    include_mimetypes=[],
+    exclude_mimetypes=[],
 ):
     """Trigger a re-ingest for all documents in the collection."""
     job_id = job_id or Job.random_id()
     if flush:
         ingest_flush(collection, include_ingest=include_ingest)
-    for document in Document.by_collection(collection.id):
+    for document in Document.by_collection_and_mimetype(
+        collection.id, include_mimetypes, exclude_mimetypes
+    ):
         proxy = document.to_proxy(ns=collection.ns)
         ingest_entity(collection, proxy, job_id=job_id, index=index)
 

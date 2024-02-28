@@ -205,11 +205,37 @@ def reindex_casefiles(flush=False):
 @click.option("--index", is_flag=True, default=False)
 @click.option("--include_ingest", is_flag=True, default=False)
 @click.option("--flush/--no-flush", default=True)
-def reingest(foreign_id, index=False, flush=True, include_ingest=False):
+@click.option(
+    "--include-mimetype",
+    "include_mimetypes",
+    multiple=True,
+    default=[],
+    help="Only include documents with these mimetypes (multiple mentions possible)",
+)
+@click.option(
+    "--exclude-mimetype",
+    "exclude_mimetypes",
+    multiple=True,
+    default=[],
+    help="Exclude documents with these mimetypes (multiple mentions possible)",
+)
+def reingest(
+    foreign_id,
+    index=False,
+    flush=True,
+    include_ingest=False,
+    include_mimetypes=[],
+    exclude_mimetypes=[],
+):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
     reingest_collection(
-        collection, index=index, flush=flush, include_ingest=include_ingest
+        collection,
+        index=index,
+        flush=flush,
+        include_ingest=include_ingest,
+        include_mimetypes=include_mimetypes,
+        exclude_mimetypes=exclude_mimetypes,
     )
 
 

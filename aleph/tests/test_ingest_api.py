@@ -48,6 +48,22 @@ class IngestApiTestCase(TestCase):
         assert doc.schema == Document.SCHEMA, doc.schema
         assert doc.meta["countries"] == ["de", "us"], doc.meta
         assert doc.meta["languages"] == ["eng"], doc.meta
+        assert doc.meta["mime_type"] == "text/csv", doc.meta
+
+        assert (
+            Document.by_collection_and_mimetype(
+                collection_id=1, include_mimetypes=["text/csv"], exclude_mimetypes=None
+            ).count()
+            == 1
+        )
+        assert (
+            Document.by_collection_and_mimetype(
+                collection_id=1,
+                include_mimetypes=None,
+                exclude_mimetypes=["text/csv"],
+            ).count()
+            == 0
+        )
 
         status = get_status(self.col)
         assert status.get("pending") == 1, status
