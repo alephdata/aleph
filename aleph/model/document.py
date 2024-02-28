@@ -6,6 +6,7 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.namespace import Namespace
 from followthemoney.util import sanitize_text
+from pantomime import normalize_mimetype
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -182,6 +183,8 @@ class Document(db.Model, DatedModel):
     def by_collection_and_mimetype(
         cls, collection_id=None, include_mimetypes=[], exclude_mimetypes=[]
     ):
+        include_mimetypes = [normalize_mimetype(mt) for mt in include_mimetypes or []]
+        exclude_mimetypes = [normalize_mimetype(mt) for mt in exclude_mimetypes or []]
         q = cls.all()
         q = q.filter(cls.collection_id == collection_id)
         if include_mimetypes:
