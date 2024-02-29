@@ -25,7 +25,7 @@ marshmallow==3.20.1
 gunicorn[eventlet]==21.2.0
 jsonschema==4.20.0
 apispec==6.3.1
-apispec-webframeworks==0.5.2
+apispec-webframeworks==1.0.0
 blinker==1.7.0
 Babel==2.12.1
 PyYAML==6.0.1
