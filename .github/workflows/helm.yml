@@ -28,7 +28,7 @@ jobs:
         run: gsutil -m cp -r gs://aleph-helm-charts . && mv aleph-helm-charts charts
 
       - name: Package chart
-        uses: WyriHaximus/github-action-helm3@v2
+        uses: WyriHaximus/github-action-helm3@v4
         with:
           exec: |
             rm -f charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz
@@ -40,7 +40,7 @@ jobs:
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}-dev.tgz gs://aleph-helm-charts
       - name: Package chart
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: WyriHaximus/github-action-helm3@v2
+        uses: WyriHaximus/github-action-helm3@v4
         with:
           exec: helm package helm/charts/aleph --version ${{ steps.get_version.outputs.VERSION }} --destination charts/
       - name: Upload chart to GCS
@@ -50,7 +50,7 @@ jobs:
         run: gsutil cp charts/aleph-${{ steps.get_version.outputs.VERSION }}.tgz gs://aleph-helm-charts
 
       - name: Generate index
-        uses: WyriHaximus/github-action-helm3@v2
+        uses: WyriHaximus/github-action-helm3@v4
         with:
           exec: helm repo index charts/
       - name: Upload index to GCS
