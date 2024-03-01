@@ -1,6 +1,6 @@
 bump2version==1.0.1
 Babel==2.12.1
-black==23.12.1
-playwright==1.40.0
-pytest-playwright==0.4.3
-ruff===0.1.9
+black==24.2.0
+playwright==1.41.2
+pytest-playwright==0.4.4
+ruff===0.3.0
