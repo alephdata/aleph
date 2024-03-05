@@ -207,9 +207,9 @@
   "document.mapping.start": "Generar entidades",
   "document.paging": "Página {pageInput} de {numberOfPages}",
   "document.pdf.search.page": "Página {page}",
-  "document.report_problem": "Report a problem",
-  "document.report_problem.text": "You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents.",
-  "document.report_problem.title": "Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?",
+  "document.report_problem": "Reportar un problema",
+  "document.report_problem.text": "Ahora puede reportar problemas fácilmente al equipo de Aleph y ayudarnos a mejorar cómo la plataforma procesa y muestra documentos.",
+  "document.report_problem.title": "¿La vista previa del documento luce rara? ¿El texto extraído es incorrecto o la información está incompleta?",
   "document.search.no_match": "Ninguna página de este documento coincide con todos los términos de su búsqueda.",
   "document.upload.button": "Subir",
   "document.upload.cancel": "Cancelar",
@@ -218,11 +218,11 @@
   "document.upload.files": "Elija los archivos a cargar...",
   "document.upload.folder": "Si prefiere subir carpetas, { button }.",
   "document.upload.folder-toggle": "Haga clic aquí",
-  "document.upload.info": "If you need to upload a large amount of files (100+) consider {link}.",
-  "document.upload.notice": "The upload is complete. It will take a few moments for the documents to be processed and become searchable.",
-  "document.upload.progress": "{done} of {total} files done, {errors} errors.",
-  "document.upload.rejected": "{fileName} is missing a file type, so it cannot be uploaded.",
-  "document.upload.retry": "Retry",
+  "document.upload.info": "Si necesita subir muchos documentos (más de 100) considere {link}.",
+  "document.upload.notice": "Se han subido todos los documentos. Todavía tardará un poco el procesamiento que permitirá realizar búsquedas en ellos.",
+  "document.upload.progress": "{done} de {total} archivos terminados, {errors} errores.",
+  "document.upload.rejected": "No se puede subir {fileName} porque no tiene tipo de archivo.",
+  "document.upload.retry": "Reintentar",
   "document.upload.save": "Subir",
   "document.upload.summary": "{numberOfFiles, number} files, {totalSize}",
   "document.upload.title": "Upload documents",
@@ -665,5 +665,6 @@
   "xref.score": "Puntuación",
   "xref.sort.default": "Default",
   "xref.sort.label": "Ordenar por:",
-  "xref.sort.random": "Random"
+  "xref.sort.random": "Aleatorio"
 }
+
