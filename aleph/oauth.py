@@ -47,7 +47,8 @@ def _get_groups(provider, oauth_token, id_token):
     """Groups are not standardised in OIDC, so this is provider-specific."""
     try:
         access_token = _parse_access_token(provider, oauth_token)
-    except DecodeError:
+    # except DecodeError:
+    except Exception:
         # Failed to parse the access_token as JWT. Most probably, the required
         # information about groups is in the id_token.
         access_token = {}
