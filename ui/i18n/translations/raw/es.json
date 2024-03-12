@@ -624,13 +624,13 @@
     "defaultMessage": "Página {page}"
   },
   "document.report_problem": {
-    "defaultMessage": "Report a problem"
+    "defaultMessage": "Reportar un problema"
   },
   "document.report_problem.text": {
-    "defaultMessage": "You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents."
+    "defaultMessage": "Ahora puede reportar problemas fácilmente al equipo de Aleph y ayudarnos a mejorar cómo la plataforma procesa y muestra documentos."
   },
   "document.report_problem.title": {
-    "defaultMessage": "Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?"
+    "defaultMessage": "¿La vista previa del documento luce rara? ¿El texto extraído es incorrecto o la información está incompleta?"
   },
   "document.search.no_match": {
     "defaultMessage": "Ninguna página de este documento coincide con todos los términos de su búsqueda."
@@ -657,7 +657,7 @@
     "defaultMessage": "Haga clic aquí"
   },
   "document.upload.info": {
-    "defaultMessage": "If you need to upload a large amount of files (100+) consider {link}."
+    "defaultMessage": "Si necesita subir muchos documentos (más de 100) considere {link}."
   },
   "document.upload.notice": {
     "defaultMessage": "The upload is complete. It will take a few moments for the documents to be processed and become searchable."
