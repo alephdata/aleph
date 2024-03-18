@@ -7,6 +7,8 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    # enable this to log all SQL statements
+    # command: ["postgres", "-c", "log_statement=all"]
     environment:
       POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph

@@ -49,4 +49,4 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
 RUN mkdir /run/prometheus
 
 # Run the green unicorn
-CMD gunicorn --config /aleph/gunicorn.conf.py --workers 5 --log-level info --log-file - aleph.manage:app
+CMD gunicorn --config /aleph/gunicorn.conf.py --workers 6 --log-level debug --log-file -
