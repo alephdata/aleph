@@ -148,22 +148,21 @@ class QueuesCollector(Collector):
         stages = {}
 
         for collection_status in status["datasets"].values():
-            for job_status in collection_status["jobs"]:
-                for stage_status in job_status["stages"]:
-                    stage = stage_status["stage"]
-                    pending = stage_status["pending"]
-                    running = stage_status["running"]
+            for stage_status in collection_status["stages"]:
+                stage = stage_status["stage"]
+                pending = stage_status["pending"]
+                running = stage_status["running"]
 
-                    if stage not in stages:
-                        stages[stage] = {
-                            "pending": 0,
-                            "running": 0,
-                        }
-
+                if stage not in stages:
                     stages[stage] = {
-                        "pending": stages[stage].get("pending") + pending,
-                        "running": stages[stage].get("running") + running,
+                        "pending": 0,
+                        "running": 0,
                     }
+
+                stages[stage] = {
+                    "pending": stages[stage].get("pending") + pending,
+                    "running": stages[stage].get("running") + running,
+                }
 
         tasks_gauge = GaugeMetricFamily(
             "aleph_tasks",
