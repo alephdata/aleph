@@ -231,10 +231,17 @@ def bulk(collection_id):
           minimum: 1
           type: integer
       - description: >-
-          This will disable checksum security measures in order to allow bulk
-          loading of document data.
+          safe=True means that the data cannot be trusted and that file checksums should be removed.
+          Flag is only available for admins. Default True.
         in: query
-        name: unsafe
+        name: safe
+        schema:
+          type: boolean
+      - description: >-
+          clean=True means that the data cannot be trusted and that the data should be cleaned from invalid values.
+          Flag is only available for admins. Default True.
+        in: query
+        name: clean
         schema:
           type: boolean
       requestBody:
@@ -258,19 +265,31 @@ def bulk(collection_id):
     if entityset is not None:
         entityset = get_entityset(entityset, request.authz.WRITE)
 
-    # This will disable checksum security measures in order to allow bulk
+    # This will disable (if False) checksum security measures in order to allow bulk
     # loading of document data:
     safe = get_flag("safe", default=True)
     # Flag is only available for admins:
     if not request.authz.is_admin:
         safe = True
 
+    # This will disable (if False) values validation for all types of all entities / properties
+    # (will pass cleaned=True to the model.get_proxy() in the aleph/logic/processing.py)
+    clean = get_flag("clean", default=True)
+    # Flag is only available for admins:
+    if not request.authz.is_admin:
+        clean = True
+
     # Let UI tools change the entities created by this:
     mutable = get_flag("mutable", default=False)
     entities = ensure_list(request.get_json(force=True))
     entity_ids = list()
     for entity_id in bulk_write(
-        collection, entities, safe=safe, mutable=mutable, role_id=request.authz.id
+        collection,
+        entities,
+        safe=safe,
+        mutable=mutable,
+        clean=clean,
+        role_id=request.authz.id,
     ):
         entity_ids.append(entity_id)
         if entityset is not None:

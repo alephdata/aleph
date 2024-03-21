@@ -623,6 +623,15 @@
   "document.pdf.search.page": {
     "defaultMessage": "Seite {page}"
   },
+  "document.report_problem": {
+    "defaultMessage": "Report a problem"
+  },
+  "document.report_problem.text": {
+    "defaultMessage": "You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents."
+  },
+  "document.report_problem.title": {
+    "defaultMessage": "Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?"
+  },
   "document.search.no_match": {
     "defaultMessage": "Keine einzelne Seite in diesem Dokument enthält alle Suchbegriffe."
   },
@@ -646,6 +655,9 @@
   },
   "document.upload.folder-toggle": {
     "defaultMessage": "hier drücken"
+  },
+  "document.upload.info": {
+    "defaultMessage": "If you need to upload a large amount of files (100+) consider {link}."
   },
   "document.upload.notice": {
     "defaultMessage": "The upload is complete. It will take a few moments for the documents to be processed and become searchable."

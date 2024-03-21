@@ -22,7 +22,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
           command: ["aleph", "worker"]
           volumeMounts:
             {{ if .Values.global.google }}
@@ -76,6 +76,7 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: SENTRY_DSN
+                  optional: true
             {{ if .Values.global.google }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/service-account.json
@@ -92,6 +93,10 @@ spec:
                   name: aleph-secrets
                   key: AWS_SECRET_ACCESS_KEY
             {{ end }}
+            {{ if .Values.global.prometheus.enabled }}
+            - name: PROMETHEUS_ENABLED
+              value: "true"
+            {{ end }}
       volumes:
         {{ if .Values.global.google }}
         - name: service-account-aleph
@@ -103,3 +108,36 @@ spec:
             medium: Memory
         - name: tmp-volume
           emptyDir: {}
+---
+{{ if .Values.global.prometheus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-worker
+  labels:
+    app: {{ .Values.global.namingPrefix }}-worker
+spec:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-worker
+  ports:
+    - port: 9100
+      targetPort: 9100
+      protocol: "TCP"
+      name: metrics
+{{ end }}
+---
+{{ if .Values.global.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.namingPrefix }}-worker
+  labels:
+    app: {{ .Values.global.namingPrefix }}-worker
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-worker
+  endpoints:
+    - interval: "30s"
+      port: metrics
+{{ end }}

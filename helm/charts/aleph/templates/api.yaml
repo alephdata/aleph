@@ -24,26 +24,29 @@ spec:
           imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           command:
             - gunicorn
+            - "--config"
+            - "/aleph/gunicorn.conf.py"
             - "--timeout"
             - "3600"
             - "--keep-alive"
             - "60"
             - "--threads"
             - "10"
-            - "--bind"
-            - 0.0.0.0:8000
             - --log-level
             - warning
             - --log-file
             - "-"
             - --access-logfile
             - "-"
-            - aleph.wsgi:app
           volumeMounts:
             {{ if .Values.global.google }}
             - mountPath: /var/secrets/google
               name: service-account-aleph
               readOnly: true
+            {{ end }}
+            {{ if .Values.global.prometheus.enabled }}
+            - mountPath: /run/prometheus
+              name: prometheus-multiproc-dir
             {{ end }}
             - mountPath: /tmp
               name: tmp-volume
@@ -91,6 +94,7 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: SENTRY_DSN
+                  optional: true
             {{ if .Values.global.google }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/service-account.json
@@ -106,6 +110,12 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: AWS_SECRET_ACCESS_KEY
+            {{ end }}
+            {{ if .Values.global.prometheus.enabled }}
+            - name: PROMETHEUS_ENABLED
+              value: "true"
+            - name: PROMETHEUS_MULTIPROC_DIR
+              value: "/run/prometheus"
             {{ end }}
           readinessProbe:
             httpGet:
@@ -127,6 +137,11 @@ spec:
         - name: service-account-aleph
           secret:
             secretName: service-account-aleph
+        {{ end }}
+        {{ if .Values.global.prometheus.enabled }}
+        - name: prometheus-multiproc-dir
+          emptyDir:
+            sizeLimit: 1Gi
         {{ end }}
         - name: tmp-volume
           emptyDir: {}
@@ -160,3 +175,25 @@ spec:
       targetPort: 8000
       protocol: "TCP"
       name: api
+    {{ if .Values.global.prometheus.enabled }}
+    - port: 9100
+      targetPort: 9100
+      protocol: "TCP"
+      name: metrics
+    {{ end }}
+---
+{{ if .Values.global.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.namingPrefix }}-api
+  labels:
+    app: {{ .Values.global.namingPrefix }}-api
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-api
+  endpoints:
+    - interval: "30s"
+      port: metrics
+{{ end }}

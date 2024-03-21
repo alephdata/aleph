@@ -10,6 +10,7 @@ from aleph.index.notifications import notifications_index
 from aleph.index.entities import ENTITY_SOURCE
 from aleph.logic.matching import match_query
 from aleph.logic.notifications import get_role_channels
+from aleph.logic.xref import SCORE_CUTOFF
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.query import Query
@@ -116,7 +117,7 @@ class XrefQuery(Query):
         "score": "_score",
     }
     AUTHZ_FIELD = "match_collection_id"
-    SCORE_CUTOFF = 0.5
+    SCORE_CUTOFF = SCORE_CUTOFF
     SOURCE = XREF_SOURCE
 
     def __init__(self, parser, collection_id=None):

@@ -46,5 +46,7 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     FTM_COMPARE_FREQUENCIES_DIR=/opt/ftm-compare/word-frequencies/ \
     FTM_COMPARE_MODEL=/opt/ftm-compare/model.pkl
 
+RUN mkdir /run/prometheus
+
 # Run the green unicorn
-CMD gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file - aleph.manage:app
+CMD gunicorn --config /aleph/gunicorn.conf.py --workers 5 --log-level info --log-file - aleph.manage:app

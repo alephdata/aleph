@@ -1,3 +1,6 @@
+## 3.15.4 (02-11-2023)
+- Helm chart now makes use of k8s autoscaling/v2 API, requiring Kubernetes 1.23+
+
 ## 3.15.3 (26-10-2023)
 - Reduced docker image size
 - Updated SECURITY.md

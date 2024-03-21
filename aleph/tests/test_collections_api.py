@@ -173,6 +173,39 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.post(url, headers=headers, data=json.dumps(data))
         assert res.status_code == 400, res
 
+    def test_bulk_api_flags(self):
+        _, headers = self.login(is_admin=True)
+        data = json.dumps(
+            [
+                {
+                    "id": "4345800498380953840",
+                    "schema": "LegalEntity",
+                    "properties": {"name": "Barbra W. Vaughn", "phone": "+19046426847"},
+                },
+                {
+                    "id": "7598743983789743598",
+                    "schema": "LegalEntity",
+                    "properties": {"name": "Marion C. Bostic", "phone": "123456"},
+                },
+            ]
+        )
+        url = "/api/2/collections/%s/_bulk?clean=False" % self.col.id
+        res = self.client.post(url, headers=headers, data=data)
+        assert res.status_code == 204, res
+        query = "/api/2/entities?filter:schemata=LegalEntity&filter:collection_id=%s"
+        query = query % self.col.id
+        res = self.client.get(query, headers=headers)
+        assert "phone" in res.json["results"][0]["properties"], res.json
+        assert "phone" in res.json["results"][1]["properties"], res.json
+        url = "/api/2/collections/%s/_bulk" % self.col.id
+        res = self.client.post(url, headers=headers, data=data)
+        assert res.status_code == 204, res
+        query = "/api/2/entities?filter:schemata=LegalEntity&filter:collection_id=%s"
+        query = query % self.col.id
+        res = self.client.get(query, headers=headers)
+        assert "phone" in res.json["results"][0]["properties"], res.json
+        assert "phone" not in res.json["results"][1]["properties"], res.json
+
     def test_bulk_entitysets_api(self):
         role, headers = self.login(is_admin=True)
         authz = Authz.from_role(role)

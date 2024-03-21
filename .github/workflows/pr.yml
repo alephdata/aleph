@@ -1,4 +1,4 @@
-name: Check formatting
+name: Run linter & formatting check
 
 on:
   pull_request:
@@ -18,3 +18,6 @@ jobs:
 
       - name: Check code formatting
         run: make format-check
+
+      - name: Run linter
+        run: make lint

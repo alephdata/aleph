@@ -1,0 +1,110 @@
+{{ if .Values.exporter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.namingPrefix }}-exporter
+  labels:
+    app: {{ .Values.global.namingPrefix }}-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-exporter
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.namingPrefix }}-exporter
+      annotations: {{- toYaml .Values.exporter.podAnnotations | nindent 8 }}
+    spec:
+      nodeSelector: {{- toYaml .Values.exporter.nodeSelector | nindent 8 }}
+      restartPolicy: Always
+      securityContext: {{- toYaml .Values.exporter.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          command:
+            - "gunicorn"
+            - "--bind"
+            - "0.0.0.0:9100"
+            - "--log-level"
+            - "warn"
+            - "--log-file"
+            - "-"
+            - "aleph.metrics.exporter:app"
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+          securityContext:
+            {{- toYaml .Values.exporter.containerSecurityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.exporter.containerResources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.global.commonEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.global.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_SECRET_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: SENTRY_DSN
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9100
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9100
+            initialDelaySeconds: 5
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.namingPrefix }}-exporter
+  labels:
+    app: {{ .Values.global.namingPrefix }}-exporter
+spec:
+  selector:
+    app: {{ .Values.global.namingPrefix }}-exporter
+  ports:
+    - port: 9100
+      targetPort: 9100
+      protocol: "TCP"
+      name: metrics
+{{ end }}
+---
+{{ if and .Values.exporter.enabled .Values.global.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.namingPrefix }}-exporter
+  labels:
+    app: {{ .Values.global.namingPrefix }}-exporter
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.namingPrefix }}-exporter
+  endpoints:
+    - interval: "120s"
+      port: metrics
+{{ end }}
