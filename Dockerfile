@@ -1,12 +1,12 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 
-# build-essential 
+# build-essential
 RUN apt-get -qq -y update \
     && apt-get -qq --no-install-recommends -y install locales \
     ca-certificates postgresql-client libpq-dev curl jq \
     python3-pip python3-icu python3-psycopg2 \
-    python3-lxml python3-crypto \
+    python3-lxml python3-crypto git \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
@@ -49,4 +49,4 @@ ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
 RUN mkdir /run/prometheus
 
 # Run the green unicorn
-CMD gunicorn --config /aleph/gunicorn.conf.py --workers 5 --log-level info --log-file - aleph.manage:app
+CMD gunicorn --config /aleph/gunicorn.conf.py --workers 6 --log-level debug --log-file -

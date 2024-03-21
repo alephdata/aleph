@@ -54,7 +54,7 @@ Using the `write-entities` command, users can load JSON-formatted entities forma
 A typical use might look this:
 
 ```bash
-curl -o md_companies.yml https://raw.githubusercontent.com/alephdata/aleph/master/mappings/md_companies.yml
+curl -o md_companies.yml https://raw.githubusercontent.com/alephdata/aleph/main/mappings/md_companies.yml
 ftm map md_companies.yml | ftm aggregate | alephclient write-entities -f md_companies
 ```
 
@@ -81,7 +81,7 @@ alephclient stream-entities -f us_ofac | ftm validate | ftm export-excel -o OFAC
 The `bulkload` command executes an [entity mapping](/developers/mappings) within the Aleph system. Its only argument is a YAML mapping file:
 
 ```
-curl -o md_companies.yml https://raw.githubusercontent.com/alephdata/aleph/master/mappings/md_companies.yml
+curl -o md_companies.yml https://raw.githubusercontent.com/alephdata/aleph/main/mappings/md_companies.yml
 alephclient bulkload md_companies.yml
 ```
 
