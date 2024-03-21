@@ -6,7 +6,6 @@ from aleph.authz import Authz
 from aleph.tests.util import TestCase, JSON
 from aleph.logic.xref import xref_collection
 from aleph.index.xref import iter_matches
-from aleph.queues import get_stage, OP_XREF
 
 
 class XrefTestCase(TestCase):
@@ -17,7 +16,6 @@ class XrefTestCase(TestCase):
         self.coll_b = self.create_collection(creator=self.user)
         self.coll_c = self.create_collection(creator=self.user)
         db.session.commit()
-        self.stage = get_stage(self.coll_a, OP_XREF, job_id="unit_test")
         self.authz = Authz.from_role(self.user)
 
         _, headers = self.login(foreign_id=self.user.foreign_id)
