@@ -1,0 +1,75 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: How to reset your password
+---
+
+import OCCRPCallout from "@snippets/OCCRPCallout.astro";
+
+# How to reset your password
+
+<p class="lead">Already have an account for OCCRP Aleph but forgot your password? Learn how to reset your password.</p>
+
+<OCCRPCallout />
+
+<Steps>
+  <Step>
+    In order to set a password for your new account, go to [aleph.occrp.org](https://aleph.occrp.org) and click on <AnnotationRef>Sign in</AnnotationRef> in the top right corner of the screen.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/aleph-homepage.png"
+        alt="A screenshot of the Aleph homepage. The page header contains a 'Signin' link at the top-right corner of the screen."
+      />
+      <Annotation
+        x="89%"
+        y="1%"
+        width="9.5%"
+        height="5.5%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Click on <AnnotationRef>Forgot Password?</AnnotationRef>.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/keycloak-signin.png"
+        alt="A screenshot of the 'Signin' page. The page consists of a form with email and password inputs and a link labeled 'Forgot password?'."
+      />
+      <Annotation
+        x="59%"
+        y="55.5%"
+        width="12%"
+        height="5.5%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Enter your email address and click the **Submit** button.
+
+    <Image
+      src="/assets/pages/users/getting-started/account/keycloak-forgot-password.png"
+      alt="A screenshot of the 'Forgot password?' page. The page consists of a form with an email input."
+    />
+
+  </Step>
+
+  <Step>
+    You will receive an email with the subject line **Reset password**. This may take up to 5 minutes. This email contains a link to reset your password.
+  </Step>
+
+  <Step>
+    You can now set a new password. Choose a unique and long password. We recommend that you use a password manager to generate and store passwords.
+
+    <Image
+      src="/assets/pages/users/getting-started/account/keycloak-change-password.png"
+      alt="A screenshot of the 'Update password' page. It has two input fields labeled 'New password' and 'Confirm password'."
+    />
+  </Step>
+
+  <Step>
+    Click the **Submit** button to complete the password reset.
+  </Step>
+</Steps>
