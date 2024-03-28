@@ -1,0 +1,177 @@
+---
+layout: '@layouts/UsersLayout.astro'
+title: How to create an account
+---
+
+import OCCRPCallout from "@snippets/OCCRPCallout.astro";
+
+# How to create an account
+
+<p class="lead">Are you a new user? Learn how to set up an account for OCCRP Aleph.</p>
+
+<OCCRPCallout />
+
+## Fill out the registration form
+
+<Steps>
+  <Step>
+    To create an account for OCCRP Aleph please fill out the [registration form](https://requests.occrp.org/register). Please note that we do not process incomplete submissions.
+  </Step>
+
+  <Step>
+    We manually review new registrations. This may take a few days. Once your registration has been approved, you will receive an email confirmation. After you have received the email confirmation, continue with the steps in the next section.
+  </Step>
+</Steps>
+
+## Request a new password
+
+<Steps>
+  <Step>
+    In order to set a password for your new account, go to [aleph.occrp.org](https://aleph.occrp.org) and click on <AnnotationRef>Sign in</AnnotationRef> in the top right corner of the screen.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/aleph-homepage.png"
+        alt="A screenshot of the Aleph homepage. The page header contains a 'Signin' link at the top-right corner of the screen."
+      />
+      <Annotation
+        x="89%"
+        y="1%"
+        width="9.5%"
+        height="5.5%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Click on <AnnotationRef>Forgot Password?</AnnotationRef>.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/keycloak-signin.png"
+        alt="A screenshot of the 'Signin' page. The page consists of a form with email and password inputs and a link labeled 'Forgot password?'."
+      />
+      <Annotation
+        x="59%"
+        y="55.5%"
+        width="12%"
+        height="5.5%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Enter your email address and click the **Submit** button.
+
+    <Image
+      src="/assets/pages/users/getting-started/account/keycloak-forgot-password.png"
+      alt="A screenshot of the 'Forgot password?' page. The page consists of a form with an email input."
+    />
+
+  </Step>
+
+  <Step>
+    You will receive an email with the subject line **Reset password**. This may take up to 5 minutes. This email contains a link to reset your password. Click on the link and continue with the steps in the next section.
+  </Step>
+</Steps>
+
+## Set up a mobile authenticator (2FA)
+
+<Steps>
+  <Step>
+    To keep your account secure, we require that you set up a mobile authenticator (sometimes also referred to as "2FA"). A mobile authenticator is an app that you install on your smartphone. It is required in addition to your email address and password when you log in. We recommend the **Google Authenticator** app, but you can also use a different app if you prefer. You can download the Google Authenticator app [for iOS from the Apple AppStore](https://apps.apple.com/de/app/google-authenticator/id388497605) or [for Android from Google Play](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2).
+  </Step>
+
+  <Step>
+    In the Google Authenticator app, click on <AnnotationRef>Add a code</AnnotationRef>, then select <AnnotationRef>Scan a QR code</AnnotationRef>.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/google-authenticator-setup.png"
+        alt="Two smartphone screens showing the Google Authenticator app. The first screen has a button labeled 'Add a code'. The second screen has the title 'Add an authenticator code' and two options: 'Scan a QR code' and 'Enter a setup key'."
+      />
+      <Annotation
+        x="15.25%"
+        y="57%"
+        width="25.5%"
+        height="7.75%"
+      />
+      <Annotation
+        x="60%"
+        y="46%"
+        width="13.5%"
+        height="6%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    Use the Google Authenticator app on your phone to scan the <AnnotationRef>QR code</AnnotationRef> displayed on your computer screen.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/keycloak-2fa-setup.png"
+        alt="A screenshot of the 'Mobile Authenticator Setup' page. The page shows a QR code and a form with an input labelled 'One-time code'."
+      />
+      <Annotation
+        x="31.5%"
+        y="42.75%"
+        width="14.25%"
+        height="14.25%"
+      />
+    </Annotations>
+  </Step>
+
+  <Step>
+    The Google Authenticator app on your phone now displays a six-digit code. Enter this code in the <AnnotationRef>One-time code</AnnotationRef> field on your computer and click the **Submit** button to complete the mobile authenticator setup.
+
+    <Annotations>
+      <Image
+        src="/assets/pages/users/getting-started/account/keycloak-2fa-setup.png"
+        alt="A screenshot of the 'Mobile Authenticator Setup' page. The page shows a QR code and a form with an input labelled 'One-time code'."
+      />
+      <Annotation
+        x="29.5%"
+        y="67%"
+        width="41%"
+        height="7.25%"
+      />
+    </Annotations>
+  </Step>
+</Steps>
+
+## Set a password
+
+<Steps>
+  <Step>
+    After setting up a mobile authenticator, you will be prompted to set a password. Choose a unique and long password. We recommend that you use a password manager to generate and store passwords.
+
+    <Image
+      src="/assets/pages/users/getting-started/account/keycloak-set-password.png"
+      alt="A screenshot of the 'Update password' page. It has two input fields labeled 'New password' and 'Confirm password'."
+    />
+  </Step>
+
+  <Step>
+    Confirm your password and click the **Submit** button.
+  </Step>
+</Steps>
+
+## Update account information and verify email address
+
+<Steps>
+  <Step>
+    Enter your first and last name and click on the **Submit** button to complete the setup of your account.
+
+    <Image
+      src="/assets/pages/users/getting-started/account/keycloak-account-information.png"
+      alt="A screenshot of the 'Update account information' page. The page shows a form with three input fields labelled 'Email address', 'First name', and 'Last name'."
+    />
+  </Step>
+
+  <Step>Finally, you will receive another email with the subject line **Verify email**. Click on the link in the email to verify your email address.</Step>
+
+  <Step>
+    That’s it. Your new account is now active and you can start using Aleph.
+  </Step>
+</Steps>

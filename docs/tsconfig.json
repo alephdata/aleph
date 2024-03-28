@@ -4,6 +4,7 @@
     "types": ["astro/client"],
     "baseUrl": ".",
     "paths": {
+      "@snippets/*": ["src/snippets/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"]
     }
