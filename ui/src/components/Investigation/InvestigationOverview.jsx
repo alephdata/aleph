@@ -13,8 +13,7 @@ import { selectCollection, selectNotificationsResult } from 'selectors';
 
 import './InvestigationOverview.scss';
 
-const guidesURLPrefix =
-  'https://docs.alephdata.org/guide/building-out-your-investigation/';
+const guidesURLPrefix = 'https://docs.aleph.occrp.org/users/investigations';
 
 class InvestigationOverview extends React.Component {
   render() {
@@ -92,7 +91,7 @@ class InvestigationOverview extends React.Component {
                 alignText="left"
                 icon="people"
                 target="_blank"
-                href={`${guidesURLPrefix}creating-an-investigation#managing-access-to-your-investigation`}
+                href={`${guidesURLPrefix}/manage-access/`}
               >
                 <FormattedMessage
                   id="investigation.overview.guides.access"
@@ -105,7 +104,7 @@ class InvestigationOverview extends React.Component {
                 alignText="left"
                 icon="upload"
                 target="_blank"
-                href={`${guidesURLPrefix}uploading-documents`}
+                href={`${guidesURLPrefix}/uploading-documents/`}
               >
                 <FormattedMessage
                   id="investigation.overview.guides.documents"
@@ -118,7 +117,7 @@ class InvestigationOverview extends React.Component {
                 alignText="left"
                 icon="graph"
                 target="_blank"
-                href={`${guidesURLPrefix}network-diagrams`}
+                href={`${guidesURLPrefix}/network-diagrams/`}
               >
                 <FormattedMessage
                   id="investigation.overview.guides.diagrams"
@@ -131,7 +130,7 @@ class InvestigationOverview extends React.Component {
                 alignText="left"
                 icon="new-object"
                 target="_blank"
-                href={`${guidesURLPrefix}using-the-table-editor`}
+                href={`${guidesURLPrefix}/entity-editor/`}
               >
                 <FormattedMessage
                   id="investigation.overview.guides.entities"
@@ -144,7 +143,7 @@ class InvestigationOverview extends React.Component {
                 alignText="left"
                 icon="table"
                 target="_blank"
-                href={`${guidesURLPrefix}generating-multiple-entities-from-a-list`}
+                href={`${guidesURLPrefix}/cross-referencing/`}
               >
                 <FormattedMessage
                   id="investigation.overview.guides.mappings"

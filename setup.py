@@ -11,7 +11,7 @@ setup(
     ],
     author="OCCRP Data Team",
     author_email="data@occrp.org",
-    url="https://docs.alephdata.org",
+    url="https://docs.aleph.occrp.org",
     license="MIT",
     packages=find_packages(exclude=["ez_setup", "examples", "test"]),
     namespace_packages=[],

@@ -124,7 +124,7 @@ export class EntityMappingMode extends Component {
               values={{
                 link: (
                   <a
-                    href="https://docs.alephdata.org/developers/mappings"
+                    href="https://docs.aleph.occrp.org/developers/mappings"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
