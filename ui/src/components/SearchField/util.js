@@ -35,7 +35,8 @@ const messages = defineMessages({
   },
   facet_emails: {
     id: 'facet.emails',
-    defaultMessage: '{count, plural, one {E-Mail} other {E-Mails}}',
+    defaultMessage:
+      '{count, plural, one {Email address} other {Email addresses}}',
   },
   facet_phones: {
     id: 'facet.phones',
