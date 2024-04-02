@@ -150,19 +150,6 @@ class InvestigationOverview extends React.Component {
                   defaultMessage="Generating entities from a spreadsheet"
                 />
               </AnchorButton>
-              <AnchorButton
-                minimal
-                intent={Intent.PRIMARY}
-                alignText="left"
-                icon="comparison"
-                target="_blank"
-                href={`${guidesURLPrefix}cross-referencing`}
-              >
-                <FormattedMessage
-                  id="investigation.overview.guides.xref"
-                  defaultMessage="Cross-referencing your data"
-                />
-              </AnchorButton>
             </div>
           </div>
         </div>
