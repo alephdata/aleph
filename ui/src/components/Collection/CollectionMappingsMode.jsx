@@ -40,7 +40,7 @@ class CollectionMappingsMode extends React.Component {
           <p>
             <FormattedMessage
               id="collection.mappings.create_docs_link"
-              defaultMessage="For more information, please refer to the {link}"
+              defaultMessage="For more information, please refer to the {link}."
               values={{
                 link: (
                   <a
@@ -50,7 +50,7 @@ class CollectionMappingsMode extends React.Component {
                   >
                     <FormattedMessage
                       id="mapping.docs.link"
-                      defaultMessage="Aleph entity mapping documentation"
+                      defaultMessage="Aleph user guide"
                     />
                   </a>
                 ),

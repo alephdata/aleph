@@ -120,17 +120,17 @@ export class EntityMappingMode extends Component {
           <p className="text-page-subtitle">
             <FormattedMessage
               id="mapping.info"
-              defaultMessage="Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
+              defaultMessage="Follow the steps below to map items in this investigation to structured entites. For more information, please refer to the {link}."
               values={{
                 link: (
                   <a
-                    href="https://docs.aleph.occrp.org/developers/mappings"
+                    href="https://docs.aleph.occrp.org/users/investigations/cross-referencing/#generating-entities-from-yourspreadsheet"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <FormattedMessage
                       id="mapping.info.link"
-                      defaultMessage="Aleph data mapping documentation"
+                      defaultMessage="Aleph user guide"
                     />
                   </a>
                 ),
