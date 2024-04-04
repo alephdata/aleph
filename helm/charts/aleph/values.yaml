@@ -6,12 +6,18 @@ global:
 
   image:
     repository: ghcr.io/alephdata/aleph
-    tag: "3.15.4"
+    tag: "3.15.5"
     pullPolicy: Always
 
   commonEnv:
     LOG_FORMAT: JSON
     REDIS_URL: redis://aleph-redis-master.default.svc.cluster.local:6379/0
+
+  prometheus:
+    enabled: false
+
+  serviceMonitor:
+    enabled: false
 
   env:
     ALEPH_DEBUG: "false"
@@ -117,7 +123,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.18.4"
+    tag: "3.19.2"
     pullPolicy: Always
 
   containerSecurityContext:
@@ -260,4 +266,31 @@ worker:
       memory: 800Mi
 
   env:
-    WORKER_THREADS: 5
+    WORKER_THREADS: 0
+
+# Aleph Prometheus Exporter - templates/exporter.yaml
+exporter:
+  enabled: false
+
+  podAnnotations: {}
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image:
+    pullPolicy: Always
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  containerResources:
+    requests:
+      memory: 250Mi
+      cpu: 10m
+    limits:
+      memory: 500Mi
