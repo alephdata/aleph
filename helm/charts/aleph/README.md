@@ -37,4 +37,4 @@ Helm chart for Aleph
 | global.env.ELASTICSEARCH_TIMEOUT | string | `"600"` | Default elasticsearch timeout |
 | global.env.REDIS_URL | string | `"redis://aleph-redis-master.default.svc.cluster.local:6379/0"` | Redis url |
 
-Checkout [https://docs.alephdata.org/developers/installation#configuration](https://docs.alephdata.org/developers/installation#configuration) for all available options.
+Checkout [https://docs.aleph.occrp.org/developers/installation#configuration](https://docs.aleph.occrp.org/developers/installation#configuration) for all available options.
