@@ -3,6 +3,7 @@ COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
+BLACK_OPTS=--extend-exclude aleph/migrate
 
 all: build upgrade web
 
@@ -28,13 +29,13 @@ lint-ui:
 	$(UIDOCKER) npm run lint
 
 format:
-	black aleph/
+	black $(BLACK_OPTS) aleph/
 
 format-ui:
 	$(UIDOCKER) npm run format
 
 format-check:
-	black --check aleph/
+	black --check $(BLACK_OPTS) aleph/
 
 format-check-ui:
 	$(UIDOCKER) npm run format:check
