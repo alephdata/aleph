@@ -324,14 +324,14 @@ def entities_update(entityset_id):
       - Entity
     """
     entityset = get_entityset(entityset_id, request.authz.WRITE)
+    collection = entityset.collection
     data = parse_request("EntityUpdate")
     entity_id = data.get("id", make_textid())
+    entity_id = collection.ns.sign(entity_id)
     try:
         entity = get_index_entity(entity_id, request.authz.READ)
-        collection = get_db_collection(entity.get("collection_id"), request.authz.READ)
     except NotFound:
         entity = None
-        collection = entityset.collection
     tag_request(collection_id=entityset.collection_id)
     if entity is None or check_write_entity(entity, request.authz):
         if get_flag("validate", default=False):

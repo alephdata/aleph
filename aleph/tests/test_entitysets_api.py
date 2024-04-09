@@ -12,6 +12,7 @@ from followthemoney.exc import InvalidData
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 from aleph.logic.collections import delete_collection
+from aleph.index.entities import index_entity
 
 log = logging.getLogger(__name__)
 
@@ -181,6 +182,51 @@ class EntitySetAPITest(TestCase):
         data = dict(res.json)
         assert len(res.json["embed"]) > 1000, res.json
         assert res.json["url"] is None
+
+    def test_entityset_entities_upsert_immutable(self):
+        role, headers = self.login(foreign_id="just_a_normal_user")
+        self.grant(collection=self.col, role=role, read=True, write=True)
+
+        data = {
+            "id": "john-doe",
+            "schema": "Person",
+            "properties": {
+                "name": ["John Doe"],
+            },
+        }
+
+        # Create an immutable entity. Immutable entities can only be created by ingest
+        # file or via the bulk API. Entities created by the default entities API are
+        # always considered mutable.
+        res = self.client.post(
+            f"/api/2/collections/{self.col.id}/_bulk",
+            json=[data],
+            query_string={"mutable": False},
+            headers=headers,
+        )
+
+        # Create an entity set
+        res = self.client.post(
+            "/api/2/entitysets",
+            json={
+                "collection_id": str(self.col.id),
+                "label": "Test Diagram",
+                "type": "diagram",
+            },
+            headers=headers,
+        )
+        entityset_id = res.json["id"]
+
+        # Upsert immutable entity
+        data["properties"]["name"] = ["John J. Doe"]
+        url = f"/api/2/entitysets/{entityset_id}/entities"
+        res = self.client.post(url, json=data, headers=headers)
+
+        # The request succeeds and the entity is added to the entity set,
+        # but the entity data hasn’t been updated
+        assert res.status_code == 200
+        assert res.json["properties"]["name"] == ["John Doe"]
+
 
     def test_entity_entitysets(self):
         url = "/api/2/entitysets"
