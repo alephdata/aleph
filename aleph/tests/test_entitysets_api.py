@@ -12,7 +12,6 @@ from followthemoney.exc import InvalidData
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 from aleph.logic.collections import delete_collection
-from aleph.index.entities import index_entity
 
 log = logging.getLogger(__name__)
 
@@ -226,7 +225,6 @@ class EntitySetAPITest(TestCase):
         # but the entity data hasn’t been updated
         assert res.status_code == 200
         assert res.json["properties"]["name"] == ["John Doe"]
-
 
     def test_entity_entitysets(self):
         url = "/api/2/entitysets"

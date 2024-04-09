@@ -717,3 +717,139 @@ class EntitiesApiTestCase(TestCase):
             assert prop == "holder", prop
             assert res["count"] == 1, pformat(res)
             assert len(res["entities"]) == 1, pformat(res)
+
+    def test_expand_filter(self):
+        _, headers = self.login(is_admin=True)
+
+        source = self.create_entity(
+            collection=self.col,
+            data={
+                "id": "source",
+                "schema": "Table",
+                "properties": {
+                    "fileName": "data.csv",
+                },
+            },
+        )
+
+        company = self.create_entity(
+            collection=self.col,
+            data={
+                "id": "company",
+                "schema": "Company",
+                "properties": {
+                    "name": ["ACME, Inc."],
+                },
+            },
+        )
+
+        person = self.create_entity(
+            collection=self.col,
+            data={
+                "id": "person",
+                "schema": "Person",
+                "properties": {
+                    "name": "John Doe",
+                    "proof": [source.id],
+                },
+            },
+        )
+
+        directorship = self.create_entity(
+            collection=self.col,
+            data={
+                "id": "directorship",
+                "schema": "Directorship",
+                "properties": {
+                    "director": [person.id],
+                    "organization": [company.id],
+                },
+            },
+        )
+
+        index_entity(source)
+        index_entity(company)
+        index_entity(person)
+        index_entity(directorship)
+
+        url = f"/api/2/entities/{person.id}/expand"
+        query_string = {"limit": 0}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+        results = sorted(res.json["results"], key=lambda r: r["property"])
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 2
+
+        assert results[0]["property"] == "directorshipDirector"
+        assert results[0]["count"] == 1
+        assert results[1]["property"] == "proof"
+        assert results[1]["count"] == 1
+
+        # Expand entity, but only with `Directorship` entities
+        query_string = {"limit": 0, "filter:schema": "Directorship"}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 1
+
+        assert res.json["results"][0]["property"] == "directorshipDirector"
+        assert res.json["results"][0]["count"] == 1
+
+        # Expand entity, but only with `Table` entities
+        query_string = {"limit": 0, "filter:schema": "Table"}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 1
+
+        assert res.json["results"][0]["property"] == "proof"
+        assert res.json["results"][0]["count"] == 1
+
+        # Expand entity and return adjacent entities
+        query_string = {"limit": 1}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+        results = sorted(res.json["results"], key=lambda r: r["property"])
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 2
+
+        # When limit > 0, we expand edge entities to include adjacent entities. In this
+        # example `Directorship` is the edge entity and the `Company` property is the
+        # adjacent entity.
+        assert results[0]["property"] == "directorshipDirector"
+        assert results[0]["count"] == 1
+        assert len(results[0]["entities"]) == 2
+        entities = sorted(results[0]["entities"], key=lambda e: e["schema"])
+        assert entities[0]["schema"] == "Company"
+        assert entities[1]["schema"] == "Directorship"
+
+        # `proof` is just a normal entity property, i.e. it does not make use of an
+        # intermediary edge property.
+        assert results[1]["property"] == "proof"
+        assert results[1]["count"] == 1
+        assert len(results[1]["entities"]) == 1
+        assert results[1]["entities"][0]["schema"] == "Table"
+
+        # Expand entity and return adjacent entities, but only `Directorship` entities
+        query_string = {"limit": 1, "filter:schema": "Directorship"}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+        results = sorted(res.json["results"], key=lambda r: r["property"])
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 1
+
+        assert results[0]["property"] == "directorshipDirector"
+        assert results[0]["count"] == 1
+        assert len(results[0]["entities"]) == 2
+
+        # Expand entity and return adjacent entities, but only `Table` entities
+        query_string = {"limit": 1, "filter:schema": "Table"}
+        res = self.client.get(url, headers=headers, query_string=query_string)
+        results = sorted(res.json["results"], key=lambda r: r["property"])
+
+        assert res.status_code == 200
+        assert len(res.json["results"]) == 1
+
+        assert results[0]["property"] == "proof"
+        assert results[0]["count"] == 1
+        assert len(results[0]["entities"]) == 1
