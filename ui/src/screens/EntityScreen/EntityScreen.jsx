@@ -108,7 +108,7 @@ class EntityScreen extends Component {
       <ButtonGroup>
         <BookmarkButton entity={entity} />
         <DownloadButton document={entity} />
-        {entity?.collection?.writeable && (
+        {entity?.collection?.writeable && entity?.writeable && (
           <>
             <DialogToggleButton
               buttonProps={{
