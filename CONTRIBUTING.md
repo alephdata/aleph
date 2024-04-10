@@ -16,9 +16,9 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 1. [Read the Aleph Support Policy](https://github.com/alephdata/aleph/blob/main/SUPPORT.md) and understand under what
    rules we provide support to others. If you feel you fall within that
-   group, please [get in touch](https://docs.alephdata.org/get-in-touch).
+   group, please [get in touch](https://docs.aleph.occrp.org/get-in-touch).
 
-2. Make sure you've [read the documentation](https://docs.alephdata.org),
+2. Make sure you've [read the documentation](https://docs.aleph.occrp.org),
    especially the technical troubleshooting sections.
 
 3. Only once you're **certain that the problem you are seeing is a bug**
@@ -30,7 +30,7 @@ If you're trying to install Aleph and need help, or if you are running Aleph and
 
 A great place to start when looking for something to work on is our [project board](https://github.com/orgs/alephdata/projects/10). For experienced Aleph developers feel free to check our the [workboard](https://github.com/orgs/alephdata/projects/10/views/1). If this is your first time working on Aleph then it's probably a good idea to pick [something easy to work on](https://github.com/orgs/alephdata/projects/10/views/10). You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute). Regardless, once you've selected an issue please take a moment to assign it to yourself, this will stop anyone else from working on your issue.
 
-If, after reviewing the list (or selecting an issue to work on) you'd like to reach out and talk to us then [get in touch](https://docs.alephdata.org/get-in-touch).
+If, after reviewing the list (or selecting an issue to work on) you'd like to reach out and talk to us then [get in touch](https://docs.aleph.occrp.org/get-in-touch).
 
 ### Forking and Branching
 

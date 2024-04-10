@@ -17,7 +17,7 @@ md_companies: md_companies.load
 # (balkhash) for aggregation. When loaded from the cache, all partial entities
 # are combined into one JSON object and ready to be indexed.
 #
-# See also: https://docs.alephdata.org/developers/mappings
+# See also: https://docs.aleph.occrp.org/developers/mappings
 %.load:
 	ftm store delete -d $* -o etl
 	ftm map $*.yml | ftm store write -o etl -d $*
@@ -29,7 +29,7 @@ md_companies: md_companies.load
 # This data is already provided in Follow the Money format and can be loaded into the
 # search index straight from a normal curl call.
 #
-# See also: https://docs.alephdata.org/data-commons/sanctions
+# See also: https://docs.aleph.occrp.org/developers/datacommons/#opensanctions
 peps: \
 	everypolitician \
 	eu_meps \
