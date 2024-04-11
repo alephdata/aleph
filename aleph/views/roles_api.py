@@ -279,4 +279,10 @@ def reset_api_key(id):
     db.session.add(role)
     db.session.commit()
     update_role(role)
-    return RoleSerializer.jsonify(role)
+
+    data = RoleSerializer().serialize(role)
+    # The API key usually isn’t included in API responses, but we return it
+    # exactly once after it has been (re-)generated.
+    data["api_key"] = role.api_key
+
+    return jsonify(data)

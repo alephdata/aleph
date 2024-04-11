@@ -164,7 +164,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 "label": self.label,
                 "email": self.email,
                 "locale": self.locale,
-                "api_key": self.api_key,
                 "is_admin": self.is_admin,
                 "is_muted": self.is_muted,
                 "is_tester": self.is_tester,
