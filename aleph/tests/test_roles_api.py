@@ -67,13 +67,59 @@ class RolesApiTestCase(TestCase):
         assert res.json["total"] == 0
         assert len(res.json["results"]) == 0
 
+    def test_view_auth(self):
+        _, other_headers = self.login(foreign_id="other")
+        role, _ = self.login(
+            foreign_id="john",
+            name="John Doe",
+            email="john@example.org",
+        )
+
+        # Unauthenticated request
+        res = self.client.get(f"/api/2/roles/{role.id}")
+        assert res.status_code == 403
+
+        # Authenticated but unauthorized request
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=other_headers)
+        assert res.status_code == 403
+
     def test_view(self):
-        res = self.client.get("/api/2/roles/%s" % self.rolex)
-        assert res.status_code == 404, res
-        role, headers = self.login()
-        res = self.client.get("/api/2/roles/%s" % role.id, headers=headers)
-        assert res.status_code == 200, res
-        # assert res.json['total'] >= 6, res.json
+        role, headers = self.login(
+            foreign_id="john",
+            name="John Doe",
+            email="john@example.org",
+        )
+
+        # Authenticated and authorized request
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+
+        assert set(res.json.keys()) == {
+            "id",
+            "type",
+            "name",
+            "email",
+            "label",
+            "created_at",
+            "updated_at",
+            "is_admin",
+            "is_muted",
+            "is_tester",
+            "has_password",
+            "counts",
+            "shallow",
+            "writeable",
+            "links",
+        }
+
+        assert res.json["id"] == str(role.id)
+        assert res.json["type"] == "user"
+        assert res.json["name"] == "John Doe"
+        assert res.json["email"] == "john@example.org"
+        assert res.json["label"] == "John Doe <j***@example.org>"
+        assert res.json["is_admin"] is False
+        assert res.json["shallow"] is False
+        assert res.json["writeable"] is True
 
     def test_update(self):
         res = self.client.post("/api/2/roles/%s" % self.rolex)
