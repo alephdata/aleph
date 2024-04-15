@@ -21,7 +21,7 @@ export default createReducer(
     [updateRole.COMPLETE]: (state, { id, data }) =>
       objectLoadComplete(state, id, data),
     [resetApiKey.COMPLETE]: (state, { id, data }) =>
-      objectLoadComplete(state, id, data),
+      objectLoadComplete(state, id, { ...data, api_key: null }),
   },
   initialState
 );
