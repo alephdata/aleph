@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { selectCurrentRole } from 'selectors';
+import { selectCurrentRole, selectMetadata } from 'selectors';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ProfileSettings from 'components/Settings/ProfileSettings';
@@ -13,6 +13,7 @@ import './SettingsScreen.scss';
 
 export default function SettingsScreen() {
   const currentRole = useSelector(selectCurrentRole);
+  const metadata = useSelector(selectMetadata);
 
   const intl = useIntl();
   const title = intl.formatMessage({
@@ -33,7 +34,7 @@ export default function SettingsScreen() {
               <ProfileSettings />
               <NotificationSettings />
               <LanguageSettings />
-              <PasswordSettings />
+              {metadata.auth.password_login_uri && <PasswordSettings />}
               <ApiKeySettings />
             </>
           )}
