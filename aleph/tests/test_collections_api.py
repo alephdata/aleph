@@ -104,6 +104,41 @@ class CollectionsApiTestCase(TestCase):
         assert "Collected" in res.json["label"], res.json
         assert validate(res.json, "Collection")
 
+    def test_create_foreign_id(self):
+        role, headers = self.login()
+        _, headers_other = self.login(foreign_id="other")
+        collection = self.create_collection(foreign_id="foo", label="foo", creator=role)
+
+        url = "/api/2/collections"
+        data = {"foreign_id": "foo", "label": "bar"}
+
+        res = self.client.post(url, json=data, headers=headers_other)
+        assert res.status_code == 400
+
+        res = self.client.post(url, json=data, headers=headers)
+        assert res.status_code == 400
+
+        # Sanity check: The collection label is still the original one
+        collection_url = f"/api/2/collections/{collection.id}"
+        res = self.client.get(collection_url, headers=headers)
+        assert res.json["foreign_id"] == "foo"
+        assert res.json["label"] == "foo"
+
+        # After deleting the collection, a new collection with the foreign ID
+        # can be created by the creator of the original collection
+        res = self.client.delete(collection_url, headers=headers)
+        assert res.status_code == 204
+
+        res = self.client.post(url, json=data, headers=headers_other)
+        assert res.status_code == 400
+
+        res = self.client.post(url, json=data, headers=headers)
+        assert res.status_code == 200
+
+        res = self.client.get(collection_url, headers=headers)
+        assert res.json["foreign_id"] == "foo"
+        assert res.json["label"] == "bar"
+
     def test_update_no_label(self):
         _, headers = self.login(is_admin=True)
         url = "/api/2/collections/%s" % self.col.id
