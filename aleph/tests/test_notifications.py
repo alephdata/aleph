@@ -57,6 +57,7 @@ class NotificationsTestCase(TestCase):
         label = "My collection"
         collection = self.create_collection(label=label)
         db.session.commit()
+        update_role(role)
 
         data = self.get_indexed_notification(
             role=role,
@@ -110,6 +111,7 @@ class NotificationsTestCase(TestCase):
         )
         collection = self.create_collection(label="My collection")
         db.session.commit()
+        update_role(role)
 
         data = self.get_indexed_notification(
             role=role,
