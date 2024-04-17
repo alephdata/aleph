@@ -1,4 +1,5 @@
 import logging
+from html import escape
 from lxml import html
 from lxml.etree import tostring
 from lxml.html.clean import Cleaner
@@ -65,6 +66,10 @@ def sanitize_html(html_text, base_url, encoding=None):
 
 def html_link(text, link):
     text = text or "[untitled]"
+    text = escape(text)
+
     if link is None:
-        return "<span class='reference'>%s</span>" % text
-    return "<a class='reference' href='%s'>%s</a>" % (link, text)
+        return f"<span class='reference'>{text}</span>"
+
+    link = escape(link)
+    return f"<a class='reference' href='{link}'>{text}</a>"
