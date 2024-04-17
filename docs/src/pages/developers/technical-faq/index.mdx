@@ -121,7 +121,15 @@ If you're encountering this issue in production mode, try to check the worker lo
 
 ## How can I make imports run faster?
 
-Please see the [Scaling Workers](/developers/installation.mdx#scaling-workers) section in the installation guide.
+The included `docker-compose` configuration for production mode has no understanding of how powerful your server is. It will run just a single instance of the services involved in data imports, `worker` and `ingest-file`. While by default, both workers will create as many threads as Python's [multiprocessing.cpu_count()](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count) reports, this may not achieve the speed you desire.
+
+The easiest way to speed up processing is to scale up those services. Make a shell script to start docker-compose with a set of arguments like this:
+
+```bash
+docker-compose up --scale ingest-file=8 --scale worker=4
+```
+
+The number of `ingest-file` and `worker` processes could be the number of CPUs in your machine. Since performance and scaling depends a lot on types of workloads you are seeing you may need to review and adjust these settings accordingly. Please see the [Scaling Workers](/developers/installation.mdx#scaling-workers) section in the installation guide.
 
 ## ElasticSearch will not start. What's wrong?
 
