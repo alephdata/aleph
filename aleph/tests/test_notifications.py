@@ -75,7 +75,7 @@ class NotificationsTestCase(TestCase):
         )
         assert (
             html
-            == "<span class='reference'>John Doe <j*******@example.org></span> created <a class='reference' href='http://aleph.ui/datasets/1'>My collection</a>"
+            == "<span class='reference'>John Doe &lt;j*******@example.org&gt;</span> created <a class='reference' href='http://aleph.ui/datasets/1'>My collection</a>"
         )
 
     def test_render_notification_link_reference(self):
@@ -104,7 +104,10 @@ class NotificationsTestCase(TestCase):
         )
 
     def test_render_notification_escape_plain_reference(self):
-        role = self.create_user(name="<a href='https://example.org'>John Doe</a>")
+        role = self.create_user(
+            name="<a href='https://example.org'>John Doe</a>",
+            email="john.doe@example.org",
+        )
         collection = self.create_collection(label="My collection")
         db.session.commit()
 
@@ -120,12 +123,11 @@ class NotificationsTestCase(TestCase):
         html = rendered["html"]
         doc = document_fromstring(html)
         links = list(doc.iterlinks())
-        user = doc.find("span[@class='reference']").text_content()
+        user = doc.find(".//span[@class='reference']").text_content()
 
         assert len(links) == 1
         assert links[0][0].text_content() == "My collection"
 
         assert (
-            user
-            == "<a href='https://example.org'>John Doe</a> <b***********@example.com>"
+            user == "<a href='https://example.org'>John Doe</a> <j*******@example.org>"
         )
