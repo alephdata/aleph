@@ -221,9 +221,15 @@ class Settings:
         self.FEEDBACK_URL_TIMELINES = env.get("ALEPH_FEEDBACK_URL_TIMELINES", None)
 
         ###############################################################################
-        # Additional configurations
+        # Instrumentation and observability
         self.SENTRY_DSN = env.get("SENTRY_DSN", None)
         self.SENTRY_ENVIRONMENT = env.get("SENTRY_ENVIRONMENT", "")
+
+        self.PROMETHEUS_ENABLED = env.to_bool("PROMETHEUS_ENABLED", False)
+        self.PROMETHEUS_PORT = env.to_int("PROMETHEUS_PORT", 9100)
+
+        ###############################################################################
+        # Additional configuration
         string_prefix = env.get("ALEPH_STRING_CONFIG_PREFIX")
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
         if string_prefix or json_prefix:

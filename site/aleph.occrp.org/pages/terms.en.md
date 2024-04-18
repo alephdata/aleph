@@ -42,7 +42,7 @@ We may transfer our rights and obligations under these terms to another organisa
 
 Anyone is welcome to browse Aleph, either anonymously, or by creating a user account, which will provide access to certain data and materials otherwise unavailable. You can create a user account by visiting [secure.occrp.org](https://secure.occrp.org). 
 
-If you are a professional journalist, you may apply to become a ‘[Friend of OCCRP](https://forms.gle/Dm9eLbecFNKnAtRGA)’, in order to gain wider access to the data and materials available on Aleph. 
+If you are a professional journalist, you may apply to become a ‘[Friend of OCCRP](https://form.asana.com/?k=hsYmAKHX1ViTzUoe410y8Q&d=24418422500834)’, in order to gain wider access to the data and materials available on Aleph. 
 
 When you choose a user identification code, password or any other piece of information as part of our security procedures, you must treat such information as confidential. You must not disclose it to any third party. We have the right to disable any user identification code or password at any time, or where in our opinion you have failed to comply with any of the provisions of these terms of use. If you know or suspect that anyone other than you knows your user identification code or password, you must promptly notify us using the contact details set out at the beginning of these terms of use.
 

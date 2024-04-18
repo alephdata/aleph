@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aleph-ingress
+  namespace: default
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: kubernetes.docker.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: aleph-ui
+                port: 
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service: 
+                name: aleph-api
+                port: 
+                  number: 8000
