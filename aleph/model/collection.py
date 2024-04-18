@@ -237,6 +237,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def create(cls, data, authz, created_at=None):
         foreign_id = data.get("foreign_id") or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
+
+        # A collection with the given foreign ID already exists
+        if collection and not collection.deleted_at:
+            raise ValueError("Invalid foreign_id")
+
+        # A deleted collection with the foreign ID already exists, but the deleted
+        # collection was created by a different role
+        if collection and collection.creator_id != authz.role.id:
+            raise ValueError("Invalid foreign_id")
+
         if collection is None:
             collection = cls()
             collection.created_at = created_at

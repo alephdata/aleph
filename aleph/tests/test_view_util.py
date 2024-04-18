@@ -3,7 +3,7 @@ import json
 from lxml.html import document_fromstring
 from werkzeug.exceptions import BadRequest
 
-from aleph.logic.html import sanitize_html
+from aleph.logic.html import sanitize_html, html_link
 from aleph.views.util import get_url_path, validate
 from aleph.tests.util import TestCase
 
@@ -62,4 +62,48 @@ class ViewUtilTest(TestCase):
         self.assertEqual(
             ctx.exception.response.get_json().get("errors"),
             {"": "'password' is a required property; 'code' is a required property"},
+        )
+
+    def test_html_link(self):
+        assert (
+            html_link(text=None, link=None)
+            == "<span class='reference'>[untitled]</span>"
+        )
+
+        assert (
+            html_link(text="Hello World", link=None)
+            == "<span class='reference'>Hello World</span>"
+        )
+
+        assert (
+            html_link(text=None, link="https://example.org")
+            == "<a class='reference' href='https://example.org'>[untitled]</a>"
+        )
+
+        assert (
+            html_link(text="Hello World", link="https://example.org")
+            == "<a class='reference' href='https://example.org'>Hello World</a>"
+        )
+
+    def test_html_link_text_escaping(self):
+        assert (
+            html_link(text="<a href='https://example.org'>Hello World</a>", link=None)
+            == "<span class='reference'>&lt;a href=&#x27;https://example.org&#x27;&gt;Hello World&lt;/a&gt;</span>"
+        )
+
+        assert (
+            html_link(
+                text="</a><a href='https://example.org'>Hello World",
+                link="https://occrp.org",
+            )
+            == "<a class='reference' href='https://occrp.org'>&lt;/a&gt;&lt;a href=&#x27;https://example.org&#x27;&gt;Hello World</a>"
+        )
+
+    def test_html_link_attribute_escaping(self):
+        assert (
+            html_link(
+                text="Hello World",
+                link="'></a><a href='https://example.org'>Hello World</a><a href='",
+            )
+            == "<a class='reference' href='&#x27;&gt;&lt;/a&gt;&lt;a href=&#x27;https://example.org&#x27;&gt;Hello World&lt;/a&gt;&lt;a href=&#x27;'>Hello World</a>"
         )
