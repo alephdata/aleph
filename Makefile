@@ -75,7 +75,7 @@ build-ui:
 	docker build -t ghcr.io/alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-e2e:
-	$(COMPOSE_E2E) build
+	$(COMPOSE_E2E) build --build-arg PLAYWRIGHT_VERSION=$(shell awk -F'==' '/^playwright==/ { print $$2 }' e2e/requirements.txt)
 
 build-full: build build-ui build-e2e
 
@@ -114,6 +114,7 @@ e2e: services-e2e e2e/test-results
 	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
 
 e2e-local-setup: dev
+	python3 -m pip install -q -r e2e/requirements.txt
 	playwright install
 
 e2e-local:
