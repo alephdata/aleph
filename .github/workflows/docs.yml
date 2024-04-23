@@ -6,6 +6,8 @@ on:
       - "docs/**"
     branches:
       - "**"
+    pr:
+      - "docs/**"
   workflow_dispatch: {}
 
 jobs:
