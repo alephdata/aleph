@@ -35,16 +35,16 @@ Really enthusiastic users of Aleph might want to add these settings to their she
 
 ## Importing all files from a directory
 
-The `crawldir` command crawls through a given directory recursively and uploads all the files and directories inside it to a collection. The external identifier \(foreign ID\) of the target collection needs to be passed to the command with `--foreign-id` option. If a collection with the given foreign ID does not exist, it will be created. The `path`argument needs to be a valid path to a file or directory:
+The `crawldir` command crawls through a given directory recursively and uploads all the files and directories inside it to a collection. The external identifier \(foreign ID\) of the target collection needs to be passed to the command with `--foreign_id` option. If a collection with the given foreign ID does not exist, it will be created. The `path`argument needs to be a valid path to a file or directory:
 
 ```bash
-alephclient crawldir --foreign-id wikileaks-cable /Users/sunu/data/cable
+alephclient crawldir --foreign_id wikileaks-cable /Users/sunu/data/cable
 ```
 
 When Aleph imports data, it performs optical character recognition \(OCR\) on images contained in the material. This works better when Aleph already has an idea of the language the documents might use. This can be specified with the `--language` option, which expects a 3-letter ISO 639 language code. It can be specified multiple times, for when the directory contains files in more than one language.
 
 ```bash
-alephclient crawldir --language rus --foreign-id russian_leak /Users/sunu/data/russian_leak
+alephclient crawldir --language rus --foreign_id russian_leak /Users/sunu/data/russian_leak
 ```
 
 ## Writing a stream of entities to a collection
