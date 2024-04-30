@@ -29,6 +29,11 @@ in touch:
 
 * https://docs.aleph.occrp.org/get-in-touch
 
+Aleph Development
+---------------
+If you're looking to get involved with the development of Aleph, please check the `CONTRIBUTING.md` file for details on how to get started.
+
+
 Release process
 ---------------
 
