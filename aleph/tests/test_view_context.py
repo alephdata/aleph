@@ -7,7 +7,7 @@ class ViewContextTest(TestCase):
         super().setUp()
         self.role = self.create_user(email="john.doe@example.org")
         self.role.set_password("12345678")
-        self.role.reset_api_key()
+        self.role.generate_api_key()
 
         self.other_role = self.create_user(
             foreign_id="other",

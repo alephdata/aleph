@@ -5,7 +5,7 @@ export {
   fetchRole,
   suggestRoles,
   updateRole,
-  resetApiKey,
+  generateApiKey,
 } from './roleActions';
 export { createAlert, deleteAlert, queryAlerts } from './alertActions';
 export { queryNotifications } from './notificationActions';

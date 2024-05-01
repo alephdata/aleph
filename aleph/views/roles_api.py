@@ -246,8 +246,8 @@ def update(id):
     return RoleSerializer.jsonify(role)
 
 
-@blueprint.route("/api/2/roles/<int:id>/reset_api_key", methods=["POST"])
-def reset_api_key(id):
+@blueprint.route("/api/2/roles/<int:id>/generate_api_key", methods=["POST"])
+def generate_api_key(id):
     """Reset the role’s API key.
     ---
     post:
@@ -275,7 +275,7 @@ def reset_api_key(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))
 
-    role.reset_api_key()
+    role.generate_api_key()
     db.session.add(role)
     db.session.commit()
     update_role(role)
