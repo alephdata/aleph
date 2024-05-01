@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent, Dialog, DialogBody, Card } from '@blueprintjs/core';
 import { ClipboardInput } from 'components/common';
 import { selectCurrentRole } from 'selectors';
-import { resetApiKey } from 'actions';
+import { generateApiKey as generateApiKeyAction } from 'actions';
 import { FormattedMessage } from 'react-intl';
 
 const GENERATE_MESSAGE = (
@@ -79,7 +79,7 @@ export default function ApiKeySettings() {
   const [{ state, apiKey }, dispatch] = useReducer(reducer, { state: 'START' });
 
   const generateApiKey = async () => {
-    const { data } = await reduxDispatch(resetApiKey(role));
+    const { data } = await reduxDispatch(generateApiKeyAction(role));
     return data.api_key;
   };
 

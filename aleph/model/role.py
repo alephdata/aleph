@@ -154,7 +154,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         digest = self.password_digest or ""
         return check_password_hash(digest, secret)
 
-    def reset_api_key(self):
+    def generate_api_key(self):
         """Resets the API key"""
         self.api_key = make_token()
 

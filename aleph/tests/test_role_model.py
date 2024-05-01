@@ -80,7 +80,7 @@ class RoleModelTest(TestCase):
 
     def test_role_by_api_key(self):
         role_ = self.create_user()
-        role_.reset_api_key()
+        role_.generate_api_key()
         db.session.add(role_)
         db.session.commit()
         assert role_.api_key is not None

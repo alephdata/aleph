@@ -129,7 +129,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 200
         assert res.json["has_api_key"] is False
 
-        role.reset_api_key()
+        role.generate_api_key()
         db.session.add(role)
         db.session.commit()
 
@@ -246,8 +246,8 @@ class RolesApiTestCase(TestCase):
 
         self.assertEqual(res.status_code, 409)
 
-    def test_reset_api_key_auth(self):
-        url = f"/api/2/roles/{self.rolex.id}/reset_api_key"
+    def test_generate_api_key_auth(self):
+        url = f"/api/2/roles/{self.rolex.id}/generate_api_key"
 
         # Anonymous request
         res = self.client.post(url)
@@ -258,12 +258,12 @@ class RolesApiTestCase(TestCase):
         res = self.client.post(url, headers=headers)
         self.assertEqual(res.status_code, 403)
 
-    def test_reset_api_key(self):
+    def test_generate_api_key(self):
         role, headers = self.login()
         assert role.api_key is None
 
         # Generate initial API key for new user
-        url = f"/api/2/roles/{role.id}/reset_api_key"
+        url = f"/api/2/roles/{role.id}/generate_api_key"
         res = self.client.post(url, headers=headers)
         new_key = res.json["api_key"]
         assert res.status_code == 200
@@ -277,7 +277,7 @@ class RolesApiTestCase(TestCase):
         old_key = new_key
 
         # Regenerate API key
-        url = f"/api/2/roles/{role.id}/reset_api_key"
+        url = f"/api/2/roles/{role.id}/generate_api_key"
         res = self.client.post(url, headers=headers)
         new_key = res.json["api_key"]
 
