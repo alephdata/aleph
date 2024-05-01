@@ -198,7 +198,7 @@ function ApiKeyDialog({
         <p>
           <FormattedMessage
             id="settings.api_key.success"
-            defaultMessage="Your new API key has been generated. Be sure to copy your new key below. You won’t be able to view it again later."
+            defaultMessage="Your new API key has been generated. Be sure to copy it below as you won’t be able to view it again later. We recommend storing your API key in a password manager. Do not share your API key with anyone else."
           />
         </p>
         <p>
