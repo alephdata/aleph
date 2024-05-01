@@ -69,6 +69,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return self.password_digest is not None
 
     @property
+    def has_api_key(self):
+        return self.api_key is not None
+
+    @property
     def is_public(self):
         return self.id in self.public_roles()
 
@@ -168,6 +172,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 "is_muted": self.is_muted,
                 "is_tester": self.is_tester,
                 "has_password": self.has_password,
+                "has_api_key": self.has_api_key,
                 # 'notified_at': self.notified_at
             }
         )
