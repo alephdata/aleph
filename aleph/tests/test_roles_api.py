@@ -106,6 +106,7 @@ class RolesApiTestCase(TestCase):
             "is_muted",
             "is_tester",
             "has_password",
+            "has_api_key",
             "counts",
             "shallow",
             "writeable",
@@ -120,6 +121,21 @@ class RolesApiTestCase(TestCase):
         assert res.json["is_admin"] is False
         assert res.json["shallow"] is False
         assert res.json["writeable"] is True
+
+    def test_view_api_key(self):
+        role, headers = self.login(foreign_id="john", email="john.doe@example.org")
+
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+        assert res.json["has_api_key"] is False
+
+        role.reset_api_key()
+        db.session.add(role)
+        db.session.commit()
+
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+        assert res.json["has_api_key"] is True
 
     def test_update(self):
         res = self.client.post("/api/2/roles/%s" % self.rolex)
