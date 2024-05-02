@@ -294,6 +294,32 @@ class RolesApiTestCase(TestCase):
         res = self.client.get(url, headers={"Authorization": new_key})
         self.assertEqual(res.status_code, 200)
 
+    def test_generate_api_key_notification(self):
+        role, headers = self.login(email="john.doe@example.org")
+        url = f"/api/2/roles/{role.id}/generate_api_key"
+
+        with mail.record_messages() as outbox:
+            assert len(outbox) == 0
+            self.client.post(url, headers=headers)
+            assert len(outbox) == 1
+
+            msg = outbox[0]
+            assert msg.recipients == ["john.doe@example.org"]
+            assert msg.subject == "[Aleph] API key generated"
+            assert "An API key has been generated for your account" in msg.body
+            assert "An API key has been generated for your account" in msg.html
+
+        with mail.record_messages() as outbox:
+            assert len(outbox) == 0
+            self.client.post(url, headers=headers)
+            assert len(outbox) == 1
+
+            msg = outbox[0]
+            assert msg.recipients == ["john.doe@example.org"]
+            assert msg.subject == "[Aleph] API key regenerated"
+            assert "Your API key has been regenerated" in msg.body
+            assert "Your API key has been regenerated" in msg.html
+
     def test_new_roles_no_api_key(self):
         SETTINGS.PASSWORD_LOGIN = True
         email = "john.doe@example.org"
