@@ -1,7 +1,7 @@
 import logging
 from banal import ensure_list
 from flask_babel import gettext
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
 from sqlalchemy import func
@@ -11,6 +11,7 @@ from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
+from aleph.logic.mail import email_role
 from aleph.util import is_auto_admin
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
@@ -274,6 +275,13 @@ def generate_api_key(id):
     """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))
+
+    event = "regenerated" if role.has_api_key else "generated"
+    params = {"role": role, "event": event}
+    plain = render_template("email/api_key_generated.txt", **params)
+    html = render_template("email/api_key_generated.html", **params)
+    subject = f"API key {event}"
+    email_role(role, subject, html=html, plain=plain)
 
     role.generate_api_key()
     db.session.add(role)
