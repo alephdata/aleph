@@ -214,9 +214,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_blocked = False
             role.notified_at = datetime.utcnow()
 
-        if role.api_key is None:
-            role.api_key = make_token()
-
         if email is not None:
             role.email = email
 
