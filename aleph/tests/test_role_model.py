@@ -77,3 +77,24 @@ class RoleModelTest(TestCase):
         # Remove the user from the group
         group_role.remove_role(user_role)
         assert user_role not in group_role.roles
+
+    def test_role_by_api_key(self):
+        role_ = self.create_user()
+        role_.reset_api_key()
+        db.session.add(role_)
+        db.session.commit()
+        assert role_.api_key is not None
+
+        role = Role.by_api_key(role_.api_key)
+        assert role is not None
+        assert role.id == role_.id
+
+    def test_role_by_api_key_empty(self):
+        role_ = self.create_user()
+        assert role_.api_key is None
+
+        role = Role.by_api_key(None)
+        assert role is None
+
+        role = Role.by_api_key("")
+        assert role is None

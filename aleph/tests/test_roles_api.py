@@ -244,18 +244,50 @@ class RolesApiTestCase(TestCase):
 
     def test_reset_api_key(self):
         role, headers = self.login()
-        old_key = role.api_key
+        assert role.api_key is None
 
+        # Generate initial API key for new user
+        url = f"/api/2/roles/{role.id}/reset_api_key"
+        res = self.client.post(url, headers=headers)
+        new_key = res.json["api_key"]
+        assert res.status_code == 200
+        assert new_key is not None
+
+        # The new API key can be used for authentication
+        url = f"/api/2/roles/{role.id}"
+        res = self.client.get(url, headers={"Authorization": new_key})
+        assert res.status_code == 200
+
+        old_key = new_key
+
+        # Regenerate API key
         url = f"/api/2/roles/{role.id}/reset_api_key"
         res = self.client.post(url, headers=headers)
         new_key = res.json["api_key"]
 
-        self.assertEqual(res.status_code, 200)
-        self.assertNotEqual(old_key, new_key)
+        assert res.status_code == 200
+        assert new_key is not None
+        assert new_key != old_key
 
+        # Old key cannot be used for authentication anymore
         url = f"/api/2/roles/{role.id}"
         res = self.client.get(url, headers={"Authorization": old_key})
         self.assertEqual(res.status_code, 403)
 
+        # New key can be used for authentication
         res = self.client.get(url, headers={"Authorization": new_key})
         self.assertEqual(res.status_code, 200)
+
+    def test_new_roles_no_api_key(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        email = "john.doe@example.org"
+        data = {
+            "password": "12345678",
+            "code": Role.SIGNATURE.dumps(email),
+        }
+        res = self.client.post("/api/2/roles", data=data)
+        assert res.status_code == 201
+
+        role = Role.by_email(email)
+        assert role is not None
+        assert role.api_key is None
