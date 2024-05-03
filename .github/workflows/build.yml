@@ -53,7 +53,7 @@ jobs:
           docker push ghcr.io/alephdata/aleph:${ALEPH_TAG};
 
       - name: Tag latest image
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && !startsWith(github.ref, 'refs/tags/test-')
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && !startsWith(github.ref, 'refs/tags/test-') && !contains(github.ref, 'rc')
         run: |
           docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:latest;
           docker push ghcr.io/alephdata/aleph:latest;
