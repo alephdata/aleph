@@ -15,7 +15,16 @@ down_revision = "c52a1f469ac7"
 
 def upgrade():
     op.add_column("role", sa.Column("api_key_expires_at", sa.DateTime()))
+    op.add_column(
+        "role", sa.Column("api_key_expiration_notification_sent", sa.Integer())
+    )
+    op.create_index(
+        index_name="ix_role_api_key_expires_at",
+        table_name="role",
+        columns=["api_key_expires_at"],
+    )
 
 
 def downgrade():
     op.drop_column("role", "api_key_expires_at")
+    op.drop_column("role", "api_key_expiration_notification_sent")

@@ -1,0 +1,11 @@
+{% extends "email/layout.txt" %}
+
+{% block content -%}
+{% trans expires_at=(expires_at | datetimeformat) -%}
+Your API key will expire in 7 days, on {{expires_at}} UTC.
+{%- endtrans %}
+
+{% trans -%}
+If you do not use the Aleph API you can ignore this email. If you use the Aleph API you will need to regenerate your API key ({{settings_url}}) and update any applications or scripts that use your API key.
+{%- endtrans %}
+{%- endblock %}
