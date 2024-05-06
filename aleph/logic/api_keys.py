@@ -89,3 +89,20 @@ def _send_api_key_expiration_notification(
 
     query.update({Role.api_key_expiration_notification_sent: days})
     db.session.commit()
+
+
+def reset_api_key_expiration():
+    now = datetime.datetime.utcnow().replace(microsecond=0)
+    expires_at = now + datetime.timedelta(days=API_KEY_EXPIRATION_DAYS)
+
+    query = Role.all_users()
+    query = query.yield_per(500)
+    query = query.where(
+        and_(
+            Role.api_key != None,  # noqa: E711
+            Role.api_key_expires_at == None,  # noqa: E711
+        )
+    )
+
+    query.update({Role.api_key_expires_at: expires_at})
+    db.session.commit()
