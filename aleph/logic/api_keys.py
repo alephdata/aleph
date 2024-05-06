@@ -1,8 +1,13 @@
+import datetime
 from flask import render_template
 
 from aleph.core import db
+from aleph.model.common import make_token
 from aleph.logic.mail import email_role
 from aleph.logic.roles import update_role
+
+# Number of days after which API keys expire
+API_KEY_EXPIRATION_DAYS = 90
 
 
 def generate_user_api_key(role):
@@ -13,7 +18,10 @@ def generate_user_api_key(role):
     subject = f"API key {event}"
     email_role(role, subject, html=html, plain=plain)
 
-    role.generate_api_key()
+    now = datetime.datetime.utcnow()
+    role.api_key = make_token()
+    role.api_key_expires_at = now + datetime.timedelta(days=API_KEY_EXPIRATION_DAYS)
+
     db.session.add(role)
     db.session.commit()
     update_role(role)

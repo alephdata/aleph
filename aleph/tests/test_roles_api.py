@@ -129,9 +129,11 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 200
         assert res.json["has_api_key"] is False
 
-        role.generate_api_key()
-        db.session.add(role)
-        db.session.commit()
+        res = self.client.post(
+            f"/api/2/roles/{role.id}/generate_api_key",
+            headers=headers,
+        )
+        assert res.status_code == 200
 
         res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
         assert res.status_code == 200
