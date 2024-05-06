@@ -1,3 +1,5 @@
+import time_machine
+
 from aleph.core import db
 from aleph.model import Role
 from aleph.tests.factories.models import RoleFactory
@@ -98,3 +100,34 @@ class RoleModelTest(TestCase):
 
         role = Role.by_api_key("")
         assert role is None
+
+    def test_role_by_api_key_expired(self):
+        role_ = self.create_user()
+
+        with time_machine.travel("2024-01-01T00:00:00Z"):
+            role_.generate_api_key()
+            db.session.add(role_)
+            db.session.commit()
+
+        with time_machine.travel("2024-03-30T23:59:59Z"):
+            print(role_.api_key_expires_at)
+            role = Role.by_api_key(role_.api_key)
+            assert role is not None
+            assert role.id == role_.id
+
+        with time_machine.travel("2024-03-31T00:00:00Z"):
+            role = Role.by_api_key(role_.api_key)
+            assert role is None
+
+    def test_role_by_api_key_legacy_without_expiration(self):
+        # Ensure that legacy API keys that were created without an expiration
+        # date continue to work.
+        role_ = self.create_user()
+        role_.generate_api_key()
+        role_.api_key_expires_at = None
+        db.session.add(role_)
+        db.session.commit()
+
+        role = Role.by_api_key(role_.api_key)
+        assert role is not None
+        assert role.id == role_.id
