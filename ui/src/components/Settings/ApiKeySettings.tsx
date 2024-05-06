@@ -4,7 +4,8 @@ import { Button, Intent, Dialog, DialogBody, Card } from '@blueprintjs/core';
 import { ClipboardInput } from 'components/common';
 import { selectCurrentRole } from 'selectors';
 import { generateApiKey as generateApiKeyAction } from 'actions';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl';
+import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
 const GENERATE_MESSAGE = (
   <FormattedMessage
@@ -103,6 +104,10 @@ export default function ApiKeySettings() {
     dispatch({ type: 'CLOSE' });
   };
 
+  const expiresAt =
+    role.api_key_expires_at &&
+    convertUTCDateToLocalDate(new Date(role.api_key_expires_at));
+
   return (
     <>
       <Card elevation={1}>
@@ -114,10 +119,23 @@ export default function ApiKeySettings() {
         </h4>
 
         <p>
+          {expiresAt && (
+            <FormattedMessage
+              id="settings.api_key.text_expiration"
+              defaultMessage="Your API key will expire on {date}, {time}."
+              values={{
+                date: <FormattedDate value={expiresAt} />,
+                time: <FormattedTime value={expiresAt} />,
+              }}
+            />
+          )}
+        </p>
+
+        <p>
           {role.has_api_key ? (
             <FormattedMessage
               id="settings.api_key.text_regenerate"
-              defaultMessage="Your API key is required to access the Aleph API. When you regenerate your API key, your old key will stop working."
+              defaultMessage="When you regenerate your API key, your old key will stop working."
             />
           ) : (
             <FormattedMessage

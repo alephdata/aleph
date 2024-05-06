@@ -1,5 +1,7 @@
 import json
 
+import time_machine
+
 from aleph.core import db, mail
 from aleph.settings import SETTINGS
 from aleph.model import Role
@@ -128,16 +130,19 @@ class RolesApiTestCase(TestCase):
         res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
         assert res.status_code == 200
         assert res.json["has_api_key"] is False
+        assert "api_key_expires_at" not in res.json
 
-        res = self.client.post(
-            f"/api/2/roles/{role.id}/generate_api_key",
-            headers=headers,
-        )
-        assert res.status_code == 200
+        with time_machine.travel("2024-01-01T00:00:00Z"):
+            res = self.client.post(
+                f"/api/2/roles/{role.id}/generate_api_key",
+                headers=headers,
+            )
+            assert res.status_code == 200
 
         res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
         assert res.status_code == 200
         assert res.json["has_api_key"] is True
+        assert res.json["api_key_expires_at"] == "2024-03-31T00:00:00"
 
     def test_update(self):
         res = self.client.post("/api/2/roles/%s" % self.rolex)
