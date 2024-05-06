@@ -171,6 +171,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 "is_tester": self.is_tester,
                 "has_password": self.has_password,
                 "has_api_key": self.has_api_key,
+                "api_key_expires_at": self.api_key_expires_at,
                 # 'notified_at': self.notified_at
             }
         )

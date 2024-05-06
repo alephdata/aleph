@@ -119,6 +119,7 @@ class RoleSerializer(Serializer):
         if self.nested or not obj["writeable"]:
             obj.pop("has_password", None)
             obj.pop("has_api_key", None)
+            obj.pop("api_key_expires_at", None)
             obj.pop("is_admin", None)
             obj.pop("is_muted", None)
             obj.pop("is_tester", None)

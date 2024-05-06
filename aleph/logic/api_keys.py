@@ -25,7 +25,7 @@ def generate_user_api_key(role):
     subject = f"API key {event}"
     email_role(role, subject, html=html, plain=plain)
 
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.utcnow().replace(microsecond=0)
     role.api_key = make_token()
     role.api_key_expires_at = now + datetime.timedelta(days=API_KEY_EXPIRATION_DAYS)
     role.api_key_expiration_notification_sent = None
