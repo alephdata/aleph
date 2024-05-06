@@ -11,9 +11,19 @@ updates:
         patterns:
           - "bump2version"
           - "black"
-          - "playwright"
           - "pytest*"
           - "ruff"
+
+  - package-ecosystem: pip
+    directory: "/e2e"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 99
+    target-branch: develop
+    groups:
+      e2e-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: "/ui"
@@ -45,13 +55,6 @@ updates:
 
   - package-ecosystem: docker
     directory: "/ui"
-    schedule:
-      interval: monthly
-    open-pull-requests-limit: 99
-    target-branch: develop
-
-  - package-ecosystem: docker
-    directory: "/e2e"
     schedule:
       interval: monthly
     open-pull-requests-limit: 99

@@ -36,13 +36,13 @@ class AppItem extends PureComponent {
           className={Classes.TEXT_DISABLED}
           icon="code"
           text={message}
-          href="https://docs.alephdata.org"
+          href="https://docs.aleph.occrp.org"
         />
         <MenuItem
           className={Classes.TEXT_DISABLED}
           icon="code"
           text={ftmMessage}
-          href="https://docs.alephdata.org/developers/followthemoney"
+          href="https://followthemoney.tech"
         />
       </>
     );

@@ -3,12 +3,14 @@ COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
+BLACK_OPTS=--extend-exclude aleph/migrate
 
 all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		postgres elasticsearch ingest-file
+		postgres elasticsearch ingest-file  \
+    redis rabbitmq
 
 shell: services
 	$(APPDOCKER) /bin/bash
@@ -28,13 +30,13 @@ lint-ui:
 	$(UIDOCKER) npm run lint
 
 format:
-	black aleph/
+	black $(BLACK_OPTS) aleph/
 
 format-ui:
 	$(UIDOCKER) npm run format
 
 format-check:
-	black --check aleph/
+	black --check $(BLACK_OPTS) aleph/
 
 format-check-ui:
 	$(UIDOCKER) npm run format:check
@@ -75,7 +77,7 @@ build-ui:
 	docker build -t ghcr.io/alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-e2e:
-	$(COMPOSE_E2E) build
+	$(COMPOSE_E2E) build --build-arg PLAYWRIGHT_VERSION=$(shell awk -F'==' '/^playwright==/ { print $$2 }' e2e/requirements.txt)
 
 build-full: build build-ui build-e2e
 
@@ -111,9 +113,10 @@ e2e: services-e2e e2e/test-results
 	$(COMPOSE_E2E) run --rm app aleph upgrade
 	$(COMPOSE_E2E) run --rm app aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
 	$(COMPOSE_E2E) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm --build-arg PLAYWRIGHT_VERSION=$(shell awk -F'==' '/^playwright==/ { print $$2 }' e2e/requirements.txt) e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
 
 e2e-local-setup: dev
+	python3 -m pip install -q -r e2e/requirements.txt
 	playwright install
 
 e2e-local:

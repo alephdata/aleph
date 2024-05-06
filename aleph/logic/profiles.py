@@ -13,6 +13,7 @@ APIs designed for entities have to be re-implemented for profiles.
 
 Outside of its own collection, any entity can be linked to any number of profiles.
 """
+
 import logging
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased

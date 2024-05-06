@@ -15,9 +15,8 @@ companies) against watchlists, e.g. from prior research or public datasets.
 For further details on the software, how to use it, install it or manage data
 imports, please check the documentation at: 
 
-* https://docs.alephdata.org
-* Installation: https://docs.alephdata.org/developers/installation
-* Changes: https://docs.alephdata.org/developers/changelog
+* https://docs.aleph.occrp.org
+* Installation: https://docs.aleph.occrp.org/developers/installation
 
 
 Support
@@ -28,7 +27,7 @@ If you're interested in participating in this process, please read the support
 policy (`SUPPORT.md`), the contribution rules (`CONTRIBUTING.md`), and the code of conduct (`CODE_OF_CONDUCT.md`) and then get
 in touch:
 
-* https://docs.alephdata.org/get-in-touch
+* https://docs.aleph.occrp.org/get-in-touch
 
 Release process
 ---------------

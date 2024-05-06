@@ -26,9 +26,11 @@ class ProfileTestCase(TestCase):
         assert profile_t1.id == profile_t2.id, (profile_t1, profile_t2)
         assert len(profile_t2.items().all()) == 3, profile_t2
         assert all(
-            e.judgement == Judgement.POSITIVE
-            if e.entity_id.startswith("a")
-            else Judgement.NEGATIVE
+            (
+                e.judgement == Judgement.POSITIVE
+                if e.entity_id.startswith("a")
+                else Judgement.NEGATIVE
+            )
             for e in profile_t2.items()
         )
 

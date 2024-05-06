@@ -6,8 +6,11 @@ from aleph.tests.util import TestCase
 from aleph.settings import SETTINGS
 from aleph.metrics.collectors import DatabaseCollector, QueuesCollector
 from aleph.model import Role, Bookmark, EntitySet
-from aleph.core import db
-from aleph.queues import get_stage
+from aleph.core import db, kv
+from aleph.queues import dataset_from_collection
+from aleph.util import random_id
+
+from servicelayer.taskqueue import Dataset
 
 
 class MetricsTestCase(TestCase):
@@ -151,10 +154,10 @@ class MetricsTestCase(TestCase):
         assert count is None, count
 
         col = self.create_collection()
-        entity = self.create_entity(data={"schema": "Company"}, collection=col)
 
-        stage = get_stage(collection=col, stage="index")
-        stage.queue({"entity_id": entity.id})
+        task_id = random_id()
+        dataset = Dataset(conn=kv, name=dataset_from_collection(col))
+        dataset.add_task(task_id, "index")
 
         reg.collect()
         count = reg.get_sample_value(
@@ -163,8 +166,7 @@ class MetricsTestCase(TestCase):
         assert count == 1, count
 
         # Fetch tasks from queue and mark them as running
-        tasks = stage.get_tasks(limit=1)
-        assert len(tasks) == 1, tasks
+        dataset.checkout_task(task_id, "index")
 
         reg.collect()
         count = reg.get_sample_value(

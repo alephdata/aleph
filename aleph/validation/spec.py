@@ -58,7 +58,7 @@ spec_info = {
 
 spec_docs = {
     "description": "Find out more about Aleph, a suite of data analysis tools for investigators.",  # noqa
-    "url": "https://docs.alephdata.org/",
+    "url": "https://docs.aleph.occrp.org/",
 }
 
 spec_tags = [
