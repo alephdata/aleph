@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -11,6 +11,7 @@ from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
 from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
+API_KEY_EXPIRATION_DAYS = 90
 
 
 membership = db.Table(
@@ -52,6 +53,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     email = db.Column(db.Unicode, nullable=True)
     type = db.Column(db.Enum(*TYPES, name="role_type"), nullable=False)
     api_key = db.Column(db.Unicode, nullable=True)
+    api_key_expires_at = db.Column(db.DateTime, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_muted = db.Column(db.Boolean, nullable=False, default=False)
     is_tester = db.Column(db.Boolean, nullable=False, default=False)
@@ -156,7 +158,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def generate_api_key(self):
         """Resets the API key"""
+        now = datetime.now(timezone.utc)
+
         self.api_key = make_token()
+        self.api_key_expires_at = now + timedelta(days=API_KEY_EXPIRATION_DAYS)
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -200,6 +205,12 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return None
         q = cls.all()
         q = q.filter_by(api_key=api_key)
+        q = q.filter(
+            or_(
+                cls.api_key_expires_at == None,  # noqa: E711
+                datetime.utcnow() < cls.api_key_expires_at,
+            )
+        )
         q = q.filter(cls.type == cls.USER)
         q = q.filter(cls.is_blocked == False)  # noqa
         return q.first()
