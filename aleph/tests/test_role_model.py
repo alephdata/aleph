@@ -1,3 +1,4 @@
+import datetime
 import time_machine
 
 from aleph.core import db
@@ -82,12 +83,11 @@ class RoleModelTest(TestCase):
 
     def test_role_by_api_key(self):
         role_ = self.create_user()
-        role_.generate_api_key()
+        role_.api_key = "1234567890"
         db.session.add(role_)
         db.session.commit()
-        assert role_.api_key is not None
 
-        role = Role.by_api_key(role_.api_key)
+        role = Role.by_api_key("1234567890")
         assert role is not None
         assert role.id == role_.id
 
@@ -103,11 +103,10 @@ class RoleModelTest(TestCase):
 
     def test_role_by_api_key_expired(self):
         role_ = self.create_user()
-
-        with time_machine.travel("2024-01-01T00:00:00Z"):
-            role_.generate_api_key()
-            db.session.add(role_)
-            db.session.commit()
+        role_.api_key = "1234567890"
+        role_.api_key_expires_at = datetime.datetime(2024, 3, 31, 0, 0, 0)
+        db.session.add(role_)
+        db.session.commit()
 
         with time_machine.travel("2024-03-30T23:59:59Z"):
             print(role_.api_key_expires_at)
@@ -123,11 +122,11 @@ class RoleModelTest(TestCase):
         # Ensure that legacy API keys that were created without an expiration
         # date continue to work.
         role_ = self.create_user()
-        role_.generate_api_key()
+        role_.api_key = "1234567890"
         role_.api_key_expires_at = None
         db.session.add(role_)
         db.session.commit()
 
-        role = Role.by_api_key(role_.api_key)
+        role = Role.by_api_key("1234567890")
         assert role is not None
         assert role.id == role_.id

@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -7,11 +7,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db
 from aleph.settings import SETTINGS
-from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
+from aleph.model.common import SoftDeleteModel, IdModel, query_like
 from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
-API_KEY_EXPIRATION_DAYS = 90
 
 
 membership = db.Table(
@@ -155,13 +154,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         """
         digest = self.password_digest or ""
         return check_password_hash(digest, secret)
-
-    def generate_api_key(self):
-        """Resets the API key"""
-        now = datetime.now(timezone.utc)
-
-        self.api_key = make_token()
-        self.api_key_expires_at = now + timedelta(days=API_KEY_EXPIRATION_DAYS)
 
     def to_dict(self):
         data = self.to_dict_dates()
