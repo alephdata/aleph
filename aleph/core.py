@@ -46,7 +46,13 @@ prometheus = PrometheusExtension()
 def determine_locale():
     try:
         options = SETTINGS.UI_LANGUAGES
-        locale = request.accept_languages.best_match(options)
+        if str(request.accept_languages) == "*":
+            # For #3704: if any language is fine pick the default one
+            locale = SETTINGS.DEFAULT_LANGUAGE
+        else:
+            locale = request.accept_languages.best_match(
+                options, default=SETTINGS.DEFAULT_LANGUAGE
+            )
         locale = locale or str(babel.default_locale)
     except RuntimeError:
         locale = str(babel.default_locale)
