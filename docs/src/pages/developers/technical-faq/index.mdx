@@ -88,15 +88,15 @@ In **production mode,** make sure you perform a backup of the main database and 
 Then, make sure you are using the latest `docker-compose.yml` file. You can do this by checking out the source repo, but really you just need that one file \(and your config in `aleph.env`\). Then, run:
 
 ```bash
-docker-compose pull --parallel
+docker compose pull --parallel
 # Terminate the existing install (enter downtime!):
-docker-compose down
-docker-compose up -d redis postgres elasticsearch
+docker compose down
+docker compose up -d redis postgres elasticsearch
 # Wait a minute or so while services boot up...
 # Run upgrade:
-docker-compose run --rm shell aleph upgrade
+docker compose run --rm shell aleph upgrade
 # Restart prod system:
-docker-compose up -d
+docker compose up -d
 ```
 
 ## I get an error about missing tables. How do I fix it?
@@ -121,12 +121,12 @@ If you're encountering this issue in production mode, try to check the worker lo
 
 ## How can I make imports run faster?
 
-The included `docker-compose` configuration for production mode has no understanding of how powerful your server is. It will run just a single instance of the services involved in data imports, `worker` and `ingest-file`. While by default, both workers will create as many threads as Python's [multiprocessing.cpu_count()](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count) reports, this may not achieve the speed you desire.
+The included `docker compose` configuration for production mode has no understanding of how powerful your server is. It will run just a single instance of the services involved in data imports, `worker` and `ingest-file`. While by default, both workers will create as many threads as Python's [multiprocessing.cpu_count()](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count) reports, this may not achieve the speed you desire.
 
-The easiest way to speed up processing is to scale up those services. Make a shell script to start docker-compose with a set of arguments like this:
+The easiest way to speed up processing is to scale up those services. Make a shell script to start `docker compose` with a set of arguments like this:
 
 ```bash
-docker-compose up --scale ingest-file=8 --scale worker=4
+docker compose up --scale ingest-file=8 --scale worker=4
 ```
 
 The number of `ingest-file` and `worker` processes could be the number of CPUs in your machine. Since performance and scaling depends a lot on types of workloads you are seeing you may need to review and adjust these settings accordingly. Please see the [Scaling Workers](/developers/installation/#scaling-workers) section in the installation guide.
@@ -138,7 +138,7 @@ Most problems arise when the ElasticSearch container doesn't startup properly, o
 You can find out specifically what went wrong with ES by consulting the logs for that container:
 
 ```
-docker-compose -f docker-compose.dev.yml logs elasticsearch
+docker compose -f docker-compose.dev.yml logs elasticsearch
 ```
 
 You will almost certainly need to run the following before you build:
@@ -185,7 +185,7 @@ make stop
 In production mode, the equivalent command is:
 
 ```bash
-docker-compose down --remove-orphans
+docker compose down --remove-orphans
 ```
 
 ## Something else is wrong, what do I do?
@@ -275,7 +275,7 @@ All of this said, we'd really love to hear about any experiments regarding this.
 You can find out specifically what went wrong with the `ingest-file` container by consulting the logs for that container:
 
 ```bash
-docker-compose -f docker-compose.dev.yml logs ingest-file
+docker compose -f docker-compose.dev.yml logs ingest-file
 ```
 
 If `LibreOffice` keeps crashing on startup with `Fatal exception: Signal 11`, [AppArmor](https://help.ubuntu.com/community/AppArmor) can be one possible cause. `AppArmor` running on the host machine could be blocking `LibreOffice` from starting up. Try disabling the `AppArmor` profiles related to `LibreOffice` by following these instructions: [https://askubuntu.com/a/1214363](https://askubuntu.com/a/1214363)
