@@ -1,0 +1,18 @@
+name: Post release topic on Discourse
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/discourse-topic-github-release-action@v1.0.1
+      with:
+        discourse-api-key: ${{ secrets.DISCOURSE_RELEASES_API_KEY }}
+        discourse-base-url: https://aleph.discourse.group/
+        discourse-category: 5
+        discourse-tags:
+          release
+          aleph
