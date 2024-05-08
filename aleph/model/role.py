@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -199,10 +199,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return None
         q = cls.all()
         q = q.filter_by(api_key=api_key)
+        utcnow = datetime.now(timezone.utc)
         q = q.filter(
             or_(
                 cls.api_key_expires_at == None,  # noqa: E711
-                datetime.utcnow() < cls.api_key_expires_at,
+                utcnow < cls.api_key_expires_at,
             )
         )
         q = q.filter(cls.type == cls.USER)
