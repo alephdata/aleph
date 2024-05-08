@@ -1,5 +1,6 @@
 import datetime
 
+import structlog
 from flask import render_template
 from sqlalchemy import and_, or_, func
 
@@ -15,6 +16,8 @@ API_KEY_EXPIRATION_DAYS = 90
 
 # Number of days before an API key expires
 API_KEY_EXPIRES_SOON_DAYS = 7
+
+log = structlog.get_logger(__name__)
 
 
 def generate_user_api_key(role):
@@ -78,13 +81,15 @@ def _send_api_key_expiration_notification(
     )
 
     for role in query:
+        expires_at = role.api_key_expires_at
         params = {
             "role": role,
-            "expires_at": role.api_key_expires_at,
+            "expires_at": expires_at,
             "settings_url": ui_url("settings"),
         }
         plain = render_template(plain_template, **params)
         html = render_template(html_template, **params)
+        log.info(f"Sending API key expiration notification: {role} at {expires_at}")
         email_role(role, subject, html=html, plain=plain)
 
     query.update({Role.api_key_expiration_notification_sent: days})
