@@ -200,12 +200,16 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         q = cls.all()
         q = q.filter_by(api_key=api_key)
         utcnow = datetime.now(timezone.utc)
+
+        # TODO: Exclude API keys without expiration date after deadline
+        # See https://github.com/alephdata/aleph/issues/3729
         q = q.filter(
             or_(
                 cls.api_key_expires_at == None,  # noqa: E711
                 utcnow < cls.api_key_expires_at,
             )
         )
+
         q = q.filter(cls.type == cls.USER)
         q = q.filter(cls.is_blocked == False)  # noqa
         return q.first()
