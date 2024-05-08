@@ -18,6 +18,7 @@ from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.logic.alerts import check_alerts
+from aleph.logic.api_keys import send_api_key_expiration_notifications
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.notifications import generate_digest, delete_old_notifications
@@ -152,6 +153,7 @@ class AlephWorker(Worker):
                     update_roles()
                     check_alerts()
                     generate_digest()
+                    send_api_key_expiration_notifications()
                     delete_expired_exports()
                     delete_old_notifications()
 
