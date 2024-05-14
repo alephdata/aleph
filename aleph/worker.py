@@ -98,7 +98,14 @@ OPERATIONS = {
 
 
 class AlephWorker(Worker):
-    def __init__(self, queues, conn=None, num_threads=sls.WORKER_THREADS, version=None):
+    def __init__(
+        self,
+        queues,
+        conn=None,
+        num_threads=sls.WORKER_THREADS,
+        version=None,
+        prefetch_count=SETTINGS.PREFETCH_COUNT,
+    ):
         super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
@@ -109,6 +116,7 @@ class AlephWorker(Worker):
         self.indexing_batch_last_updated = defaultdict(lambda: None)
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
+        self.prefetch_count = prefetch_count
 
     def on_message(self, channel, method, properties, body, args):
         connection = args[0]
@@ -216,5 +224,6 @@ def get_worker(num_threads=1):
         queues=[sls.QUEUE_ALEPH, sls.QUEUE_INDEX],
         conn=kv,
         num_threads=num_threads or 1,
+        prefetch_count=SETTINGS.PREFETCH_COUNT,
         version=__version__,
     )

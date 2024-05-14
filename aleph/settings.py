@@ -207,6 +207,7 @@ class Settings:
         self.INDEXING_BATCH_SIZE = env.to_int(
             "ALEPH_INDEXING_BATCH_SIZE", 100
         )  # run indexing jobs in a batch of 100 for better performance
+        self.PREFETCH_COUNT = env.to_int("ALEPH_PREFETCH_COUNT", 100)
 
         # TODO, document
         self.RABBITMQ_MAX_PRIORITY = env.to_int("ALEPH_RABBITMQ_MAX_PRIORITY", 10)
