@@ -30,12 +30,12 @@ in touch:
 * https://docs.aleph.occrp.org/get-in-touch
 
 Aleph Development
----------------
+-----------------
+
 If you're looking to get involved with the development of Aleph, please check the `CONTRIBUTING.md` file for details on how to get started.
 
 ⚠️ **IMPORTANT** ⚠️ 
 The default branch in this GitHub repository is "develop". The develop branch contains unreleased, unstable code. For stable releases, please check out the `list of releases <https://github.com/alephdata/aleph/releases>`_ or switch to the `main branch <https://github.com/alephdata/aleph/tree/main>`_.
-----
 
 Release process
 ---------------
