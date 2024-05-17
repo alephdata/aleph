@@ -185,7 +185,6 @@ export class PdfViewer extends Component {
         )}
         <div key={pdfUrl}>
           <Document
-            renderAnnotations
             file={pdfUrl}
             loading={loading}
             onLoadSuccess={this.onDocumentLoad}
@@ -202,6 +201,7 @@ export class PdfViewer extends Component {
                 rotate={effectiveRotation}
                 loading={loading}
                 onLoadSuccess={this.onPageLoad}
+                renderAnnotationLayer={false}
               />
             )}
           </Document>
