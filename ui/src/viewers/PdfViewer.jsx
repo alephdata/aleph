@@ -17,6 +17,7 @@ import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 const messages = defineMessages({
   placeholder: {
