@@ -100,13 +100,13 @@ OPERATIONS = {
 class AlephWorker(Worker):
     def __init__(
         self,
-        queues,
+        stages,
         conn=None,
         num_threads=sls.WORKER_THREADS,
         version=None,
         prefetch_count=SETTINGS.RABBITMQ_PREFETCH_COUNT,
     ):
-        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
+        super().__init__(stages, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
         # special treatment for indexing jobs - indexing jobs need to be batched
@@ -221,7 +221,7 @@ def get_worker(num_threads=1):
     operations = tuple(OPERATIONS.keys())
     log.info(f"Worker active, stages: {operations}")
     return AlephWorker(
-        queues=[sls.QUEUE_ALEPH, sls.QUEUE_INDEX],
+        stages=operations,
         conn=kv,
         num_threads=num_threads or 1,
         prefetch_count=SETTINGS.RABBITMQ_PREFETCH_COUNT,

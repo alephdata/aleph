@@ -10,7 +10,6 @@ from servicelayer.taskqueue import (
     Dataset,
     NO_COLLECTION,
     PREFIX,
-    get_routing_key,
 )
 from servicelayer import settings as sls
 
@@ -78,8 +77,8 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     try:
         channel = rabbitmq_conn.channel()
         channel.basic_publish(
-            exchange="",
-            routing_key=get_routing_key(stage),
+            exchange="amq.topic",
+            routing_key=stage,
             body=json.dumps(body),
             properties=pika.BasicProperties(
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE, priority=priority
