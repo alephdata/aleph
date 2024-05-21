@@ -16,18 +16,6 @@ from aleph.core import kv, db, create_app
 from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
-from aleph.queues import (
-    OP_INDEX,
-    OP_REINDEX,
-    OP_REINGEST,
-    OP_XREF,
-    OP_EXPORT_SEARCH,
-    OP_EXPORT_XREF,
-    OP_LOAD_MAPPING,
-    OP_FLUSH_MAPPING,
-    OP_UPDATE_ENTITY,
-    OP_PRUNE_ENTITY,
-)
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.collections import compute_collections, refresh_collection
@@ -84,16 +72,20 @@ def op_flush_mapping(collection, task):
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
 OPERATIONS = {
-    OP_INDEX: op_index,
-    OP_XREF: lambda c, _: xref_collection(c),
-    OP_REINGEST: op_reingest,
-    OP_REINDEX: op_reindex,
-    OP_LOAD_MAPPING: lambda c, t: load_mapping(c, **t.payload),
-    OP_FLUSH_MAPPING: op_flush_mapping,
-    OP_EXPORT_SEARCH: lambda _, t: export_entities(**t.payload),
-    OP_EXPORT_XREF: lambda _, t: export_matches(**t.payload),
-    OP_UPDATE_ENTITY: lambda c, t: update_entity(c, job_id=t.job_id, **t.payload),
-    OP_PRUNE_ENTITY: lambda c, t: prune_entity(c, job_id=t.job_id, **t.payload),
+    SETTINGS.STAGE_INDEX: op_index,
+    SETTINGS.STAGE_XREF: lambda c, _: xref_collection(c),
+    SETTINGS.STAGE_REINGEST: op_reingest,
+    SETTINGS.STAGE_REINDEX: op_reindex,
+    SETTINGS.STAGE_LOAD_MAPPING: lambda c, t: load_mapping(c, **t.payload),
+    SETTINGS.STAGE_FLUSH_MAPPING: op_flush_mapping,
+    SETTINGS.STAGE_EXPORT_SEARCH: lambda _, t: export_entities(**t.payload),
+    SETTINGS.STAGE_EXPORT_XREF: lambda _, t: export_matches(**t.payload),
+    SETTINGS.STAGE_UPDATE_ENTITY: lambda c, t: update_entity(
+        c, job_id=t.job_id, **t.payload
+    ),
+    SETTINGS.STAGE_PRUNE_ENTITY: lambda c, t: prune_entity(
+        c, job_id=t.job_id, **t.payload
+    ),
 }
 
 
@@ -104,7 +96,7 @@ class AlephWorker(Worker):
         conn=None,
         num_threads=sls.WORKER_THREADS,
         version=None,
-        prefetch_count=SETTINGS.RABBITMQ_PREFETCH_COUNT,
+        prefetch_count_mapping=defaultdict(lambda: 1),
     ):
         super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
@@ -116,7 +108,7 @@ class AlephWorker(Worker):
         self.indexing_batch_last_updated = defaultdict(lambda: None)
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
-        self.prefetch_count = prefetch_count
+        self.prefetch_count_mapping = prefetch_count_mapping
 
     def on_message(self, channel, method, properties, body, args):
         connection = args[0]
@@ -167,7 +159,7 @@ class AlephWorker(Worker):
             collection = Collection.by_id(task.collection_id, deleted=True)
 
         # Task batching for index operation
-        if task.operation == OP_INDEX:
+        if task.operation == SETTINGS.STAGE_INDEX:
             with indexing_lock:
                 batch = self.indexing_batches[task.collection_id]
                 batch.append(task)
@@ -218,12 +210,27 @@ class AlephWorker(Worker):
 
 
 def get_worker(num_threads=1):
-    operations = tuple(OPERATIONS.keys())
-    log.info(f"Worker active, stages: {operations}")
+    qos_mapping = {
+        SETTINGS.STAGE_INDEX: SETTINGS.RABBITMQ_QOS_INDEX_QUEUE,
+        SETTINGS.STAGE_XREF: SETTINGS.RABBITMQ_QOS_XREF_QUEUE,
+        SETTINGS.STAGE_REINGEST: SETTINGS.RABBITMQ_QOS_REINGEST_QUEUE,
+        SETTINGS.STAGE_REINDEX: SETTINGS.RABBITMQ_QOS_REINDEX_QUEUE,
+        SETTINGS.STAGE_LOAD_MAPPING: SETTINGS.RABBITMQ_QOS_LOAD_MAPPING_QUEUE,
+        SETTINGS.STAGE_FLUSH_MAPPING: SETTINGS.RABBITMQ_QOS_FLUSH_MAPPING_QUEUE,
+        SETTINGS.STAGE_EXPORT_SEARCH: SETTINGS.RABBITMQ_QOS_EXPORT_SEARCH_QUEUE,
+        SETTINGS.STAGE_EXPORT_XREF: SETTINGS.RABBITMQ_QOS_EXPORT_XREF_QUEUE,
+        SETTINGS.STAGE_UPDATE_ENTITY: SETTINGS.RABBITMQ_QOS_UPDATE_ENTITY_QUEUE,
+        SETTINGS.STAGE_PRUNE_ENTITY: SETTINGS.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE,
+    }
+
+    aleph_worker_queues = qos_mapping.keys()
+
+    log.info(f"Worker active, stages: {aleph_worker_queues}")
+
     return AlephWorker(
-        queues=[sls.QUEUE_ALEPH, sls.QUEUE_INDEX],
+        queues=aleph_worker_queues,
         conn=kv,
         num_threads=num_threads or 1,
-        prefetch_count=SETTINGS.RABBITMQ_PREFETCH_COUNT,
         version=__version__,
+        prefetch_count_mapping=qos_mapping,
     )

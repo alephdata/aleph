@@ -1,4 +1,5 @@
 import logging
+from aleph.settings import SETTINGS
 from banal import ensure_list
 from flask_babel import gettext
 from flask import Blueprint, request, redirect
@@ -11,7 +12,6 @@ from aleph.logic.entitysets import create_entityset, refresh_entityset
 from aleph.logic.entitysets import save_entityset_item
 from aleph.logic.diagrams import publish_diagram
 from aleph.logic.entities import upsert_entity, validate_entity, check_write_entity
-from aleph.queues import queue_task, OP_UPDATE_ENTITY
 from aleph.search import EntitySetItemsQuery, SearchQueryParser
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.context import tag_request
@@ -434,7 +434,9 @@ def item_update(entityset_id):
     item = save_entityset_item(entityset, collection, entity_id, **data)
     db.session.commit()
     job_id = get_session_id()
-    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity_id)
+    queue_task(
+        collection, SETTINGS.STAGE_UPDATE_ENTITY, job_id=job_id, entity_id=entity_id
+    )
     if item is not None:
         # The entityset is needed to check if the item is writeable in the serializer:
         item = item.to_dict(entityset=entityset)
