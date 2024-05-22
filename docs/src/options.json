@@ -29,7 +29,13 @@
         {
           "title": "Getting started",
           "items": [
-            { "slug": "/users/getting-started/account" },
+            {
+              "slug": "/users/getting-started/account",
+              "children": [
+                { "slug": "/users/getting-started/account/create" },
+                { "slug": "/users/getting-started/account/reset-password" }
+              ]
+            },
             { "slug": "/users/getting-started/key-terms" },
             { "slug": "/users/getting-started/homepage" }
           ]
