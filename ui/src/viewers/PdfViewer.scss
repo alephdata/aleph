@@ -91,7 +91,8 @@ $pagesWidth: 150px;
         padding: 0;
       }
 
-      .page > canvas {
+      .react-pdf__Page__canvas,
+      .react-pdf__Page__textContent {
         /* center each page */
         margin: auto;
         padding-bottom: $aleph-grid-size;
