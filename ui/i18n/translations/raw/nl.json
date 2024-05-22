@@ -1,252 +1,252 @@
 {
   "alert.manager.description": {
-    "defaultMessage": "You will receive notifications when a new result is added that matches any of the alerts you have set up below."
+    "defaultMessage": "U krijgt een bericht wanneer een nieuw resultaat wordt toegevoegd dat overeenkomst met een van de waarschuwingen die u hieronder aanmaakt."
   },
   "alerts.add_placeholder": {
-    "defaultMessage": "Create a new tracking alert..."
+    "defaultMessage": "Maak een nieuwe volgwaarschuwing aan..."
   },
   "alerts.delete": {
-    "defaultMessage": "Remove alert"
+    "defaultMessage": "Verwijder waarschuwing"
   },
   "alerts.heading": {
-    "defaultMessage": "Manage your alerts"
+    "defaultMessage": "Bewerk uw waarschuwingen"
   },
   "alerts.no_alerts": {
-    "defaultMessage": "You are not tracking any searches"
+    "defaultMessage": "U hebt geen volgwaarschuwingen ingesteld"
   },
   "alerts.save": {
-    "defaultMessage": "Update"
+    "defaultMessage": "Bijwerken"
   },
   "alerts.title": {
-    "defaultMessage": "Tracking alerts"
+    "defaultMessage": "Volgwaarschuwingen"
   },
   "alerts.track": {
-    "defaultMessage": "Track"
+    "defaultMessage": "Volgen"
   },
   "auth.bad_request": {
-    "defaultMessage": "The Server did not accept your input"
+    "defaultMessage": "De server weigerde uw invoer"
   },
   "auth.server_error": {
-    "defaultMessage": "Server error"
+    "defaultMessage": "Serverfout"
   },
   "auth.success": {
-    "defaultMessage": "Success"
+    "defaultMessage": "Succes"
   },
   "auth.unauthorized": {
-    "defaultMessage": "Not authorized"
+    "defaultMessage": "Niet bevoegd"
   },
   "auth.unknown_error": {
-    "defaultMessage": "An unexpected error occured"
+    "defaultMessage": "Er ging onverwacht iets fout"
   },
   "case.choose.name": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Titel"
   },
   "case.choose.summary": {
-    "defaultMessage": "Summary"
+    "defaultMessage": "Samenvatting"
   },
   "case.chose.languages": {
-    "defaultMessage": "Languages"
+    "defaultMessage": "Talen"
   },
   "case.create.login": {
-    "defaultMessage": "You must sign in to upload your own data."
+    "defaultMessage": "Meld u aan om gegevens te uploaden"
   },
   "case.description": {
-    "defaultMessage": "Investigations let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+    "defaultMessage": "Onderzoeken laten u documenten uploaden en delen, die bij een verhaal horen. U kunt PDFs, email-archieven en spreadsheets uploaden, waar dan gemakkelijk in gezocht en gebladerd kan worden."
   },
   "case.label_placeholder": {
-    "defaultMessage": "Untitled investigation"
+    "defaultMessage": "Naamloos onderzoek"
   },
   "case.language_placeholder": {
-    "defaultMessage": "Select languages"
+    "defaultMessage": "Selecteer talen"
   },
   "case.languages.helper": {
-    "defaultMessage": "Used for optical text recognition in non-Latin alphabets."
+    "defaultMessage": "Gebruikt voor tekstherkenning (OCR) van niet-Latijnse tekens."
   },
   "case.save": {
-    "defaultMessage": "Save"
+    "defaultMessage": "Opslaan"
   },
   "case.share.with": {
-    "defaultMessage": "Share with"
+    "defaultMessage": "Deel met"
   },
   "case.summary": {
-    "defaultMessage": "A brief description of the investigation"
+    "defaultMessage": "Een korte omschrijving van het onderzoek"
   },
   "case.title": {
-    "defaultMessage": "Create an investigation"
+    "defaultMessage": "Start een nieuw onderzoek"
   },
   "case.users": {
-    "defaultMessage": "Search users"
+    "defaultMessage": "Zoek gebruikers"
   },
   "cases.create": {
-    "defaultMessage": "New investigation"
+    "defaultMessage": "Nieuw onderzoek"
   },
   "cases.empty": {
-    "defaultMessage": "You do not have any investigations yet."
+    "defaultMessage": "U hebt nog geen onderzoeken"
   },
   "cases.no_results": {
-    "defaultMessage": "No investigations were found matching this query."
+    "defaultMessage": "Er werd geen onderzoek gevonden dat aan de zoekopdracht voldoet."
   },
   "cases.placeholder": {
-    "defaultMessage": "Search investigations..."
+    "defaultMessage": "Doorzoek onderzoeken..."
   },
   "cases.title": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Onderzoeken"
   },
   "clipboard.copy.after": {
-    "defaultMessage": "Successfully copied to clipboard"
+    "defaultMessage": "Succesvol naar het klembord gekopieerd"
   },
   "clipboard.copy.before": {
-    "defaultMessage": "Copy to clipboard"
+    "defaultMessage": "Kopieer naar het klembord"
   },
   "collection.addSchema.placeholder": {
-    "defaultMessage": "Add new entity type"
+    "defaultMessage": "Voeg een nieuw type entiteit toe"
   },
   "collection.analyze.alert.text": {
-    "defaultMessage": "You're about to re-index the entities in {collectionLabel}. This can be helpful if there are inconsistencies in how the data is presented."
+    "defaultMessage": "U gaat de entiteiten in [collectionLabel] opnieuw indexeren.\nDit kan helpen wanneer er tegenstrijdigheden zitten in de weergave van de data."
   },
   "collection.analyze.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.cancel.button": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.countries": {
-    "defaultMessage": "Country"
+    "defaultMessage": "Land"
   },
   "collection.creator": {
-    "defaultMessage": "Manager"
+    "defaultMessage": "Beheerder"
   },
   "collection.data_updated_at": {
-    "defaultMessage": "Content updated"
+    "defaultMessage": "Inhoud bijgewerkt"
   },
   "collection.data_url": {
     "defaultMessage": "Data URL"
   },
   "collection.delete.confirm": {
-    "defaultMessage": "I understand the consequences."
+    "defaultMessage": "Ik begrijp de consequenties"
   },
   "collection.delete.confirm.dataset": {
-    "defaultMessage": "Delete this dataset."
+    "defaultMessage": "Verwijder deze dataset."
   },
   "collection.delete.confirm.investigation": {
-    "defaultMessage": "Delete this investigation."
+    "defaultMessage": "Verwijder dit onderzoek."
   },
   "collection.delete.question": {
-    "defaultMessage": "Are you sure you want to permanently delete {collectionLabel} and all contained items? This cannot be undone."
+    "defaultMessage": "Weet u zeker dat u [collectionLabel] definitief wilt verwijderen, inclusief alle bijbehorende objecten? Dit kan niet ongedaangemaakt worden."
   },
   "collection.delete.success": {
-    "defaultMessage": "Successfully deleted {label}"
+    "defaultMessage": "{label} succesvol verwijderd"
   },
   "collection.delete.title.dataset": {
-    "defaultMessage": "Delete dataset"
+    "defaultMessage": "Verwijder dataset"
   },
   "collection.delete.title.investigation": {
-    "defaultMessage": "Delete investigation"
+    "defaultMessage": "Verwijder onderzoek"
   },
   "collection.edit.access_title": {
     "defaultMessage": "Access control"
   },
   "collection.edit.cancel_button": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.edit.groups": {
-    "defaultMessage": "Groups"
+    "defaultMessage": "Groepen"
   },
   "collection.edit.info.analyze": {
-    "defaultMessage": "Re-process"
+    "defaultMessage": "Verwerk opnieuw"
   },
   "collection.edit.info.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.edit.info.category": {
-    "defaultMessage": "Category"
+    "defaultMessage": "Categorie"
   },
   "collection.edit.info.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "Landen"
   },
   "collection.edit.info.creator": {
-    "defaultMessage": "Manager"
+    "defaultMessage": "Beheerder"
   },
   "collection.edit.info.data_url": {
-    "defaultMessage": "Data source URL"
+    "defaultMessage": "Databron-URL"
   },
   "collection.edit.info.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "collection.edit.info.foreign_id": {
     "defaultMessage": "Foreign ID"
   },
   "collection.edit.info.frequency": {
-    "defaultMessage": "Update frequency"
+    "defaultMessage": "Bijwerk-frequentie"
   },
   "collection.edit.info.info_url": {
-    "defaultMessage": "Information URL"
+    "defaultMessage": "Informatie-URL"
   },
   "collection.edit.info.label": {
     "defaultMessage": "Label"
   },
   "collection.edit.info.languages": {
-    "defaultMessage": "Languages"
+    "defaultMessage": "Talen"
   },
   "collection.edit.info.placeholder_country": {
-    "defaultMessage": "Select countries"
+    "defaultMessage": "Selecteer landen"
   },
   "collection.edit.info.placeholder_data_url": {
-    "defaultMessage": "Link to the raw data in a downloadable form"
+    "defaultMessage": "Verwijzing naar de ruwe data in de vorm van een download"
   },
   "collection.edit.info.placeholder_info_url": {
-    "defaultMessage": "Link to further information"
+    "defaultMessage": "Verwijzing naar meer informatie"
   },
   "collection.edit.info.placeholder_label": {
-    "defaultMessage": "A label"
+    "defaultMessage": "Een label"
   },
   "collection.edit.info.placeholder_language": {
-    "defaultMessage": "Select languages"
+    "defaultMessage": "Selecteer talen"
   },
   "collection.edit.info.placeholder_publisher": {
-    "defaultMessage": "Organisation or person publishing this data"
+    "defaultMessage": "Organisatie of persoon die deze data publiceert"
   },
   "collection.edit.info.placeholder_publisher_url": {
-    "defaultMessage": "Link to the publisher"
+    "defaultMessage": "Verwijzing naar de publicist"
   },
   "collection.edit.info.placeholder_summary": {
-    "defaultMessage": "A brief summary"
+    "defaultMessage": "Korte samenvatting"
   },
   "collection.edit.info.publisher": {
-    "defaultMessage": "Publisher"
+    "defaultMessage": "Publicist"
   },
   "collection.edit.info.publisher_url": {
-    "defaultMessage": "Publisher URL"
+    "defaultMessage": "URL van de publicist"
   },
   "collection.edit.info.restricted": {
-    "defaultMessage": "This dataset is restricted and viewers should be warned."
+    "defaultMessage": "Deze dataset is beperkt en kijkers moeten gewaarschuwd worden."
   },
   "collection.edit.info.save": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Wijzigingen opslaan"
   },
   "collection.edit.info.summary": {
-    "defaultMessage": "Summary"
+    "defaultMessage": "Samenvatting"
   },
   "collection.edit.permissions_warning": {
-    "defaultMessage": "Note: User must already have an Aleph account in order to receive access."
+    "defaultMessage": "N.B. Gebruiker moet al een Aleph account hebben om toegang te verkrijgen."
   },
   "collection.edit.permissionstable.edit": {
-    "defaultMessage": "Edit"
+    "defaultMessage": "Wijzig"
   },
   "collection.edit.permissionstable.view": {
-    "defaultMessage": "View"
+    "defaultMessage": "Bekijk"
   },
   "collection.edit.save_button": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Wijzigingen opslaan"
   },
   "collection.edit.save_success": {
-    "defaultMessage": "Your changes are saved."
+    "defaultMessage": "Wijzigingen worden opgeslagen."
   },
   "collection.edit.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "collection.edit.users": {
-    "defaultMessage": "Users"
+    "defaultMessage": "Gebruikers"
   },
   "collection.foreign_id": {
     "defaultMessage": "Foreign ID"
@@ -255,55 +255,55 @@
     "defaultMessage": "Updates"
   },
   "collection.index.empty": {
-    "defaultMessage": "No datasets were found."
+    "defaultMessage": "Geen datasets gevonden."
   },
   "collection.index.filter.all": {
-    "defaultMessage": "All"
+    "defaultMessage": "Alle"
   },
   "collection.index.filter.mine": {
-    "defaultMessage": "Created by me"
+    "defaultMessage": "Gemaakt door mij"
   },
   "collection.index.no_results": {
-    "defaultMessage": "No datasets were found matching this query."
+    "defaultMessage": "Geen datasets gevonden met deze zoekopdracht."
   },
   "collection.index.placeholder": {
-    "defaultMessage": "Search datasets..."
+    "defaultMessage": "Zoek datasets..."
   },
   "collection.index.title": {
     "defaultMessage": "Datasets"
   },
   "collection.info.access": {
-    "defaultMessage": "Share"
+    "defaultMessage": "Delen"
   },
   "collection.info.browse": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Documenten"
   },
   "collection.info.delete": {
-    "defaultMessage": "Delete dataset"
+    "defaultMessage": "Verwijder dataset"
   },
   "collection.info.delete_casefile": {
-    "defaultMessage": "Delete investigation"
+    "defaultMessage": "Verwijder onderzoek"
   },
   "collection.info.diagrams": {
-    "defaultMessage": "Network diagrams"
+    "defaultMessage": "Netwerkdiagrammen"
   },
   "collection.info.diagrams_description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+    "defaultMessage": "Netwerkdiagrammen visualiseren complexe relaties binnen een onderzoek."
   },
   "collection.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Documenten"
   },
   "collection.info.edit": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "collection.info.entities": {
     "defaultMessage": "Entities"
   },
   "collection.info.lists": {
-    "defaultMessage": "Lists"
+    "defaultMessage": "Lijsten"
   },
   "collection.info.lists_description": {
-    "defaultMessage": "Lists let you organize and group related entities of interest."
+    "defaultMessage": "Met lijsten organiseer je een groep gerelateerde entiteiten die je onderzoekt."
   },
   "collection.info.mappings": {
     "defaultMessage": "Entity mappings"
@@ -312,40 +312,40 @@
     "defaultMessage": "Entity mappings allow you to bulk generate structured Follow the Money entities (like People, Companies, and the relationships among them) from rows in a spreadsheet or CSV document"
   },
   "collection.info.mentions": {
-    "defaultMessage": "Mentions"
+    "defaultMessage": "Vermeldingen"
   },
   "collection.info.mentions_description": {
     "defaultMessage": "Aleph automatically extracts terms that resemble names, address, phone numbers, and email addresses from uploaded documents and entities within your investigation. {br}{br} Click on a mentioned term below to find where it appears in your investigation."
   },
   "collection.info.overview": {
-    "defaultMessage": "Overview"
+    "defaultMessage": "Overzicht"
   },
   "collection.info.reindex": {
-    "defaultMessage": "Re-index all content"
+    "defaultMessage": "Her-indexeer de hele inhoud"
   },
   "collection.info.reingest": {
     "defaultMessage": "Re-ingest documents"
   },
   "collection.info.search": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Zoek"
   },
   "collection.info.source_documents": {
-    "defaultMessage": "Source documents"
+    "defaultMessage": "Brondocumenten"
   },
   "collection.info.timelines": {
-    "defaultMessage": "Timelines"
+    "defaultMessage": "Tijdlijnen"
   },
   "collection.info.timelines_description": {
-    "defaultMessage": "Timelines are a way to view and organize events chronologically."
+    "defaultMessage": "Tijdlijnen zijn een manier om gebeurtenissen chronologisch te bekijken en te organiseren."
   },
   "collection.info.xref": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "Kruisverwijzing"
   },
   "collection.info.xref_description": {
     "defaultMessage": "Cross-referencing allows you to search the rest of Aleph for entities similar to those contained in your investigation."
   },
   "collection.info_url": {
-    "defaultMessage": "Information URL"
+    "defaultMessage": "Informatie-URL"
   },
   "collection.last_updated": {
     "defaultMessage": "Last updated {date}"
@@ -360,7 +360,7 @@
     "defaultMessage": "This dataset is empty."
   },
   "collection.publisher": {
-    "defaultMessage": "Publisher"
+    "defaultMessage": "Publicist"
   },
   "collection.reconcile": {
     "defaultMessage": "Reconciliation"
@@ -369,7 +369,7 @@
     "defaultMessage": "Match your own data against the entities in this collection using the free {openrefine} tool by adding the reconciliation endpoint."
   },
   "collection.reindex.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.reindex.confirm": {
     "defaultMessage": "Start indexing"
@@ -429,7 +429,7 @@
     "defaultMessage": "Metadata updated"
   },
   "collection.xref.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "collection.xref.confirm": {
     "defaultMessage": "Confirm"
@@ -444,7 +444,7 @@
     "defaultMessage": "You will now cross-reference {collectionLabel} against all other sources. Start this process once and then wait for it to complete."
   },
   "collection.xref.title": {
-    "defaultMessage": "Cross-reference"
+    "defaultMessage": "Kruisverwijzing"
   },
   "dashboard.activity": {
     "defaultMessage": "Activity"
@@ -453,37 +453,37 @@
     "defaultMessage": "Alerts"
   },
   "dashboard.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Onderzoeken"
   },
   "dashboard.diagrams": {
-    "defaultMessage": "Network diagrams"
+    "defaultMessage": "Netwerkdiagrammen"
   },
   "dashboard.exports": {
     "defaultMessage": "Exports"
   },
   "dashboard.groups": {
-    "defaultMessage": "Groups"
+    "defaultMessage": "Groepen"
   },
   "dashboard.lists": {
-    "defaultMessage": "Lists"
+    "defaultMessage": "Lijsten"
   },
   "dashboard.notifications": {
     "defaultMessage": "Notifications"
   },
   "dashboard.settings": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "dashboard.status": {
-    "defaultMessage": "System status"
+    "defaultMessage": "Systeemstatus"
   },
   "dashboard.subheading": {
     "defaultMessage": "Check the progress of ongoing data analysis, upload, and processing tasks."
   },
   "dashboard.timelines": {
-    "defaultMessage": "Timelines"
+    "defaultMessage": "Tijdlijnen"
   },
   "dashboard.title": {
-    "defaultMessage": "System Status"
+    "defaultMessage": "Systeemstatus"
   },
   "dashboard.workspace": {
     "defaultMessage": "Workspace"
@@ -573,19 +573,19 @@
     "defaultMessage": "Diagrams"
   },
   "diagrams.description": {
-    "defaultMessage": "Network diagrams let you visualize complex relationships within an investigation."
+    "defaultMessage": "Netwerkdiagrammen visualiseren complexe relaties binnen een onderzoek."
   },
   "diagrams.no_diagrams": {
     "defaultMessage": "There are no network diagrams."
   },
   "diagrams.title": {
-    "defaultMessage": "Network diagrams"
+    "defaultMessage": "Netwerkdiagrammen"
   },
   "document.download": {
     "defaultMessage": "Download"
   },
   "document.download.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "document.download.confirm": {
     "defaultMessage": "Download"
@@ -639,7 +639,7 @@
     "defaultMessage": "Upload"
   },
   "document.upload.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "document.upload.close": {
     "defaultMessage": "Close"
@@ -654,7 +654,7 @@
     "defaultMessage": "If you would like to upload folders instead, { button }."
   },
   "document.upload.folder-toggle": {
-    "defaultMessage": "click here"
+    "defaultMessage": "klik hier"
   },
   "document.upload.info": {
     "defaultMessage": "If you need to upload a large amount of files (100+) consider {link}."
@@ -693,10 +693,10 @@
     "defaultMessage": "No message body."
   },
   "entity.delete.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "entity.delete.confirm": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "entity.delete.error": {
     "defaultMessage": "An error occured while attempting to delete this entity."
@@ -729,7 +729,7 @@
     "defaultMessage": "Attachments"
   },
   "entity.info.documents": {
-    "defaultMessage": "Documents"
+    "defaultMessage": "Documenten"
   },
   "entity.info.info": {
     "defaultMessage": "Info"
@@ -741,13 +741,13 @@
     "defaultMessage": "Similar"
   },
   "entity.info.tags": {
-    "defaultMessage": "Mentions"
+    "defaultMessage": "Vermeldingen"
   },
   "entity.info.text": {
     "defaultMessage": "Text"
   },
   "entity.info.view": {
-    "defaultMessage": "View"
+    "defaultMessage": "Bekijk"
   },
   "entity.info.workbook_warning": {
     "defaultMessage": "This sheet is part of workbook {link}"
@@ -771,7 +771,7 @@
     "defaultMessage": "Select a table document"
   },
   "entity.manager.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "entity.manager.edge_create_success": {
     "defaultMessage": "Successfully linked {source} and {target}"
@@ -861,10 +861,10 @@
     "defaultMessage": "Updated {date}"
   },
   "entityset.choose.name": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Titel"
   },
   "entityset.choose.summary": {
-    "defaultMessage": "Summary"
+    "defaultMessage": "Samenvatting"
   },
   "entityset.create.collection": {
     "defaultMessage": "Investigation"
@@ -882,7 +882,7 @@
     "defaultMessage": "Create"
   },
   "entityset.delete.confirm": {
-    "defaultMessage": "I understand the consequences."
+    "defaultMessage": "Ik begrijp de consequenties"
   },
   "entityset.delete.confirm.diagram": {
     "defaultMessage": "Delete this network diagram."
@@ -915,10 +915,10 @@
     "defaultMessage": "Delete timeline"
   },
   "entityset.info.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "entityset.info.edit": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "entityset.info.export": {
     "defaultMessage": "Export"
@@ -933,7 +933,7 @@
     "defaultMessage": "Successfully added {count} {count, plural, one {entity} other {entities}} to {entitySet}"
   },
   "entityset.selector.success_toast_button": {
-    "defaultMessage": "View"
+    "defaultMessage": "Bekijk"
   },
   "entityset.selector.title": {
     "defaultMessage": "Add {firstCaption} {titleSecondary} to..."
@@ -945,7 +945,7 @@
     "defaultMessage": "and {count} other {count, plural, one {entity} other {entities}}"
   },
   "entityset.update.submit": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Wijzigingen opslaan"
   },
   "error.screen.not_found": {
     "defaultMessage": "The requested page could not be found."
@@ -954,7 +954,7 @@
     "defaultMessage": "<bold>Initiate your export.</bold> {br}{br} Exports take some time to generate. You will receive an email once the data is ready. {br}{br} Please trigger this export only once."
   },
   "exports.dialog.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "exports.dialog.confirm": {
     "defaultMessage": "Export"
@@ -1098,7 +1098,7 @@
     "defaultMessage": "Preview next result"
   },
   "hotkeys.search_focus": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Zoeken"
   },
   "infoMode.collection_casefile": {
     "defaultMessage": "Investigation"
@@ -1230,16 +1230,16 @@
     "defaultMessage": "List settings"
   },
   "lists": {
-    "defaultMessage": "Lists"
+    "defaultMessage": "Lijsten"
   },
   "lists.description": {
-    "defaultMessage": "Lists let you organize and group related entities of interest."
+    "defaultMessage": "Met lijsten organiseer je een groep gerelateerde entiteiten die je onderzoekt."
   },
   "lists.no_lists": {
     "defaultMessage": "There are no lists."
   },
   "lists.title": {
-    "defaultMessage": "Lists"
+    "defaultMessage": "Lijsten"
   },
   "login.oauth": {
     "defaultMessage": "Sign in via OAuth"
@@ -1251,7 +1251,7 @@
     "defaultMessage": "Generating entities..."
   },
   "mapping.actions.delete": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "mapping.actions.delete.toast": {
     "defaultMessage": "Deleting mapping and any generated entities..."
@@ -1266,13 +1266,13 @@
     "defaultMessage": "Removing generated entities..."
   },
   "mapping.actions.save": {
-    "defaultMessage": "Save changes"
+    "defaultMessage": "Wijzigingen opslaan"
   },
   "mapping.actions.save.toast": {
     "defaultMessage": "Re-generating entities..."
   },
   "mapping.create.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "mapping.create.confirm": {
     "defaultMessage": "Generate"
@@ -1281,10 +1281,10 @@
     "defaultMessage": "Are you sure you are ready to generate entities using this mapping?"
   },
   "mapping.delete.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "mapping.delete.confirm": {
-    "defaultMessage": "Delete"
+    "defaultMessage": "Verwijderen"
   },
   "mapping.delete.question": {
     "defaultMessage": "Are you sure you want to delete this mapping and all generated entities?"
@@ -1314,7 +1314,7 @@
     "defaultMessage": "Relationship Error: {id} entity must have a {source} and {target} assigned"
   },
   "mapping.flush.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "mapping.flush.confirm": {
     "defaultMessage": "Remove"
@@ -1392,7 +1392,7 @@
     "defaultMessage": "Properties"
   },
   "mapping.save.cancel": {
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Annuleren"
   },
   "mapping.save.confirm": {
     "defaultMessage": "Update mapping & re-generate"
@@ -1449,25 +1449,25 @@
     "defaultMessage": "Bookmarks"
   },
   "nav.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Onderzoeken"
   },
   "nav.collections": {
     "defaultMessage": "Datasets"
   },
   "nav.diagrams": {
-    "defaultMessage": "Network diagrams"
+    "defaultMessage": "Netwerkdiagrammen"
   },
   "nav.exports": {
     "defaultMessage": "Exports"
   },
   "nav.lists": {
-    "defaultMessage": "Lists"
+    "defaultMessage": "Lijsten"
   },
   "nav.menu.cases": {
-    "defaultMessage": "Investigations"
+    "defaultMessage": "Onderzoeken"
   },
   "nav.settings": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "nav.signin": {
     "defaultMessage": "Sign in"
@@ -1476,10 +1476,10 @@
     "defaultMessage": "Sign out"
   },
   "nav.status": {
-    "defaultMessage": "System status"
+    "defaultMessage": "Systeemstatus"
   },
   "nav.timelines": {
-    "defaultMessage": "Timelines"
+    "defaultMessage": "Tijdlijnen"
   },
   "nav.view_notifications": {
     "defaultMessage": "Notifications"
@@ -1503,7 +1503,7 @@
     "defaultMessage": "Recent notifications"
   },
   "notifications.type_filter.all": {
-    "defaultMessage": "All"
+    "defaultMessage": "Alle"
   },
   "pages.not.found": {
     "defaultMessage": "Page not found"
@@ -1659,7 +1659,7 @@
     "defaultMessage": "Second term"
   },
   "search.advanced.submit": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Zoeken"
   },
   "search.advanced.title": {
     "defaultMessage": "Advanced Search"
@@ -1788,7 +1788,7 @@
     "defaultMessage": "Search: {title}"
   },
   "search.title_emptyq": {
-    "defaultMessage": "Search"
+    "defaultMessage": "Zoeken"
   },
   "settings.api_key": {
     "defaultMessage": "API Secret Access Key"
@@ -1833,13 +1833,13 @@
     "defaultMessage": "Change your password"
   },
   "settings.save": {
-    "defaultMessage": "Update"
+    "defaultMessage": "Bijwerken"
   },
   "settings.saved": {
     "defaultMessage": "It's official, your profile is updated."
   },
   "settings.title": {
-    "defaultMessage": "Settings"
+    "defaultMessage": "Instellingen"
   },
   "sidebar.open": {
     "defaultMessage": "Expand"
@@ -1869,7 +1869,7 @@
     "defaultMessage": "Show:"
   },
   "sorting.bar.caption": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Titel"
   },
   "sorting.bar.collection_id": {
     "defaultMessage": "Dataset"
@@ -1878,7 +1878,7 @@
     "defaultMessage": "Size"
   },
   "sorting.bar.countries": {
-    "defaultMessage": "Countries"
+    "defaultMessage": "Landen"
   },
   "sorting.bar.created_at": {
     "defaultMessage": "Creation Date"
@@ -1896,7 +1896,7 @@
     "defaultMessage": "End date"
   },
   "sorting.bar.label": {
-    "defaultMessage": "Title"
+    "defaultMessage": "Titel"
   },
   "sorting.bar.sort": {
     "defaultMessage": "Sort by:"
@@ -1959,16 +1959,16 @@
     "defaultMessage": "Timeline settings"
   },
   "timelines": {
-    "defaultMessage": "Timelines"
+    "defaultMessage": "Tijdlijnen"
   },
   "timelines.description": {
-    "defaultMessage": "Timelines are a way to view and organize events chronologically."
+    "defaultMessage": "Tijdlijnen zijn een manier om gebeurtenissen chronologisch te bekijken en te organiseren."
   },
   "timelines.no_timelines": {
     "defaultMessage": "There are no timelines."
   },
   "timelines.title": {
-    "defaultMessage": "Timelines"
+    "defaultMessage": "Tijdlijnen"
   },
   "valuelink.tooltip": {
     "defaultMessage": "{count} mentions in {appName}"
