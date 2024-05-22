@@ -17,6 +17,7 @@ import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 const messages = defineMessages({
   placeholder: {
@@ -184,7 +185,6 @@ export class PdfViewer extends Component {
         )}
         <div key={pdfUrl}>
           <Document
-            renderAnnotations
             file={pdfUrl}
             loading={loading}
             onLoadSuccess={this.onDocumentLoad}
@@ -201,6 +201,7 @@ export class PdfViewer extends Component {
                 rotate={effectiveRotation}
                 loading={loading}
                 onLoadSuccess={this.onPageLoad}
+                renderAnnotationLayer={false}
               />
             )}
           </Document>
