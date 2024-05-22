@@ -24,7 +24,7 @@
     "dagre": "^0.8.5",
     "date-fns": "^2.30.0",
     "google-libphonenumber": "^3.2.33",
-    "http-proxy-middleware": "^2.0.0",
+    "http-proxy-middleware": "^3.0.0",
     "js-file-download": "^0.4.9",
     "lodash": "^4.17.11",
     "moment": "^2.29.1",
