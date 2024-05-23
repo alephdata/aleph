@@ -112,7 +112,6 @@ class AlephWorker(Worker):
         self.prefetch_count_mapping = prefetch_count_mapping
         self.periodic_timer = threading.Timer(10, self.periodic)
 
-
     def on_message(self, channel, method, properties, body, args):
         connection = args[0]
         task = get_task(body, method.delivery_tag)

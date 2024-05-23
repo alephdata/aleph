@@ -11,7 +11,6 @@ from servicelayer.taskqueue import (
     NO_COLLECTION,
     PREFIX,
 )
-from servicelayer import settings as sls
 
 from aleph.core import kv, rabbitmq_conn
 from aleph.settings import SETTINGS
