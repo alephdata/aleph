@@ -1,10 +1,10 @@
+from aleph.settings import SETTINGS
 from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_REINGEST, OP_REINDEX, OP_INDEX
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
 from aleph.logic.collections import get_deep_collection
@@ -176,7 +176,9 @@ def reingest(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     index = get_flag("index", False)
-    queue_task(collection, OP_REINGEST, job_id=get_session_id(), index=index)
+    queue_task(
+        collection, SETTINGS.STAGE_REINGEST, job_id=get_session_id(), index=index
+    )
     return ("", 202)
 
 
@@ -209,7 +211,7 @@ def reindex(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     flush = get_flag("flush", False)
-    queue_task(collection, OP_REINDEX, job_id=get_session_id(), flush=flush)
+    queue_task(collection, SETTINGS.STAGE_REINDEX, job_id=get_session_id(), flush=flush)
     return ("", 202)
 
 
@@ -301,7 +303,7 @@ def bulk(collection_id):
             )
     collection.touch()
     db.session.commit()
-    queue_task(collection, OP_INDEX, job_id=job_id, entity_ids=entity_ids)
+    queue_task(collection, SETTINGS.STAGE_INDEX, job_id=job_id, entity_ids=entity_ids)
     return ("", 204)
 
 

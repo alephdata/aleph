@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
+from servicelayer.taskqueue import declare_rabbitmq_queue
 from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
@@ -24,7 +25,7 @@ from aleph.logic.aggregator import get_aggregator
 from aleph.logic.collections import update_collection, reindex_collection
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
-from aleph.core import db, kv, create_app
+from aleph.core import db, kv, create_app, rabbitmq_conn
 from aleph.oauth import oauth
 from aleph.queues import flush_queue
 
@@ -81,9 +82,8 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
-        sls.QUEUE_ALEPH = "test-aleph-queue"
-        sls.QUEUE_INDEX = "test-index-queue"
-        sls.QUEUE_INGEST = "test-ingest-queue"
+        for stage in SETTINGS.ALEPH_STAGES:
+            stage = f"test-{stage}-queue"
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
 
         SETTINGS.APP_NAME = APP_NAME
@@ -106,6 +106,15 @@ class TestCase(unittest.TestCase):
 
         app = create_app({})
         return app
+
+    def initialize_aleph_worker(self):
+        channel = rabbitmq_conn.channel()
+        for stage in SETTINGS.ALEPH_STAGES:
+            try:
+                channel.queue_delete(stage)
+            except ValueError:
+                pass
+            declare_rabbitmq_queue(channel, stage)
 
     def create_user(self, foreign_id="tester", name=None, email=None, is_admin=False):
         role = Role.load_or_create(
@@ -236,6 +245,8 @@ class TestCase(unittest.TestCase):
 
         self._ctx = self.app.test_request_context()
         self._ctx.push()
+
+        self.initialize_aleph_worker()
 
     def setUp(self):
         if not hasattr(SETTINGS, "_global_test_state"):

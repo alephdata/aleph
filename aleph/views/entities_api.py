@@ -25,7 +25,7 @@ from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer
 from aleph.settings import SETTINGS
-from aleph.queues import queue_task, OP_EXPORT_SEARCH
+from aleph.queues import queue_task
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)
@@ -172,14 +172,14 @@ def export():
         schemata = parser.getlist("filter:schemata")
     label = gettext("Search: %s") % query.to_text()
     export = create_export(
-        operation=OP_EXPORT_SEARCH,
+        operation=SETTINGS.STAGE_EXPORT_SEARCH,
         role_id=request.authz.id,
         label=label,
         mime_type=ZIP,
         meta={"query": query.get_full_query(), "schemata": schemata},
     )
     job_id = get_session_id()
-    queue_task(None, OP_EXPORT_SEARCH, job_id=job_id, export_id=export.id)
+    queue_task(None, SETTINGS.STAGE_EXPORT_SEARCH, job_id=job_id, export_id=export.id)
     return ("", 202)
 
 

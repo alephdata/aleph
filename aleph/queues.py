@@ -10,9 +10,7 @@ from servicelayer.taskqueue import (
     Dataset,
     NO_COLLECTION,
     PREFIX,
-    get_routing_key,
 )
-from servicelayer import settings as sls
 
 from aleph.core import kv, rabbitmq_conn
 from aleph.settings import SETTINGS
@@ -21,19 +19,6 @@ from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
-OP_INGEST = "ingest"
-OP_ANALYZE = "analyze"
-OP_INDEX = "index"
-OP_XREF = "xref"
-OP_REINGEST = "reingest"
-OP_REINDEX = "reindex"
-OP_LOAD_MAPPING = "loadmapping"
-OP_FLUSH_MAPPING = "flushmapping"
-OP_EXPORT_SEARCH = "exportsearch"
-OP_EXPORT_XREF = "exportxref"
-OP_UPDATE_ENTITY = "updateentity"
-OP_PRUNE_ENTITY = "pruneentity"
-
 
 lock = threading.Lock()
 
@@ -41,9 +26,11 @@ lock = threading.Lock()
 def flush_queue():
     try:
         channel = rabbitmq_conn.channel()
-        channel.queue_purge(sls.QUEUE_ALEPH)
-        channel.queue_purge(sls.QUEUE_INGEST)
-        channel.queue_purge(sls.QUEUE_INDEX)
+        for queue in SETTINGS.ALEPH_STAGES:
+            try:
+                channel.queue_purge(queue)
+            except ValueError:
+                logging.exception(f"Error while flushing the {queue} queue")
         channel.close()
     except pika.exceptions.AMQPError:
         logging.exception("Error while flushing task queue")
@@ -79,7 +66,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         channel = rabbitmq_conn.channel()
         channel.basic_publish(
             exchange="",
-            routing_key=get_routing_key(stage),
+            routing_key=stage,
             body=json.dumps(body),
             properties=pika.BasicProperties(
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE, priority=priority
@@ -132,10 +119,10 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     pipeline = list(SETTINGS.INGEST_PIPELINE)
     if index:
-        pipeline.append(OP_INDEX)
+        pipeline.append(SETTINGS.STAGE_INDEX)
     context = get_context(collection, pipeline)
 
-    queue_task(collection, OP_INGEST, job_id, context, **proxy.to_dict())
+    queue_task(collection, SETTINGS.STAGE_INGEST, job_id, context, **proxy.to_dict())
 
 
 def pipeline_entity(collection, proxy, job_id=None):
@@ -145,7 +132,7 @@ def pipeline_entity(collection, proxy, job_id=None):
     if not SETTINGS.TESTING:
         if proxy.schema.is_a(Entity.ANALYZABLE):
             pipeline.extend(SETTINGS.INGEST_PIPELINE)
-    pipeline.append(OP_INDEX)
+    pipeline.append(SETTINGS.STAGE_INDEX)
     context = get_context(collection, pipeline)
 
     operation = pipeline.pop(0)

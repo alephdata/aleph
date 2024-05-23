@@ -5,7 +5,6 @@ from aleph.core import db, archive
 from aleph.settings import SETTINGS
 from aleph.model import Document
 from aleph.queues import ingest_entity
-from aleph.queues import OP_INGEST
 from aleph.logic.aggregator import get_aggregator, MODEL_ORIGIN
 from aleph.util import random_id
 
@@ -17,7 +16,7 @@ def ingest_flush(collection, entity_id=None, include_ingest=False):
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity_id, origin=MODEL_ORIGIN)
     if include_ingest:
-        aggregator.delete(entity_id=entity_id, origin=OP_INGEST)
+        aggregator.delete(entity_id=entity_id, origin=SETTINGS.STAGE_INGEST)
     for stage in SETTINGS.INGEST_PIPELINE:
         aggregator.delete(entity_id=entity_id, origin=stage)
 
