@@ -21,6 +21,7 @@ from aleph.views.serializers import EntitySetItemSerializer
 from aleph.views.util import jsonify, get_flag, get_session_id, require
 from aleph.views.util import get_nested_collection, get_index_entity, get_entityset
 from aleph.views.util import parse_request, get_db_collection
+from aleph.queues import queue_task
 
 
 blueprint = Blueprint("entitysets_api", __name__)

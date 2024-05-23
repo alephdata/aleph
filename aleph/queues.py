@@ -27,9 +27,11 @@ lock = threading.Lock()
 def flush_queue():
     try:
         channel = rabbitmq_conn.channel()
-        channel.queue_purge(sls.QUEUE_ALEPH)
-        channel.queue_purge(sls.QUEUE_INGEST)
-        channel.queue_purge(sls.QUEUE_INDEX)
+        for queue in SETTINGS.ALEPH_STAGES:
+            try:
+                channel.queue_purge(queue)
+            except ValueError:
+                logging.exception(f"Error while flushing the {queue} queue")
         channel.close()
     except pika.exceptions.AMQPError:
         logging.exception("Error while flushing task queue")

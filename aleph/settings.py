@@ -210,7 +210,7 @@ class Settings:
 
         # Prefetch count values
         # This is the number of tasks the AlephWorker will grab at any given time
-        self.RABBITMQ_QOS_INDEX_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_INDEX_QUEUE", 20)
+        self.RABBITMQ_QOS_INDEX_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_INDEX_QUEUE", 10)
         self.RABBITMQ_QOS_XREF_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_XREF_QUEUE", 1)
         self.RABBITMQ_QOS_REINGEST_QUEUE = env.to_int(
             "ALEPH_RABBITMQ_QOS_REINGEST_QUEUE", 1
@@ -249,6 +249,19 @@ class Settings:
         self.STAGE_EXPORT_XREF = "exportxref"
         self.STAGE_UPDATE_ENTITY = "updateentity"
         self.STAGE_PRUNE_ENTITY = "pruneentity"
+
+        self.ALEPH_STAGES = [
+            self.STAGE_INDEX,
+            self.STAGE_XREF,
+            self.STAGE_REINGEST,
+            self.STAGE_REINDEX,
+            self.STAGE_LOAD_MAPPING,
+            self.STAGE_FLUSH_MAPPING,
+            self.STAGE_EXPORT_SEARCH,
+            self.STAGE_EXPORT_XREF,
+            self.STAGE_UPDATE_ENTITY,
+            self.STAGE_PRUNE_ENTITY,
+        ]
 
         # Document processing pipeline
         self.INGEST_PIPELINE = env.to_list(

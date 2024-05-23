@@ -11,6 +11,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
 from aleph.views.util import get_index_entity, get_session_id, obj_or_404, require
+from aleph.queues import queue_task
 
 
 blueprint = Blueprint("mappings_api", __name__)

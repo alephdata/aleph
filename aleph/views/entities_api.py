@@ -25,6 +25,7 @@ from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer, EntitySetSerializer
 from aleph.views.serializers import SimilarSerializer
 from aleph.settings import SETTINGS
+from aleph.queues import queue_task
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint("entities_api", __name__)

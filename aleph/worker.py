@@ -6,6 +6,7 @@ import functools
 import queue
 from typing import List
 import copy
+from typing import Dict, Callable
 
 import structlog
 from servicelayer.taskqueue import Worker, Task, Dataset, get_task
@@ -71,7 +72,7 @@ def op_flush_mapping(collection, task):
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = {
+OPERATIONS: Dict[str, Callable] = {
     SETTINGS.STAGE_INDEX: op_index,
     SETTINGS.STAGE_XREF: lambda c, _: xref_collection(c),
     SETTINGS.STAGE_REINGEST: op_reingest,
@@ -210,7 +211,7 @@ class AlephWorker(Worker):
 
 
 def get_worker(num_threads=1):
-    qos_mapping = {
+    qos_mapping: Dict[str, int] = {
         SETTINGS.STAGE_INDEX: SETTINGS.RABBITMQ_QOS_INDEX_QUEUE,
         SETTINGS.STAGE_XREF: SETTINGS.RABBITMQ_QOS_XREF_QUEUE,
         SETTINGS.STAGE_REINGEST: SETTINGS.RABBITMQ_QOS_REINGEST_QUEUE,
@@ -223,7 +224,7 @@ def get_worker(num_threads=1):
         SETTINGS.STAGE_PRUNE_ENTITY: SETTINGS.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE,
     }
 
-    aleph_worker_queues = qos_mapping.keys()
+    aleph_worker_queues = list(qos_mapping.keys())
 
     log.info(f"Worker active, stages: {aleph_worker_queues}")
 
