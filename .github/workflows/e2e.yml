@@ -30,6 +30,9 @@ jobs:
           docker --version
           docker-compose --version
 
+      - name: Build e2e image
+        run: make build-e2e
+
       - name: Pull and start services
         run: make services-e2e
 
