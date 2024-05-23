@@ -210,7 +210,9 @@ class Settings:
 
         # Prefetch count values
         # This is the number of tasks the AlephWorker will grab at any given time
-        self.RABBITMQ_QOS_INDEX_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_INDEX_QUEUE", 10)
+        self.RABBITMQ_QOS_INDEX_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_INDEX_QUEUE", 100
+        )
         self.RABBITMQ_QOS_XREF_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_XREF_QUEUE", 1)
         self.RABBITMQ_QOS_REINGEST_QUEUE = env.to_int(
             "ALEPH_RABBITMQ_QOS_REINGEST_QUEUE", 1
