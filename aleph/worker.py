@@ -199,6 +199,13 @@ class AlephWorker(Worker):
         return task
 
     def after_task(self, task):
+        if not self.periodic_timer.is_alive():
+            log.info(
+                f"Restarting periodic timer (interval={self.periodic_timer.interval}s)"
+            )
+            self.periodic_timer.cancel()
+            self.periodic_timer = threading.Timer(10, self.periodic)
+            self.periodic_timer.start()
         if not SETTINGS.TESTING:
             if task.collection_id and task.get_dataset(conn=kv).is_done():
                 refresh_collection(task.collection_id)
