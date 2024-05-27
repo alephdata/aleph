@@ -3,7 +3,7 @@ COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
-BLACK_FLAGS=--exclude aleph/migrate
+BLACK_OPTS=--extend-exclude aleph/migrate
 
 all: build upgrade web
 
@@ -29,13 +29,13 @@ lint-ui:
 	$(UIDOCKER) npm run lint
 
 format:
-	black $(BLACK_FLAGS) aleph/
+	black $(BLACK_OPTS) aleph/
 
 format-ui:
 	$(UIDOCKER) npm run format
 
 format-check:
-	black --check $(BLACK_FLAGS) aleph/
+	black --check $(BLACK_OPTS) aleph/
 
 format-check-ui:
 	$(UIDOCKER) npm run format:check
@@ -112,7 +112,7 @@ e2e: services-e2e e2e/test-results
 	$(COMPOSE_E2E) run --rm app aleph upgrade
 	$(COMPOSE_E2E) run --rm app aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
 	$(COMPOSE_E2E) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm --build-arg PLAYWRIGHT_VERSION=$(shell awk -F'==' '/^playwright==/ { print $$2 }' e2e/requirements.txt) e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
 
 e2e-local-setup: dev
 	python3 -m pip install -q -r e2e/requirements.txt

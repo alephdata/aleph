@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aleph",
-    version="3.15.6",
+    version="3.17.0",
     description="Document sifting web frontend",
     classifiers=[
         "Intended Audience :: Developers",
@@ -11,7 +11,7 @@ setup(
     ],
     author="OCCRP Data Team",
     author_email="data@occrp.org",
-    url="https://docs.alephdata.org",
+    url="https://docs.aleph.occrp.org",
     license="MIT",
     packages=find_packages(exclude=["ez_setup", "examples", "test"]),
     namespace_packages=[],

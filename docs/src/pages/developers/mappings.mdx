@@ -11,7 +11,7 @@ title: Importing structured data
 
 Aleph is commonly used to import data tables \(like a companies registry, list of persons of interest, or a set of government contracts\) that a user wants to search and browse.
 
-It does this by mapping tabular source data to the [Follow the Money](https://docs.alephdata.org/developers/followthemoney) \(FtM\) data model. Aleph defines entities \(such as `People`, `Companies`, `Assets` or `Court Cases`\), and the relationships between them \(such as `Family`relations, or business interests – `Ownership` or `Directorship`, or other links like `Sanctions`, `Payments` \).
+It does this by mapping tabular source data to the [Follow the Money](/developers/followthemoney) \(FtM\) data model. Aleph defines entities \(such as `People`, `Companies`, `Assets` or `Court Cases`\), and the relationships between them \(such as `Family`relations, or business interests – `Ownership` or `Directorship`, or other links like `Sanctions`, `Payments` \).
 
 To load structured data into Aleph, an entity mapping file needs to be created. A mapping file uses YAML syntax to describe how information from a table can be projected to FtM entities.
 
@@ -474,7 +474,7 @@ Mapping files can be loaded in two different ways — either from an aleph shell
 aleph bulkload mapping.yml
 ```
 
-or by using a combination of [`followthemoney-util`](https://docs.alephdata.org/developers/ftm) and [`alephclient`](https://docs.alephdata.org/developers/alephclient) command-line tools:
+or by using a combination of [`followthemoney-util`](/developers/followthemoney/ftm) and [`alephclient`](/developers/alephclient) command-line tools:
 
 ```
 ftm map mapping.yml | ftm aggregate | alephclient write-entities -f dataset_name

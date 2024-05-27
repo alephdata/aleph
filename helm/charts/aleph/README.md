@@ -11,7 +11,7 @@ Helm chart for Aleph
 | global.amazon | bool | `true` | Are we using AWS services like s3? |
 | global.google | bool | `false` | Are we using GCE services like storage, vision api? |
 | global.image.repository | string | `"alephdata/aleph"` | Aleph docker image repo |
-| global.image.tag | string | `"3.15.6"` | Aleph docker image tag |
+| global.image.tag | string | `"3.17.0"` | Aleph docker image tag |
 | global.image.tag | string | `"Always"` |  |
 | global.namingPrefix | string | `"aleph"` | Prefix for the names of k8s resources |
 
@@ -37,4 +37,4 @@ Helm chart for Aleph
 | global.env.ELASTICSEARCH_TIMEOUT | string | `"600"` | Default elasticsearch timeout |
 | global.env.REDIS_URL | string | `"redis://aleph-redis-master.default.svc.cluster.local:6379/0"` | Redis url |
 
-Checkout [https://docs.alephdata.org/developers/installation#configuration](https://docs.alephdata.org/developers/installation#configuration) for all available options.
+Checkout [https://docs.aleph.occrp.org/developers/installation#configuration](https://docs.aleph.occrp.org/developers/installation#configuration) for all available options.

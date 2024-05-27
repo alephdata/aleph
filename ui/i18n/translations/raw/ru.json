@@ -624,13 +624,13 @@
     "defaultMessage": "Страница {page}"
   },
   "document.report_problem": {
-    "defaultMessage": "Report a problem"
+    "defaultMessage": "Сообщить об ошибке"
   },
   "document.report_problem.text": {
-    "defaultMessage": "You can now easily report such problems to the Aleph team. This helps us improve how Aleph processes and displays documents."
+    "defaultMessage": "Сообщайте о любых проблемах — это поможет нам улучшить обработку и отображение документов в Алефе."
   },
   "document.report_problem.title": {
-    "defaultMessage": "Does the document preview look strange? Is the extracted text incorrect, or is the information incomplete?"
+    "defaultMessage": "Документ выглядит странно? Текст извлечён некорректно или информация неполная?"
   },
   "document.search.no_match": {
     "defaultMessage": "Искомых слов в документе не найдено."
@@ -657,7 +657,7 @@
     "defaultMessage": "нажмите здесь"
   },
   "document.upload.info": {
-    "defaultMessage": "If you need to upload a large amount of files (100+) consider {link}."
+    "defaultMessage": "Если необходимо загрузить большое количество файлов (100+), воспользуйтесь {link}."
   },
   "document.upload.notice": {
     "defaultMessage": "Загрузка завершена. После индексирования документы станут доступны для полнотекстового поиска."

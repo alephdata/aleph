@@ -58,7 +58,7 @@ def sanitize_html(html_text, base_url, encoding=None):
             if el.tag == "a":
                 el.set("target", "_blank")
                 el.set("rel", "nofollow noreferrer external noopener")
-        return tostring(doc)
+        return tostring(doc, method="html", encoding="unicode")
     except Exception as exc:
         log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
         return gettext("[HTML removed: could not be sanitized]")

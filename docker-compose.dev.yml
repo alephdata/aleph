@@ -7,6 +7,8 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    # enable this to log all SQL statements
+    # command: ["postgres", "-c", "log_statement=all"]
     environment:
       POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
@@ -35,7 +37,7 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.20.3
+    image: ghcr.io/alephdata/ingest-file:3.22.0
     hostname: ingest
     tmpfs: /tmp
     volumes:

@@ -17,6 +17,7 @@ import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 const messages = defineMessages({
   placeholder: {
@@ -157,8 +158,18 @@ export class PdfViewer extends Component {
   fetchComponents() {
     import(/* webpackChunkName:'pdf-lib' */ 'react-pdf').then(
       ({ Document, Page, pdfjs }) => {
-        // see https://github.com/wojtekmaj/react-pdf#create-react-app
-        pdfjs.GlobalWorkerOptions.workerSrc = `/static/pdf.worker.min.js`;
+        // Webpack will copy `pdf.worker.min.js` to the build directory and automatically
+        // include a file hash in the file name to handle browser cache invalidation.
+        // See: https://github.com/wojtekmaj/react-pdf#import-worker-recommended
+        // See: https://webpack.js.org/guides/asset-modules/#url-assets
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          // The leading `!!` disables all configured loaders that are usually applied for
+          // JS files as the worker file is already bundled and optimized for distribution.
+          // See: https://webpack.js.org/concepts/loaders/#inline
+          '!!pdfjs-dist/build/pdf.worker.min.js',
+          import.meta.url
+        ).toString();
+
         this.setState({ components: { Document, Page } });
       }
     );
@@ -184,7 +195,6 @@ export class PdfViewer extends Component {
         )}
         <div key={pdfUrl}>
           <Document
-            renderAnnotations
             file={pdfUrl}
             loading={loading}
             onLoadSuccess={this.onDocumentLoad}
@@ -201,6 +211,7 @@ export class PdfViewer extends Component {
                 rotate={effectiveRotation}
                 loading={loading}
                 onLoadSuccess={this.onPageLoad}
+                renderAnnotationLayer={false}
               />
             )}
           </Document>
