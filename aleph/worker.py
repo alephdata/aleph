@@ -229,25 +229,21 @@ class AlephWorker(Worker):
 
 
 def get_worker(num_threads=1):
-    qos_mapping: Dict[str, int] = {
-        SETTINGS.STAGE_INDEX: SETTINGS.RABBITMQ_QOS_INDEX_QUEUE,
-        SETTINGS.STAGE_XREF: SETTINGS.RABBITMQ_QOS_XREF_QUEUE,
-        SETTINGS.STAGE_REINGEST: SETTINGS.RABBITMQ_QOS_REINGEST_QUEUE,
-        SETTINGS.STAGE_REINDEX: SETTINGS.RABBITMQ_QOS_REINDEX_QUEUE,
-        SETTINGS.STAGE_LOAD_MAPPING: SETTINGS.RABBITMQ_QOS_LOAD_MAPPING_QUEUE,
-        SETTINGS.STAGE_FLUSH_MAPPING: SETTINGS.RABBITMQ_QOS_FLUSH_MAPPING_QUEUE,
-        SETTINGS.STAGE_EXPORT_SEARCH: SETTINGS.RABBITMQ_QOS_EXPORT_SEARCH_QUEUE,
-        SETTINGS.STAGE_EXPORT_XREF: SETTINGS.RABBITMQ_QOS_EXPORT_XREF_QUEUE,
-        SETTINGS.STAGE_UPDATE_ENTITY: SETTINGS.RABBITMQ_QOS_UPDATE_ENTITY_QUEUE,
-        SETTINGS.STAGE_PRUNE_ENTITY: SETTINGS.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE,
-    }
+    # The stages performed by AlephWorker correspond to
+    # RabbitMQ queues. Both use the same string as a name,
+    # By default, AlephWorker implements all stages
+    # (and reads from all queues) except "index" and "analyze".
+    aleph_worker_stages = list(SETTINGS.ALEPH_STAGES)
 
-    aleph_worker_queues = list(qos_mapping.keys())
+    log.info(f"Worker active, stages: {aleph_worker_stages}")
 
-    log.info(f"Worker active, stages: {aleph_worker_queues}")
+    qos_mapping = {}
+    for stage in aleph_worker_stages:
+        if stage not in qos_mapping:
+            qos_mapping[stage] = SETTINGS.QOS_MAPPING.get(stage, 1)
 
     return AlephWorker(
-        queues=aleph_worker_queues,
+        queues=aleph_worker_stages,
         conn=kv,
         num_threads=num_threads or 1,
         version=__version__,

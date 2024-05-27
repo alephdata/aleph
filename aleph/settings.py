@@ -252,18 +252,34 @@ class Settings:
         self.STAGE_UPDATE_ENTITY = "updateentity"
         self.STAGE_PRUNE_ENTITY = "pruneentity"
 
-        self.ALEPH_STAGES = [
-            self.STAGE_INDEX,
-            self.STAGE_XREF,
-            self.STAGE_REINGEST,
-            self.STAGE_REINDEX,
-            self.STAGE_LOAD_MAPPING,
-            self.STAGE_FLUSH_MAPPING,
-            self.STAGE_EXPORT_SEARCH,
-            self.STAGE_EXPORT_XREF,
-            self.STAGE_UPDATE_ENTITY,
-            self.STAGE_PRUNE_ENTITY,
-        ]
+        self.ALEPH_STAGES = env.to_list(
+            "ALEPH_WORKER_STAGES",
+            [
+                self.STAGE_INDEX,
+                self.STAGE_XREF,
+                self.STAGE_REINGEST,
+                self.STAGE_REINDEX,
+                self.STAGE_LOAD_MAPPING,
+                self.STAGE_FLUSH_MAPPING,
+                self.STAGE_EXPORT_SEARCH,
+                self.STAGE_EXPORT_XREF,
+                self.STAGE_UPDATE_ENTITY,
+                self.STAGE_PRUNE_ENTITY,
+            ],
+        )
+
+        self.QOS_MAPPING = {
+            self.STAGE_INDEX: self.RABBITMQ_QOS_INDEX_QUEUE,
+            self.STAGE_XREF: self.RABBITMQ_QOS_XREF_QUEUE,
+            self.STAGE_REINGEST: self.RABBITMQ_QOS_REINGEST_QUEUE,
+            self.STAGE_REINDEX: self.RABBITMQ_QOS_REINDEX_QUEUE,
+            self.STAGE_LOAD_MAPPING: self.RABBITMQ_QOS_LOAD_MAPPING_QUEUE,
+            self.STAGE_FLUSH_MAPPING: self.RABBITMQ_QOS_FLUSH_MAPPING_QUEUE,
+            self.STAGE_EXPORT_SEARCH: self.RABBITMQ_QOS_EXPORT_SEARCH_QUEUE,
+            self.STAGE_EXPORT_XREF: self.RABBITMQ_QOS_EXPORT_XREF_QUEUE,
+            self.STAGE_UPDATE_ENTITY: self.RABBITMQ_QOS_UPDATE_ENTITY_QUEUE,
+            self.STAGE_PRUNE_ENTITY: self.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE,
+        }
 
         # Document processing pipeline
         self.INGEST_PIPELINE = env.to_list(
