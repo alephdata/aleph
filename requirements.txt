@@ -9,7 +9,7 @@ normality==2.5.0
 pantomime==0.6.1
 
 # Flask ecosystem
-Flask==2.3.3
+Flask==3.0.3
 Flask-SQLAlchemy==3.0.5
 Flask-Mail==0.9.1
 Flask-Migrate==4.0.7
@@ -22,7 +22,7 @@ authlib==0.15.5
 
 elasticsearch==7.17.0
 marshmallow==3.21.1
-gunicorn[eventlet]==21.2.0
+gunicorn[eventlet]==22.0.0
 jsonschema==4.22.0
 apispec==6.3.1
 apispec-webframeworks==0.5.2
