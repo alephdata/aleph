@@ -16,7 +16,7 @@ services:
   elasticsearch:
     build:
       context: services/elasticsearch
-    image: ghcr.io/alephdata/aleph-elasticsearch:${ALEPH_TAG:-4.0.0-rc10}
+    image: ghcr.io/alephdata/aleph-elasticsearch:${ALEPH_TAG:-4.0.0-rc11}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -55,7 +55,7 @@ services:
   app:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-4.0.0-rc10}
+    image: alephdata/aleph:${ALEPH_TAG:-4.0.0-rc11}
     hostname: aleph
     command: /bin/bash
     links:
@@ -83,7 +83,7 @@ services:
   api:
     build:
       context: .
-    image: alephdata/aleph:${ALEPH_TAG:-4.0.0-rc10}
+    image: alephdata/aleph:${ALEPH_TAG:-4.0.0-rc11}
     command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
@@ -117,7 +117,7 @@ services:
   ui:
     build:
       context: ui
-    image: alephdata/aleph-ui:${ALEPH_TAG:-4.0.0-rc10}
+    image: alephdata/aleph-ui:${ALEPH_TAG:-4.0.0-rc11}
     links:
       - api
     command: npm run start
