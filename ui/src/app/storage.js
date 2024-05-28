@@ -6,14 +6,7 @@ export const loadState = () => {
       return {};
     }
 
-    const storedState = JSON.parse(json);
-
-    // TODO: Remove after deadline
-    // See https://github.com/alephdata/aleph/issues/2864
-    storedState.localBookmarks = storedState.bookmarks;
-    delete storedState.bookmarks;
-
-    return storedState;
+    return JSON.parse(json);
   } catch (e) {
     // eslint-disable-next-line
     console.error('could not load state', e);

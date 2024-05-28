@@ -20,7 +20,6 @@ import notifications from './notifications';
 import systemStatus from './systemStatus';
 import exports from './exports';
 import bookmarks from './bookmarks';
-import localBookmarks from './localBookmarks';
 
 const rootReducer = combineReducers({
   messages,
@@ -43,10 +42,6 @@ const rootReducer = combineReducers({
   systemStatus,
   exports,
   bookmarks,
-
-  // TODO: Remove after deadline
-  // See https://github.com/alephdata/aleph/issues/2864
-  localBookmarks,
 });
 
 export default rootReducer;

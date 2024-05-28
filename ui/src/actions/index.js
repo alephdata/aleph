@@ -70,7 +70,6 @@ export {
   queryBookmarks,
   createBookmark,
   deleteBookmark,
-  migrateLocalBookmarks,
 } from './bookmarkActions';
 
 export { createAction };
