@@ -64,14 +64,6 @@ export const entitySetAddEntity = asyncActionCreator(
   { name: 'CREATE_ENTITY' }
 );
 
-export const fetchDiagramEmbed = asyncActionCreator(
-  (entitySetId) => async () => {
-    const response = await endpoint.post(`entitysets/${entitySetId}/embed`);
-    return response.data;
-  },
-  { name: 'FETCH_DIAGRAM_EMBED' }
-);
-
 export const queryEntitySetItems = asyncActionCreator(
   (query) => async () => queryEndpoint(query),
   { name: 'QUERY_ENTITYSET_ITEMS' }
