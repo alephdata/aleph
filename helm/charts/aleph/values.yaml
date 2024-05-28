@@ -6,7 +6,7 @@ global:
 
   image:
     repository: ghcr.io/alephdata/aleph
-    tag: "3.15.5"
+    tag: "3.17.0"
     pullPolicy: Always
 
   commonEnv:
@@ -123,7 +123,7 @@ ingestfile:
 
   image:
     repository: ghcr.io/alephdata/ingest-file
-    tag: "3.20.0"
+    tag: "3.22.0"
     pullPolicy: Always
 
   containerSecurityContext:

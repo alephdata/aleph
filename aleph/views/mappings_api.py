@@ -2,7 +2,7 @@ import logging
 from banal import first
 from followthemoney import model
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from aleph.core import db
 from aleph.model import Mapping, Status
@@ -10,7 +10,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
-from aleph.views.util import get_index_entity, get_session_id, obj_or_404, require
+from aleph.views.util import get_index_entity, get_session_id, require
 
 
 blueprint = Blueprint("mappings_api", __name__)
@@ -28,8 +28,13 @@ def load_query():
     return query
 
 
-def get_table_id(data):
-    return get_index_entity(data.get("table_id"), request.authz.READ).get("id")
+def get_table_id(data, collection):
+    table = get_index_entity(data.get("table_id"), request.authz.READ)
+
+    if table["collection_id"] != collection.id:
+        raise BadRequest()
+
+    return table.get("id")
 
 
 def get_entityset_id(data):
@@ -37,6 +42,21 @@ def get_entityset_id(data):
     if entityset_id is not None:
         get_entityset(entityset_id, request.authz.WRITE)
         return entityset_id
+
+
+def get_mapping(mapping_id, collection):
+    mapping = Mapping.by_id(mapping_id)
+
+    if not mapping:
+        raise NotFound()
+
+    # This could be implemented in a cleaner way by adding a where clause
+    # to the database query. But `Mapping.by_id` directly executes the query
+    # and does not return a query object, so we cannot alter the query.
+    if mapping.collection_id != collection.id:
+        raise NotFound()
+
+    return mapping
 
 
 @blueprint.route("/<int:collection_id>/mappings", methods=["GET"])
@@ -120,7 +140,7 @@ def create(collection_id):
     data = parse_request("MappingCreate")
     mapping = Mapping.create(
         load_query(),
-        get_table_id(data),
+        get_table_id(data, collection),
         collection,
         request.authz.id,
         entityset_id=get_entityset_id(data),
@@ -163,8 +183,8 @@ def view(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    mapping = get_mapping(mapping_id, collection)
     return MappingSerializer.jsonify(mapping)
 
 
@@ -210,12 +230,12 @@ def update(collection_id, mapping_id):
       - Collection
       - Mapping
     """
-    get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    mapping = get_mapping(mapping_id, collection)
     data = parse_request("MappingCreate")
     mapping.update(
         query=load_query(),
-        table_id=get_table_id(data),
+        table_id=get_table_id(data, collection),
         entityset_id=get_entityset_id(data),
     )
     db.session.commit()
@@ -257,13 +277,12 @@ def trigger(collection_id, mapping_id):
       - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping = get_mapping(mapping_id, collection)
     mapping.disabled = False
     mapping.set_status(Status.PENDING)
     db.session.commit()
     job_id = get_session_id()
     queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, mapping_id=mapping.id)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping, status=202)
 
 
@@ -301,7 +320,7 @@ def flush(collection_id, mapping_id):
       - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping = get_mapping(mapping_id, collection)
     mapping.disabled = True
     mapping.last_run_status = None
     mapping.last_run_err_msg = None
@@ -350,7 +369,7 @@ def delete(collection_id, mapping_id):
       - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    mapping = get_mapping(mapping_id, collection)
     mapping.delete()
     db.session.commit()
     queue_task(

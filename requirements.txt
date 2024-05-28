@@ -4,12 +4,12 @@ followthemoney==3.5.9
 followthemoney-store[postgresql]==3.1.0
 followthemoney-compare==0.4.4
 fingerprints==1.2.3
-servicelayer[google,amazon]==1.22.0
+servicelayer[google,amazon]==1.22.2
 normality==2.5.0
 pantomime==0.6.1
 
 # Flask ecosystem
-Flask==3.0.3
+Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
 Flask-Mail==0.9.1
 Flask-Migrate==4.0.7
@@ -18,7 +18,7 @@ Flask-Babel==4.0.0
 flask-talisman==1.1.0
 SQLAlchemy==2.0.21
 alembic==1.13.1
-authlib==1.3.0
+authlib==0.15.5
 
 elasticsearch==7.17.0
 marshmallow==3.21.1
