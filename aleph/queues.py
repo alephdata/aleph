@@ -74,9 +74,14 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         )
         dataset = Dataset(conn=kv, name=dataset_from_collection(collection))
         dataset.add_task(task_id, stage)
-        channel.close()
     except (pika.exceptions.UnroutableError, pika.exceptions.AMQPConnectionError):
         log.exception("Error while queuing task")
+    finally:
+        try:
+            channel = rabbitmq_conn.channel()
+            channel.close()
+        except pika.exceptions.ChannelWrongStateError as e:
+            log.debug("Excplicitly closing RabbitMQ channel failed.")
 
     if SETTINGS.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
