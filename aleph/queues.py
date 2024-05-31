@@ -80,7 +80,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
         try:
             channel = rabbitmq_conn.channel()
             channel.close()
-        except pika.exceptions.ChannelWrongStateError as e:
+        except pika.exceptions.ChannelWrongStateError:
             log.debug("Excplicitly closing RabbitMQ channel failed.")
 
     if SETTINGS.TESTING and lock.acquire(False):
