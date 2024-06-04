@@ -64,6 +64,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     }
     try:
         channel = rabbitmq_conn.channel()
+        channel.confirm_delivery()
         channel.basic_publish(
             exchange="",
             routing_key=stage,
