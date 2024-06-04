@@ -13,7 +13,7 @@ from servicelayer.taskqueue import Worker, Task, Dataset, get_task
 from servicelayer import settings as sls
 
 from aleph import __version__
-from aleph.core import kv, db, create_app
+from aleph.core import kv, db, create_app, rabbitmq_conn
 from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
@@ -141,6 +141,7 @@ class AlephWorker(Worker):
         with app.app_context():
             try:
                 db.session.remove()
+                rabbitmq_conn.process_data_events(time_limit=1)
                 if self.often.check():
                     self.often.update()
                     log.info("Self-check...")
