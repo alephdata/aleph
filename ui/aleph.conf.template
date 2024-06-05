@@ -1,0 +1,45 @@
+include mime.types;
+index index.html;
+
+sendfile on;
+client_max_body_size 2000g;
+client_body_timeout 84600s;
+proxy_connect_timeout 84600s;
+proxy_send_timeout 84600s;
+proxy_read_timeout 84600s;
+send_timeout 84600s;
+proxy_buffering off;
+proxy_request_buffering off;
+
+upstream docker-api {
+    server api:8000;
+}
+
+server {
+    listen 8080;
+    ignore_invalid_headers          off;
+    add_header Referrer-Policy            "same-origin";
+    add_header X-Clacks-Overhead          "GNU Terry Pratchett";
+    add_header X-Content-Type-Options     "nosniff";
+    add_header X-Frame-Options            "SAMEORIGIN";
+    add_header X-XSS-Protection           "1; mode=block";
+    add_header Feature-Policy             "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'";
+    add_header Content-Security-Policy    "${ALEPH_CONTENT_SECURITY_POLICY}";
+
+    location / {
+        root /assets;
+        try_files $uri $uri/ /index.html;
+
+        gzip_static on;
+        gzip_types text/plain text/xml text/css 
+            text/javascript application/x-javascript;
+    }
+
+    location /api {
+        proxy_pass         http://docker-api;
+        proxy_redirect     off;
+        proxy_set_header   Host $http_host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
