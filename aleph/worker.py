@@ -9,7 +9,7 @@ import copy
 from typing import Dict, Callable
 
 import structlog
-from servicelayer.taskqueue import Worker, Task, Dataset, get_task
+from servicelayer.taskqueue import Worker, Task, Dataset
 from servicelayer import settings as sls
 
 from aleph import __version__
