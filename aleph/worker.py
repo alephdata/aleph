@@ -112,15 +112,6 @@ class AlephWorker(Worker):
         self.prefetch_count_mapping = prefetch_count_mapping
         self.periodic_timer = threading.Timer(10, self.periodic)
 
-    def on_message(self, channel, method, properties, body, args):
-        connection = args[0]
-        task = get_task(body, method.delivery_tag)
-        # the task needs to be acknowledged in the same channel that it was
-        # received. So store the channel. This is useful when executing batched
-        # indexing tasks since they are acknowledged late.
-        task._channel = channel
-        self.local_queue.put((task, channel, connection))
-
     def on_signal(self, signal, _):
         log.debug("Cancelling periodic timer")
         self.periodic_timer.cancel()
