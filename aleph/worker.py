@@ -223,7 +223,9 @@ class AlephWorker(Worker):
                     now - self.indexing_batch_last_updated[collection_id]
                 )
                 if since_last_update > INDEXING_TIMEOUT:
-                    log.debug(f"Running batch indexing for collection {collection_id}")
+                    log.debug(
+                        f"Running batch indexing for collection {collection_id} ({len(batch)} items)"
+                    )
                     op_index(collection_id, batch, worker=self)
                     del self.indexing_batch_last_updated[collection_id]
                     del self.indexing_batches[collection_id]
