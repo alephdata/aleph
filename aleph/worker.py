@@ -110,19 +110,12 @@ class AlephWorker(Worker):
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
-        self.periodic_timer = threading.Timer(10, self.periodic)
 
     def on_signal(self, signal, _):
-        log.debug("Cancelling periodic timer")
-        self.periodic_timer.cancel()
         super().on_signal(signal, _)
 
     def process(self, blocking=True):
         if blocking:
-            log.info(
-                f"Starting periodic timer (interval={self.periodic_timer.interval}s)"
-            )
-            self.periodic_timer.start()
             with app.app_context():
                 self.process_blocking()
         else:
@@ -132,7 +125,7 @@ class AlephWorker(Worker):
         with app.app_context():
             try:
                 db.session.remove()
-                rabbitmq_conn.process_data_events(time_limit=1)
+                # rabbitmq_conn.process_data_events(time_limit=1)
                 if self.often.check():
                     self.often.update()
                     log.info("Self-check...")
@@ -191,13 +184,6 @@ class AlephWorker(Worker):
         return task
 
     def after_task(self, task):
-        if not self.periodic_timer.is_alive():
-            log.info(
-                f"Restarting periodic timer (interval={self.periodic_timer.interval}s)"
-            )
-            self.periodic_timer.cancel()
-            self.periodic_timer = threading.Timer(10, self.periodic)
-            self.periodic_timer.start()
         if not SETTINGS.TESTING:
             if task.collection_id and task.get_dataset(conn=kv).is_done():
                 refresh_collection(task.collection_id)
