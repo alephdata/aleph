@@ -205,6 +205,11 @@ class Settings:
             "ALEPH_INDEXING_BATCH_SIZE", 100
         )  # run indexing jobs in a batch of 100 for better performance
 
+        # Number of seconds during which AlephWorker will amass
+        # a batch of indexing tasks to execute (up to INDEXING_BATCH_SIZE).
+        # If the timeout is reached the worker executes the tasks amassed.
+        self.INDEXING_TIMEOUT = env.to_int("ALEPH_INDEXING_TIMEOUT", 10)
+
         # TODO, document
         self.RABBITMQ_MAX_PRIORITY = env.to_int("ALEPH_RABBITMQ_MAX_PRIORITY", 10)
 

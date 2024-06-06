@@ -28,7 +28,9 @@ from aleph.logic.xref import xref_collection, export_matches
 from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
 
-INDEXING_TIMEOUT = 10  # run all available indexing jobs in a batch after 10 seconds
+INDEXING_TIMEOUT = (
+    SETTINGS.INDEXING_TIMEOUT
+)  # run all available indexing jobs in a batch after 10 seconds
 
 log = structlog.get_logger(__name__)
 
@@ -194,10 +196,15 @@ class AlephWorker(Worker):
         if indexing_lock.acquire(False):
             batches = list(self.indexing_batches.items())
             indexing_lock.release()
+            log.debug(f"Evaluating {len(batches)} index batches for execution.")
             for collection_id, batch in batches:
                 now = time.time()
                 since_last_update = int(
                     now - self.indexing_batch_last_updated[collection_id]
+                )
+                log.debug(
+                    f"Batch for collection {collection_id} contains {len(batch)} items. ",
+                    f"Elapsed: {since_last_update}/{INDEXING_TIMEOUT} s.",
                 )
                 if since_last_update > INDEXING_TIMEOUT:
                     log.debug(
@@ -206,6 +213,8 @@ class AlephWorker(Worker):
                     op_index(collection_id, batch, worker=self)
                     del self.indexing_batch_last_updated[collection_id]
                     del self.indexing_batches[collection_id]
+
+            log.debug(f"Done evaluating {len(batches)} index batches for execution.")
 
 
 def get_worker(num_threads=1):
