@@ -6,7 +6,7 @@ from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
 from aleph.settings import SETTINGS
-from aleph.core import url_for, talisman
+from aleph.core import url_for
 from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import EntitiesQuery, MatchQuery
@@ -19,11 +19,6 @@ from aleph.views.context import tag_request
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 blueprint = Blueprint("reconcile_api", __name__)
 log = logging.getLogger(__name__)
-CSP = {
-    "default-src": "'*'",
-    "script-src": "'*'",
-    "connect-src": "'*'",
-}
 
 
 def get_freebase_types():
@@ -99,7 +94,6 @@ def reconcile_index(collection=None):
 @blueprint.route(
     "/api/2/collections/<collection_id>/reconcile", methods=["GET", "POST"]
 )
-@talisman(content_security_policy=CSP)
 def reconcile(collection_id=None):
     """Reconciliation API, emulates Google Refine API.
     ---
@@ -176,7 +170,6 @@ def reconcile_op(query, collection=None):
 
 
 @blueprint.route("/api/freebase/suggest", methods=["GET", "POST"])
-@talisman(content_security_policy=CSP)
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
     require(request.authz.can_browse_anonymous)
@@ -203,7 +196,6 @@ def suggest_entity():
 
 
 @blueprint.route("/api/freebase/property", methods=["GET", "POST"])
-@talisman(content_security_policy=CSP)
 def suggest_property():
     require(request.authz.can_browse_anonymous)
     prefix = request.args.get("prefix", "").lower().strip()
@@ -235,7 +227,6 @@ def suggest_property():
 
 
 @blueprint.route("/api/freebase/type", methods=["GET", "POST"])
-@talisman(content_security_policy=CSP)
 def suggest_type():
     require(request.authz.can_browse_anonymous)
     prefix = request.args.get("prefix", "").lower().strip()
