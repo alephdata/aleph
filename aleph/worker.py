@@ -13,7 +13,7 @@ from servicelayer.taskqueue import Worker, Task, Dataset
 from servicelayer import settings as sls
 
 from aleph import __version__
-from aleph.core import kv, db, create_app, rabbitmq_conn
+from aleph.core import kv, db, create_app
 from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
