@@ -2,12 +2,14 @@ import logging
 from pprint import pformat  # noqa
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.proxy import EntityProxy
 from followthemoney.graph import Node
 from followthemoney.types import registry
 
 from aleph.core import es
 from aleph.settings import SETTINGS
 from aleph.model import Entity
+from aleph.logic import resolver
 from aleph.logic.graph import Graph
 from aleph.index.entities import ENTITY_SOURCE
 from aleph.index.indexes import entities_read_index
@@ -32,11 +34,13 @@ def _expand_properties(proxies, properties):
     return props
 
 
-def _expand_adjacent(graph, proxy, prop):
+def _expand_adjacent(graph, proxy, prop, schemata=None):
     """Return all proxies related to the given proxy/prop combo as an array.
     This creates the very awkward return format for the API, which simply
     gives you a list of entities and lets the UI put them in some meaningful
     relation. Gotta revise this some day...."""
+    schemata = ensure_list(schemata)
+
     # Too much effort to do this right. This works, too:
     adjacent = set()
     node = Node.from_proxy(proxy)
@@ -47,7 +51,7 @@ def _expand_adjacent(graph, proxy, prop):
     return adjacent
 
 
-def expand_proxies(proxies, authz, properties=None, limit=0):
+def expand_proxies(proxies, authz, schemata=None, properties=None, limit=0):
     """Expand an entity's graph to find adjacent entities that are connected
     by a property (eg: Passport entity linked to a Person) or an Entity type
     edge (eg: Person connected to Company through Directorship).
@@ -61,12 +65,24 @@ def expand_proxies(proxies, authz, properties=None, limit=0):
 
     queries = {}
     entity_ids = [proxy.id for proxy in proxies]
+    schemata = ensure_list(schemata)
     # First, find all the entities pointing to the current one via a stub
     # property. This will return the intermediate edge entities in some
     # cases - then we'll use graph.resolve() to get the far end of the
     # edge.
     for prop in _expand_properties(proxies, properties):
         if not prop.stub:
+            for proxy in proxies:
+                for value in proxy.get(prop):
+                    if isinstance(value, str):
+                        # This is a really hacky workaround. We use the `Graph` object as
+                        # the resolver stub, because `Graph.resolve` also uses the resolver
+                        # internally and we do not want to load the same entity twice. This
+                        # is highly dependent on the `Graph.resolve` implementation and
+                        # probably not a good idea.
+                        resolver.queue(graph, Entity, value)
+            continue
+        if schemata and prop.reverse.schema.name not in schemata:
             continue
         index = entities_read_index(prop.reverse.schema)
         field = "properties.%s" % prop.reverse.name
@@ -79,17 +95,31 @@ def expand_proxies(proxies, authz, properties=None, limit=0):
     if limit > 0:
         graph.resolve()
 
+    if schemata:
+        resolver.resolve(graph)
+
     results = []
     for prop in _expand_properties(proxies, properties):
-        count = counts.get(prop.qname, 0)
-        if not prop.stub:
-            count = sum(len(p.get(prop)) for p in proxies)
+        if prop.stub:
+            count = counts.get(prop.qname)
+        else:
+            count = 0
+            for proxy in proxies:
+                for value in proxy.get(prop):
+                    if schemata:
+                        if isinstance(value, str):
+                            value = model.get_proxy(resolver.get(graph, Entity, value))
+                        if not isinstance(value, EntityProxy):
+                            continue
+                        if value.schema.name not in schemata:
+                            continue
+                    count += 1
 
         entities = set()
         for proxy in proxies:
             entities.update(_expand_adjacent(graph, proxy, prop))
 
-        if count > 0:
+        if count:
             item = {
                 "property": prop.name,
                 "count": count,

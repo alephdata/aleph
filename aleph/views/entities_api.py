@@ -557,8 +557,14 @@ def expand(entity_id):
         request.args, request.authz, max_limit=SETTINGS.MAX_EXPAND_ENTITIES
     )
     properties = parser.filters.get("property")
+
+    schemata = parser.filters.get("schema", [])
+    if not schemata:
+        schemata = parser.filters.get("schemata", [])
+
     results = expand_proxies(
         [proxy],
+        schemata=schemata,
         properties=properties,
         authz=request.authz,
         limit=parser.limit,
