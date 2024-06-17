@@ -207,19 +207,13 @@ To begin a production deployment:
 sudo sysctl -w vm.max_map_count=262144
 ```
 
-- Finally, you can boot the docker-compose environment:
+- After that, you can boot the docker-compose environment:
 
 ```bash
 docker-compose up -d
 ```
 
-This will run Aleph in detached mode. You can shut down the system at any time by issuing the following command:
-
-```bash
-docker-compose down
-```
-
-Before Aleph can process any requests or data, you need to make sure it sets up the database and search index correctly by executing an upgrade:
+This will run Aleph in detached mode. Before Aleph can process any requests or data, you need to make sure it sets up the database and search index correctly by executing an upgrade:
 
 ```bash
 docker-compose run --rm shell aleph upgrade
@@ -229,6 +223,12 @@ While the system is running, it will bind to to port `8080` of its host machine 
 
 ```bash
 curl http://localhost:8080/api/2/statistics
+```
+
+You can shut down the system at any time by issuing the following command:
+
+```bash
+docker-compose down
 ```
 
 If your servers firewall configuration allows it, you can now also open `http://localhost:8080` in your browser and use the web interface to navigate the application.
