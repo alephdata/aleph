@@ -202,10 +202,6 @@ class AlephWorker(Worker):
                 since_last_update = int(
                     now - self.indexing_batch_last_updated[collection_id]
                 )
-                log.debug(
-                    f"Batch for collection {collection_id} contains {len(batch)} items. ",
-                    f"Elapsed: {since_last_update}/{INDEXING_TIMEOUT} s.",
-                )
                 if since_last_update > INDEXING_TIMEOUT:
                     log.debug(
                         f"Running batch indexing for collection {collection_id} ({len(batch)} items)"
