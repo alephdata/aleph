@@ -173,15 +173,6 @@ class EntitySetAPITest(TestCase):
         assert res2.json["id"] == res.json["id"], res2.json
         assert "np" in res2.json["properties"]["nationality"], res2.json
 
-        embed_url = "/api/2/entitysets/%s/embed" % entityset_id
-        res = self.client.post(embed_url)
-        assert res.status_code == 403, res
-        res = self.client.post(embed_url, headers=self.headers)
-        assert res.status_code == 200, res
-        data = dict(res.json)
-        assert len(res.json["embed"]) > 1000, res.json
-        assert res.json["url"] is None
-
     def test_entity_entitysets(self):
         url = "/api/2/entitysets"
         res = self.client.post(url, json=self.input_data, headers=self.headers)

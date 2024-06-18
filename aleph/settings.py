@@ -158,9 +158,6 @@ class Settings:
             "ALEPH_PAGES_PATH", os.path.join(self.APP_DIR, "pages")
         )
 
-        # Publishing network diagram embeds
-        self.REACT_FTM_URL = "https://cdn.jsdelivr.net/npm/@alephdata/react-ftm@latest/dist/react-ftm-embed.js"  # noqa
-
         ##############################################################################
         # E-mail settings
 
