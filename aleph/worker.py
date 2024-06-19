@@ -196,7 +196,6 @@ class AlephWorker(Worker):
         if indexing_lock.acquire(False):
             batches = list(self.indexing_batches.items())
             indexing_lock.release()
-            log.debug(f"Evaluating {len(batches)} index batches for execution.")
             for collection_id, batch in batches:
                 now = time.time()
                 since_last_update = int(
@@ -209,8 +208,6 @@ class AlephWorker(Worker):
                     op_index(collection_id, batch, worker=self)
                     del self.indexing_batch_last_updated[collection_id]
                     del self.indexing_batches[collection_id]
-
-            log.debug(f"Done evaluating {len(batches)} index batches for execution.")
 
 
 def get_worker(num_threads=1):
