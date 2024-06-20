@@ -41,6 +41,10 @@ indexing_lock = threading.Lock()
 
 def op_index(collection_id: str, batch: List[Task], worker: Worker):
     collection = Collection.by_id(collection_id)
+
+    if not collection:
+        return
+
     sync = any(task.context.get("sync", False) for task in batch)
     index_many(collection, sync=sync, tasks=batch)
     for task in batch:
