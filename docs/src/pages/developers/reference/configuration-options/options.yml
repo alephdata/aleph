@@ -7,9 +7,6 @@ general:
   - name: 'ALEPH_URL_SCHEME'
     description: 'URL scheme used when generating URLs. Automatically set to `https` if `ALEPH_UI_URL` starts with `https`.'
     defaultValue: 'https'
-  - name: 'ALEPH_CONTENT_POLICY'
-    description: 'Content security policy to include in HTTP responses.'
-    defaultValue: '"default-src: ''self'' ''unsafe-inline'' ''unsafe-eval'' data: *"'
   - name: 'ALEPH_CORS_ORIGINS'
     description: 'List of allowed HTTP CORS origins. Spearate multiple values using a pipe character `|`.'
     defaultValue: '*'
@@ -76,12 +73,16 @@ ui:
     description: List of enabled languages. Users can select their preferred language. Separate multiple values using a colon `:`.
     defaultValue: ru:es:de:en:ar:fr
   - name: ALEPH_DEFAULT_LANGUAGE
-    description: ???
+    description: Default UI language
     defaultValue: en
   - name: ALEPH_FEEDBACK_URL_DOCUMENTS
     description: External link that allows users to report problems with ingested documents. You can use `{{role_email}}` and `{{entity_url}}` placeholders which will be replaced dynamically.
   - name: ALEPH_FEEDBACK_URL_TIMELINES
     description: External link that allows useres to give feedback about the timelines feature in Aleph investigations.
+  - name: ALEPH_APP_BANNER
+    description: Display a static message at the top of the screen. Refer to [How to display a message banner](/developers/how-to/operations/message-banner) for details.
+  - name: ALEPH_APP_MESSAGES_URL
+    description: Load messages from this URL and display the most recent message at the top of the screen. Refer to [How to display a message banner](/developers/how-to/operations/message-banner) for details.
 
 ingestors:
   - name: 'ALEPH_INGEST_PIPELINE'
@@ -90,15 +91,9 @@ ingestors:
   - name: 'INGESTORS_CONVERT_TIMEOUT'
     description: 'Timeout in hours for document conversions.'
     defaultValue: '7200'
-  - name: 'INGESTORS_CONVERT_RETRIES'
-    description: 'Number of times a failed document conversion is retried.'
-    defaultValue: '256'
   - name: 'INGESTORS_OCR_VISION_API'
     description: 'Use the Google Vision API instead of performing OCR locally using Tesseract.'
     defaultValue: 'false'
-  - name: 'INGESTORS_GEONAMES_PATH'
-    description: '???'
-    defaultValue: '/ingestors/data/geonames.txt'
   - name: 'INGESTORS_LID_MODEL_PATH'
     description: 'Path to a fastText model used for language identification.'
     defaultValue: '/ingestors/data/lid.176.ftz'
@@ -237,6 +232,21 @@ featureFlags:
   - name: ALEPH_ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE
     description: Enable experimental bookmarks feature. Bookmarks are stored client-side and users may accidentally delete them when clearing browser data.
     defaultValue: 'false'
+
+monitoring:
+  - name: 'SENTRY_DSN'
+    description: 'Sentry DSN. Refer to the [Sentry documentation](https://docs.sentry.io/platforms/python/configuration/options/#common-options) for details.'
+  - name: 'SENTRY_ENVIRONMENT'
+    description: 'Sentry environment. Refer to the [Sentry documentation](https://docs.sentry.io/platforms/python/configuration/options/#common-options) for details.'
+  - name: 'SENTRY_CAPTURE_PROCESSING_EXCEPTIONS'
+    description: 'Report exceptions that occur during processing of uploaded files to Sentry. Enable this with care as it can easily eat up the Sentry event quota if you upload a lot of files.'
+    defaultValue: 'false'
+  - name: 'PROMETHEUS_ENABLED'
+    description: 'Enable Prometheus metrics. Refer to [How to set up Prometheus metrics](/developers/how-to/operations/prometheus) for details.'
+    defaultValue: 'false'
+  - name: 'PROMETHEUS_PORT'
+    description: 'Port for Prometheus metrics endpoint'
+    defaultValue: '9100'
 
 development:
   - name: 'ALEPH_DEBUG'
