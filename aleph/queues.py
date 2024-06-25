@@ -4,18 +4,19 @@ import threading
 from random import randrange
 
 import pika
+from servicelayer import taskqueue
 from servicelayer.rate_limit import RateLimit
 from servicelayer.cache import make_key
 from servicelayer.taskqueue import (
     Dataset,
     NO_COLLECTION,
     PREFIX,
+    dataset_from_collection,
 )
 
 from aleph.core import kv, rabbitmq_conn
 from aleph.settings import SETTINGS
 from aleph.model import Entity
-from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
@@ -23,90 +24,20 @@ log = logging.getLogger(__name__)
 lock = threading.Lock()
 
 
-def flush_queue():
-    try:
-        channel = rabbitmq_conn.channel()
-        for queue in SETTINGS.ALEPH_STAGES:
-            try:
-                channel.queue_purge(queue)
-            except ValueError:
-                logging.exception(f"Error while flushing the {queue} queue")
-        channel.close()
-    except pika.exceptions.AMQPError:
-        logging.exception("Error while flushing task queue")
-    for key in kv.scan_iter(PREFIX + "*"):
-        kv.delete(key)
-
-
-def dataset_from_collection(collection):
-    """servicelayer dataset from a collection"""
-    if collection is None:
-        return NO_COLLECTION
-    return str(collection.id)
-
-
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_task_count(collection) -> int:
-    """Get the total task count for a given dataset."""
-    status = Dataset.get_active_dataset_status(conn=kv)
-    try:
-        collection = status["datasets"][str(collection.id)]
-        total = collection["finished"] + collection["running"] + collection["pending"]
-    except KeyError:
-        total = 0
-    return total
-
-
-def get_priority(collection) -> int:
-    """
-    Priority buckets for tasks based on the total (pending + running) task count.
-    """
-    total_task_count = get_task_count(collection)
-    if total_task_count < 500:
-        return randrange(7, 9)
-    elif total_task_count < 10000:
-        return randrange(4, 7)
-    return randrange(1, 4)
-
-
-# ToDo: Move this to servicelayer??
 def queue_task(collection, stage, job_id=None, context=None, **payload):
-    task_id = random_id()
-    priority = get_priority(collection)
-    body = {
-        "collection_id": dataset_from_collection(collection),
-        "job_id": job_id or random_id(),
-        "task_id": task_id,
-        "operation": stage,
-        "context": context,
-        "payload": payload,
-        "priority": priority,
-    }
-    try:
-        channel = rabbitmq_conn.channel()
-        channel.confirm_delivery()
-        channel.basic_publish(
-            exchange="",
-            routing_key=stage,
-            body=json.dumps(body),
-            properties=pika.BasicProperties(
-                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE, priority=priority
-            ),
-        )
-        dataset = Dataset(conn=kv, name=dataset_from_collection(collection))
-        dataset.add_task(task_id, stage)
-    except (pika.exceptions.UnroutableError, pika.exceptions.AMQPConnectionError):
-        log.exception("Error while queuing task")
-    finally:
-        try:
-            channel = rabbitmq_conn.channel()
-            channel.close()
-        except pika.exceptions.ChannelWrongStateError:
-            log.debug("Excplicitly closing RabbitMQ channel failed.")
-
+    taskqueue.queue_task(
+        rabbitmq_conn,
+        kv,
+        collection.id,
+        stage,
+        job_id=job_id,
+        context=context,
+        **payload
+    )
     if SETTINGS.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
 

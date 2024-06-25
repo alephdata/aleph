@@ -10,7 +10,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
-from servicelayer.taskqueue import declare_rabbitmq_queue
+from servicelayer.taskqueue import declare_rabbitmq_queue, flush_queues
 from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
@@ -27,7 +27,6 @@ from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app, rabbitmq_conn
 from aleph.oauth import oauth
-from aleph.queues import flush_queue
 
 log = logging.getLogger(__name__)
 APP_NAME = "aleph-test"
@@ -264,7 +263,7 @@ class TestCase(unittest.TestCase):
                     conn.commit()
 
         kv.flushall()
-        flush_queue()
+        flush_queues(rabbitmq_conn, kv, SETTINGS.ALEPH_STAGES)
         create_system_roles()
 
     def tearDown(self):
