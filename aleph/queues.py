@@ -26,7 +26,7 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     taskqueue.queue_task(
         rabbitmq_conn,
         kv,
-        collection.id,
+        collection.id if collection else 0,
         stage,
         job_id=job_id,
         context=context,
