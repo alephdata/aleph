@@ -1,16 +1,10 @@
 import logging
-import json
 import threading
-from random import randrange
 
-import pika
 from servicelayer import taskqueue
 from servicelayer.rate_limit import RateLimit
-from servicelayer.cache import make_key
 from servicelayer.taskqueue import (
     Dataset,
-    NO_COLLECTION,
-    PREFIX,
     dataset_from_collection,
 )
 
