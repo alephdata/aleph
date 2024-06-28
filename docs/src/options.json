@@ -156,6 +156,7 @@
             { "slug": "/developers/reference/configuration-options" },
             { "slug": "/developers/reference/languages" },
             { "slug": "/developers/reference/file-types" },
+            { "slug": "/developers/reference/prometheus-metrics" },
             {
               "title": "HTTP API",
               "external": true,

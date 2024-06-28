@@ -4,7 +4,7 @@ title: Configuration Options
 ---
 
 import options from './options.yml';
-import ConfigurationOptions from '@components/ConfigurationOptions.astro';
+import ReferenceListing from '@components/ReferenceListing.astro';
 
 # Configuration Options
 
@@ -12,61 +12,61 @@ import ConfigurationOptions from '@components/ConfigurationOptions.astro';
 
 ## General
 
-<ConfigurationOptions options={options.general} />
+<ReferenceListing items={options.general} />
 
 ## User Interface
 
-<ConfigurationOptions options={options.ui} />
+<ReferenceListing items={options.ui} />
 
 ## Ingestors
 
-<ConfigurationOptions options={options.ingestors} />
+<ReferenceListing items={options.ingestors} />
 
 ## Databases and services
 
 Refer to the [architecture](/developers/explanation/architecture) for details about how Aleph uses the different databases.
 
-<ConfigurationOptions options={options.services} />
+<ReferenceListing items={options.services} />
 
 ## Workers
 
-<ConfigurationOptions options={options.workers} />
+<ReferenceListing items={options.workers} />
 
 ## Storage
 
 By default, Aleph stores uploaded files on the local file system. You can configure Aleph to use an external blob storage service like AWS S3 or Google Cloud Storage instead. Depending on the service, you may need to set additional configuration options (see [Cloud providers](#cloud-providers)).
 
-<ConfigurationOptions options={options.storage} />
+<ReferenceListing items={options.storage} />
 
 ## Cloud providers
 
 Aleph currently supports AWS S3 (and S3-compatible services) for file storage and the Google Cloud Vision API for OCR. If you want to use one of these services, make sure to set the respective configuration options.
 
-<ConfigurationOptions options={options.cloud} />
+<ReferenceListing items={options.cloud} />
 
 ## Authentication
 
-<ConfigurationOptions options={options.auth} />
+<ReferenceListing items={options.auth} />
 
 ## OAuth
 
 Use these configuration options to configure an external OAuth provider. Some of these options may be optional depending on your provider. Refer to ["How configure an OAuth provider"](/developers/how-to/operations/oauth) for details.
 
-<ConfigurationOptions options={options.oauth} />
+<ReferenceListing items={options.oauth} />
 
 ## Email
 
 Aleph sends notification and authentication emails. The following options are used to configure outbound email. They map to the [configuration options exposed by Flask-Mail](https://pythonhosted.org/Flask-Mail/#configuring-flask-mail).
 
-<ConfigurationOptions options={options.email} />
+<ReferenceListing items={options.email} />
 
 ## Monitoring
 
-<ConfigurationOptions options={options.monitoring} />
+<ReferenceListing items={options.monitoring} />
 
 ## Feature flags
 
-<ConfigurationOptions options={options.featureFlags} />
+<ReferenceListing items={options.featureFlags} />
 
 ## Development
 
@@ -76,7 +76,7 @@ Aleph sends notification and authentication emails. The following options are us
   These options are convenience options for use in a development environment. Do not enable them in a production environment. Enabling them in a production environment is insecure and can lead to remote code execution and unauthorized access to sensitive data.
 </Callout>
 
-<ConfigurationOptions options={options.development} />
+<ReferenceListing items={options.development} />
 
 ## Additional configuration options
 

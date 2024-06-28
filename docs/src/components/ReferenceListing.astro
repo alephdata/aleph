@@ -1,6 +1,6 @@
 ---
 import Markdown from '@astrojs/markdown-component';
-const { options } = Astro.props;
+const { items } = Astro.props;
 ---
 
 <style>
@@ -23,7 +23,7 @@ const { options } = Astro.props;
 
 <dl>
   {
-    options.map(({ name, description, defaultValue }) => (
+    items.map(({ name, description, type, defaultValue }) => (
       <>
         <dt id={name}>
           <code>{name}</code>
@@ -33,6 +33,11 @@ const { options } = Astro.props;
           {defaultValue && (
             <p>
               <strong>Default:</strong> <code>{defaultValue}</code>
+            </p>
+          )}
+          {type && (
+            <p>
+              <strong>Type:</strong> {type}
             </p>
           )}
         </dd>
