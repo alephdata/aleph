@@ -60,12 +60,6 @@ class Settings:
         )
         self.APP_UI_URL = self.APP_PARSED_UI_URL.geturl()
 
-        # Content security policy:
-        self.CONTENT_POLICY = env.get(
-            "ALEPH_CONTENT_POLICY",
-            "default-src: 'self' 'unsafe-inline' 'unsafe-eval' data: *",
-        )
-
         # Cross-origin resource sharing
         self.CORS_ORIGINS = env.to_list("ALEPH_CORS_ORIGINS", ["*"], separator="|")
 
