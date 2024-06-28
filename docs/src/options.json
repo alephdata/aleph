@@ -73,43 +73,99 @@
     "developers": {
       "sections": [
         {
-          "title": "Tech Docs",
+          "title": "Getting started",
           "items": [
-            { "slug": "/developers/installation" },
+            { "slug": "/developers/getting-started/development-environment" },
             {
-              "slug": "/developers/followthemoney",
+              "slug": "/developers/getting-started/production-deployment",
               "children": [
-                { "slug": "/developers/followthemoney/ftm" },
                 {
-                  "title": "Technical Reference",
-                  "external": true,
-                  "link": "https://followthemoney.tech/"
+                  "slug": "/developers/getting-started/production-deployment/docker-compose"
                 }
               ]
             },
-            { "slug": "/developers/memorious" },
-            { "slug": "/developers/alephclient" },
-            { "slug": "/developers/mappings" },
-            { "slug": "/developers/mixed-graphs" },
-            { "slug": "/developers/adding-text-processors" },
+            { "slug": "/developers/getting-started/find-datasets" }
+          ]
+        },
+        {
+          "title": "How To",
+          "items": [
             {
-              "slug": "/developers/technical-faq",
+              "slug": "/developers/how-to/development",
               "children": [
-                { "slug": "/developers/technical-faq/design-premises" },
-                { "slug": "/developers/technical-faq/look-ma-no-docker" }
+                {
+                  "slug": "/developers/how-to/development/inspect-elasticsearch"
+                },
+                {
+                  "slug": "/developers/how-to/development/custom-text-processor"
+                },
+                { "slug": "/developers/how-to/development/translate-aleph" },
+                { "slug": "/developers/how-to/development/new-languages" },
+                { "slug": "/developers/how-to/development/identity-provider" }
               ]
             },
-            { "slug": "/developers/developer-tools" },
-            { "slug": "/developers/datacommons" }
+            {
+              "slug": "/developers/how-to/operations",
+              "children": [
+                { "slug": "/developers/how-to/operations/backups" },
+                { "slug": "/developers/how-to/operations/upgrades" },
+                { "slug": "/developers/how-to/operations/blob-storage" },
+                { "slug": "/developers/how-to/operations/identity-provider" },
+                { "slug": "/developers/how-to/operations/reverse-proxy" },
+                { "slug": "/developers/how-to/operations/users-and-groups" },
+                { "slug": "/developers/how-to/operations/message-banner" },
+                { "slug": "/developers/how-to/operations/custom-pages" },
+                { "slug": "/developers/how-to/operations/custom-data-model" },
+                { "slug": "/developers/how-to/operations/sentry" },
+                { "slug": "/developers/how-to/operations/prometheus" },
+                { "slug": "/developers/how-to/operations/structured-logging" }
+              ]
+            },
+            {
+              "slug": "/developers/how-to/data",
+              "children": [
+                { "slug": "/developers/how-to/data/install-alephclient" },
+                { "slug": "/developers/how-to/data/install-ftm" },
+                { "slug": "/developers/how-to/data/import-ftm-data" },
+                { "slug": "/developers/how-to/data/upload-directory" },
+                { "slug": "/developers/how-to/data/import-tabular-data" },
+                { "slug": "/developers/how-to/data/import-ocds-data" },
+                { "slug": "/developers/how-to/data/export-ftm-data" },
+                { "slug": "/developers/how-to/data/export-network-graphs" },
+                { "slug": "/developers/how-to/data/mixed-graphs" }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Explanation",
+          "items": [
+            { "slug": "/developers/explanation/architecture" },
+            { "slug": "/developers/explanation/followthemoney" },
+            { "slug": "/developers/explanation/design-premises" },
+            { "slug": "/developers/explanation/ingest-pipeline" },
+            { "slug": "/developers/explanation/entity-extraction" },
+            { "slug": "/developers/explanation/search" },
+            { "slug": "/developers/explanation/cross-referencing" }
           ]
         },
         {
           "title": "Reference",
           "items": [
+            { "slug": "/developers/reference/glossary" },
+            { "slug": "/developers/reference/configuration-options" },
+            { "slug": "/developers/reference/languages" },
+            { "slug": "/developers/reference/file-types" },
+            { "slug": "/developers/reference/prometheus-metrics" },
             {
-              "title": "Aleph API",
+              "title": "HTTP API",
               "external": true,
               "link": "https://redocly.github.io/redoc/?url=https://aleph.occrp.org/api/openapi.json"
+            },
+            {
+              "title": "FollowTheMoney Model Explorer",
+              "external": true,
+              "link": "https://followthemoney.tech/explorer"
             }
           ]
         }

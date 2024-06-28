@@ -1,0 +1,128 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Configure an Identity Provider
+---
+
+# How To Configure an Identity Provider
+
+<p class="lead">Aleph ships with a built-in password authentication system. However, for production deployments, we recommend delegating authentication to an external identity provider. If you’re organization already uses an identity provider, this allows your users to use Aleph without setting up a separate account. Even if you do not use an identity provider, this provides additional security features such as multi-factor authentication.</p>
+
+## Disable password authentication
+
+When setting up an external identity provider, you most like won’t want users to create accounts using Aleph’s built-in password authentication system. You can disable password authentication by setting the `ALEPH_PASSWORD_LOGIN` configuration option to `false`.
+
+<Callout theme="danger">
+  If you do not disable password authentication, anyone will still be able to create an account or sign in using password authentication.
+</Callout>
+
+## Configure OAuth
+Aleph has built-in support for the identity providers listed below. Other identity providers that support the [OpenID Connect standard](https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)) should work with Aleph, too.
+
+However, we can unfortunately not guarantee that the instructions below are always up to date. If you’re using one of the identity providers listed below and find that the instructions are outdated or if you use an identity provider not listed we’d appreciate if you could open a pull request with updated instructions.
+
+### Google
+
+<Callout>
+  User groups are not standardized in OpenID and Aleph currently doesn’t support syncing user groups when using Google as an identity provider.
+</Callout>
+
+<Steps>
+  <Step>
+    Create an OAuth client in the Google Cloud console. Please refer to the [Google Cloud documentation](https://developers.google.com/workspace/guides/create-credentials#oauth-client-id) for detailed instructions.
+  </Step>
+
+  <Step>
+    If you want to allow only users in your organization to access your Aleph instance, make sure to select the correct [user type](https://support.google.com/cloud/answer/10311615).
+  </Step>
+
+  <Step>
+    In the Google Cloud console, add Aleph’s OAuth endpoint as an authorized redirect URI. For example, if your Aleph instance is available at `https://example.org`, add the following authorized redirect URI:
+
+    ```
+    https://example.org/api/2/sessions/callback
+    ```
+  </Step>
+
+  <Step>
+    After creating a new OAuth client in the Google Cloud console, set the following Aleph configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ALEPH_OAUTH` | `true` |
+| `ALEPH_OAUTH_KEY` | Client ID |
+| `ALEPH_OAUTH_SECRET` | Client secret |
+| `ALEPH_OAUTH_METADATA_URL` | `https://accounts.google.com/.well-known/openid-configuration` |
+  </Step>
+</Steps>
+
+### Keycloak
+
+<Steps>
+  <Step>
+    In Keycloak, create a new OpenID Connect client. Please refer to the [Keycloak documentation](https://www.keycloak.org/docs/latest/server_admin/index.html#proc-creating-oidc-client_server_administration_guide) for detailed instructions.
+  </Step>
+
+  <Step>
+    In Keycloak, add Aleph’s OAuth endpoint as a redirect URI. For example, if your Aleph instance is available at `https://example.org`, add the following redirect URI:
+
+    ```
+    https://example.org/api/2/sessions/callback
+    ```
+  </Step>
+
+  <Step>
+    You also need the OpenID configuration endpoint of your Keycloak instance. For example, if your Keycloak instance is hosted at `https://keycloak.example.org` and you use a realm named `aleph` the OpenID configuration endpoint would be:
+
+    ```
+    https://keycloak.example.org/auth/realms/aleph/.well-known/openid-configuration
+    ```
+
+    You can also find the OpenID configuration endpoint in the [realm settings](https://www.keycloak.org/docs/latest/server_admin/index.html#configuring-realms) in the Keycloak admin interface.
+  </Step>
+
+  <Step>
+    After creating a new client in Keycloak, set the following Aleph configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ALEPH_OAUTH` | `true` |
+| `ALEPH_OAUTH_KEY` | Client ID |
+| `ALEPH_OAUTH_SECRET` | Client secret |
+| `ALEPH_OAUTH_METADATA_URL` | OpenID configuration endpoint (see previous step) |
+  </Step>
+</Steps>
+
+### Microsoft Entra ID (formerly Azure Active Directory)
+
+<Steps>
+  <Step>
+    Register a new application in the Microsoft Entra admin center. Please refer to the [Microsoft Entra ID documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) for detailed instructions.
+  </Step>
+
+  <Step>
+    If you want to allow only users in your organization to access your Aleph instance, make sure to select the correct account type.
+  </Step>
+
+  <Step>
+    In the Microsoft Entra admin center, add Aleph’s OAuth endpoint as a redirect URI. For example, if your Aleph instance is available at `https://example.org`, add the following redirect URI:
+
+    ```
+    https://example.org/api/2/sessions/callback
+    ```
+  </Step>
+
+  <Step>
+    You also need the OpenID configuration endpoint of the app you created in the first step. Please refer to the [Microsoft Entra ID documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc#find-your-apps-openid-configuration-document-uri) for instructions on how to find your OpenID configuration endpoint.
+  </Step>  
+
+  <Step>
+    After creating a new client in Keycloak, set the following Aleph configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ALEPH_OAUTH` | `true` |
+| `ALEPH_OAUTH_KEY` | Client ID |
+| `ALEPH_OAUTH_SECRET` | Client secret |
+| `ALEPH_OAUTH_METADATA_URL` | OpenID configuration endpoint (see previous step) |
+  </Step>
+</Steps>

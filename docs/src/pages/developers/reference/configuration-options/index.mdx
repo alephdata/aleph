@@ -1,0 +1,92 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Configuration Options
+---
+
+import options from './options.yml';
+import ReferenceListing from '@components/ReferenceListing.astro';
+
+# Configuration Options
+
+<p class="lead">Aleph can be configured using environment variables to adjust it to your needs. This page lists all available configuration options.</p>
+
+## General
+
+<ReferenceListing items={options.general} />
+
+## User Interface
+
+<ReferenceListing items={options.ui} />
+
+## Ingestors
+
+<ReferenceListing items={options.ingestors} />
+
+## Databases and services
+
+Refer to the [architecture](/developers/explanation/architecture) for details about how Aleph uses the different databases.
+
+<ReferenceListing items={options.services} />
+
+## Workers
+
+<ReferenceListing items={options.workers} />
+
+## Storage
+
+By default, Aleph stores uploaded files on the local file system. You can configure Aleph to use an external blob storage service like AWS S3 or Google Cloud Storage instead. Depending on the service, you may need to set additional configuration options (see [Cloud providers](#cloud-providers)).
+
+<ReferenceListing items={options.storage} />
+
+## Cloud providers
+
+Aleph currently supports AWS S3 (and S3-compatible services) for file storage and the Google Cloud Vision API for OCR. If you want to use one of these services, make sure to set the respective configuration options.
+
+<ReferenceListing items={options.cloud} />
+
+## Authentication
+
+<ReferenceListing items={options.auth} />
+
+## OAuth
+
+Use these configuration options to configure an external OAuth provider. Some of these options may be optional depending on your provider. Refer to ["How configure an OAuth provider"](/developers/how-to/operations/oauth) for details.
+
+<ReferenceListing items={options.oauth} />
+
+## Email
+
+Aleph sends notification and authentication emails. The following options are used to configure outbound email. They map to the [configuration options exposed by Flask-Mail](https://pythonhosted.org/Flask-Mail/#configuring-flask-mail).
+
+<ReferenceListing items={options.email} />
+
+## Monitoring
+
+<ReferenceListing items={options.monitoring} />
+
+## Feature flags
+
+<ReferenceListing items={options.featureFlags} />
+
+## Development
+
+<Callout theme="danger">
+  **Never enable the following options in a production environment!**
+
+  These options are convenience options for use in a development environment. Do not enable them in a production environment. Enabling them in a production environment is insecure and can lead to remote code execution and unauthorized access to sensitive data.
+</Callout>
+
+<ReferenceListing items={options.development} />
+
+## Additional configuration options
+
+Aleph’s backend is a Flask application. You can set arbitrary configuration options of the Flask app configuration object using environment variables. This is helpful in case you need to directly adjust a configuration option exposed by Flask or another package and Aleph doesn't provide a respective configuration option.
+
+In order to enable this feature, set `ALEPH_STRING_CONFIG_PREFIX`. Aleph will then load all environment variables starting with the configured prefix and append them to the Flask app configuration. In the following example, the Flask [`MAX_CONTENT_LENGTH`](https://flask.palletsprojects.com/en/2.2.x/config/#MAX_CONTENT_LENGTH) configuration options will be set.
+
+```
+ALEPH_STRING_CONFIG_PREFIX=CUSTOM_
+CUSTOM_MAX_CONTENT_LENGTH=1048576
+```
+
+Similarly, this also works for complex, non-string configuration options. Set `ALEPH_JSON_CONFIG_PREFIX` and Aleph will load all environment variables starting with the configured prefix, trying to parse values as JSON.

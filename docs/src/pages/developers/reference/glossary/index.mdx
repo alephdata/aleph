@@ -1,0 +1,57 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Glossary
+---
+
+# Glossary
+
+<p class="lead">This page contains definitions of terms that have a specific meaning in Aleph. It is intended for developers working on Aleph’s codebase and people operating Aleph instances.</p>
+
+## Collection
+A collection is the main way of organizing source files and entities in Aleph. Every entitiy and file is part of exactly one collection. Collections can be shared with users and user groups. There are two types of collections: [datasets](#dataset) and [investigations](#investigation). Aleph mostly treats datasets and investigations in the same way. However, the user interface for datasets and collections is different.
+
+## Investigation
+An investigation is a [collection](#collection). Investigations are workspaces for users to collect and share source files and entities that belong to a project or story that is in progress. Users can upload source files and create entities using a spreadsheet-like editor or by mapping data from CSV or Excel files. Users can also use tools like network diagrams and timelines to visualize data.
+
+## Dataset
+A dataset is a [collection](#collection). Unlike investigations, datasets are used to share data that isn’t related to a specific story or project, but might be relevant now or in the future. Users cannot upload files to or edit entities in datasets. Every dataset has a category (e.g. "leak", "company registry", or "sanctions list") that allow users to discover relevant datasets. Datasets can be shared with individual users, user groups, or even publicly.
+
+<Callout theme="danger">
+  Some parts of the codebase still use the term "Dataset" to refer to collections (i.e. investigations *and* datasets). This includes the [task queue implementation](https://github.com/alephdata/servicelayer/blob/main/servicelayer/taskqueue.py) and [followthemoney-store](https://github.com/alephdata/followthemoney-store/blob/main/ftmstore/dataset.py). This can be quite confusing. Please feel free to ask a member of the Aleph team for clarification if in doubt.
+</Callout>
+
+## Foreign ID
+A foreign ID is a unique identifier for a collection. When creating a dataset or investigation, you can provide a custom foreign ID, for example a foreign ID that is easy to remember or that follows a naming scheme. Foreign IDs can be used with many commands of the alephclient CLI and in some other cases and are especially useful when automating data imports or exports.
+
+## FollowTheMoney
+[FollowTheMoney](https://followthemoney.tech) is a data model for anti-corruption investigations. It contains definitions of entities relevant in this context (e.g. people, companies, payments etc.). FollowTheMoney also provides Python and TypeScript packages and a command-line tool to generate, validate, and export FollowTheMoney data. FollowTheMoney was extracted out of Aleph, and Aleph makes heavy use of FollowTheMoney. All data within [collections](#collection) (even source files) is represented using the FollowTheMoney data model.
+
+## Entity
+An entity is an object of structured information. Entities have an ID, a schema, and a set of properties. For more information about entities, refer to the [FollowTheMoney documentation](https://followthemoney.tech/docs/).
+
+## Schema
+A schema is a type of [entity](#entity). The schema defines which properties can be set for an entity. For example, entities of the [`Person`](https://followthemoney.tech/explorer/schemata/Person) schema have `name` and `country` properties, [`Company`](https://followthemoney.tech/explorer/schemata/Person) entities also have `legalForm` and `registrationNumber` properties. You can browse all available schemata using the [model explorer](https://followthemoney.tech/explorer/).
+
+## Fragment
+Aleph uses a library called [followthemoney-store](https://github.com/alephdata/followthemoney-store) to store entities in a SQL database. Rather than using one row per entity, entities are represented by one or more *fragments*. Each fragment stores a subset of the entitiy data. In order to make entities searchable, all fragments for a single entity are merged into a single entity. This approach has some advantages. You can read more about it in the [FollowTheMoney](https://followthemoney.tech/docs/fragments/) documentation.
+
+## Cross-referencing
+Cross-referencing allows users to compare a dataset to all other data in Aleph to find similar entities across datasets and investigations. Refer to the [Aleph user guide](/users/investigations/cross-referencing) for more information.
+
+## Archive
+The archive is the storage backend used to store source files uploaded to Aleph, but also other data like exports requested by users. Aleph [supports multiple storage backend](/developers/how-to/operations/blob-storage) such as the local file system, S3-compatible object storage, or GCP Cloud Storage.
+
+## Role
+A role in Aleph is either an individual user, a system user, or a group of users. Roles can be members of other (user group) roles. Every role can have multiple permissions giving it read or read/write access to a particular collection.
+
+## Administrator
+An administrator is a (user) [role](#role) with special permissions. Administrators can access all collections and can make datasets public (i.e. accessible for anonymous visitors).
+
+## Job
+A job is a set of [tasks](#task) to be processed by workers. For example, when uploading multiple files to Aleph at once, that creates a single job. However, that job contains multiple tasks to ingest, analyze, and index the individual files. Aleph stores some metadata for jobs, e.g. the time when the job was started.
+
+## Task
+A task is a single unit of background work, e.g. indexing a specific entity or creating a data export requested by a user. Tasks have a [stage](#stage) (e.g. `index`) and an (optional) payload (e.g. the ID of the entity to index). Tasks are processed by exactly one worker. Once a worker started processing a task, it cannot be cancelled.
+
+## Stage
+A stage refers to the operation of a background [task](#task), e.g. indexing, or analyzing.

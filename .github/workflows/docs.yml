@@ -1,13 +1,15 @@
 name: Docs
 
 on: 
+  pull_request:
+    paths:
+      - "docs/**"
   push:
     paths:
       - "docs/**"
     branches:
-      - "**"
-    pr:
-      - "docs/**"
+      - "develop"
+      - "main"
   workflow_dispatch: {}
 
 jobs:

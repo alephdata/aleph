@@ -1,0 +1,111 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Set Up an Identity Provider
+---
+
+# How to Set Up an Identity Provider for Development
+
+<p class="lead">When making changes to the OAuth authentication flow in Aleph, it can be helpful to test changes against a real identity provider. This guide describes how to run the Keycloak identity provider in your local development environment and how to configure Aleph accordingly.</p>
+
+<Callout theme="danger">This guide describes how to set up Keycloak in a development environment. If you want to configure a production Aleph instance to use Keycloak as an identity provider, please refer to [our operations guide](/developers/how-to/operations/identity-provider).</Callout>
+
+## Set up Keycloak
+
+The official [Keycloak documentation](https://www.keycloak.org/getting-started/getting-started-docker) provides detailed instructions on how to run Keycloak using Docker. You can follow these instructions for the most part. However, you will have to make a few minor changes:
+
+<Steps>
+  <Step>
+    The default port used in the Keycloak documentation is `8080`. In an Aleph development environment that port is already in use for the Aleph UI. Adjust the port mapping for the Keycloak container to use a different port:
+
+    ```bash
+    docker run -p "8888:8080" -e "KEYCLOAK_ADMIN=admin" -e "KEYCLOAK_ADMIN_PASSWORD=admin" quay.io/keycloak/keycloak:23.0.1 start-dev
+    ```
+  </Step>
+
+  <Step>
+    After creating a new realm in the Keycloak admin console, set the "Frontend URL" setting to `http://localhost:8888`. This is necessary to ensure that Aleph redirects you to the correct URL during the authentication flow.
+  </Step>
+
+  <Step>
+    When creating a new client using the Keycloak admin console, change the following settings:
+
+| Setting | Value |
+| --- | --- |
+| Client authentication | Enabled |
+| Valid redirect URIs | `http://localhost:8080/api/2/sessions/callback` |
+| Valid post logout redirect URIs | `http://localhost:8080/` |
+  </Step>
+
+  <Step>
+    After creating a new client using the Keycloak admin console, switch to the "Credentials" tab and take note of the client secret.
+  </Step>
+</Steps>
+
+## Configure Aleph
+
+Finally, you need to adjust Aleph’s configuration to use your local Keycloak instance instead of the default password authentication flow.
+
+<Steps>
+  <Step>
+    Set the following Aleph configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ALEPH_OAUTH` | `true` |
+| `ALEPH_OAUTH_KEY` | `myclient` |
+| `ALEPH_OAUTH_SECRET` | Client secret from previous step |
+| `ALEPH_OAUTH_METADATA_URL` | `http://host.docker.internal:8888/realms/myrealm/.well-known/openid-configuration` |
+| `ALEPH_PASSWORD_LOGIN=false` | `false` |
+  </Step>
+
+  <Step>
+    Restart Aleph, visit the Aleph UI at `http://localhost:8080`, and click on the "Sign in" button in the navigation bar to test the authentication flow.
+  </Step>
+</Steps>
+
+## Sync user groups
+
+Aleph can automatically sync user groups from certain identity providers, including Keycloak. If you want to test this feature in your development environment, you need to apply additional settings in the Keycloak admin console.
+
+<Steps>
+  <Step>
+    In the Keycloak admin console, switch to the "myrealm" realm you created previously.
+  </Step>
+
+  <Step>
+    Navigate to the "myclient" client you created previously.
+  </Step>
+
+  <Step>
+    Switch to the "Client scopes" tab and select the "myclient-dedicated" scope.
+  </Step>
+
+  <Step>
+    In the "Mappers" tab, click on "Configure a new mapper".
+  </Step>
+
+  <Step>
+    Choose "Group Memberships" as the mapper type and fill in the form:
+
+| Setting | Value |
+| --- | --- |
+| Name | `Group memberships` |
+| Token Claim Name | `groups` |
+  </Step>
+
+  <Step>
+    Click "Save".
+  </Step>
+
+  <Step>
+    Navigate to the "Groups" section and create a new group.
+  </Step>
+
+  <Step>
+    Click on the group you created, switch to the "Members" tab and add the user you created previously to the group.
+  </Step>
+
+  <Step>
+    Aleph syncs group memberships everytime a users signs in. To test the configuration changes switch to the Aleph UI, sign out, then sign in again. You should now see the group created in the previous step in the left sidebar in the "Groups" section.
+  </Step>
+</Steps>

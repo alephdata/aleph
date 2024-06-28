@@ -1,0 +1,23 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Set Up Sentry
+---
+
+# How To Set Up Sentry
+
+<p class="lead">[Sentry](https://sentry.io) is an error monitoring service. Whenever an unexpected error occurs, Sentry tracks the error and context that might be helpful to understand and resolve the error. This guide describes how to configure your Aleph instance to track errors using Sentry.</p>
+
+<Steps>
+  <Step>
+    Set up a new project using the managed Sentry service or a self-hosted Sentry instance.
+  </Step>
+
+  <Step>
+    Set the `SENTRY_DSN` configuration option to use the Sentry DSN of your project. Please refer to the [Sentry documentation](https://docs.sentry.io/product/sentry-basics/concepts/dsn-explainer/#where-to-find-your-dsn) for instructions on how to find your Sentry DSN.
+  </Step>
+
+  <Step>
+    That’s it! Aleph will now report any unexpected errors to Sentry.
+  </Step>
+</Steps>
+

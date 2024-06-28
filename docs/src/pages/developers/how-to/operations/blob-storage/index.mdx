@@ -1,0 +1,112 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Configure a Storage Provider
+---
+
+# How To Configure a Storage Provider
+
+<p class="lead">Whenever you upload a file to Aleph that file are stored in the so-called file archive. Aleph supports multiple storage backends for the file archive. By default, Aleph stores files on the local file system, but you can configure Aleph to use an object storage provider such as Google Cloud Storage or AWS S3.</p>
+
+## File system
+
+By default, Aleph stores files on the local file system. You do not have to change any configuration options to store the file archive on the local file system.
+
+If necessary, you can configure the path of the file system by setting the `ARCHIVE_PATH` configuration option.
+
+<Callout theme="danger">
+  Files written inside of a Docker container are not persisted by default, i.e. they are lost when the container is deleted or recreated. When you run Aleph using the default storage driver, make sure that a [volume is configured](https://docs.docker.com/storage/volumes/) to persist the data even when the container is deleted or recreated.
+
+  When storing files on the file system you have to set up backups yourself. Please also refer to our guide on [how to create a backup](/developers/how-to/operations/backups).
+</Callout>
+
+## Amazon AWS S3
+
+You can use [Amazon AWS S3](https://aws.amazon.com/s3/) or any other object storage provider that is compatible with S3 to store files. Many other providers such as [Digital Ocean](https://www.digitalocean.com/products/spaces), [Backblaze](https://www.backblaze.com/cloud-storage), [OVH](https://www.ovhcloud.com/en/public-cloud/object-storage/) provide object storage compatible with S3.
+
+<Steps>
+  <Step>
+    Create and configure a storage bucket with your provider. Depending on whether you use Amazon AWS S3 or a different provider the exact steps vary so we cannot provide step-by-step instructions in this guide. Please refer to the documentation of your provider for details.
+
+    <Callout theme="danger">
+      Make sure to configure your bucket to be private.
+    </Callout>
+  </Step>
+
+  <Step>
+    After you have created your storage bucket, you need the following information:
+
+    * Bucket URL (sometimes also referred to as the bucket endpoint)
+    * Access key ID
+    * Secret access key
+
+    Your provider may use slightly different terms instead of "Access key ID" and "Secret access key".
+  </Step>
+
+  <Step>
+    Set the following configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ARCHIVE_TYPE` | `s3` |
+| `ARCHIVE_BUCKET` | Bucket URL |
+| `AWS_ACCESS_KEY_ID` | Access key ID |
+| `AWS_SECRET_ACCESS_KEY` | Secret access key |
+  </Step>
+</Steps>
+
+### IAM roles
+
+If you use Amazon AWS S3 as your object storage provider and host Aleph on Amazon AWS EC2 you can use IAM roles instead of explicitly specifying an access key ID and secret access key. If possible this is the preferred way to give Aleph access to a storage bucket as it doesn’t require you to manually manage the credentials.
+
+Please refer to the [Amazon AWS documentation](https://docs.aws.amazon.com/sdkref/latest/guide/access-iam-roles-for-ec2.html) for details. Once you’ve configured the necessary IAM, configure Aleph as outlined in the previous section but leave the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` configuration options empty.
+
+## Google Cloud Storage
+
+<Steps>
+  <Step>
+    Create and configure a storage bucket. For details, please refer to the [Google Cloud Storage documentation](https://cloud.google.com/storage/docs/creating-buckets).
+
+    <Callout theme="danger">
+      Make sure to configure your bucket to be private.
+    </Callout>
+  </Step>
+
+  <Step>
+    [Create a service account](https://cloud.google.com/iam/docs/service-accounts-create).
+  </Step>
+
+  <Step>
+    Assign the [Storage Object User](https://cloud.google.com/storage/docs/access-control/iam-roles) role to the service account created in the previous step.
+  </Step>
+
+  <Step>
+    [Create a service account key](https://cloud.google.com/iam/docs/keys-create-delete#creating) and download credentials file in JSON format.
+
+    <Callout theme="danger">
+      The credentials file gives access to the contents of the storage bucket. Store it savely to prevent accidentally exposing the credentials file.
+    </Callout>
+  </Step>
+
+  <Step>
+    Make the credentials file available inside the Aleph containers:
+
+    * If you deployed Aleph using Docker Compose create a volume to mount the credentials files in the services `api`, `ingest-file`, `worker`, and `shell`. Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path where the credentials file is mounted. For example, if you have mounted the credentials file at `/var/secrets/google/service-account.json` set `GOOGLE_APPLICATION_CREDENTIALS=/var/secrets/google/service-account.json`.
+
+    * If you deployed Aleph on Kubernetes using the Aleph Helm chart create a secret named `service-account-aleph` with the contents of the credentials file. Then set the chart value `global.google` to `true`.
+  </Step>
+
+  <Step>
+    Set the following configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ARCHIVE_TYPE` | `gs` |
+| `ARCHIVE_BUCKET` | Name of the bucket created in the first step |
+  </Step>
+</Steps>
+
+### Attached service accounts
+
+If you use Google Cloud Storage as your object storage provider and host Aleph on the Google Cloud Platform you can use so-called attached service accounts instead of explicitly specifying a credentials files. If possible this is the prefferred way to give Aleph access to a storage bucket as it doesn’t require you to manually manage the credentials.
+
+Please refer to the [Google Cloud Platform documentation](https://cloud.google.com/iam/docs/attach-service-accounts) for details. Once you’ve configured an attached service account, you can configure Aleph to use your storage bucket as outlined above without mounting a credentials file or setting the `Google_APPLICATION_CREDENTIALS` environment variable.

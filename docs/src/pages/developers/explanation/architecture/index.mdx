@@ -1,0 +1,135 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Architecture Overview
+---
+
+# Architecture Overview
+
+<p class="lead">If you want to start contributing to Aleph’s codebase or need to scale your Aleph deployment, it’s a good idea to learn how Aleph’s components work together. This page provides an overview of Aleph’s system architecture.</p>
+
+## Components
+
+<Mermaid
+  straightEdges
+  highlightActive
+  content={`
+    graph TB
+      memorious("Memorious")
+      ui("UI")
+      alephclient("alephclient")
+
+      subgraph level2
+        api("API")
+        workers("Workers")
+        ingest("ingest-file")
+      end
+
+      subgraph level3
+        ftm("FtM store")
+        files("File archive")
+        db("App database")
+        es("Elasticsearch")
+        redis("Redis")
+      end
+
+      class level2 dummy
+      class level3 dummy
+
+      ui-->api
+      memorious-->api
+      alephclient-->api
+
+      api-->db
+      api-->es
+      api-->redis
+      api-->files
+
+      ingest-->redis
+      ingest-->files
+      ingest-->ftm
+
+      workers-->db
+      workers-->es
+      workers-->redis
+      workers-->files
+      workers-->ftm 
+  `}
+/>
+
+### API
+
+The Aleph API is a Flask application. It powers the web UI and alephclient, can be used to ingest data scraped using [Memorious crawlers](https://alephdata.github.io/memorious) or custom scripts.
+
+### UI
+
+The Aleph UI is a single-page application implemented using React. End users can use the UI to search Aleph, upload files, create and edit structured data, create network diagrams and timelines, and more.
+
+### Workers
+
+Workers process background tasks such as [exporting search results](/users/search/basics#export-multiple-search-results), indexing updated new or entities in Elasticsearch, or [cross-referencing data against other datasets](/users/investigations/cross-referencing).
+
+### ingest-file
+
+ingest-file worker process documents uploaded to Aleph. ingest-file can handle a wide range of document types and formats, including text documents (PDF, Word, LibreOffice, plaintext, …), spreadsheets and databases (Excel, CSV, SQlite, …), emails (RFC2822, Outlook mailboxes, Mbox) and more.
+
+### FollowTheMoney store
+
+The FollowTheMoney store is a PostgreSQL database that stores [FollowTheMoney entities](/developers/explanation/followthemoney). All data added to an Aleph instance is represented as entities, including structured data and files uploaded.
+
+### App database
+
+The app database is a PostgreSQL database that stores any data that is not directly related to structured data added or files uploaded to an Aleph instance, for example metadata about users, user groups, permissions, collections, and other information. This can be the same database as the FollowTheMoney store, but we recommend using separate databases for production deployments.
+
+### Elasticsearch
+
+Elasticsearch is used to make data searchable. Aleph maintains [multiple indexes](/developers/explanation/search) for FollowTheMoney entities as well as collections and notifications.
+
+### Redis
+
+Aleph uses Redis in many ways, for example as a task queue, to store user sessions, and to cache collection statistics.
+
+### File archive
+
+The file archive stores all files uploaded to Aleph. It supports multiple storage backends, including the local file system, AWS S3, and Google Cloud Storage.
+
+### alephclient
+
+alephclient is a Python library and CLI that simplifies common tasks (e.g. batch uploads). It interacts with Aleph via the API.
+
+### Memorious
+
+Memorious is a scraping toolkit that facilitates fast development and easy maintenance of scrapers. While Memorious integrates with Aleph and can emit data as FollowTheMoney entities, Memorious is a completely optional component.
+
+## Code repositories
+
+### `alephdata/aleph`
+
+Main Aleph repository that contains the source code for the API, UI, and workers.
+
+### `alephdata/ingest-file`
+
+Contains the source code for ingest-file.
+
+### `alephdata/followthemoney`
+
+Data model definition for the FollowTheMoney onthology and libraries for working with FollowTheMoney entities in Python and Typescript.
+
+### `alephdata/followthemoney-store`
+
+Library to help with storing FollowTheMoney entities in a SQL database.
+
+### `alephdata/followthemoney-compare`
+
+Tools to train models to compare FollowTheMoney entities, used to cross-reference entities across datasets.
+
+### `alephdata/servicelayer`
+
+Generic components used by multiple other components, for example workers, caches, implementation of file storage backends etc.
+
+### `alephdata/alephclient`
+
+A CLI and Python library to interact with the Aleph API.
+
+### `alephdata/aleph-elasticsearch`
+
+Customized Elasticsearch Docker image for use with Aleph.

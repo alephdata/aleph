@@ -1,0 +1,98 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Configure Custom Pages
+---
+
+# How To Configure Custom Pages
+
+<p class="lead">Aleph includes CMS-like functionality that allows you to manage custom pages using Markdown files. Custom pages can be helpful to display information about your organization, terms of use, and more. In this guide, you will learn how to create and edit custom pages.</p>
+
+## Prerequisites
+
+This guide assumes that you have installed Aleph following the [production deployment](/developers/getting-started/production-deployment) guide.
+
+## Set up a volume mount
+
+Aleph loads Markdown files from the [`/aleph/pages` directory](https://github.com/alephdata/aleph/tree/main/aleph/pages). By default, Aleph ships with default page contents for the homepage and an about page. Follow these steps in order to override the default pages:
+
+<Steps>
+  <Step>
+    Navigate to the directory you have installed Aleph in and create a new directory that will contain your customized pages:
+
+    ```sh
+    cd aleph
+    mkdir pages
+    ```
+  </Step>
+
+  <Step>
+    Download a copy of the two default pages and save them in the `pages` directory created in the previous step:
+
+    ```sh
+    curl -L https://raw.githubusercontent.com/alephdata/aleph/main/aleph/pages/home.en.md > pages/home.en.md
+    curl -L https://raw.githubusercontent.com/alephdata/aleph/main/aleph/pages/about.en.md > pages/about.en.md
+    ```
+  </Step>
+
+  <Step>
+    You need to make these pages available inside of the Aleph Docker container. Add a separate item to the `volumes` configuration of the `api` service in `docker-compose.yml` as shown below. This will make the contents of the `pages` directory you created in the first step available inside of the Docker container at `/aleph/pages`, the directory Aleph loads Markdown files from by default.
+
+    ```yaml
+    api:
+      # ...
+      volumes:
+        - archive-data:/data
+        - ./pages:/aleph/pages
+    ```
+  </Step>
+
+  <Step>
+    Run the following command to apply the updated Docker Compose configuration:
+
+    ```sh
+    docker compose up -d
+    ```
+  </Step>
+</Steps>
+
+## Edit a page
+
+If you want to edit the contents of the default homepage or about page, simply edit the `home.en.md` or `about.en.md` files in the directory you created in the first step.
+
+## Create a new page
+
+In order to add an additional page, create a file in the `pages` directory you created in the first step. The file name determines the URL under which the page can be accessed. For example, if you create a file named `terms-of-use.en.md`, it can be accessed at `https://example.org/pages/`.
+
+In addition to the Markdown body, every file contains a YAML frontmatter section that can be used to customize how the page is displayed.
+
+The following example will display the terms page in the page header using the short "Terms" label. However, when visiting the page, the full title "Terms of Use" will be displayed as the main page heading.
+
+```yaml title="terms-of-use.en.md"
+---
+title: Terms of Use
+short: Terms
+menu: true
+---
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+```
+
+## Translate a page
+
+In addition to the default language, you can create translations of a page. Aleph displays pages in the user’s preferred language, if a respective translation is available. If no translation is available, Aleph falls back to the default language.
+
+In order to translate a page, create a copy of the page. The two-letter language code suffix denotes the language of the translation. For example, create a copy with the `fr` suffix if you want to translate a page to French:
+
+```sh
+cp pages/about.en.md pages/about.fr.md
+```
+
+Edit and translate the contents of `about.fr.md` as necessary.
+
+## Restart Aleph
+
+After updating or creating new pages or translations, you need to restart Aleph to apply the changes:
+
+```sh
+docker compose restart
+```

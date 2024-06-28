@@ -1,0 +1,93 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Export Network Graphs
+---
+
+# How To Export Network Graphs
+
+<p class="lead">In some cases you may want to process data stored in Aleph as a graph, for example to run advanced network analysis. This guide describes how to export data as Cypher commands for Neo4j or in the GEXF format for Gephi/Sigma.js.</p>
+
+## Transformation strategy
+
+Data in Aleph ist stored using [FollowTheMoney](/developers/explanation/followthemoney). FollowTheMoney sees every unit of information as an entity with a set of properties. To analyze this information as a network with nodes and edges, we need to decide what logic should rule the transformation of entities into nodes and edges. Different strategies are available:
+
+* Some entity schemata, such as `Directorship`, `Ownership`, `Family` or `Payment`, contain annotations that define how they can be transformed into an edge with a source and target.
+* Entities also naturally reference others. For example, an `Email` has an emitters property that refers to a `LegalEntity`, the sender. The emitters property connects the two entities and can also be turned into an edge.
+* Finally, some types of properties (e.g. `email`, `iban`, `names`) can be formed into nodes, with edges formed towards each node that derives from an entity with that property value. For example, an address node for “40 Wall Street” would show links to all the companies registered there, or a node representing the name “Frank Smith” would connect all the documents mentioning that name.
+
+## Prerequisites
+
+This guide uses the alephclient CLI to export FollowTheMoney data from Aleph and the ftm CLI to convert FollowTheMoney data to Cypher commands. If you don’t have these two CLIs installed, please refer to [How to install the ftm CLI](/developers/how-to/data/install-ftm) and [How to install the alephclient CLI](/developers/how-to/data/install-alephclient) for installation instructions.
+
+Using the alephclient CLI, you can stream entities from an Aleph collection and write them to a file:
+
+```sh
+alephclient stream-entities --foreign-id 0bdf... --outfile entities.json
+```
+
+Replace `0bdf...` with the foreign ID of your collection. You can find a collection’s foreign ID in the Aleph UI. Navigate to the collection homepage. The foreign ID is listed in the sidebar on the right.
+
+<Callout theme="danger">
+  Streaming very large collections from an Aleph instance is a resource-consuming activity on the server side. Please only stream collections with more than 100,000 entities after making sure that the server administrators are OK with it.
+</Callout>
+
+## Exporting Cypher commands for Neo4j
+
+[Neo4j](https://neo4j.com/) is a popular open-source graph database that can be queried and edited using the [Cypher language](https://neo4j.com/docs/cypher-refcard/current/). It can be used as a database backend or queried directly to perform advanced analysis, e.g. to find all paths between two entities.
+
+<Image
+  src="/assets/pages/developers/how-to/data/export-network-graphs/neo4j.png"
+  density={2}
+  alt="A screenshot of the Neo4j UI showing a visualization of US sanctions lists."
+  caption="US sanctions list loaded into a Neo4j database"
+/>
+
+Run the following command to convert the FollowTheMoney entities streamed from Aleph to Cypher commands:
+
+```sh
+ftm export-cypher --infile entities.json --outfile entities.cypher
+```
+
+Alternatively, you can also stream the commands directly into Neo4J’s Cypher shell to load the data into a Neo4j database:
+
+```sh
+ftm export-cypher --infile entities.json | cypher-shell -u USER -p PASSWORD
+```
+
+Running the above commands will only make explicit edges based on entity references. If you want to reify specific property types as edges, use the `--edge-types`/`-e` option:
+
+```sh
+# Creates an edge between two entities that have address properties with the same value
+ftm export-cypher --infile entities.json --edge-types address
+
+# Creates an edge between two entities that have address or IBAN properties with the same value
+ftm export-cypher --infile entities.json -e address -e iban
+```
+
+## GEXF for Gephi/Sigma.js
+
+The [Graph Exchange XML Format (GEXF)](https://gephi.org/gexf/format/) is a file format used by the network analysis software [Gephi](https://gephi.org/) and other tools developed in the periphery of the [Media Lab at Sciences Po](http://tools.medialab.sciences-po.fr/). Gephi is particularly suited to do quantitative analysis of graphs with tens of thousands of nodes. It can calculate network metrics like centrality or PageRank, or generate complex visual layouts.
+
+<Image
+  src="/assets/pages/developers/how-to/data/export-network-graphs/gephi.png"
+  density={2}
+  alt="A screenshot of the Gephi UI showing a visualization of US sanctions lists."
+  caption="US sanctions list visualized using Gephi"
+/>
+
+
+Run the following command to convert the FollowTheMoney entities streamed from Aleph to GEXF:
+
+```sh
+ftm export-gexf --infile entities.json --outfile entities.gexf
+```
+
+Running the above commands will only make explicit edges based on entity references. If you want to reify specific property types as edges, use the `--edge-types`/`-e` option:
+
+```sh
+# Creates an edge between two entities that have address properties with the same value
+ftm export-gexf --infile entities.json --edge-types address
+
+# Creates an edge between two entities that have address or IBAN properties with the same value
+ftm export-gexf --infile entities.json -e address -e iban
+```

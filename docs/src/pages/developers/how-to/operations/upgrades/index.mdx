@@ -1,0 +1,88 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Upgrade to a New Version
+---
+
+# How To Upgrade to a New Version
+
+<p class="lead">Aleph is under active development. We release new Aleph versions with bugfixes, stability improvements, and new features. We recommend that you always run a recent version of Aleph. This guide describes how to upgrade a production Aleph instance to a new version.</p>
+
+<Callout>
+  Do you want to upgrade your local development environment? Follow the steps in the [Getting Started](/developers/getting-started/development-environment#upgrade-to-a-new-version) section.
+</Callout>
+
+## Prerequisites
+
+<Steps>
+  <Step>
+    Before you upgrade to a new Aleph version, [create a backup](/developers/how-to/operations/backups) of all your data. Make sure that you’re backup process is reliable and that you are able to successfully restore data from your backups.
+  </Step>
+
+  <Step>
+    We publish new releases on our [GitHub releases page](https://github.com/alephdata/aleph/releases/). In some cases, new Aleph versions may include breaking changes that include additional, manual steps in order to upgrade. We will add a warning to the release notes in such cases, so make sure you read and understand the release notes.
+  </Step>
+</Steps>
+
+## Docker Compose
+
+If you have deployed Aleph using Docker Compose, follow these steps:
+
+<Steps>
+  <Step>
+    Review changes to the `docker-compose.yml` of the Aleph version you want to upgrade to. Make sure to sure what these changes mean, then apply the changes to your custom `docker-compose.yml` configuration file. This includes changing the Aleph version number in `docker-compose.yml` to the version you’d like to upgrade to.
+  </Step>
+
+  <Step>
+    Pull new versions of the container images:
+
+    ```bash
+    docker compose pull --parallel
+    ```
+  </Step>
+
+  <Step>
+    Stop all containers:
+
+    ```bash
+    docker compose down
+    ```
+  </Step>
+
+  <Step>
+    Start all services:
+
+    ```bash
+    docker compose up -d redis postgres elasticsearch
+    ```
+  </Step>
+
+  <Step>
+    Wait for a minute or two until all services have started. Then run database migrations:
+
+    ```bash
+    docker compose run --rm shell aleph upgrade
+    ```
+  </Step>
+
+  <Step>
+    Finally, start all containers:
+
+    ```bash
+    docker compose up -d
+    ```
+  </Step>
+</Steps>
+
+## Kubernetes
+
+If you have deployed Aleph using Kubernetes, follow these steps:
+
+<Steps>
+  <Step>
+    For every Aleph release, we also publish a new version of the Aleph Helm chart. Make sure you [pull the corresponding version](https://helm.sh/docs/helm/helm_pull/) of the Aleph Helm chart.
+  </Step>
+
+  <Step>
+    [Upgrade the Helm release](https://helm.sh/docs/helm/helm_upgrade/) to the latest version. This will automatically run database migrations.
+  </Step>
+</Steps>

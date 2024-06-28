@@ -1,0 +1,27 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Add Support for New Languages
+---
+
+# How to Add Support for New Languages
+
+<p class="lead">Some document processing features such as text recognition (OCR) or named entity extraction (NER) depend on the language of files you upload to Aleph. This guide describes how you can add support for documents in other languages.</p>
+
+<Steps>
+  <Step>
+    Check the [list of supported languages](/developers/reference/languages) to see if a particular language is already supported. Some languages are only partially supported by Aleph (for example OCR is supported, but NER is not).
+  </Step>
+
+  <Step>
+    Add the three-letter language code to the [hard-coded list of languages](https://github.com/alephdata/followthemoney/blob/main/followthemoney/types/language.py) in FollowTheMoney (if it isn’t already included).
+  </Step>
+
+  <Step>
+    In order to add OCR support for a new language, you need to install the repsective Tesseract model in ingest-file. The ingest-file Docker image is based on Ubuntu. Check the [list of Tesseract language models](https://packages.ubuntu.com/search?keywords=tesseract-ocr) available as Ubuntu packages. If a package for the new language is available, add it to the [ingest-file Dockerfile](https://github.com/alephdata/ingest-file/blob/main/Dockerfile).
+  </Step>
+
+  <Step>
+    In order to add NER support for a new language, you need to install a respsective spaCy model in ingest-file. Check the [list of spaCy language models](https://spacy.io/usage/models). If a package for the new language is available, add it to the [ingest-file Dockerfile](https://spacy.io/usage/models) and update the `NER_MODELS` setting in the [ingest-file settings](https://github.com/alephdata/ingest-file/blob/main/ingestors/settings.py) to include a mapping from the three-letter language code to the spaCy model.
+  </Step>
+</Steps>
+

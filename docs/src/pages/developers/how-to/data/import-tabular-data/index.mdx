@@ -1,0 +1,68 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Import Tabular Data
+---
+
+# How To Import Tabular Data
+
+<p class="lead">While you can easily upload and preview many tabular file formats (such as Excel and CSV files or SQLite and Microsoft Access databases), mapping them to the FollowTheMoney data model allows you to make use of powerful features such as cross-referencing. This guide describes how to map tabular data to the FollowTheMoney data model to import it into Aleph.</p>
+
+## Prerequisites
+
+This guide uses the ftm CLI to map tabular data to the FollowTheMoney data model and the alephclient CLI to import FollowTheMoney data into Aleph. If you don’t have these two CLIs installed, please refer to [How to install the ftm CLI](/developers/how-to/data/install-ftm) and [How to install the alephclient CLI](/developers/how-to/data/install-alephclient) for installation instructions.
+
+## Mapping tabular data
+
+In order to map data to the FollowTheMoney data model using the ftm CLI, you need the following:
+
+* A **source data table**: Source data can be either a CSV (comma-separated values) file using the UTF-8 character encoding, or a valid [connection string](https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls) to connect to a SQL database. Using SQL as a source also lets you perform JOINs within the database while mapping data.
+
+* A **mapping file**: This is a YAML file that describes how to convert the rows and colums to FollowTheMoney entities.
+
+Below is a simple mapping file. It downloads a list of British members of parliament and transforms them into `Person` entities. Please refer to the [FollowTheMoney documentation](https://followthemoney.tech/docs/mappings/) for detailed instructions on how to write a mapping file and more complex examples.
+
+```yaml title="brexitonians.yml"
+uk-mps-57:
+  queries:
+    - csv_url: http://bit.ly/uk-mps-csv
+      entities:
+        member:
+          schema: Person
+          keys:
+            - id
+          properties:
+            name:
+              column: name
+```
+
+You can now use the ftm CLI to execute the mapping:
+
+```bash
+ftm map brexitonians.yml
+```
+
+This outputs FollowTheMoney entities to your terminal, one entity per line. You can also write the entities to a file:
+
+```bash
+ftm map --outfile uk-mps-57.json brexitonians.yml
+```
+
+## Importing mapped data
+
+You can now import these entities into Aleph using the alephclient CLI:
+
+```bash
+alephclient write-entities --infile uk-mps-57.json --foreign-id brexitonians
+```
+
+This will import the data into the Aleph collection with the foreign ID `opensanctions-peps`. If no collection with this foreign ID exists, a new collection is created.
+
+If you’d like to import data into an existing collection and do not know its foreign ID, you can find the foreign ID in the Aleph UI. Navigate to the collection or investigation homepage. The foreign ID is listed in the sidebar on the right.
+
+## Everything at once
+
+Instead of writing the mapping result to an intermediate file, you can also pipe the output of the mapping directly into alephclient:
+
+```bash
+ftm map brexitonians.yml | alephclient write-entities -f brexitonians
+```

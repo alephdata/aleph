@@ -1,0 +1,38 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Enable Structured Logging
+---
+
+# How To Enable Structured Logging
+
+<p class="lead">By default, Aleph emits logs in a format that’s easy to read for humans. However, you can also configure Aleph to emit logs in JSON format. This is especially useful if you use a centralized log aggregation service, as it provides additional context and allow you to filter logs based on structured data.</p>
+
+<Steps>
+  <Step>
+    Set the `LOG_FORMAT` configuration option to `JSON`.
+  </Step>
+
+  <Step>
+    Restart Aleph.
+  </Step>
+
+  <Step>
+    The Aleph API, Aleph workers, and ingest-file logs will now emit logs in JSON format, with additional context. For example, many logs will include the ID of the collection or job the log is related to:
+
+```json
+{
+  "logger": "aleph.worker",
+  "timestamp": "2024-06-19 09:35:30.996352",
+  "job_id": "4:b20c3421-74dd-468f-bf21-a5957ef01d37",
+  "stage": "index",
+  "start_time": 1718789730.9948978,
+  "v": "3.17.0",
+  "dataset": "2",
+  "retry": 0,
+  "trace_id": "11239b1b-b4e5-45d5-b6de-ad37679c4bb5",
+  "message": "Task [2]: index (started)",
+  "severity": "INFO",
+}
+```
+  </Step>
+</Steps>

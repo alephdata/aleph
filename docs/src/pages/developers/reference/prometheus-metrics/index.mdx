@@ -1,0 +1,43 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Prometheus Metrics
+---
+
+import metrics from './metrics.yml';
+import ReferenceListing from '@components/ReferenceListing.astro';
+
+# Prometheus Metrics
+
+<p class="lead">Aleph exposes information about its own state as Prometheus metrics. This page lists all avialable metrics.</p>
+
+## System
+
+<ReferenceListing items={metrics.system} />
+
+## Users and feature usage
+
+<ReferenceListing items={metrics.usage} />
+
+## API
+
+<ReferenceListing items={metrics.api} />
+
+## Cross-referencing
+
+<ReferenceListing items={metrics.xref} />
+
+## Authentication
+
+<ReferenceListing items={metrics.auth} />
+
+## Queues
+
+<ReferenceListing items={metrics.queues} />
+
+## Workers
+
+<ReferenceListing items={metrics.workers} />
+
+## Ingestion
+
+<ReferenceListing items={metrics.ingestion} />

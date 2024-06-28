@@ -1,0 +1,33 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Create a Backup
+---
+
+# How To Create a Backup
+<p class="lead">It is important that you create intervals of your Aleph instance in regular intervals and before upgrading to new versions. This articles will help you understand where Aleph stores persistent data.</p>
+
+<Callout theme="danger">The exact steps to create a backup vary depending on the setup. This means that we cannot provide step-by-step instructions. Please make sure to always verify that your backups are working as intended and that you are able to successfully restore your data from backups.</Callout>
+
+Aleph stores data multiple different persistent systems. In order to function successfully all of the components above need to be fully operational. That means that you have to create regular backups and be able to restore them for all of the components.
+
+## Archive
+This is where Aleph stores files uploaded to Aleph (and some other data such as exports requested by users).
+
+In case you’re using the local file system for the archive, you can map the Docker volume to a directory on the host machine. You can then backup the directory on the host machine using you’re preferred method, e.g. using [rsync](https://en.wikipedia.org/wiki/Rsync).
+
+You can also [configure Aleph to use a storage provider](http://localhost:3000/developers/how-to/operations/blob-storage) that provides automatic backups and availability guarantees. In that case you do not need to backup the archive manually. However, you should still test that automatic backups are created as expected and that you can restore the automatic backups successfully.
+
+## App database
+This PostgreSQL database stores application data like users, sessions, collection metadata etc. This database is the one defined by the `ALEPH_DATABASE_URI` configuration option.
+
+Please refer to the [PostgreSQL documentation](https://www.postgresql.org/docs/current/backup-dump.html) to learn how to backup a PostgreSQL database.
+
+You can also use a managed PostgreSQL service that includes automatic, managed backups, e.g. AWS RDS or Google Cloud SQL.
+
+## FollowTheMoney store
+A PostgreSQL database to store FollowTheMoney entities. This database is defined by the `FTM_STORE_URI` configuration option. This can be the PostgreSQL same database instance as the app database or a separate one. If you have configured Aleph to use a separate database instance, make sure to create a separate backup of the FollowTheMoney store.
+
+## Elasticsearch
+Since version 3.8, Aleph includes an experimental tool to restore most of the Elasticsearch indexes from the FollowTheMoney store. However, this excludes some data like notifications or cross-referencing matches. Depending on the amount of data in your Aleph instance, restoring from the FollowTheMoney store can also take a significant amount of time.
+
+For these reasons, we recommend that you back up your Elasticsearch cluster. Please refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/snapshots-take-snapshot.html) for detailed instructions.

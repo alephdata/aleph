@@ -15,6 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "@alephdata/followthemoney": "^3.4.0",
+    "@astrojs/markdown-component": "^1.0.5",
+    "@rollup/plugin-yaml": "^4.1.1",
     "@untitaker/hyperlink": "^0.1.26",
     "astro": "^2.8.5",
     "astro-theme-docs": "github:alephdata/astro-theme-docs"
