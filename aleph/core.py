@@ -18,7 +18,7 @@ from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 from servicelayer.util import service_retries, backoff
 from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
-from servicelayer.taskqueue import get_rabbitmq_connection
+from servicelayer.taskqueue import get_rabbitmq_channel
 from servicelayer import settings as sls
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
@@ -191,7 +191,7 @@ es = LocalProxy(get_es)
 kv = LocalProxy(get_redis)
 cache = LocalProxy(get_cache)
 archive = LocalProxy(get_archive)
-rabbitmq_conn = LocalProxy(get_rabbitmq_connection)
+rabbitmq_channel = LocalProxy(get_rabbitmq_channel)
 
 
 def url_for(*a, **kw):

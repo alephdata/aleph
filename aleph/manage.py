@@ -12,7 +12,7 @@ from flask.cli import FlaskGroup
 from followthemoney.cli.util import write_object
 from servicelayer.taskqueue import flush_queues
 
-from aleph.core import create_app, cache, db, rabbitmq_conn, kv
+from aleph.core import create_app, cache, db, rabbitmq_channel, kv
 from aleph.authz import Authz
 from aleph.model import Collection, Role, EntitySet
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
@@ -525,7 +525,7 @@ def cleanuparchive(prefix):
 
 @cli.command()
 def flushqueue():
-    flush_queues(rabbitmq_conn, kv, SETTINGS.ALEPH_STAGES)
+    flush_queues(rabbitmq_channel, kv, SETTINGS.ALEPH_STAGES)
 
 
 @cli.command()

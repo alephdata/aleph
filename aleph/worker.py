@@ -131,7 +131,6 @@ class AlephWorker(Worker):
         with app.app_context():
             try:
                 db.session.remove()
-                # rabbitmq_conn.process_data_events(time_limit=1)
                 if self.often.check():
                     self.often.update()
                     log.info("Self-check...")

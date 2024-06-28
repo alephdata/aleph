@@ -8,7 +8,7 @@ from servicelayer.taskqueue import (
     dataset_from_collection,
 )
 
-from aleph.core import kv, rabbitmq_conn
+from aleph.core import kv, rabbitmq_channel
 from aleph.settings import SETTINGS
 from aleph.model import Entity
 
@@ -24,7 +24,7 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
 
 def queue_task(collection, stage, job_id=None, context=None, **payload):
     taskqueue.queue_task(
-        rabbitmq_conn,
+        rabbitmq_channel,
         kv,
         collection.id if collection else 0,
         stage,

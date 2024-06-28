@@ -25,7 +25,7 @@ from aleph.logic.aggregator import get_aggregator
 from aleph.logic.collections import update_collection, reindex_collection
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
-from aleph.core import db, kv, create_app, rabbitmq_conn
+from aleph.core import db, kv, create_app, rabbitmq_channel
 from aleph.oauth import oauth
 
 log = logging.getLogger(__name__)
@@ -107,13 +107,12 @@ class TestCase(unittest.TestCase):
         return app
 
     def initialize_aleph_worker(self):
-        channel = rabbitmq_conn.channel()
         for stage in SETTINGS.ALEPH_STAGES:
             try:
-                channel.queue_delete(stage)
+                rabbitmq_channel.queue_delete(stage)
             except ValueError:
                 pass
-            declare_rabbitmq_queue(channel, stage)
+            declare_rabbitmq_queue(rabbitmq_channel, stage)
 
     def create_user(self, foreign_id="tester", name=None, email=None, is_admin=False):
         role = Role.load_or_create(
@@ -263,7 +262,7 @@ class TestCase(unittest.TestCase):
                     conn.commit()
 
         kv.flushall()
-        flush_queues(rabbitmq_conn, kv, SETTINGS.ALEPH_STAGES)
+        flush_queues(rabbitmq_channel, kv, SETTINGS.ALEPH_STAGES)
         create_system_roles()
 
     def tearDown(self):
