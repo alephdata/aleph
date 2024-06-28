@@ -6,14 +6,30 @@ import { Button, ProgressBar, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import withRouter from 'app/withRouter';
-import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
+import {
+  Collection,
+  ErrorSection,
+  Numeric,
+  Skeleton,
+  RelativeTime,
+} from 'components/common';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
 import { selectSystemStatus } from 'selectors';
+import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
 import './SystemStatusScreen.scss';
+
+const dateFormat = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  weekday: 'short',
+  hour: 'numeric',
+  minute: 'numeric',
+};
 
 const messages = defineMessages({
   title: {
@@ -100,16 +116,50 @@ export class SystemStatusScreen extends React.Component {
     const active = res.pending + res.running;
     const total = active + res.finished;
     const progress = res.finished / total;
+
+    const startedAt =
+      res.start_time && convertUTCDateToLocalDate(res.start_time);
+    const lastUpdatedAt =
+      res.last_update && convertUTCDateToLocalDate(res.last_update);
+
     return (
       <tr key={collection?.id || 'null'}>
-        <td className="entity">
-          <Collection.Link collection={res.collection} />
-          {!res.collection && (
-            <FormattedMessage
-              id="status.no_collection"
-              defaultMessage="Other tasks"
-            />
-          )}
+        <td>
+          <strong>
+            <Collection.Link collection={res.collection} />
+            {!res.collection && (
+              <FormattedMessage
+                id="status.no_collection"
+                defaultMessage="Other tasks"
+              />
+            )}
+          </strong>
+          <br />
+          <span className="StatusTable__timestamps">
+            {startedAt && (
+              <>
+                <FormattedMessage
+                  id="status.started_at"
+                  defaultMessage="started"
+                />{' '}
+                <span title={intl.formatDate(startedAt, dateFormat)}>
+                  <RelativeTime date={startedAt} />
+                </span>
+              </>
+            )}
+            {lastUpdatedAt && (
+              <>
+                {' · '}
+                <FormattedMessage
+                  id="status.last_updated_at"
+                  defaultMessage="last updated"
+                />{' '}
+                <span title={intl.formatDate(lastUpdatedAt, dateFormat)}>
+                  <RelativeTime date={lastUpdatedAt} />
+                </span>
+              </>
+            )}
+          </span>
         </td>
         <td>
           <ProgressBar value={progress} intent={Intent.PRIMARY} />

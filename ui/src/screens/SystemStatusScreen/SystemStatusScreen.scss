@@ -13,4 +13,8 @@
   td.text {
     @include rtlSupportInvertedProp(padding, left, 0, null);
   }
+
+  &__timestamps {
+    color: $aleph-greyed-text;
+  }
 }
