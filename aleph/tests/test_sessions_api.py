@@ -4,13 +4,12 @@ from aleph.model import Collection
 from aleph.logic.collections import update_collection
 from aleph.views.base_api import _metadata_locale
 from aleph.tests.util import TestCase
-from aleph.tests.factories.models import RoleFactory
 
 
 class SessionsApiTestCase(TestCase):
     def setUp(self):
         super(SessionsApiTestCase, self).setUp()
-        self.role = RoleFactory.create()
+        self.role = self.create_user()
 
     def test_admin_all_access(self):
         self.wl = Collection()
@@ -62,3 +61,19 @@ class SessionsApiTestCase(TestCase):
         res = self.client.get("/api/2/roles/%s" % self.role.id, headers=headers)
         assert res.status_code == 200, res
         assert res.json["id"] == str(self.role.id), res
+
+    def test_password_login_no_api_key(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        secret = self.fake.password()
+        self.role.set_password(secret)
+        data = {
+            "email": self.role.email,
+            "password": secret,
+        }
+        assert self.role.api_key is None
+
+        res = self.client.post("/api/2/sessions/login", data=data)
+        assert res.status_code == 200
+
+        db.session.refresh(self.role)
+        assert self.role.api_key is None

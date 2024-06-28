@@ -32,3 +32,11 @@ export const updateRole = asyncActionCreator(
   },
   { name: 'UPDATE_ROLE' }
 );
+
+export const generateApiKey = asyncActionCreator(
+  (role) => async () => {
+    const response = await endpoint.post(`roles/${role.id}/generate_api_key`);
+    return { id: role.id, data: response.data };
+  },
+  { name: 'GENERATE_API_KEY' }
+);
