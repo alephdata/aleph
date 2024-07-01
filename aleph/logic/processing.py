@@ -8,7 +8,7 @@ from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 from servicelayer.taskqueue import Task
 
-from aleph.logic.collections import index_aggregator, refresh_collection
+from aleph.logic.collections import index_aggregator, refresh_collection, index_aggregator_bulk
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def index_many(batch, sync=False):
         for task in batch[collection_id]:
             entity_ids[collection_id].extend(ensure_list(task.payload.get("entity_ids")))
 
-    index_aggregator(entity_ids, sync=sync)
+    index_aggregator_bulk(entity_ids, sync=sync)
 
     for collection_id in batch:
         if collection_id:

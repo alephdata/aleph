@@ -44,8 +44,12 @@ def op_index(batch, worker: Worker):
 
     # if not collection:
     #     return
-
-    sync = any(task.context.get("sync", False) for task in batch)
+    sync = False
+    for collection_id in batch:
+        for task in batch[collection_id]:
+            if task.context.get("sync", False):
+                sync = True
+                break
     index_many(batch, sync=sync)
     for task in batch:
         # acknowledge batched tasks
@@ -112,7 +116,7 @@ class AlephWorker(Worker):
         # in batches of 100 (specified by INDEXING_BATCH_SIZE) or we wait for 10
         # seconds (specified by INDEXING_TIMEOUT) before triggering an batched
         # run of all available indexing tasks
-        self.indexing_batch_last_updated = ""
+        self.indexing_batch_last_updated = 0.0
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
@@ -170,8 +174,8 @@ class AlephWorker(Worker):
                 if sum([len(self.indexing_batches[id]) for id in self.indexing_batches]) >= SETTINGS.INDEXING_BATCH_SIZE:
                     # batch size limit reached; execute the existing batch and reset
                     op_index(self.indexing_batches, worker=self)
-                    self.indexing_batches = {}
-                    self.indexing_batch_last_updated = ""
+                    del self.indexing_batches
+                    del self.indexing_batch_last_updated
                 else:
                     log.info(
                         f"Task [collection:{task.collection_id}]: "
@@ -212,8 +216,8 @@ class AlephWorker(Worker):
                     f"items)"
                 )
                 op_index(batches, worker=self)
-                self.indexing_batches = {}
-                self.indexing_batch_last_updated = ""
+                del self.indexing_batches
+                del self.indexing_batch_last_updated
 
 
 def get_worker(num_threads=1):
