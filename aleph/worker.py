@@ -39,14 +39,14 @@ app = create_app(config={"SERVER_NAME": SETTINGS.APP_UI_URL})
 indexing_lock = threading.Lock()
 
 
-def op_index(collection_id: str, batch: List[Task], worker: Worker):
-    collection = Collection.by_id(collection_id)
+def op_index(batch, worker: Worker):
+    # collection = Collection.by_id(collection_id)
 
-    if not collection:
-        return
+    # if not collection:
+    #     return
 
     sync = any(task.context.get("sync", False) for task in batch)
-    index_many(collection, sync=sync, tasks=batch)
+    index_many(batch, sync=sync)
     for task in batch:
         # acknowledge batched tasks
         log.info(
@@ -112,7 +112,7 @@ class AlephWorker(Worker):
         # in batches of 100 (specified by INDEXING_BATCH_SIZE) or we wait for 10
         # seconds (specified by INDEXING_TIMEOUT) before triggering an batched
         # run of all available indexing tasks
-        self.indexing_batch_last_updated = defaultdict(lambda: None)
+        self.indexing_batch_last_updated = ""
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
@@ -165,12 +165,13 @@ class AlephWorker(Worker):
             with indexing_lock:
                 batch = self.indexing_batches[task.collection_id]
                 batch.append(task)
-                self.indexing_batch_last_updated[task.collection_id] = time.time()
-                if len(batch) >= SETTINGS.INDEXING_BATCH_SIZE:
+                self.indexing_batch_last_updated = time.time()
+                # if len(batch) >= SETTINGS.INDEXING_BATCH_SIZE:
+                if sum([len(self.indexing_batches[id]) for id in self.indexing_batches]) >= SETTINGS.INDEXING_BATCH_SIZE:
                     # batch size limit reached; execute the existing batch and reset
-                    op_index(task.collection_id, batch, worker=self)
-                    del self.indexing_batches[task.collection_id]
-                    del self.indexing_batch_last_updated[task.collection_id]
+                    op_index(self.indexing_batches, worker=self)
+                    self.indexing_batches = {}
+                    self.indexing_batch_last_updated = ""
                 else:
                     log.info(
                         f"Task [collection:{task.collection_id}]: "
@@ -196,21 +197,23 @@ class AlephWorker(Worker):
     def run_indexing_batches(self):
         """Run remaining batched indexing tasks after waiting for a maximum of
         INDEXING_TIMEOUT seconds"""
+        # we is the lock needed?
         if indexing_lock.acquire(False):
-            batches = list(self.indexing_batches.items())
+            batches = self.indexing_batches
             indexing_lock.release()
-            for collection_id, batch in batches:
-                now = time.time()
-                since_last_update = int(
-                    now - self.indexing_batch_last_updated[collection_id]
+            now = time.time()
+            # TODO - What default value should self.indexing_batch_last_updated
+            # have? since the linter picks up an error here, "float - str""
+            since_last_update = int(now - self.indexing_batch_last_updated)
+            if since_last_update > INDEXING_TIMEOUT:
+                log.debug(
+                    f"Running batch indexing for collection "
+                    f"{sum([len(self.indexing_batches[id]) for id in self.indexing_batches])} "
+                    f"items)"
                 )
-                if since_last_update > INDEXING_TIMEOUT:
-                    log.debug(
-                        f"Running batch indexing for collection {collection_id} ({len(batch)} items)"
-                    )
-                    op_index(collection_id, batch, worker=self)
-                    del self.indexing_batch_last_updated[collection_id]
-                    del self.indexing_batches[collection_id]
+                op_index(batches, worker=self)
+                self.indexing_batches = {}
+                self.indexing_batch_last_updated = ""
 
 
 def get_worker(num_threads=1):

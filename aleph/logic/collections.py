@@ -115,19 +115,19 @@ def aggregate_model(collection, aggregator):
     writer.flush()
 
 
-def index_aggregator(
-    collection, aggregator, entity_ids=None, skip_errors=False, sync=False
-):
+def index_aggregator(entity_ids, skip_errors=False, sync=False):
     def _generate():
         idx = 0
-        entities = aggregator.iterate(entity_id=entity_ids, skip_errors=skip_errors)
-        for idx, proxy in enumerate(entities, 1):
-            if idx > 0 and idx % 1000 == 0:
-                log.debug("[%s] Index: %s...", collection, idx)
-            yield proxy
-        log.debug("[%s] Indexed %s entities", collection, idx)
+        for collection_id in entity_ids:
+            aggregator = get_aggregator(collection_id)
+            entities = aggregator.iterate(entity_id=entity_ids, skip_errors=skip_errors)
+            for idx, proxy in enumerate(entities, 1):
+                if idx > 0 and idx % 1000 == 0:
+                    log.debug("[%s] Index: %s...", collection_id, idx)
+                yield (proxy, collection_id)
+            log.debug("[%s] Indexed %s entities", collection_id, idx)
 
-    entities_index.index_bulk(collection, _generate(), sync=sync)
+    entities_index.index_bulk(_generate(), sync=sync)
 
 
 def reingest_collection(
