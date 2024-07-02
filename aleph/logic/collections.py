@@ -129,13 +129,16 @@ def index_aggregator(
 
     entities_index.index_bulk(_generate(), collection=collection, sync=sync)
 
+
 def index_aggregator_bulk(entity_ids, skip_errors=False, sync=False):
     def _generate():
         idx = 0
         for collection_id in entity_ids:
             collection = Collection.by_id(collection_id)
             aggregator = get_aggregator(collection)
-            entities = aggregator.iterate(entity_id=entity_ids[collection_id], skip_errors=skip_errors)
+            entities = aggregator.iterate(
+                entity_id=entity_ids[collection_id], skip_errors=skip_errors
+            )
             for idx, proxy in enumerate(entities, 1):
                 if idx > 0 and idx % 1000 == 0:
                     log.debug("[%s] Index: %s...", collection_id, idx)

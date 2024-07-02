@@ -4,7 +4,6 @@ import time
 import threading
 import functools
 import queue
-from typing import List
 import copy
 from typing import Dict, Callable
 
@@ -168,7 +167,12 @@ class AlephWorker(Worker):
                 batch.append(task)
                 self.indexing_batch_last_updated = time.time()
                 # if len(batch) >= SETTINGS.INDEXING_BATCH_SIZE:
-                if sum([len(self.indexing_batches[id]) for id in self.indexing_batches]) >= SETTINGS.INDEXING_BATCH_SIZE:
+                if (
+                    sum(
+                        [len(self.indexing_batches[id]) for id in self.indexing_batches]
+                    )
+                    >= SETTINGS.INDEXING_BATCH_SIZE
+                ):
                     # batch size limit reached; execute the existing batch and reset
                     op_index(self.indexing_batches, worker=self)
                     del self.indexing_batches
