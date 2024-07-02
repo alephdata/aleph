@@ -40,16 +40,13 @@ indexing_lock = threading.Lock()
 
 
 def op_index(batch, worker: Worker):
-    # collection = Collection.by_id(collection_id)
-
-    # if not collection:
-    #     return
     sync = False
     for collection_id in batch:
         for task in batch[collection_id]:
             if task.context.get("sync", False):
                 sync = True
                 break
+    log.info(f"Batching tasks from {len(batch.keys())} collections")
     index_many(batch, sync=sync)
     for task in batch:
         # acknowledge batched tasks
@@ -206,8 +203,6 @@ class AlephWorker(Worker):
             batches = self.indexing_batches
             indexing_lock.release()
             now = time.time()
-            # TODO - What default value should self.indexing_batch_last_updated
-            # have? since the linter picks up an error here, "float - str""
             since_last_update = int(now - self.indexing_batch_last_updated)
             if since_last_update > INDEXING_TIMEOUT:
                 log.debug(
