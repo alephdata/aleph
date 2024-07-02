@@ -11,7 +11,7 @@ title: Installing Aleph
 
 ## Prerequisites
 
-Aleph requires multiple services to operate. It uses Docker containers to make it easier for development and deployments. Before we continue, you will need to have Docker and `docker-compose` installed. Please refer to their manual to learn how to set up [Docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/).
+Aleph requires multiple services to operate. It uses Docker containers to make it easier for development and deployments. Before we continue, you will need to have Docker and `docker compose` installed. Please refer to their manual to learn how to set up [Docker](https://docs.docker.com/engine/installation/) and [docker compose](https://docs.docker.com/compose/install/).
 
 ## Developer setup
 
@@ -27,7 +27,7 @@ Developer mode is a docker configuration for Aleph which makes it easy to do sof
 - Both backend and frontend will operate in debug mode and give more verbose error messages when a problem occurs.
 - The host machine's file system will be accessible from within Aleph's docker container at `/host`.
 
-Developer mode overrides the configuration file for `docker-compose`, using `docker-compose.dev.yml` instead of `docker-compose.yml`. This is done by wrapping most developer mode commands using `make`.
+Developer mode overrides the configuration file for `docker compose`, using `docker-compose.dev.yml` instead of `docker-compose.yml`. This is done by wrapping most developer mode commands using `make`.
 
 ### Getting started
 
@@ -109,7 +109,7 @@ To also get a sample of (non-document) entity data, consider loading [sanctions 
 
 ### Running Tests
 
-To run the tests, assuming you already have the `docker-compose` up and ready, run:
+To run the tests, assuming you already have the `docker compose` up and ready, run:
 
 ```bash
 make test
@@ -187,13 +187,13 @@ The same can be done if you run an instance of the `shell` container in producti
 Aleph is distributed as a set of Docker containers, which can be run on any server that meets the following criteria:
 
 - 8GB (or more) of RAM. While the software will start with much less, we advise providing ample main memory for ideal performance.
-- A working install of [Docker](https://www.docker.com/) and `docker-compose`. See [the FAQ page](/developers/technical-faq#can-i-run-aleph-without-using-docker) for information on not using Docker.
+- A working install of [Docker](https://www.docker.com/) and `docker compose`. See [the FAQ page](/developers/technical-faq#can-i-run-aleph-without-using-docker) for information on not using Docker.
 - A domain name or IP address which can be used at the root via HTTPS (i.e. Aleph doesn't support running at a sub-path like `/aleph`). You are welcome to contribute fixes for this scenario.
 - An internet connection to download and install the package.
 
 To begin a production deployment:
 
-- Obtain a copy of Aleph's [docker-compose](https://github.com/alephdata/aleph/blob/main/docker-compose.yml) file and [base configurations](https://github.com/alephdata/aleph/blob/main/aleph.env.tmpl) (named `aleph.env.tmpl`).
+- Obtain a copy of Aleph's [docker compose](https://github.com/alephdata/aleph/blob/main/docker-compose.yml) file and [base configurations](https://github.com/alephdata/aleph/blob/main/aleph.env.tmpl) (named `aleph.env.tmpl`).
 - Make a copy of the configurations file named `aleph.env` and define settings for your production instance. Check the [section on configuration](/developers/installation#configuration) for more information regarding the available options.
 
 <Callout>
@@ -207,22 +207,22 @@ To begin a production deployment:
 sudo sysctl -w vm.max_map_count=262144
 ```
 
-- Finally, you can boot the docker-compose environment:
+- Finally, you can boot the `docker compose` environment:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will run Aleph in detached mode. You can shut down the system at any time by issuing the following command:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 Before Aleph can process any requests or data, you need to make sure it sets up the database and search index correctly by executing an upgrade:
 
 ```bash
-docker-compose run --rm shell aleph upgrade
+docker compose run --rm shell aleph upgrade
 ```
 
 While the system is running, it will bind to to port `8080` of its host machine and accept incoming connections. You can check that the system is functional with a curl request:
@@ -260,13 +260,13 @@ For SQL database, Aleph uses PostgreSQL. PostgreSQL can be backed up and restore
 For example, here's how you can dump the database:
 
 ```
-docker-compose exec postgres pg_dumpall -c -U postgres > dump_`date +%Y-%m-%d"_"%H:%M:%S`.sql
+docker compose exec postgres pg_dumpall -c -U postgres > dump_`date +%Y-%m-%d"_"%H:%M:%S`.sql
 ```
 
 and then restore from the dump:
 
 ```
-cat dump_2021-11-03_18:03:54.sql | docker-compose exec -T postgres psql -U aleph -d aleph
+cat dump_2021-11-03_18:03:54.sql | docker compose exec -T postgres psql -U aleph -d aleph
 ```
 
 The commands will be slightly different depending on your specific set up. If you're running a separate database instance for FtM-Store, you should backup both the Aleph application database and the FtM-Store database. The data dump creation command should be put in a cron job to automate snapshot creation and those snapshots should be copied to a separate backup server.
@@ -277,12 +277,12 @@ Note: This works only for Aleph versions greater than 3.8.0.
 
 Here's how you can recreate the ElasticSearch index from the FtM-Store database:
 
-1. Run `docker-compose run --rm shell aleph upgrade` to recreate the indices in Elasticsearch
-2. Once that finishes running, run `docker-compose run --rm shell aleph reindex-full` to write data into Elasticsearch indices from the FtM-Store PostgreSQL database.This will take some time to run depending on how much data you have.
+1. Run `docker compose run --rm shell aleph upgrade` to recreate the indices in Elasticsearch
+2. Once that finishes running, run `docker compose run --rm shell aleph reindex-full` to write data into Elasticsearch indices from the FtM-Store PostgreSQL database.This will take some time to run depending on how much data you have.
 
 ## Configuration
 
-The main configuration file of Aleph is `aleph.env`, which is loaded by docker-compose and can modify many aspects of system behaviour. A template for the configuration with details regarding many of the options is available in the `aleph.env.tmpl` file.
+The main configuration file of Aleph is `aleph.env`, which is loaded by `docker compose` and can modify many aspects of system behaviour. A template for the configuration with details regarding many of the options is available in the `aleph.env.tmpl` file.
 
 ### Configuration options
 
