@@ -45,21 +45,24 @@ def op_index(batch, worker: Worker):
             if task.context.get("sync", False):
                 sync = True
                 break
+
     log.info(f"Batching tasks from {len(batch.keys())} collections")
     index_many(batch, sync=sync)
-    for task in batch:
-        # acknowledge batched tasks
-        log.info(
-            f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
-        )
-        # avoid data race with the main thread by using a copy of the task
-        channel = task._channel
-        delattr(task, "_channel")
-        task = copy.deepcopy(task)
-        task.context["skip_ack"] = False
-        cb = functools.partial(worker.ack_message, task, channel)
-        channel.connection.add_callback_threadsafe(cb)
+
+    for collection_id, tasks in batch.items():
+        for task in tasks:
+            # acknowledge batched tasks
+            log.info(
+                f"Task [collection: {task.collection_id}]: "
+                f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
+            )
+            # avoid data race with the main thread by using a copy of the task
+            channel = task._channel
+            delattr(task, "_channel")
+            task = copy.deepcopy(task)
+            task.context["skip_ack"] = False
+            cb = functools.partial(worker.ack_message, task, channel)
+            channel.connection.add_callback_threadsafe(cb)
 
 
 def op_reingest(collection, task):
@@ -163,10 +166,8 @@ class AlephWorker(Worker):
         # Task batching for index operation
         if task.operation == SETTINGS.STAGE_INDEX:
             with indexing_lock:
-                batch = self.indexing_batches[task.collection_id]
-                batch.append(task)
+                self.indexing_batches[task.collection_id].append(task)
                 self.indexing_batch_last_updated = time.time()
-                # if len(batch) >= SETTINGS.INDEXING_BATCH_SIZE:
                 if (
                     sum(
                         [len(self.indexing_batches[id]) for id in self.indexing_batches]
@@ -175,11 +176,11 @@ class AlephWorker(Worker):
                 ):
                     # batch size limit reached; execute the existing batch and reset
                     op_index(self.indexing_batches, worker=self)
-                    del self.indexing_batches
-                    del self.indexing_batch_last_updated
+                    self.indexing_batches = defaultdict(list)
+                    self.indexing_batch_last_updated = 0.0
                 else:
                     log.info(
-                        f"Task [collection:{task.collection_id}]: "
+                        f"Task [collection: {task.collection_id}]: "
                         f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (batched)"
                     )
                 # skip acknowledgment for batched task; the batch processing function
@@ -202,10 +203,8 @@ class AlephWorker(Worker):
     def run_indexing_batches(self):
         """Run remaining batched indexing tasks after waiting for a maximum of
         INDEXING_TIMEOUT seconds"""
-        # we is the lock needed?
-        if indexing_lock.acquire(False):
-            batches = self.indexing_batches
-            indexing_lock.release()
+        # is the lock needed?
+        with indexing_lock:
             now = time.time()
             since_last_update = int(now - self.indexing_batch_last_updated)
             if since_last_update > INDEXING_TIMEOUT:
@@ -214,9 +213,9 @@ class AlephWorker(Worker):
                     f"{sum([len(self.indexing_batches[id]) for id in self.indexing_batches])} "
                     f"items)"
                 )
-                op_index(batches, worker=self)
-                del self.indexing_batches
-                del self.indexing_batch_last_updated
+                op_index(self.indexing_batches, worker=self)
+                self.indexing_batches = defaultdict(list)
+                self.indexing_batch_last_updated = 0.0
 
 
 def get_worker(num_threads=1):
