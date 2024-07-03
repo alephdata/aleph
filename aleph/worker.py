@@ -209,9 +209,9 @@ class AlephWorker(Worker):
             since_last_update = int(now - self.indexing_batch_last_updated)
             if since_last_update > INDEXING_TIMEOUT:
                 log.debug(
-                    f"Running batch indexing for collection "
+                    f"Running batch indexing with "
                     f"{sum([len(self.indexing_batches[id]) for id in self.indexing_batches])} "
-                    f"items)"
+                    f"items"
                 )
                 op_index(self.indexing_batches, worker=self)
                 self.indexing_batches = defaultdict(list)
