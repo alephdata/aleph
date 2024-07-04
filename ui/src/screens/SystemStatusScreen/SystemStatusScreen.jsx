@@ -1,18 +1,18 @@
 import React from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  FormattedTime,
+  injectIntl,
+} from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, ProgressBar, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
 import withRouter from 'app/withRouter';
-import {
-  Collection,
-  ErrorSection,
-  Numeric,
-  Skeleton,
-  RelativeTime,
-} from 'components/common';
+import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
 import Screen from 'components/Screen/Screen';
 import Dashboard from 'components/Dashboard/Dashboard';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -121,6 +121,7 @@ export class SystemStatusScreen extends React.Component {
       res.start_time && convertUTCDateToLocalDate(res.start_time);
     const lastUpdatedAt =
       res.last_update && convertUTCDateToLocalDate(res.last_update);
+    const today = new Date();
 
     return (
       <tr key={collection?.id || 'null'}>
@@ -143,7 +144,12 @@ export class SystemStatusScreen extends React.Component {
                   defaultMessage="started"
                 />{' '}
                 <span title={intl.formatDate(startedAt, dateFormat)}>
-                  <RelativeTime date={startedAt} />
+                  {today.toDateString() !== startedAt.toDateString() && (
+                    <>
+                      <FormattedDate value={startedAt} />{' '}
+                    </>
+                  )}
+                  <FormattedTime value={startedAt} />
                 </span>
               </>
             )}
@@ -155,7 +161,12 @@ export class SystemStatusScreen extends React.Component {
                   defaultMessage="last updated"
                 />{' '}
                 <span title={intl.formatDate(lastUpdatedAt, dateFormat)}>
-                  <RelativeTime date={lastUpdatedAt} />
+                  {today.toDateString() !== lastUpdatedAt.toDateString() && (
+                    <>
+                      <FormattedDate value={lastUpdatedAt} />{' '}
+                    </>
+                  )}
+                  <FormattedTime value={lastUpdatedAt} />
                 </span>
               </>
             )}
