@@ -6,7 +6,7 @@ global:
 
   image:
     repository: ghcr.io/alephdata/aleph
-    tag: "4.0.0-rc34"
+    tag: "4.0.0-rc35"
     pullPolicy: Always
 
   commonEnv:
