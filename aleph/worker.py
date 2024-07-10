@@ -208,14 +208,14 @@ class AlephWorker(Worker):
             now = time.time()
             since_last_update = int(now - self.indexing_batch_last_updated)
             if since_last_update > INDEXING_TIMEOUT:
-                log.debug(
-                    f"Running batch indexing with "
-                    f"{sum([len(self.indexing_batches[id]) for id in self.indexing_batches])} "
-                    f"items"
+                batched_item_count = sum(
+                    [len(self.indexing_batches[id]) for id in self.indexing_batches]
                 )
-                op_index(self.indexing_batches, worker=self)
-                self.indexing_batches = defaultdict(list)
-                self.indexing_batch_last_updated = 0.0
+                if batched_item_count:
+                    log.debug(f"Running batch indexing with {batched_item_count} items")
+                    op_index(self.indexing_batches, worker=self)
+                    self.indexing_batches = defaultdict(list)
+                    self.indexing_batch_last_updated = 0.0
 
 
 def get_worker(num_threads=1):
