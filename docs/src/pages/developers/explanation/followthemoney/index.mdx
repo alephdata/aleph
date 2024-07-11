@@ -5,8 +5,79 @@ title: FollowTheMoney
 
 # FollowTheMoney
 
-<p class="lead">Aleph is built on top of FollowTheMoney, a data model for the most common entity and relationship types used in anti-corruption reporting. Aleph allows users to browse, import, and exports data in the FollowTheMoney data model.</p>
+<p class="lead">Aleph is built on top of FollowTheMoney, a data model for the most common entity and relationship types used in anti-corruption reporting. Aleph allows users to browse, import, and export data in the FollowTheMoney data format. This page explains key concepts of FollowTheMoney.</p>
 
-<Callout>
-  This documentation article hasn’t been written yet. 🙈
-</Callout>
+## Entities and schemata
+
+FollowTheMoney defines entity types commonly used in anti-corruption reporting, including [people](https://followthemoney.tech/explorer/schemata/Person/), [companies](https://followthemoney.tech/explorer/schemata/Company/), [assets](https://followthemoney.tech/explorer/schemata/Asset/), [addresses](https://followthemoney.tech/explorer/schemata/Address/), etc. In fact, even the files you upload to Aleph are modelled as entities (for example, there are entities representing [spreadsheets](https://followthemoney.tech/explorer/schemata/Workbook/), [emails](https://followthemoney.tech/explorer/schemata/Email/), and other types of files). An entity can also represent a relationship between other entities, such as a payment or an ownership of a company.
+
+Entity types are also called **entity schemata**.
+
+## Properties
+
+Every entity schema defines a set of properties. For example, the [Person](https://followthemoney.tech/explorer/schemata/Person/) schema has a `nationality` property while the [Company](https://followthemoney.tech/explorer/schemata/Company/) schema has a `jurisdiction` property. Both properties, however, have the same property type, [country](https://followthemoney.tech/explorer/types/country/).
+
+## References
+
+There are many different property types, including types for [strings](https://followthemoney.tech/explorer/types/string/), [dates](https://followthemoney.tech/explorer/types/date/) or [identifiers](https://followthemoney.tech/explorer/types/identifier/). There is also a special entity property type which allows entities to reference other entities. For example, the Passport schema has a `holder` property that references another entity:
+
+<Mermaid
+  content={`
+    graph LR
+      passport("Passport") -- "holder" --> holder("Person")
+  `}
+/>
+
+This also allows modelling more complex relationships:
+
+<Mermaid
+  content={`
+    graph TB
+      acme("ACME, Inc.")
+      john("John Doe")
+      directorship("Directorship\nStart date: 1996-01-24\nEnd date: 2001-04-01")
+      directorship -- "director" --> john
+      directorship -- "organization" --> acme
+  `}
+/>
+
+## JSON
+
+Entities are often serialized as JSON snippets. For example, the example in the section above could be represented as follows:
+
+```json
+{
+  "id": "acme",
+  "schema": "Company",
+  "properties": {
+    "name": ["ACME, Inc."],
+  }
+}
+```
+
+```json
+{
+  "id": "john",
+  "schema": "Person",
+  "properties": {
+    "name": ["John Doe"],
+  },
+}
+```
+
+```json
+{
+  "id": "john-acme",
+  "schema": "Directorship",
+  "properties": {
+    "director": ["john"],
+    "organization": ["acme"],
+  }
+}
+```
+
+While Aleph allows you to edit entities via the Aleph UI, you can also [read](/developers/how-to/data/export-ftm-data) and [write](/developers/how-to/data/import-ftm-data) entities programmatically in JSON format.
+
+## Learn more
+
+Find more information on the [FollowTheMoney documentation website](https://followthemoney.tech) which also includes [the Model Explorer](https://followthemoney.tech/explorer/), a reference of all built-in entity schemata and property types.
