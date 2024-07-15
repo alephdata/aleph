@@ -2,6 +2,7 @@ from contextlib import contextmanager
 import unittest.mock as mock
 from urllib.parse import urlparse, parse_qs
 from requests import Response
+from typing import List
 
 from aleph.core import db
 from aleph.settings import SETTINGS
@@ -236,8 +237,8 @@ def mock_oauth_token_exchange(name: str, email: str):
 
         # https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
         parse_mock.return_value = {
-            "name": "John Doe",
-            "email": "john.doe@example.org",
+            "name": name,
+            "email": email,
         }
 
         yield
