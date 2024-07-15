@@ -42,8 +42,33 @@ import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
 import './Router.scss';
 
 const MESSAGES_INTERVAL = 15 * 60 * 1000; // every 15 minutes
+const MAX_METADATA_REQUEST_ATTEMPTS = 5;
+const DELAY_METADATA_REQUEST = 2000;
+
+const Loading = (
+  <div className="RouterLoading">
+    <div className="spinner">
+      <Spinner className={Classes.LARGE} />
+    </div>
+  </div>
+);
+
+const SomethingIsWrong = (
+  <div className="RouterLoading">
+    Something is wrong, please try again later
+  </div>
+);
 
 class Router extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      metadataRequestAttempts: 0,
+      requestThreadWorksFine: true,
+    };
+  }
+
   componentDidMount() {
     this.fetchIfNeeded();
     this.setMessagesInterval();
@@ -61,12 +86,36 @@ class Router extends Component {
     const { metadata, messages } = this.props;
 
     if (metadata.shouldLoad) {
-      this.props.fetchMetadata();
+      this.executeRetryPattern();
     }
 
     if (messages.shouldLoad) {
       this.fetchMessages();
     }
+  }
+
+  executeRetryPattern() {
+    if (this.state.metadataRequestAttempts >= MAX_METADATA_REQUEST_ATTEMPTS) {
+      return;
+    }
+
+    this.setState({
+      metadataRequestAttempts: this.state.metadataRequestAttempts + 1,
+    });
+
+    const delay = this.state.metadataRequestAttempts * DELAY_METADATA_REQUEST;
+
+    const functionRef = () => {
+      // eslint-disable-next-line
+      console.log(
+        'metadataRequestAttempts',
+        this.state.metadataRequestAttempts
+      );
+
+      this.props.fetchMetadata();
+    };
+
+    setTimeout(functionRef, delay);
   }
 
   fetchMessages() {
@@ -78,8 +127,13 @@ class Router extends Component {
   }
 
   setMessagesInterval() {
-    const id = setInterval(() => this.fetchMessages(), MESSAGES_INTERVAL);
-    this.setState(() => ({ messagesInterval: id }));
+    if (!this.state?.messagesInterval) {
+      const id = setInterval(
+        () => this.executeRetryPattern(),
+        MESSAGES_INTERVAL
+      );
+      this.setState(() => ({ messagesInterval: id }));
+    }
   }
 
   clearMessagesInterval() {
@@ -92,16 +146,12 @@ class Router extends Component {
     const { metadata, session, pinnedMessage, dismissMessage } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
-    const Loading = (
-      <div className="RouterLoading">
-        <div className="spinner">
-          <Spinner className={Classes.LARGE} />
-        </div>
-      </div>
-    );
-
     if (!isLoaded) {
-      return Loading;
+      if (this.state.metadataRequestAttempts < MAX_METADATA_REQUEST_ATTEMPTS) {
+        return Loading;
+      } else {
+        return SomethingIsWrong;
+      }
     }
 
     return (
