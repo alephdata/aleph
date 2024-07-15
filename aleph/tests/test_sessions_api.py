@@ -102,7 +102,7 @@ class SessionsApiTestCase(TestCase):
 
 class SessionsApiOAuthTestCase(TestCase):
     def setUp(self):
-        super().setUpClass()
+        super().setUp()
 
         SETTINGS.OAUTH = True
         SETTINGS.OAUTH_HANDLER = "test-oidc"
