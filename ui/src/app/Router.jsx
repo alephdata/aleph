@@ -65,7 +65,6 @@ class Router extends Component {
 
     this.state = {
       metadataRequestAttempts: 0,
-      requestThreadWorksFine: true,
     };
   }
 
