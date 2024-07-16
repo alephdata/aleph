@@ -106,12 +106,6 @@ class Router extends Component {
     const delay = this.state.metadataRequestAttempts * DELAY_METADATA_REQUEST;
 
     const functionRef = () => {
-      // eslint-disable-next-line
-      console.log(
-        'metadataRequestAttempts',
-        this.state.metadataRequestAttempts
-      );
-
       this.props.fetchMetadata();
     };
 
