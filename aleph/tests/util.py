@@ -87,7 +87,6 @@ class TestCase(unittest.TestCase):
         SETTINGS.TESTING = True
         SETTINGS.DEBUG = True
         SETTINGS.CACHE = True
-        SETTINGS.OAUTH = False
         SETTINGS.SECRET_KEY = "batman"
         SETTINGS.APP_UI_URL = UI_URL
         SETTINGS.ARCHIVE_TYPE = "file"
