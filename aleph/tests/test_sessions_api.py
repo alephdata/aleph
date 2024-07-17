@@ -221,9 +221,78 @@ class SessionsApiOAuthTestCase(TestCase):
         assert query["status"] == ["error"]
         assert query["code"] == ["403"]
 
+    def test_oauth_callback_sync_groups(self):
+        # Start OAuth flow
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+        state = query["state"]
+
+        # Exchange auth code for an OAuth token
+        with mock_oauth_token_exchange(
+            name="John Doe",
+            email="john.doe@example.org",
+            groups=["group-a", "group-b"],
+        ):
+            res = self.client.get(
+                "/api/2/sessions/callback",
+                query_string={
+                    "code": "example-auth-code",
+                    "state": state,
+                },
+            )
+
+        location = urlparse(res.headers["Location"])
+        fragment_query = parse_qs(location.fragment)
+        auth_token = fragment_query["token"][0]
+
+        # Get the users groups
+        res = self.client.get(
+            "/api/2/groups",
+            headers={"Authorization": f"Token {auth_token}"},
+        )
+        assert len(res.json["results"]) == 2
+        assert res.json["results"][0]["name"] == "group-a"
+        assert res.json["results"][1]["name"] == "group-b"
+
+        # Start another OAuth flow. In real life, the user's group memberships
+        # would have changed with the ID provider. In this test, the mocked token
+        # exchange will simply return a different set of groups.
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+        state = query["state"]
+
+        # Exchange the auth code for an OAuth token
+        with mock_oauth_token_exchange(
+            name="John Doe",
+            email="john.doe@example.org",
+            groups=["project-b", "project-c"],
+        ):
+            res = self.client.get(
+                "/api/2/sessions/callback",
+                query_string={
+                    "code": "example-auth-code",
+                    "state": state,
+                },
+            )
+
+        location = urlparse(res.headers["Location"])
+        fragment_query = parse_qs(location.fragment)
+        auth_token = fragment_query["token"][0]
+
+        # The groups have been updated
+        res = self.client.get(
+            "/api/2/groups",
+            headers={"Authorization": f"Token {auth_token}"},
+        )
+        assert len(res.json["results"]) == 2
+        assert res.json["results"][0]["name"] == "project-b"
+        assert res.json["results"][1]["name"] == "project-c"
+
 
 @contextmanager
-def mock_oauth_token_exchange(name: str, email: str):
+def mock_oauth_token_exchange(name: str, email: str, groups: List[str] = []):
     patch_send = mock.patch("requests.sessions.Session.send")
     patch_parse = mock.patch(
         "authlib.integrations.flask_client.remote_app.FlaskRemoteApp.parse_id_token"
@@ -239,6 +308,7 @@ def mock_oauth_token_exchange(name: str, email: str):
         parse_mock.return_value = {
             "name": name,
             "email": email,
+            "groups": groups,  # This is not standardized/provider specific
         }
 
         yield
