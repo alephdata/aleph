@@ -138,7 +138,6 @@ class AlephWorker(Worker):
                     self.often.update()
                     log.info("Self-check...")
                     compute_collections()
-                    Dataset.cleanup_dataset_status(kv)
 
                 if self.daily.check():
                     self.daily.update()
