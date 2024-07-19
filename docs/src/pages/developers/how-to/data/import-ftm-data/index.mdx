@@ -1,0 +1,40 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Import FollowTheMoney Data
+---
+
+# How To Import FollowTheMoney Data
+
+<p class="lead">If you want to use an [open dataset](/developers/getting-started/find-datasets) or have pre-processed and converted structured data to the FollowTheMoney format, you can easily import that data into your Aleph instance. This guide describes how to import structured FollowTheMoney data into Aleph.</p>
+
+<Callout>
+  Do you want to upload many files or any entire directory from your computer at once? Please follow the instructions in [this how-to guide](#).
+
+  Do you want to convert tabular data (e.g. Excel files or SQL databases) to the FollowTheMoney format? Please follow the instructions in [this how-to guide](#).
+</Callout>
+
+<Steps>
+  <Step>
+    If you want to import a dataset that’s available online, download a copy of the data in FollowTheMoney format. For example, if you’d like to import the [OpenSanctions dataset of Politically Exposed Persons (PEPs)](https://data.opensanctions.org/datasets/20231205/peps/entities.ftm.json), you could download it using the following command:
+
+    ```bash
+    curl -O https://data.opensanctions.org/datasets/20231205/peps/entities.ftm.json
+    ```
+  </Step>
+
+  <Step>
+    In the next step, you will use the alephclient CLI to import data into your Aleph instance. If you haven’t yet set up alephclient on your computer, refer to [this how-to guide](/developers/how-to/data/install-alephclient) to install and configure alephclient.
+  </Step>
+
+  <Step>
+    You can now import the dataset in FollowTheMoney format using alephclient:
+
+    ```bash
+    alephclient write-entities --infile entities.ftm.json --foreign-id opensanctions-peps
+    ```
+
+    This will import the data into the Aleph collection with the foreign ID `opensanctions-peps`. If no collection with this foreign ID exists, a new collection is created.
+
+    If you’d like to import data into an existing collection and do not know its foreign ID, you can find the foreign ID in the Aleph UI. Navigate to the collection or investigation homepage. The foreign ID is listed in the sidebar on the right.
+  </Step>
+</Steps>
