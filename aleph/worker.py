@@ -8,7 +8,7 @@ import copy
 from typing import Dict, Callable
 
 import structlog
-from servicelayer.taskqueue import Worker, Task, Dataset
+from servicelayer.taskqueue import Worker, Task
 from servicelayer import settings as sls
 
 from aleph import __version__
@@ -138,7 +138,6 @@ class AlephWorker(Worker):
                     self.often.update()
                     log.info("Self-check...")
                     compute_collections()
-                    Dataset.cleanup_dataset_status(kv)
 
                 if self.daily.check():
                     self.daily.update()
