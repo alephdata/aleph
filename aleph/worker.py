@@ -46,8 +46,6 @@ def op_index(batch, worker: Worker):
                 sync = True
                 break
 
-    log.info(f"Batching tasks from {len(batch.keys())} collections")
-
     # we want skip_errors=True because we can't recover from ftm merge related errors
     index_many(batch, sync=sync, skip_errors=True)
 
@@ -212,8 +210,12 @@ class AlephWorker(Worker):
                 batched_item_count = sum(
                     [len(self.indexing_batches[id]) for id in self.indexing_batches]
                 )
+                collection_count = len(self.indexing_batches)
                 if batched_item_count:
-                    log.debug(f"Running batch indexing with {batched_item_count} items")
+                    log.debug(
+                        f"Running batch indexing with {batched_item_count} "
+                        f"items from {collection_count} collections"
+                    )
                     op_index(self.indexing_batches, worker=self)
                     self.indexing_batches = defaultdict(list)
                     self.indexing_batch_last_updated = 0.0
