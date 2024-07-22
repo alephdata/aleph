@@ -15,7 +15,7 @@ from aleph.logic.aggregator import get_aggregator
 log = logging.getLogger(__name__)
 
 
-def index_many(batch, sync=False):
+def index_many(batch, sync=False, skip_errors=False):
     """Project the contents of the collections aggregator into the index."""
     entity_ids = {}
 
@@ -26,7 +26,7 @@ def index_many(batch, sync=False):
                 ensure_list(task.payload.get("entity_ids"))
             )
 
-    index_aggregator_bulk(entity_ids, sync=sync)
+    index_aggregator_bulk(entity_ids, sync=sync, skip_errors=skip_errors)
 
     for collection_id in batch:
         if collection_id:

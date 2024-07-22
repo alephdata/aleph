@@ -47,7 +47,9 @@ def op_index(batch, worker: Worker):
                 break
 
     log.info(f"Batching tasks from {len(batch.keys())} collections")
-    index_many(batch, sync=sync)
+
+    # we want skip_errors=True because we can't recover from ftm merge related errors
+    index_many(batch, sync=sync, skip_errors=True)
 
     for collection_id, tasks in batch.items():
         for task in tasks:
