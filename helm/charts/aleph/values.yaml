@@ -268,7 +268,47 @@ worker:
       memory: 800Mi
 
   env:
+    ALEPH_WORKER_STAGES: "xref:reingest:reindex:loadmapping:flushmapping:exportsearch:exportxref:updateentity:pruneentity"
     WORKER_THREADS: 0
+
+# Aleph Indexing Worker - templates/worker-index.yaml
+worker-index:
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 100%
+    type: RollingUpdate
+
+  podAnnotations: {}
+
+  env:
+    ALEPH_WORKER_STAGES: "index"
+    WORKER_THREADS: 0
+
+  nodeSelector: {}
+
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  image: {}
+
+  # Scaling:
+  replicas: 2
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  containerResources:
+    requests:
+      cpu: 301m
+      memory: 300Mi
+    limits:
+      # cpu: 1000m
+      memory: 800Mi
+
 
 # Aleph Prometheus Exporter - templates/exporter.yaml
 exporter:
