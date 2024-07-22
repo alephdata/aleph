@@ -241,7 +241,7 @@ class Settings:
             "ALEPH_RABBITMQ_QOS_UPDATE_ENTITY_QUEUE", 1
         )
         self.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE = env.to_int(
-            "ALEPH_RABBITMQ_QOS_PRUNE_ENTITY_QUEUE"
+            "ALEPH_RABBITMQ_QOS_PRUNE_ENTITY_QUEUE", 1
         )
 
         self.STAGE_INGEST = "ingest"
