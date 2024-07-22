@@ -5,20 +5,20 @@ metadata:
   labels:
     app: {{ .Values.global.namingPrefix }}-worker-index
 spec:
-  replicas: {{ .Values.worker.replicas }}
+  replicas: {{ .Values.workerindex.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.global.namingPrefix }}-worker-index
-  strategy: {{- toYaml .Values.worker.strategy | nindent 4 }}
+  strategy: {{- toYaml .Values.workerindex.strategy | nindent 4 }}
   template:
     metadata:
       labels:
         app: {{ .Values.global.namingPrefix }}-worker-index
-      annotations: {{- toYaml .Values.worker.podAnnotations | nindent 8 }}
+      annotations: {{- toYaml .Values.workerindex.podAnnotations | nindent 8 }}
     spec:
-      nodeSelector: {{- toYaml .Values.worker.nodeSelector | nindent 8 }}
+      nodeSelector: {{- toYaml .Values.workerindex.nodeSelector | nindent 8 }}
       restartPolicy: Always
-      securityContext: {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
+      securityContext: {{- toYaml .Values.workerindex.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
@@ -35,9 +35,9 @@ spec:
             - mountPath: /home/app
               name: home-volume
           securityContext:
-            {{- toYaml .Values.worker.containerSecurityContext | nindent 12 }}
+            {{- toYaml .Values.workerindex.containerSecurityContext | nindent 12 }}
           resources:
-            {{- toYaml .Values.worker.containerResources | nindent 12 }}
+            {{- toYaml .Values.workerindex.containerResources | nindent 12 }}
           env:
             {{- range $key, $value := .Values.global.commonEnv }}
             - name: {{ $key }}
@@ -47,7 +47,7 @@ spec:
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- range $key, $value := .Values.worker.env }}
+            {{- range $key, $value := .Values.workerindex.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
