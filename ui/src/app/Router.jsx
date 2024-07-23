@@ -60,6 +60,8 @@ const SomethingIsWrong = (
 );
 
 class Router extends Component {
+  metadataTimeoutIntervals = [];
+
   constructor(props) {
     super(props);
 
@@ -105,7 +107,18 @@ class Router extends Component {
     const delay = this.state.metadataRequestAttempts * DELAY_METADATA_REQUEST;
 
     const functionRef = () => {
-      this.props.fetchMetadata();
+      const { metadata } = this.props;
+
+      if (!metadata.shouldLoad) {
+        this.metadataTimeoutIntervals.forEach((intervalId) => {
+          clearInterval(intervalId);
+        });
+
+        return;
+      }
+
+      const intervalId = setTimeout(functionRef, delay);
+      this.metadataTimeoutIntervals.push(intervalId);
     };
 
     setTimeout(functionRef, delay);
