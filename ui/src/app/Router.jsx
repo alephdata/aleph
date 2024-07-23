@@ -117,11 +117,11 @@ class Router extends Component {
         return;
       }
 
-      const intervalId = setTimeout(functionRef, delay);
-      this.metadataTimeoutIntervals.push(intervalId);
+      this.props.fetchMetadata();
     };
 
-    setTimeout(functionRef, delay);
+    const intervalId = setTimeout(functionRef, delay);
+    this.metadataTimeoutIntervals.push(intervalId);
   }
 
   fetchMessages() {
