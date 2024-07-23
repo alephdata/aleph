@@ -131,7 +131,8 @@ class AlephWorker(Worker):
             log.debug("Batch timer started")
 
     def on_signal(self, signal, _):
-        self.batch_timer.cancel()
+        if self.batch_timer:
+            self.batch_timer.cancel()
         super().on_signal(signal, _)
 
     def process(self, blocking=True):
