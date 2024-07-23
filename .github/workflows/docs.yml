@@ -1,13 +1,15 @@
 name: Docs
 
 on: 
+  pull_request:
+    paths:
+      - "docs/**"
   push:
     paths:
       - "docs/**"
     branches:
-      - "**"
-    pr:
-      - "docs/**"
+      - "develop"
+      - "main"
   workflow_dispatch: {}
 
 jobs:
@@ -28,7 +30,7 @@ jobs:
           docs-path: ./docs
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' }}
     needs: build
     runs-on: ubuntu-latest
 

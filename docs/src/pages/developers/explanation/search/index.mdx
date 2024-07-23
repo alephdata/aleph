@@ -1,0 +1,150 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Search
+---
+
+# Search
+
+<p class="lead">This article describes how Aleph makes use of Elasticsearch to make data searchable, as well as some of the considerations behind and limitations of the current index structure.</p>
+
+Aleph uses Elasticsearch for search and content retrieval. We build a custom [Docker image](https://github.com/alephdata/aleph-elasticsearch) based on the official image that includes the [ICU plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-icu.html) (used primarily for transliteration) and a custom list of synonyms.
+
+## Entity indexes
+
+Aleph maintains a separate Elasticsearch index per FollowTheMoney schema, for example:
+
+| Schema | Index |
+| --- | --- |
+| Company | `aleph-entity-company-v1` |
+| Person | `aleph-entity-person-v1` |
+| Document | `aleph-entity-document-v1` |
+| … | … |
+
+Every entity index has a version suffix (e.g. `v1`) that can be configured globally. This allows writing and reading from and to different (or even multiple) indexes in order to migrate/reindex indexes in a live system.
+
+### Field mappings
+
+Aleph automatically configures appropriate [mappings](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html#mapping) for every entity index. Mappings define how the entities in the respective indexes are stored and indexed which in turn has an effect on the way the different properties can be searched and used in filter conditions.
+
+In Elasticsearch, there are two different data types for textual contents, [`keyword`](https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html#keyword-field-type) and [`text`](https://www.elastic.co/guide/en/elasticsearch/reference/current/text.html#text-field-type). The `keyword` type is intended to be used for structured contents such as IDs, email addresses, tags, categories. These can later be used for filtering results on exact value matches, for example using the faceted search in Aleph’s UI.
+
+The `text` type is intended to be used for unstructured text contents such as the full contents of a document or an email. `text` fields support full-text searches. However, `text` fields cannot be used in filters.
+
+Apart from the `keyword` and `text` field types, ElasticSearch also has support for other common data types such as dates, numbers, and binary values.
+
+Aleph configures entity indexes as follows, based on the properties of the schema:
+
+| FollowTheMoney type | ElasticSearch type | Notes |
+| --- | --- | --- |
+| `text` | `text` | Not indexed separately, but copied to the main `text` field used in full-text searches. |
+| `date` | `date` | Additionally also copied to the main `text` field, so that these properties are also used in full-text searches. |
+| All other property types, including `string` | `keyword` | Additionally also copied to the main `text` field, so that these properties are also used in full-text searches. |
+
+This "hybrid" mapping configuration allows full-text searches across all properties, but also searches and filtering on structured data like email addresses and dates.
+
+{/*TODO Double-check dates, numeric mappings*/}
+
+<Callout>
+  ElasticSearch [does not support changing the field type](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html#updating-field-mappings) in existing indexes. When the property type of a FollowTheMoney schema changes (for example from `text` to `string`), this will not be reflected in the index configuration unless the index is deleted and recreated.
+</Callout>
+
+### Special fields
+
+In addition to FtM property values and a full-text search field, Aleph also automatically indexes a few special fields that are derived from the entity data.
+
+#### Fields per property type
+
+Aleph creates fields per property type that contain all the values of a particular property type. For example, in case of a `Company` entity, the `countries` field will contain the values from the `jurisdiction` property. In case of a `Person` entity, the `countries` field will contain the values from the `country` and `nationality` properties. In the same way, Aleph aggregates values per property-type for all other [matchable property types](https://followthemoney.tech/explorer/#types) (including language, name, phone, …). This allows filtering by a country, language, name, phone number, etc. no matter the exact property that contains the country or name.
+
+{/* TODO Right now, only values from matchable props are considered, even if the prop type is matchable */}
+
+#### Fingerprints
+
+Aleph uses the [fingerprints package](https://github.com/alephdata/fingerprints/) to heavily normalize names. For example, it will normalize both “Siemens Aktiengesellschaft” and “Siemens AG” to “ag siemens”. The normalized names are stored in the **fingerprints field**. The fingerprints field is mostly used by Aleph for cross-referencing, but the field can also be queried directly just like any other field.
+
+### Number of shards
+
+Each index is stored in one or more shards. Shards can be distributed across multiple nodes. Each shard has some overhead, i.e. lots of very small shards have an impact on search performance. On the other hand, when using very large shards, moving shards (for example in case of a node failure) takes longer.
+
+For this reason, Aleph configures the number of shards depending on the entity schema. By default, entity indexes will be split into 5 shards, with higher (or lower) numbers of shards for very common (or uncommon) entity schemata.
+
+For example, the `Pages` schema is used to represent PDF, Word, PowerPoint and other similar types of documents. These entities tend to be quite large, because they contain the entire document contents. Additionally, they are very common in a typical Aleph instance. As a consequence, the index for `Pages` entities is usually quite large, so it makes sense to split it up into a larger number of shards.
+
+On the other hand, `Passport` entities tend to be much smaller in size and less common in a typical Aleph instance, so it makes sense to reduce the number of shards for the passports index.
+
+### Indexing of multi-page documents
+
+Multi-page documents (for example Word/OpenDocument, PDF, and PowerPoint documents) are represented using multiple entities.
+
+Each page in the document is represented by a separate `Page` entity. `Page` entities store the text contents of the page and a reference to a parent `Pages` entity. The `Pages` entity represents the entire document and also contains the concatenated text contents of all pages in the document, alongside general meta information (.
+
+Modeling multi-page documents covers the main use cases related to documents:
+
+Searching for documents that match a search query (on any page);
+Searching within documents to find the exact page that matches a search query;
+Retrieving the text contents of single pages for display in the web UI.
+
+## Search query syntax
+
+We use ElasticSearch’s [`query_string` query type](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-icu.html) in most places which means that the [full syntax](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax) supported by this query type is also supported in the Aleph API and web UI, including boolean operators, wildcards, fuzziness, proximity and regex operators.
+
+<Callout>
+  The limitations for these features as outlined in the referenced ElasticSearch documentation articles apply. Using some of the features can result in very slow queries, high resource usage or timeouts.
+</Callout>
+
+## Full-text search
+
+* We use the [default tokenizer](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-analyzer.html), that means that … {/*TODO*/}
+* Non-latin text is transliterated using the [ICU plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-icu-transform.html).
+* The [synonym filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-synonym-tokenfilter.html) is applied to search queries based on a [custom list of synonyms](https://github.com/alephdata/aleph-elasticsearch/blob/master/synonames.txt). The list of synonyms consists mostly of alternate spellings for common names (e.g. “Vladimir” and “Wladimir”).
+
+## Search results ranking
+
+Aleph uses the default Elasticsearch settings for calculation of relevance scores. The current Elasticsearch version [defaults to BM25](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/index-modules-similarity.html#bm25).
+
+## Limitations and known issues
+
+### Search results snippets
+
+The `_source` field is a special field in Elasticsearch that contains the original JSON data passed to Elasticsearch at index time. The `_source` field is also required in order to [generate search result snippets and search term highlights](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/highlighting.html) for search results.
+
+Our indices are configured to exclude the `text` field from the `_source`. As a reminder, contents from all Aleph properties are copied to the `text` field. That means that in almost all cases the contents in the text field in most cases do not need to be retrieved directly because they are redundant.
+
+One notable exception is the `indexText` property. This property gets a special treatment in Aleph and is copied to the `text` field (i.e. it can be searched), but it is not stored separately and thus cannot be retrieved. The `indexProperty` is used by `Pages` entities  for the full-text contents of multi-page documents (see [Indexing of multi-page documents](#indexing-of-multi-page-documents)). As a consequence, Elasticsearch cannot compute snippets or highlights for `Pages` entities.
+
+[Related GitHub issue](https://github.com/alephdata/aleph/issues/2138)
+
+### Exact searches
+
+Due to the way data is indexed, there is currently no way in Aleph to do “exact” searches that return only results that match search terms character-by-character. When quoting multiple search terms (e.g. `”Vladimir Putin”`) we perform a phrase search. A phrase search matches any entities that contain all the search terms in the exact same order (i.e. only entities that contain “Vladimir” followed by “Putin”).
+
+Even when using a phrase search, ElasticSearch applies transliteration and default tokenization. That means that a phrase search for “Владимир Путин” would also return “Vladimir Putin” as a result and “ACME, Inc.” would also match “ACME Inc” (without interpunctuation). (However, when using a phrase search, the search query isn’t expanded using the configured synonymes.)
+
+This is not the desired behavior in some use cases (e.g. when trying to narrow down a large result set based on subtle spelling variations). However, adding support for “true” exact searches would most likely require rebuilding the index and thus hasn’t been feasible for now.
+
+[Related GitHub issue](https://github.com/alephdata/aleph/issues/2888)
+
+### Minimum should match
+
+When executing entity searches, set the `minimum_should_match` option to `66%`, i.e. results have to match at least two thirds of subqueries to be returned. This can be counterintuitive when using explicit operators. For example, “Biden OR Trudeau OR Macron OR Scholz” will match only entities that contain at least two of the four terms, even though the query has explicitly specified an OR operator.
+
+[Related GitHub issue](https://github.com/alephdata/aleph/issues/2834)
+
+### Prefix searches
+
+The Aleph API supports a `prefix` parameter to execute searches using the [`match_phrase_prefix` query type](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase-prefix.html) in ElasticSearch. The API feature is primarily used to show autocomplete suggestions in the UI for entities like companies or people.
+
+This query type has some limitations which become apparent only for big indexes. The query type uses the `n` most frequent terms starting with the prefix (with `n` defaulting to 50), i.e. executing a query search for the prefix “put” will expand the search with the 50 terms that occur most frequently in the entire index (for example “Putin”).
+
+When executing a prefix search within a collection, there can be situations where no results are returned even though there actually are entities that begin with the prefix (but are not in the top 50 most frequent terms).
+
+[Related GitHub issue](https://github.com/alephdata/aleph/issues/2997)
+
+### Regex searches
+
+While ElasticSearch (and thus also Aleph) supports regular expressions in search queries, they are limited to individual terms. That means that regular expressions cannot match multiple terms (i.e. you can’t use the regex `/lorem ipsum/` to match full-text contents of a document) and a regex always has to match the full term (i.e. `/put/` will match “put” but not “putin”).
+
+Additionally, using regular expressions that contain interpunctuation or whitespace to match full-text contents will most likely fail, as interpunctuation is used by the standard tokenizer as an indicator for term boundaries. For example “20.02.2022” would be split into the terms “20”, “02”, and “2022”. As regular expressions can only match individual terms, a search using the regex `/\d{2}\.\d{2}\.\d{4}/` wouldn’t match the document.
+
+{/*TODO Verify the example */}
+{/*TODO The above is true for full-text search, but keyword search is different */}
