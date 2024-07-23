@@ -125,7 +125,7 @@ class AlephWorker(Worker):
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
-        if "index" in SETTINGS.ALEPH_STAGES and not SETTINGS.TESTING:
+        if "index" in SETTINGS.ALEPH_STAGES:
             self.batch_timer = BatchTimer(INDEXING_TIMEOUT, self.run_indexing_batches)
             self.batch_timer.start()
             log.debug("Batch timer started")
