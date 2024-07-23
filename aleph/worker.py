@@ -46,6 +46,11 @@ def op_index(batch, worker: Worker):
                 sync = True
                 break
 
+    log.debug(
+        f"Running batch indexing with {SETTINGS.INDEXING_BATCH_SIZE}"
+        f" items from {len(batch.keys())} collections"
+    )
+
     # we want skip_errors=True because we can't recover from ftm merge related errors
     index_many(batch, sync=sync, skip_errors=True)
 
