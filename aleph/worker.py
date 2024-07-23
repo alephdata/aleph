@@ -38,12 +38,6 @@ app = create_app(config={"SERVER_NAME": SETTINGS.APP_UI_URL})
 indexing_lock = threading.Lock()
 
 
-class BatchTimer(threading.Timer):
-    def run(self):
-        while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
-
-
 def op_index(batch, worker: Worker):
     sync = False
     for collection_id in batch:
@@ -125,13 +119,8 @@ class AlephWorker(Worker):
         self.indexing_batches = defaultdict(list)
         self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
-        if "index" in SETTINGS.ALEPH_STAGES:
-            self.batch_timer = BatchTimer(INDEXING_TIMEOUT, self.run_indexing_batches)
-            self.batch_timer.start()
-            log.debug("Batch timer started")
 
     def on_signal(self, signal, _):
-        self.batch_timer.cancel()
         super().on_signal(signal, _)
 
     def process(self, blocking=True):
@@ -159,6 +148,7 @@ class AlephWorker(Worker):
                     delete_expired_exports()
                     delete_old_notifications()
 
+                self.run_indexing_batches()
             except Exception:
                 log.exception("Error while executing periodic tasks")
 
@@ -212,24 +202,23 @@ class AlephWorker(Worker):
     def run_indexing_batches(self):
         """Run remaining batched indexing tasks after waiting for a maximum of
         INDEXING_TIMEOUT seconds"""
-        with app.app_context():
-            # is the lock needed?
-            with indexing_lock:
-                now = time.time()
-                since_last_update = int(now - self.indexing_batch_last_updated)
-                if since_last_update > INDEXING_TIMEOUT:
-                    batched_item_count = sum(
-                        [len(self.indexing_batches[id]) for id in self.indexing_batches]
+        # is the lock needed?
+        with indexing_lock:
+            now = time.time()
+            since_last_update = int(now - self.indexing_batch_last_updated)
+            if since_last_update > INDEXING_TIMEOUT:
+                batched_item_count = sum(
+                    [len(self.indexing_batches[id]) for id in self.indexing_batches]
+                )
+                collection_count = len(self.indexing_batches)
+                if batched_item_count:
+                    log.debug(
+                        f"Running batch indexing with {batched_item_count} "
+                        f"items from {collection_count} collections"
                     )
-                    collection_count = len(self.indexing_batches)
-                    if batched_item_count:
-                        log.debug(
-                            f"Running batch indexing with {batched_item_count} "
-                            f"items from {collection_count} collections"
-                        )
-                        op_index(self.indexing_batches, worker=self)
-                        self.indexing_batches = defaultdict(list)
-                        self.indexing_batch_last_updated = 0.0
+                    op_index(self.indexing_batches, worker=self)
+                    self.indexing_batches = defaultdict(list)
+                    self.indexing_batch_last_updated = 0.0
 
 
 def get_worker(num_threads=1):
