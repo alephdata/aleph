@@ -43,6 +43,8 @@ Make sure to only ever expose your TLS reverse proxy to the internet. Ports for 
 
 ## Configure Aleph
 
+You can configure Aleph using environment variables. As Aleph consists of multiple components, make sure that the environment variables are set for the API, worker, and ingest-file containers.
+
 ### Aleph version
 
 In `aleph.env` set the `ALEPH_TAG` configuration option to specify the Aleph version you want to deploy. If `ALEPH_TAG` is not set, the stable version specified in `docker-compose.yml` is deployed.
