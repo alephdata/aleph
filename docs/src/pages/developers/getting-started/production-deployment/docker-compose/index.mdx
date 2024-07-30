@@ -49,7 +49,7 @@ Finally, run the following command to start Aleph in detached mode. This means c
 If you run this command for the first time, Docker Compose downloads Docker images for all services before starting the containers. This may take a while.
 
 ```sh
-docker compose up -d
+docker compose up -d api ui
 ```
 
 While Aleph is running, it binds to port `8080` on the host machine. You can check that Aleph is running and accepts incoming connections using curl:
