@@ -45,13 +45,9 @@ Make sure to only ever expose your TLS reverse proxy to the internet. Ports for 
 
 You can configure Aleph using environment variables. As Aleph consists of multiple components, make sure that the environment variables are set for the API, worker, and ingest-file containers.
 
-### Aleph version
-
-In `aleph.env` set the `ALEPH_TAG` configuration option to specify the Aleph version you want to deploy. If `ALEPH_TAG` is not set, the stable version specified in `docker-compose.yml` is deployed.
-
 ### Secret key
 
-Next, you need to generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a 24-character random string:
+Generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a random 24-character string:
 
 ```sh
 openssl rand -hex 24
