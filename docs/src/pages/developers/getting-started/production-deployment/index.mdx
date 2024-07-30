@@ -65,6 +65,10 @@ Set `ALEPH_UI_URL` to the URL where the user interface will be made available. F
 
 Aleph needs to be able to send emails to users, for example to notify them of new search results for saved search queries. Configure an SMTP server using the [`ALEPH_MAIL_*` configuration options](/developers/reference/configuration-options#email).
 
+### Database (optional)
+
+Aleph uses PostgreSQL to store entity data and metadata about users, collections, etc. You can customize Aleph to use the same database or two separate databases for entity data and metadata by setting the [`ALEPH_DATABASE_URI`](/developers/reference/configuration-options#databases-and-services) and [`FTM_STORE_URI`](/developers/reference/configuration-options#databases-and-services) configuration options.
+
 ### Storage (optional)
 
 By default, Aleph stores uploaded files on the local file system. However, Aleph also supports storing files using [AWS S3](https://aws.amazon.com/s3/) (or an S3-compatible service) or [Google Cloud Storage](https://cloud.google.com/storage/). Refer to ["How to configure a storage provider"](/developers/how-to/operations/blob-storage) for instructions.
