@@ -131,6 +131,7 @@
                 { "slug": "/developers/how-to/data/import-tabular-data" },
                 { "slug": "/developers/how-to/data/import-ocds-data" },
                 { "slug": "/developers/how-to/data/export-ftm-data" },
+                { "slug": "/developers/how-to/data/export-mentions" },
                 { "slug": "/developers/how-to/data/export-network-graphs" },
                 { "slug": "/developers/how-to/data/mixed-graphs" }
               ]
