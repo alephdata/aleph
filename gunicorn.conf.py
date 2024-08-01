@@ -8,6 +8,7 @@ _PROM_MULTIPROC_DIR = os.environ.get("PROMETHEUS_MULTIPROC_DIR", None)
 wsgi_app = "aleph.wsgi:app"
 bind = "0.0.0.0:8000"
 timeout = 3600
+limit_request_line = 8190
 
 if _PROM_ENABLED:
     # Gunicorn will bind to port 8000 (the default, publicly exposed port)
@@ -27,7 +28,6 @@ if _PROM_ENABLED:
         if _PROM_ENABLED and _PROM_MULTIPROC_DIR:
             for file in os.scandir(_PROM_MULTIPROC_DIR):
                 os.unlink(file.path)
-
 
     def child_exit(_, worker):
         if _PROM_ENABLED and _PROM_MULTIPROC_DIR:
