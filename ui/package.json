@@ -30,7 +30,7 @@
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
-    "query-string": "^8.1.0",
+    "query-string": "^9.1.0",
     "react": "^16.13.1",
     "react-colorful": "^5.5.1",
     "react-countup": "^6.5.0",
