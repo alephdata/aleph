@@ -38,18 +38,18 @@ Aleph uses Elasticsearch to store and search data. Elasticsearch maps search ind
 
 ## Start Aleph
 
+Run the following command to migrate Aleph’s database and create Elasticsearch indices. This command makes use of the `aleph` CLI that’s installed in the Aleph Docker image.
+
+```sh
+docker compose run --rm shell aleph upgrade
+```
+
 Finally, run the following command to start Aleph in detached mode. This means containers run in the background, so you can exit your shell session at any time without stopping the containers. Using the default Docker Compose configuration, Docker containers will restart automatically when they crash.
 
 If you run this command for the first time, Docker Compose downloads Docker images for all services before starting the containers. This may take a while.
 
 ```sh
-docker compose up -d
-```
-
-After all services have started, run the following command to migrate Aleph’s database and create Elasticsearch indices. This command makes use of the `aleph` CLI that’s installed in the Aleph Docker image.
-
-```sh
-docker compose run --rm shell aleph upgrade
+docker compose up -d api ui
 ```
 
 While Aleph is running, it binds to port `8080` on the host machine. You can check that Aleph is running and accepts incoming connections using curl:

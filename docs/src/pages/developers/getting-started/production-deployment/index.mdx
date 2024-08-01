@@ -43,13 +43,11 @@ Make sure to only ever expose your TLS reverse proxy to the internet. Ports for 
 
 ## Configure Aleph
 
-### Aleph version
-
-In `aleph.env` set the `ALEPH_TAG` configuration option to specify the Aleph version you want to deploy. If `ALEPH_TAG` is not set, the stable version specified in `docker-compose.yml` is deployed.
+You can configure Aleph using environment variables. As Aleph consists of multiple components, make sure that the environment variables are set for the API, worker, and ingest-file containers.
 
 ### Secret key
 
-Next, you need to generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a 24-character random string:
+Generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a random 24-character string:
 
 ```sh
 openssl rand -hex 24
@@ -64,6 +62,10 @@ Set `ALEPH_UI_URL` to the URL where the user interface will be made available. F
 ### Email
 
 Aleph needs to be able to send emails to users, for example to notify them of new search results for saved search queries. Configure an SMTP server using the [`ALEPH_MAIL_*` configuration options](/developers/reference/configuration-options#email).
+
+### Database (optional)
+
+Aleph uses PostgreSQL to store entity data and metadata about users, collections, etc. You can customize Aleph to use the same database or two separate databases for entity data and metadata by setting the [`ALEPH_DATABASE_URI`](/developers/reference/configuration-options#databases-and-services) and [`FTM_STORE_URI`](/developers/reference/configuration-options#databases-and-services) configuration options.
 
 ### Storage (optional)
 

@@ -55,6 +55,12 @@ general:
   - name: 'ALEPH_RESULT_HIGHLIGHT'
     description: 'Enable highlights in search result snippets.'
     defaultValue: 'true'
+  - name: 'ALEPH_XREF_SCROLL'
+    description: '[Scroll timeout](https://www.elastic.co/guide/en/elasticsearch/reference/current/scroll-api.html#scroll-api-query-params) used for Elasticsearch requests during cross-referencing.'
+    defaultValue: '5m'
+  - name: 'ALEPH_XREF_SCROLL_SIZE'
+    description: '[Scroll size](https://www.elastic.co/guide/en/elasticsearch/reference/current/scroll-api.html#scroll-api-query-params) used for Elasticsearch requests during cross-referencing.'
+    defaultValue: '1000'
 
 ui:
   - name: ALEPH_UI_URL
@@ -108,7 +114,7 @@ services:
   - name: 'ALEPH_DATABASE_URI'
     description: 'Connection URI to a PostgreSQL database. This database is used to store non-entity data like collection metadata, users etc.'
     defaultValue: 'postgresql://aleph:aleph@postgres/aleph'
-  - name: 'ALEPH_FTM_STORE_URI'
+  - name: 'FTM_STORE_URI'
     description: 'Connection URI to a for PostgreSQL database. This database is used to store entity fragments.'
     defaultValue: 'postgresql://aleph:aleph@postgres/aleph'
   - name: 'ALEPH_ELASTICSEARCH_URI'
@@ -193,6 +199,15 @@ auth:
   - name: 'ALEPH_SESSION_EXPIRE'
     description: 'Session expiration in seconds.'
     defaultValue: '60000'
+  - name: 'ALEPH_ROLE_BLOCKED_MESSAGE'
+    description: 'Message that is displayed when a blocked user tries to log in.'
+    defaultValue: 'Your account has been blocked.'
+  - name: 'ALEPH_ROLE_BLOCKED_LINK'
+    description: 'Target of the link displayed below the message that is displayed when a blocked user tries to log in. You can use this to link further information on what users can do if their account has been blocked etc.'
+    defaultValue: 'None'
+  - name: 'ALEPH_ROLE_BLOCKED_LINK_LABEL'
+    description: 'Label of the link that is displayed when a blocked user tries to log in.'
+    defaultValue: 'None'
 
 oauth:
   - name: 'ALEPH_OAUTH'
