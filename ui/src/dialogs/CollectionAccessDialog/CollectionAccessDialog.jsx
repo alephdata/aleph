@@ -146,10 +146,11 @@ class CollectionAccessDialog extends Component {
       return null;
     }
 
-    const exclude = permissions.map((perm) => perm.role.id);
     const systemRoles = this.filterPermissions('system');
     const groupRoles = this.filterPermissions('group');
     const userRoles = this.filterPermissions('user');
+    const exclude = userRoles.map((perm) => perm.role.id);
+
     return (
       <FormDialog
         processing={blocking}
