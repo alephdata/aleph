@@ -23,7 +23,7 @@
     "d3-scale": "^4.0.2",
     "dagre": "^0.8.5",
     "date-fns": "^2.30.0",
-    "google-libphonenumber": "^3.2.33",
+    "google-libphonenumber": "^3.2.38",
     "http-proxy-middleware": "^2.0.0",
     "js-file-download": "^0.4.9",
     "lodash": "^4.17.11",
