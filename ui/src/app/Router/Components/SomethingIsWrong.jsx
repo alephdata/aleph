@@ -1,6 +1,11 @@
+import { FormattedMessage } from 'react-intl';
+
 const SomethingIsWrong = () => (
   <div className="RouterLoading">
-    Something is wrong, please try again later
+    <FormattedMessage
+      id="somethingIsWrong"
+      defaultMessage="Something is wrong, please try again later"
+    />
   </div>
 );
 
