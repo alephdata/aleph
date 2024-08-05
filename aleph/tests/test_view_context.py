@@ -1,5 +1,6 @@
 from aleph.core import db
 from aleph.tests.util import TestCase
+from aleph.logic.util import hash_api_key
 
 
 class ViewContextTest(TestCase):
@@ -7,7 +8,7 @@ class ViewContextTest(TestCase):
         super().setUp()
         self.role = self.create_user(email="john.doe@example.org")
         self.role.set_password("12345678")
-        self.role.api_key = "1234567890"
+        self.role.api_key_digest = hash_api_key("1234567890")
 
         self.other_role = self.create_user(
             foreign_id="other",
@@ -47,12 +48,12 @@ class ViewContextTest(TestCase):
         assert res.status_code == 401
 
     def test_authz_header_api_key(self):
-        headers = {"Authorization": f"ApiKey {self.role.api_key}"}
+        headers = {"Authorization": "ApiKey 1234567890"}
         res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
         assert res.status_code == 200
         assert res.json["email"] == "john.doe@example.org"
 
-        headers = {"Authorization": self.role.api_key}
+        headers = {"Authorization": "1234567890"}
         res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
         assert res.status_code == 200
         assert res.json["email"] == "john.doe@example.org"
@@ -83,7 +84,7 @@ class ViewContextTest(TestCase):
         assert res.status_code == 403
 
     def test_authz_url_param_api_key(self):
-        query_string = {"api_key": self.role.api_key}
+        query_string = {"api_key": "1234567890"}
         res = self.client.get(f"/api/2/roles/{self.role.id}", query_string=query_string)
         assert res.status_code == 200
         assert res.json["email"] == "john.doe@example.org"

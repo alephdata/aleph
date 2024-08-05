@@ -9,6 +9,7 @@ from aleph.core import db
 from aleph.settings import SETTINGS
 from aleph.model.common import SoftDeleteModel, IdModel, query_like
 from aleph.util import anonymize_email
+from aleph.logic.util import hash_api_key
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     email = db.Column(db.Unicode, nullable=True)
     type = db.Column(db.Enum(*TYPES, name="role_type"), nullable=False)
     api_key = db.Column(db.Unicode, nullable=True)
+    api_key_digest = db.Column(db.Unicode, nullable=True)
     api_key_expires_at = db.Column(db.DateTime, nullable=True)
     api_key_expiration_notification_sent = db.Column(db.Integer, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
@@ -71,7 +73,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def has_api_key(self):
-        return self.api_key is not None
+        return self.api_key_digest is not None
 
     @property
     def is_public(self):
@@ -193,10 +195,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def by_api_key(cls, api_key):
         if api_key is None:
             return None
-        q = cls.all()
-        q = q.filter_by(api_key=api_key)
-        utcnow = datetime.now(timezone.utc)
 
+        q = cls.all()
+
+        digest = hash_api_key(api_key)
+        q = q.filter(cls.api_key_digest == digest)
+
+        utcnow = datetime.now(timezone.utc)
         # TODO: Exclude API keys without expiration date after deadline
         # See https://github.com/alephdata/aleph/issues/3729
         q = q.filter(
@@ -208,6 +213,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         q = q.filter(cls.type == cls.USER)
         q = q.filter(cls.is_blocked == False)  # noqa
+
         return q.first()
 
     @classmethod
