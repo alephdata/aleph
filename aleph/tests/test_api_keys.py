@@ -12,26 +12,26 @@ from aleph.tests.util import TestCase
 class ApiKeysTestCase(TestCase):
     def test_generate_user_api_key(self):
         role = self.create_user()
-        assert role.api_key is None
+        assert role.api_key_digest is None
         assert role.api_key_expires_at is None
 
         with time_machine.travel("2024-01-01T00:00:00Z"):
             generate_user_api_key(role)
             db.session.refresh(role)
-            assert role.api_key is not None
+            assert role.api_key_digest is not None
             assert role.api_key_expires_at.date() == datetime.date(2024, 3, 31)
 
-        old_key = role.api_key
+        old_digest = role.api_key_digest
 
         with time_machine.travel("2024-02-01T00:00:00Z"):
             generate_user_api_key(role)
             db.session.refresh(role)
-            assert role.api_key != old_key
+            assert role.api_key_digest != old_digest
             assert role.api_key_expires_at.date() == datetime.date(2024, 5, 1)
 
     def test_generate_user_api_key_notification(self):
         role = self.create_user(email="john.doe@example.org")
-        assert role.api_key is None
+        assert role.api_key_digest is None
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0
@@ -65,7 +65,7 @@ class ApiKeysTestCase(TestCase):
                 assert len(outbox) == 1
                 assert outbox[0].subject == "[Aleph] API key generated"
 
-                assert role.api_key is not None
+                assert role.api_key_digest is not None
                 assert role.api_key_expires_at.date() == datetime.date(2024, 3, 31)
 
                 assert len(outbox) == 1
@@ -122,7 +122,7 @@ class ApiKeysTestCase(TestCase):
 
     def test_send_api_key_expiration_notifications_no_key(self):
         role = self.create_user(email="john.doe@example.org")
-        assert role.api_key is None
+        assert role.api_key_digest is None
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0

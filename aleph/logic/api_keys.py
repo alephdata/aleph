@@ -9,7 +9,7 @@ from aleph.model import Role
 from aleph.model.common import make_token
 from aleph.logic.mail import email_role
 from aleph.logic.roles import update_role
-from aleph.logic.util import ui_url
+from aleph.logic.util import ui_url, hash_api_key
 
 # Number of days after which API keys expire
 API_KEY_EXPIRATION_DAYS = 90
@@ -29,7 +29,8 @@ def generate_user_api_key(role):
     email_role(role, subject, html=html, plain=plain)
 
     now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
-    role.api_key = make_token()
+    api_key = make_token()
+    role.api_key_digest = hash_api_key(api_key)
     role.api_key_expires_at = now + datetime.timedelta(days=API_KEY_EXPIRATION_DAYS)
     role.api_key_expiration_notification_sent = None
 
@@ -37,7 +38,7 @@ def generate_user_api_key(role):
     db.session.commit()
     update_role(role)
 
-    return role.api_key
+    return api_key
 
 
 def send_api_key_expiration_notifications():
@@ -70,7 +71,7 @@ def _send_api_key_expiration_notification(
     query = query.where(
         and_(
             and_(
-                Role.api_key != None,  # noqa: E711
+                Role.api_key_digest != None,  # noqa: E711
                 func.date(Role.api_key_expires_at) <= threshold,
             ),
             or_(
@@ -104,7 +105,7 @@ def reset_api_key_expiration():
     query = query.yield_per(500)
     query = query.where(
         and_(
-            Role.api_key != None,  # noqa: E711
+            Role.api_key_digest != None,  # noqa: E711
             Role.api_key_expires_at == None,  # noqa: E711
         )
     )
