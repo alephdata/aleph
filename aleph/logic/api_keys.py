@@ -112,3 +112,25 @@ def reset_api_key_expiration():
 
     query.update({Role.api_key_expires_at: expires_at})
     db.session.commit()
+
+
+def hash_plaintext_api_keys():
+    query = Role.all_users()
+    query = query.yield_per(250)
+    query = query.where(
+        and_(
+            Role.api_key != None,  # noqa: E711
+            Role.api_key_digest == None,  # noqa: E711
+        )
+    )
+
+    results = db.session.execute(query).scalars()
+
+    for index, partition in enumerate(results.partitions()):
+        for role in partition:
+            role.api_key_digest = hash_api_key(role.api_key)
+            role.api_key = None
+            db.session.add(role)
+            log.info(f"Hashing API key: {role}")
+        log.info(f"Comitting partition {index}")
+        db.session.commit()

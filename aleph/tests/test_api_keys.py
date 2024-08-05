@@ -5,7 +5,9 @@ from aleph.core import db, mail
 from aleph.logic.api_keys import (
     generate_user_api_key,
     send_api_key_expiration_notifications,
+    hash_plaintext_api_keys,
 )
+from aleph.logic.util import hash_api_key
 from aleph.tests.util import TestCase
 
 
@@ -193,3 +195,25 @@ class ApiKeysTestCase(TestCase):
 
                 assert outbox[4].subject == "[Aleph] Your API key will expire in 7 days"
                 assert outbox[5].subject == "[Aleph] Your API key has expired"
+
+    def test_hash_plaintext_api_keys(self):
+        user_1 = self.create_user(foreign_id="user_1", email="user1@example.org")
+        user_1.api_key = "1234567890"
+        user_1.api_key_digest = None
+
+        user_2 = self.create_user(foreign_id="user_2", email="user2@example.org")
+        user_2.api_key = None
+        user_2.api_key_digest = None
+
+        db.session.add_all([user_1, user_2])
+        db.session.commit()
+
+        hash_plaintext_api_keys()
+
+        db.session.refresh(user_1)
+        assert user_1.api_key is None
+        assert user_1.api_key_digest == hash_api_key("1234567890")
+
+        db.session.refresh(user_2)
+        assert user_2.api_key is None
+        assert user_2.api_key_digest is None
