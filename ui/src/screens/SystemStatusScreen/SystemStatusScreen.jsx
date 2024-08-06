@@ -4,7 +4,9 @@ import {
   FormattedDate,
   FormattedMessage,
   FormattedTime,
+  FormattedRelativeTime,
   injectIntl,
+  useIntl,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -21,15 +23,6 @@ import { selectSystemStatus } from 'selectors';
 import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
 import './SystemStatusScreen.scss';
-
-const dateFormat = {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-  weekday: 'short',
-  hour: 'numeric',
-  minute: 'numeric',
-};
 
 const messages = defineMessages({
   title: {
@@ -117,12 +110,6 @@ export class SystemStatusScreen extends React.Component {
     const total = active + res.finished;
     const progress = res.finished / total;
 
-    const startedAt =
-      res.start_time && convertUTCDateToLocalDate(res.start_time);
-    const lastUpdatedAt =
-      res.last_update && convertUTCDateToLocalDate(res.last_update);
-    const today = new Date();
-
     return (
       <tr key={collection?.id || 'null'}>
         <td>
@@ -137,37 +124,23 @@ export class SystemStatusScreen extends React.Component {
           </strong>
           <br />
           <span className="StatusTable__timestamps">
-            {startedAt && (
+            {res.start_time && (
               <>
                 <FormattedMessage
                   id="status.started_at"
                   defaultMessage="started"
                 />{' '}
-                <span title={intl.formatDate(startedAt, dateFormat)}>
-                  {today.toDateString() !== startedAt.toDateString() && (
-                    <>
-                      <FormattedDate value={startedAt} />{' '}
-                    </>
-                  )}
-                  <FormattedTime value={startedAt} />
-                </span>
+                <StatusTimestamp date={res.start_time} />
               </>
             )}
-            {lastUpdatedAt && (
+            {res.last_update && (
               <>
                 {' · '}
                 <FormattedMessage
                   id="status.last_updated_at"
                   defaultMessage="last updated"
                 />{' '}
-                <span title={intl.formatDate(lastUpdatedAt, dateFormat)}>
-                  {today.toDateString() !== lastUpdatedAt.toDateString() && (
-                    <>
-                      <FormattedDate value={lastUpdatedAt} />{' '}
-                    </>
-                  )}
-                  <FormattedTime value={lastUpdatedAt} />
-                </span>
+                <StatusTimestamp date={res.last_update} />
               </>
             )}
           </span>
@@ -274,6 +247,44 @@ export class SystemStatusScreen extends React.Component {
       </Screen>
     );
   }
+}
+
+function StatusTimestamp({ date }) {
+  const intl = useIntl();
+  const today = new Date();
+  const localDate = convertUTCDateToLocalDate(date);
+  const isToday = today.toDateString() === localDate.toDateString();
+
+  const formattedDate = isToday ? (
+    // This renders a localized "today"
+    <FormattedRelativeTime numeric="auto" unit="day" value={0} />
+  ) : (
+    <FormattedDate
+      value={localDate}
+      year="numeric"
+      month="short"
+      day="numeric"
+    />
+  );
+
+  const formattedTime = <FormattedTime value={localDate} />;
+
+  return (
+    <span
+      title={intl.formatDate(localDate, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+      })}
+    >
+      {formattedDate}
+      {', '}
+      {formattedTime}
+    </span>
+  );
 }
 
 const mapStateToProps = (state) => {
