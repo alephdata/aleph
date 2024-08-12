@@ -76,11 +76,15 @@ def _get_credential_authz(credential):
     if " " in credential:
         method, credential = credential.split(" ", 1)
         if method == "Token":
-            return Authz.from_token(credential)
+            authz = Authz.from_token(credential)
+            authz.auth_method = "session_token"
+            return authz
 
     role = Role.by_api_key(credential)
     if role is not None:
-        return Authz.from_role(role=role)
+        authz = Authz.from_role(role=role)
+        authz.auth_method = "api_key"
+        return authz
 
 
 def get_authz(request):
