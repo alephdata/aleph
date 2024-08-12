@@ -7,7 +7,7 @@ from prometheus_client.registry import Collector
 from followthemoney import __version__ as ftm_version
 
 from aleph import __version__ as aleph_version
-from aleph.core import create_app as create_flask_app
+from aleph.core import create_app as create_flask_app, babel
 from aleph.index.collections import get_collection_stats
 from aleph.queues import get_active_dataset_status
 from aleph.model import Role, Collection, EntitySet, Bookmark
@@ -52,23 +52,33 @@ class DatabaseCollector(Collector):
             "30d": datetime.timedelta(days=30),
             "90d": datetime.timedelta(days=90),
             "365d": datetime.timedelta(days=365),
+            "all_time": None,
         }
 
         gauge = GaugeMetricFamily(
             "aleph_users",
             "Total number of users",
-            labels=["active"],
+            labels=["active", "locale"],
         )
-
-        gauge.add_metric(["ALL_TIME"], Role.all_users().count())
 
         for label, delta in periods.items():
             now = datetime.datetime.now(datetime.timezone.utc)
-            limit = now - delta
 
-            count = Role.all_users().filter(Role.updated_at >= limit).count()
+            query = (
+                Role.all_users()
+                .with_entities(Role.locale, func.count())
+                .group_by(Role.locale)
+            )
 
-            gauge.add_metric([label], count)
+            if delta:
+                limit = now - delta
+                query = query.filter(Role.updated_at >= limit)
+            else:
+                label = "all"
+
+            for locale, count in query:
+                locale = locale or str(babel.default_locale)
+                gauge.add_metric([label, locale], count)
 
         return gauge
 

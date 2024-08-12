@@ -53,21 +53,38 @@ class MetricsTestCase(TestCase):
         assert users[0].foreign_id == "system:aleph"
 
         with time_machine.travel("2100-01-01T00:00:00Z"):
-            self.create_user(foreign_id="user_1")
+            user_1 = self.create_user(foreign_id="user_1")
+            db.session.add(user_1)
+            db.session.commit()
 
         with time_machine.travel("2100-01-08T00:00:00Z"):
-            self.create_user(foreign_id="user_2")
+            user_2 = self.create_user(foreign_id="user_2")
+            user_2.locale = "de"
+            db.session.add(user_2)
+            db.session.commit()
 
         with time_machine.travel("2100-01-08T12:00:00Z"):
             reg.collect()
-            assert reg.get_sample_value("aleph_users", {"active": "24h"}) == 1
-            assert reg.get_sample_value("aleph_users", {"active": "7d"}) == 1
-            assert reg.get_sample_value("aleph_users", {"active": "30d"}) == 2
-            assert reg.get_sample_value("aleph_users", {"active": "90d"}) == 2
-            assert reg.get_sample_value("aleph_users", {"active": "365d"}) == 2
 
-            # includes the default superuser
-            assert reg.get_sample_value("aleph_users", {"active": "ALL_TIME"}) == 3
+            de = reg.get_sample_value("aleph_users", {"active": "24h", "locale": "de"})
+            en = reg.get_sample_value("aleph_users", {"active": "24h", "locale": "en"})
+            assert de == 1
+            assert en is None
+
+            de = reg.get_sample_value("aleph_users", {"active": "30d", "locale": "de"})
+            en = reg.get_sample_value("aleph_users", {"active": "30d", "locale": "en"})
+            assert de == 1
+            assert en == 1
+
+            de = reg.get_sample_value("aleph_users", {"active": "365d", "locale": "de"})
+            en = reg.get_sample_value("aleph_users", {"active": "365d", "locale": "en"})
+            assert de == 1
+            assert en == 1
+
+            de = reg.get_sample_value("aleph_users", {"active": "all", "locale": "de"})
+            en = reg.get_sample_value("aleph_users", {"active": "all", "locale": "en"})
+            assert de == 1
+            assert en == 2  # includes the default super user
 
     def test_collection_categories(self):
         reg = CollectorRegistry()
