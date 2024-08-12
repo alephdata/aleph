@@ -1,4 +1,5 @@
 import datetime
+from collections import defaultdict
 
 from sqlalchemy import func, case
 from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
@@ -7,6 +8,7 @@ from followthemoney import __version__ as ftm_version
 
 from aleph import __version__ as aleph_version
 from aleph.core import create_app as create_flask_app
+from aleph.index.collections import get_collection_stats
 from aleph.queues import get_active_dataset_status
 from aleph.model import Role, Collection, EntitySet, Bookmark
 
@@ -246,3 +248,33 @@ class QueuesCollector(Collector):
             tasks_gauge.add_metric([stage, "running"], tasks["running"])
 
         yield tasks_gauge
+
+
+class StatisticsCollector(Collector):
+    def __init__(self):
+        self._flask_app = create_flask_app()
+
+    def collect(self):
+        with self._flask_app.app_context():
+            yield self._entities()
+
+    def _entities(self):
+        gauge = GaugeMetricFamily(
+            "aleph_entities",
+            "Total number of entities by FollowTheMoney schema",
+            labels=["schema"],
+        )
+
+        stats = defaultdict(lambda: 0)
+
+        for collection in Collection.all().yield_per(1000):
+            collection_stats = get_collection_stats(collection.id)
+            schemata = collection_stats["schema"]["values"]
+
+            for schema, count in schemata.items():
+                stats[schema] += count
+
+        for schema, count in stats.items():
+            gauge.add_metric([schema], count)
+
+        return gauge

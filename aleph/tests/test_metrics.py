@@ -5,9 +5,15 @@ import time_machine
 
 from aleph.tests.util import TestCase
 from aleph.settings import SETTINGS
-from aleph.metrics.collectors import DatabaseCollector, QueuesCollector
+from aleph.metrics.collectors import (
+    DatabaseCollector,
+    QueuesCollector,
+    StatisticsCollector,
+)
 from aleph.model import Role, Bookmark, EntitySet, Collection
 from aleph.core import db, kv
+from aleph.index.entities import index_entity
+from aleph.logic.collections import compute_collections
 from aleph.queues import dataset_from_collection
 from aleph.util import random_id
 
@@ -276,3 +282,29 @@ class MetricsTestCase(TestCase):
             "aleph_tasks", {"stage": "index", "status": "running"}
         )
         assert count == 1, count
+
+    def test_entities(self):
+        reg = CollectorRegistry()
+        reg.register(StatisticsCollector())
+
+        collection_1 = self.create_collection()
+        entity_1 = self.create_entity(
+            collection=collection_1,
+            data={"schema": "Person", "properties": {}},
+        )
+
+        collection_2 = self.create_collection()
+        entity_2 = self.create_entity(
+            collection=collection_2,
+            data={"schema": "Person", "properties": {}},
+        )
+
+        index_entity(entity_1)
+        index_entity(entity_2)
+
+        # This is usually executed periodically by a worker
+        compute_collections()
+
+        reg.collect()
+        persons = reg.get_sample_value("aleph_entities", {"schema": "Person"})
+        assert persons == 2
