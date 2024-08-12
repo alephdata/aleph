@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, case
 from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 from prometheus_client.registry import Collector
 from followthemoney import __version__ as ftm_version
@@ -30,7 +30,13 @@ class DatabaseCollector(Collector):
     def collect(self):
         with self._flask_app.app_context():
             yield self._users()
-            yield self._collections()
+
+            # In theory, these could be one metric with multiple labels for categories,
+            # countries, and languages, but this would result in a very high cardinality.
+            yield self._collection_categories()
+            yield self._collection_countries()
+            yield self._collection_languages()
+
             yield self._collection_users()
             yield self._entitysets()
             yield self._entityset_users()
@@ -63,43 +69,88 @@ class DatabaseCollector(Collector):
             gauge.add_metric([label], count)
 
         return gauge
+
+    def _collection_categories(self):
         gauge = GaugeMetricFamily(
-            "aleph_collections",
+            "aleph_collection_categories",
             "Total number of collections by category",
-            labels=["category"],
+            labels=["category", "type"],
+        )
+
+        # This is just a convenience to make querying the Prometheus metrics easier,
+        # but it doesn’t change metric cardinality because category implies type.
+        type_ = case(
+            (Collection.category == "casefile", "casefile"),
+            else_="dataset",
         )
 
         query = (
             Collection.all()
-            .with_entities(Collection.category, func.count())
-            .group_by(Collection.category)
+            .with_entities(Collection.category, type_, func.count())
+            .group_by(Collection.category, type_)
         )
 
-        for category, count in query:
-            gauge.add_metric([category], count)
+        for category, type_, count in query:
+            gauge.add_metric([category, type_], count)
+
+        return gauge
+
+    def _collection_countries(self):
+        gauge = GaugeMetricFamily(
+            "aleph_collection_countries",
+            "Total number of collections by country",
+            labels=["country", "type"],
+        )
+
+        country = func.unnest(Collection.countries).label("country")
+        type_ = case(
+            (Collection.category == "casefile", "casefile"),
+            else_="dataset",
+        )
+        query = (
+            Collection.all()
+            .with_entities(country, type_, func.count())
+            .group_by(country, type_)
+        )
+
+        for country, type_, count in query:
+            gauge.add_metric([country, type_], count)
+
+        return gauge
+
+    def _collection_languages(self):
+        gauge = GaugeMetricFamily(
+            "aleph_collection_languages",
+            "Total number of collections by language",
+            labels=["language", "type"],
+        )
+
+        lang = func.unnest(Collection.languages).label("country")
+        type_ = case(
+            (Collection.category == "casefile", "casefile"),
+            else_="dataset",
+        )
+        query = (
+            Collection.all()
+            .with_entities(lang, type_, func.count())
+            .group_by(lang, type_)
+        )
+
+        for lang, type_, count in query:
+            gauge.add_metric([lang, type_], count)
 
         return gauge
 
     def _collection_users(self):
-        gauge = GaugeMetricFamily(
+        query = Collection.all().with_entities(
+            func.count(func.distinct(Collection.creator_id)),
+        )
+
+        return GaugeMetricFamily(
             "aleph_collection_users",
             "Total number of users that have created at least one collection",
-            labels=["category"],
+            value=query.scalar(),
         )
-
-        query = (
-            Collection.all()
-            .with_entities(
-                Collection.category,
-                func.count(func.distinct(Collection.creator_id)),
-            )
-            .group_by(Collection.category)
-        )
-
-        for category, count in query:
-            gauge.add_metric([category], count)
-
-        return gauge
 
     def _entitysets(self):
         gauge = GaugeMetricFamily(

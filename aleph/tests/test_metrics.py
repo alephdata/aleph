@@ -6,7 +6,7 @@ import time_machine
 from aleph.tests.util import TestCase
 from aleph.settings import SETTINGS
 from aleph.metrics.collectors import DatabaseCollector, QueuesCollector
-from aleph.model import Role, Bookmark, EntitySet
+from aleph.model import Role, Bookmark, EntitySet, Collection
 from aleph.core import db, kv
 from aleph.queues import dataset_from_collection
 from aleph.util import random_id
@@ -63,29 +63,115 @@ class MetricsTestCase(TestCase):
             # includes the default superuser
             assert reg.get_sample_value("aleph_users", {"active": "ALL_TIME"}) == 3
 
-        reg.collect()
-        assert reg.get_sample_value("aleph_users") == 2
-
-    def test_collections(self):
+    def test_collection_categories(self):
         reg = CollectorRegistry()
         reg.register(DatabaseCollector())
-        labels = {"category": "casefile"}
+
+        user = self.create_user(is_admin=True)
+        self.create_collection(creator=user, category="casefile")
+        self.create_collection(creator=user, category="leak")
 
         reg.collect()
-        counter = reg.get_sample_value("aleph_collections", labels)
-        users = reg.get_sample_value("aleph_collection_users", labels)
-        assert counter is None, counter
-        assert counter is None, counter
+        casefiles = reg.get_sample_value(
+            "aleph_collection_categories",
+            {"category": "casefile", "type": "casefile"},
+        )
+        leaks = reg.get_sample_value(
+            "aleph_collection_categories",
+            {"category": "leak", "type": "dataset"},
+        )
+        assert casefiles == 1
+        assert leaks == 1
 
-        user = self.create_user()
-        self.create_collection(creator=user)
-        self.create_collection(creator=user)
+    def test_collection_countries(self):
+        reg = CollectorRegistry()
+        reg.register(DatabaseCollector())
+
+        user = self.create_user(is_admin=True)
+        self.create_collection(
+            creator=user,
+            category="casefile",
+            countries=["de", "fr"],
+        )
+        self.create_collection(
+            creator=user,
+            category="leak",
+            countries=["fr", "lu"],
+        )
 
         reg.collect()
-        counter = reg.get_sample_value("aleph_collections", labels)
-        users = reg.get_sample_value("aleph_collection_users", labels)
-        assert counter == 2, counter
-        assert users == 1, users
+        de = reg.get_sample_value(
+            "aleph_collection_countries",
+            {"country": "de", "type": "casefile"},
+        )
+        lu = reg.get_sample_value(
+            "aleph_collection_countries",
+            {"country": "lu", "type": "dataset"},
+        )
+        fr_casefile = reg.get_sample_value(
+            "aleph_collection_countries",
+            {"country": "fr", "type": "casefile"},
+        )
+        fr_dataset = reg.get_sample_value(
+            "aleph_collection_countries",
+            {"country": "fr", "type": "dataset"},
+        )
+        assert de == 1
+        assert lu == 1
+        assert fr_casefile == 1
+        assert fr_dataset == 1
+
+    def test_collection_languages(self):
+        reg = CollectorRegistry()
+        reg.register(DatabaseCollector())
+
+        user = self.create_user(is_admin=True)
+        self.create_collection(
+            creator=user,
+            category="casefile",
+            languages=["fra", "eng"],
+        )
+        self.create_collection(
+            creator=user,
+            category="leak",
+            languages=["fra", "nld"],
+        )
+
+        reg.collect()
+        eng = reg.get_sample_value(
+            "aleph_collection_languages",
+            {"language": "eng", "type": "casefile"},
+        )
+        nld = reg.get_sample_value(
+            "aleph_collection_languages",
+            {"language": "nld", "type": "dataset"},
+        )
+        fra_casefile = reg.get_sample_value(
+            "aleph_collection_languages",
+            {"language": "fra", "type": "casefile"},
+        )
+        fra_dataset = reg.get_sample_value(
+            "aleph_collection_languages",
+            {"language": "fra", "type": "dataset"},
+        )
+
+        assert eng == 1
+        assert nld == 1
+        assert fra_casefile == 1
+        assert fra_dataset == 1
+
+    def test_collection_users(self):
+        reg = CollectorRegistry()
+        reg.register(DatabaseCollector())
+
+        user_1 = self.create_user(foreign_id="user_1")
+        self.create_user(foreign_id="user_2")
+        self.create_collection(creator=user_1)
+        self.create_collection(creator=user_1)
+
+        assert Collection.all_casefiles().count() == 2
+        assert Role.all_users().count() == 3  # 2 + super user
+        assert reg.get_sample_value("aleph_collection_users") == 1
 
     def test_entitysets(self):
         reg = CollectorRegistry()
