@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import func
 from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 from prometheus_client.registry import Collector
@@ -36,13 +38,31 @@ class DatabaseCollector(Collector):
             yield self._bookmark_users()
 
     def _users(self):
-        return GaugeMetricFamily(
+        periods = {
+            "24h": datetime.timedelta(hours=24),
+            "7d": datetime.timedelta(days=7),
+            "30d": datetime.timedelta(days=30),
+            "90d": datetime.timedelta(days=90),
+            "365d": datetime.timedelta(days=365),
+        }
+
+        gauge = GaugeMetricFamily(
             "aleph_users",
             "Total number of users",
-            value=Role.all_users().count(),
+            labels=["active"],
         )
 
-    def _collections(self):
+        gauge.add_metric(["ALL_TIME"], Role.all_users().count())
+
+        for label, delta in periods.items():
+            now = datetime.datetime.now(datetime.timezone.utc)
+            limit = now - delta
+
+            count = Role.all_users().filter(Role.updated_at >= limit).count()
+
+            gauge.add_metric([label], count)
+
+        return gauge
         gauge = GaugeMetricFamily(
             "aleph_collections",
             "Total number of collections by category",

@@ -1,6 +1,7 @@
 import os
 
 from prometheus_client import CollectorRegistry
+import time_machine
 
 from aleph.tests.util import TestCase
 from aleph.settings import SETTINGS
@@ -45,10 +46,22 @@ class MetricsTestCase(TestCase):
         users = list(Role.all_users())
         assert users[0].foreign_id == "system:aleph"
 
-        reg.collect()
-        assert reg.get_sample_value("aleph_users") == 1
+        with time_machine.travel("2100-01-01T00:00:00Z"):
+            self.create_user(foreign_id="user_1")
 
-        self.create_user()
+        with time_machine.travel("2100-01-08T00:00:00Z"):
+            self.create_user(foreign_id="user_2")
+
+        with time_machine.travel("2100-01-08T12:00:00Z"):
+            reg.collect()
+            assert reg.get_sample_value("aleph_users", {"active": "24h"}) == 1
+            assert reg.get_sample_value("aleph_users", {"active": "7d"}) == 1
+            assert reg.get_sample_value("aleph_users", {"active": "30d"}) == 2
+            assert reg.get_sample_value("aleph_users", {"active": "90d"}) == 2
+            assert reg.get_sample_value("aleph_users", {"active": "365d"}) == 2
+
+            # includes the default superuser
+            assert reg.get_sample_value("aleph_users", {"active": "ALL_TIME"}) == 3
 
         reg.collect()
         assert reg.get_sample_value("aleph_users") == 2
