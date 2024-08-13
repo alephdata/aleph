@@ -108,7 +108,7 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
     lookup = {}
     values = set()
     for prop, value in proxy.itervalues():
-        log.debug("Property value", prop, value)
+        log.debug(f"Property value {prop} {value}")
         if prop.type not in prop_types:
             log.debug("Ignore property because it is not a pivot")
             continue
@@ -116,10 +116,8 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
             log.debug("Ignore property because it is not matchable")
             continue
         if prop.specificity(value) > 0.1:
-            log.debug(
-                "Ignore property because specificity is below 0.1",
-                prop.specificity(value),
-            )
+            spec = prop.specificity(value)
+            log.debug(f"Ignore property because specificity of {spec} is below 0.1")
             values.add((prop.type, value))
 
     type_names = [t.name for t in prop_types]
