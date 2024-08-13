@@ -116,7 +116,10 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
             log.debug("Ignore property because it is not matchable")
             continue
         if prop.specificity(value) > 0.1:
-            log.debug("Ignore property because specificity is below 0.1", prop.specificity(value))
+            log.debug(
+                "Ignore property because specificity is below 0.1",
+                prop.specificity(value),
+            )
             values.add((prop.type, value))
 
     type_names = [t.name for t in prop_types]
