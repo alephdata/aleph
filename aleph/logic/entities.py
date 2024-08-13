@@ -40,7 +40,7 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
     collection.touch()
 
     proxy = entity.to_proxy()
-    log.debug(f"Upsert entity {entity.to_dict()}")
+    log.debug(f"Upsert entity {proxy.to_dict()}")
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=proxy.id)
     aggregator.put(proxy, origin=MODEL_ORIGIN)
