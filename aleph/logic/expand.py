@@ -123,7 +123,7 @@ def entity_tags(proxy, authz, prop_types=DEFAULT_TAGS):
 
     type_names = [t.name for t in prop_types]
     log.debug("Tags[%s]: %s values", type_names, len(values))
-    log.debug("Values", values)
+    log.debug(f"Values {values}")
     for type_, value in values:
         key = type_.node_id(value)
         lookup[key] = (type_, value)
