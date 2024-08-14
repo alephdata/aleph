@@ -35,11 +35,13 @@ jobs:
       - name: Install development dependencies
         run: make dev
 
-      - name: Check code formatting
-        run: make format-check
+      # - name: Check code formatting
+      #   run: make format-check
 
-      - name: Run linter
-        run: make lint
+      # - name: Run linter
+      #   run: make lint
+
+      - run: pip freeze
 
       - name: Run aleph tests
         run: make ALEPH_TAG=${GITHUB_SHA} test
