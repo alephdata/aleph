@@ -1,0 +1,54 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Download Files
+---
+
+# How To Download Files
+
+<p class="lead">The Aleph UI allows you to download source files from a dataset or investigation to your computer. However, this may not be practicable if you need to download a large number of all files. This guide describes how to use the alephclient CLI to download files from an investigation or dataset to a local directory.</p>
+
+<Callout theme="danger">
+  Source files can contain viruses and code that notify the originator when you open them. For sensitive data, we recommend only opening source files on a computer that is permanently disconnected from the internet.
+</Callout>
+
+<Callout theme="danger">
+  Download large numbers of files from an Aleph instance is a resource-consuming activity on the server side. Please make sure to contact the administrator of your Aleph instance before downloading large numbers of files.
+</Callout>
+
+## Prerequisites
+
+This guide uses the alephclient CLI to download files from Aleph in bulk. If you haven’t yet set up alephclient on your computer, refer to [this how-to guide](/developers/how-to/data/install-alephclient) to install and configure alephclient.
+
+## Download all files
+
+Run the following command to download all files from a dataset or an investigation to your computer:
+
+```bash
+alephclient fetchdir --foreign-id wikileaks-cable --prefix /Users/sunu/data/cable
+```
+
+This will download all files in the dataset or investigation with the foreign ID `wikileaks-cable` into the local directory `/Users/sunu/data/cable`. If you do not specify the `--prefix` option, by default the files will be download into the current working directory.
+
+If you do not know the foreign ID of the dataset or investigation, you can find the foreign ID in the Aleph UI. Navigate to the dataset or investigation homepage. The foreign ID is listed in the sidebar on the right.
+
+## Download a specific folder
+
+<Steps>
+  <Step>
+    In order to download files in a specific folder, navigate to the folder in the Aleph UI.
+  </Step>
+
+  <Step>
+    Copy the folder’s entity ID. You can find the entity ID in the URL. For example, if the folder’s URL in the Aleph UI is `https://example.org/entities/12345.06662...`, then the entity ID is the last component of the URL, that is `12345.06662...`.
+  </Step>
+
+  <Step>
+    Run the following command to download the folder:
+
+    ```bash
+    alephclient fetchdir --entity-id 12345.06662... --prefix /Users/sunu/data/cable
+    ```
+
+    This will downloda the folder with the entity ID `12345.06662...` into the local directory `/User/sunu/data/cable`.
+  </Step>
+</Steps>
