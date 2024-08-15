@@ -363,7 +363,7 @@ class EntitiesApiTestCase(TestCase):
             "collection_id": self.col_id,
             "properties": {
                 "name": "Blaaaa blubb",
-                "phone": ["+491769817271", "+491769817999"],
+                "phone": ["+4917698172710", "+4917698179990"],
             },
         }
         resa = self.client.post(
@@ -374,7 +374,7 @@ class EntitiesApiTestCase(TestCase):
             "collection_id": self.col_id,
             "properties": {
                 "name": "Nobody Man",
-                "phone": ["+491769817271", "+491769817777"],
+                "phone": ["+4917698172710", "+4917698177770"],
             },
         }
         resa = self.client.post(
@@ -385,7 +385,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, (res.status_code, res.json)
         results = res.json["results"]
         assert len(results) == 1, results
-        assert results[0]["value"] == "+491769817271", results
+        assert results[0]["value"] == "+4917698172710", results
         validate(res.json["results"][0], "EntityTag")
 
     def test_undelete(self):
