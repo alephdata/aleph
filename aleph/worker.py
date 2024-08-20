@@ -23,7 +23,7 @@ from aleph.logic.notifications import generate_digest, delete_old_notifications
 from aleph.logic.roles import update_roles
 from aleph.logic.export import delete_expired_exports, export_entities
 from aleph.logic.processing import index_many
-from aleph.logic.xref import xref_collection, export_matches
+from aleph.logic.xref import xref_collection, export_matches, process_xref_batch
 from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
 
@@ -90,6 +90,9 @@ def op_flush_mapping(collection, task):
 OPERATIONS: Dict[str, Callable] = {
     SETTINGS.STAGE_INDEX: op_index,
     SETTINGS.STAGE_XREF: lambda c, _: xref_collection(c),
+    SETTINGS.STAGE_XREF_BATCH: lambda c, t: process_xref_batch(
+        c, t.payload.get("entity_ids")
+    ),
     SETTINGS.STAGE_REINGEST: op_reingest,
     SETTINGS.STAGE_REINDEX: op_reindex,
     SETTINGS.STAGE_LOAD_MAPPING: lambda c, t: load_mapping(c, **t.payload),
