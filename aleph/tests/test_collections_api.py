@@ -1,5 +1,7 @@
 import json
 
+from datetime import datetime
+
 from aleph.core import db
 from aleph.settings import SETTINGS
 from aleph.authz import Authz
@@ -288,3 +290,30 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 0 == res.json["pending"], res.json
+
+    def test_touch(self):
+        url = f"/api/2/collections/{self.col.id}/touch"
+        res = self.client.post(url)
+        assert res.status_code == 403, res
+
+        _, headers = self.login(is_admin=True)
+
+        url = f"/api/2/collections/{self.col.id}"
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        # import pprint
+        # pprint.pprint(res.json)
+        updated_at_timestamp = datetime.fromisoformat(res.json["updated_at"])
+
+        # import time
+        # time.sleep(5)
+
+        url = f"/api/2/collections/{self.col.id}/touch"
+        res = self.client.post(url, headers=headers)
+        assert res.status_code == 202, res
+
+        url = f"/api/2/collections/{self.col.id}"
+        res = self.client.get(url, headers=headers)
+        new_updated_at_timestamp = datetime.fromisoformat(res.json["updated_at"])
+
+        # assert new_updated_at_timestamp > updated_at_timestamp

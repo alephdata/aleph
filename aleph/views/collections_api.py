@@ -406,3 +406,32 @@ def delete(collection_id):
     sync = get_flag("sync", default=True)
     delete_collection(collection, keep_metadata=keep_metadata, sync=sync)
     return ("", 204)
+
+
+@blueprint.route("/<int:collection_id>/touch", methods=["POST", "PUT"])
+def touch(collection_id):
+    """
+    ---
+    post:
+      summary: Touch a collection
+      description: >
+        Set the timestamp for the most recent change to the data in collection `collection_id`.
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.is_admin)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection_id)
+    return ("", 202)
