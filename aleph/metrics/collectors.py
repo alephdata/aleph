@@ -72,7 +72,7 @@ class DatabaseCollector(Collector):
 
             if delta:
                 limit = now - delta
-                query = query.filter(Role.updated_at >= limit)
+                query = query.filter(Role.last_login_at >= limit)
             else:
                 label = "all"
 
