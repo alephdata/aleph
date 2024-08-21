@@ -320,7 +320,12 @@ class CollectionsApiTestCase(TestCase):
 
             url = f"/api/2/collections/{self.col.id}"
             res = self.client.get(url, headers=headers)
-            fake_updated_at_timestamp = datetime.fromisoformat(res.json["data_updated_at"])
-            assert fake_updated_at_timestamp.year == datetime.fromisoformat(fake_timestamp).year
+            fake_updated_at_timestamp = datetime.fromisoformat(
+                res.json["data_updated_at"]
+            )
+            assert (
+                fake_updated_at_timestamp.year
+                == datetime.fromisoformat(fake_timestamp).year
+            )
 
             assert fake_updated_at_timestamp < updated_at_timestamp
