@@ -1,6 +1,7 @@
 import json
 
 from datetime import datetime
+import time_machine
 
 from aleph.core import db
 from aleph.settings import SETTINGS
@@ -301,12 +302,7 @@ class CollectionsApiTestCase(TestCase):
         url = f"/api/2/collections/{self.col.id}"
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
-        # import pprint
-        # pprint.pprint(res.json)
-        updated_at_timestamp = datetime.fromisoformat(res.json["updated_at"])
-
-        # import time
-        # time.sleep(5)
+        assert res.json.get("data_updated_at", None) is None
 
         url = f"/api/2/collections/{self.col.id}/touch"
         res = self.client.post(url, headers=headers)
@@ -314,6 +310,17 @@ class CollectionsApiTestCase(TestCase):
 
         url = f"/api/2/collections/{self.col.id}"
         res = self.client.get(url, headers=headers)
-        new_updated_at_timestamp = datetime.fromisoformat(res.json["updated_at"])
+        updated_at_timestamp = datetime.fromisoformat(res.json["data_updated_at"])
 
-        # assert new_updated_at_timestamp > updated_at_timestamp
+        fake_timestamp = "2001-04-02T09:45:04.112439"
+        with time_machine.travel(fake_timestamp):
+            url = f"/api/2/collections/{self.col.id}/touch"
+            res = self.client.post(url, headers=headers)
+            assert res.status_code == 202, res
+
+            url = f"/api/2/collections/{self.col.id}"
+            res = self.client.get(url, headers=headers)
+            fake_updated_at_timestamp = datetime.fromisoformat(res.json["data_updated_at"])
+            assert fake_updated_at_timestamp.year == datetime.fromisoformat(fake_timestamp).year
+
+            assert fake_updated_at_timestamp < updated_at_timestamp
