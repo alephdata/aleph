@@ -52,18 +52,18 @@ class MetricsTestCase(TestCase):
         users = list(Role.all_users())
         assert users[0].foreign_id == "system:aleph"
 
-        with time_machine.travel("2100-01-01T00:00:00Z"):
-            user_1 = self.create_user(foreign_id="user_1")
-            db.session.add(user_1)
-            db.session.commit()
+        user_1 = self.create_user(foreign_id="user_1")
+        user_1.last_login_at = "2024-01-01T00:00:00Z"
+        db.session.add(user_1)
+        db.session.commit()
 
-        with time_machine.travel("2100-01-08T00:00:00Z"):
-            user_2 = self.create_user(foreign_id="user_2")
-            user_2.locale = "de"
-            db.session.add(user_2)
-            db.session.commit()
+        user_2 = self.create_user(foreign_id="user_2")
+        user_2.last_login_at = "2024-01-08T00:00:00Z"
+        user_2.locale = "de"
+        db.session.add(user_2)
+        db.session.commit()
 
-        with time_machine.travel("2100-01-08T12:00:00Z"):
+        with time_machine.travel("2024-01-08T12:00:00Z"):
             reg.collect()
 
             de = reg.get_sample_value("aleph_users", {"active": "24h", "locale": "de"})

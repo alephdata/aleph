@@ -1,3 +1,4 @@
+import datetime
 import logging
 from urllib.parse import urlencode
 from flask_babel import gettext
@@ -68,6 +69,7 @@ def password_login():
         AUTH_ATTEMPTS.labels(method="password", result="failed").inc()
         raise BadRequest(gettext("Invalid user or password."))
 
+    role.last_login_at = datetime.datetime.now(datetime.timezone.utc)
     role.touch()
     db.session.commit()
     AUTH_ATTEMPTS.labels(method="password", result="success").inc()
@@ -125,6 +127,7 @@ def oauth_callback():
         AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         raise err
 
+    role.last_login_at = datetime.datetime.now(datetime.timezone.utc)
     db.session.commit()
     update_role(role)
     AUTH_ATTEMPTS.labels(method="oauth", result="success").inc()
