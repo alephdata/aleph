@@ -2,5 +2,5 @@ apiVersion: v2
 name: aleph
 description: Helm chart for Aleph
 type: application
-version: 4.0.0-rc55
-appVersion: 4.0.0-rc55
+version: 4.0.0-rc56
+appVersion: 4.0.0-rc56
