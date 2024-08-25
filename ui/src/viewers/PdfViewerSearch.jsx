@@ -17,13 +17,13 @@ class PdfViewerSearch extends Component {
   }
 
   componentDidMount() {
-    this.fetchPage();
+    this.fetchSearchResults();
   }
 
   componentDidUpdate(prevProps) {
     const { query } = this.props;
     if (!query.sameAs(prevProps.query)) {
-      this.fetchPage();
+      this.fetchSearchResults();
     }
   }
 
@@ -40,7 +40,7 @@ class PdfViewerSearch extends Component {
     return `#${queryString.stringify(hashQuery)}`;
   }
 
-  fetchPage() {
+  fetchSearchResults() {
     const { query, result } = this.props;
     if (!!query.getString('q') && result.shouldLoad) {
       this.props.queryEntities({ query });
