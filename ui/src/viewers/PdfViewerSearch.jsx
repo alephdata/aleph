@@ -48,7 +48,7 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { page, dir, result } = this.props;
+    const { result } = this.props;
 
     if (result.total === undefined) {
       return <SectionLoading />;
@@ -56,47 +56,55 @@ class PdfViewerSearch extends Component {
 
     return (
       <div className="pages">
-        {result.total === 0 && (
-          <>
-            <div
-              className={c(
-                Classes.CALLOUT,
-                Classes.INTENT_WARNING,
-                `${Classes.ICON}-search`
-              )}
-            >
-              <FormattedMessage
-                id="document.search.no_match"
-                defaultMessage="No single page within this document matches all your search terms."
-              />
-            </div>
-            {this.props.children}
-          </>
+        {result.total === 0 ? this.renderEmptyState() : this.renderResults()}
+      </div>
+    );
+  }
+
+  renderResults() {
+    const { page, dir, result } = this.props;
+
+    return (
+      <ul>
+        {result.results.map((res) => (
+          <li key={`page-${res.id}`}>
+            <p dir={dir}>
+              <Link
+                to={this.getResultLink(res)}
+                className={classNames({ active: page === res.index })}
+              >
+                <span
+                  className={c(Classes.ICON, `${Classes.ICON}-document`)}
+                />
+                <FormattedMessage
+                  id="document.pdf.search.page"
+                  defaultMessage="Page {page}"
+                  values={{
+                    page: res.getProperty('index'),
+                  }}
+                />
+              </Link>
+            </p>
+            <SearchHighlight highlight={res.highlight} />
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  renderEmptyState() {
+    return (
+      <div
+        className={c(
+          Classes.CALLOUT,
+          Classes.INTENT_WARNING,
+          `${Classes.ICON}-search`
         )}
-        <ul>
-          {result.results.map((res) => (
-            <li key={`page-${res.id}`}>
-              <p dir={dir}>
-                <Link
-                  to={this.getResultLink(res)}
-                  className={classNames({ active: page === res.index })}
-                >
-                  <span
-                    className={c(Classes.ICON, `${Classes.ICON}-document`)}
-                  />
-                  <FormattedMessage
-                    id="document.pdf.search.page"
-                    defaultMessage="Page {page}"
-                    values={{
-                      page: res.getProperty('index'),
-                    }}
-                  />
-                </Link>
-              </p>
-              <SearchHighlight highlight={res.highlight} />
-            </li>
-          ))}
-        </ul>
+      >
+        <FormattedMessage
+          id="document.search.no_match"
+          defaultMessage="No single page within this document matches all your search terms."
+        />
       </div>
     );
   }
