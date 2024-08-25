@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { SectionLoading, SearchHighlight } from 'components/common';
+import {
+  SectionLoading,
+  SearchHighlight,
+  QueryInfiniteLoad,
+} from 'components/common';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import { queryEntities } from 'actions';
@@ -62,33 +66,40 @@ class PdfViewerSearch extends Component {
   }
 
   renderResults() {
-    const { page, dir, result } = this.props;
+    const { page, dir, result, query } = this.props;
 
     return (
-      <ul>
-        {result.results.map((res) => (
-          <li key={`page-${res.id}`}>
-            <p dir={dir}>
-              <Link
-                to={this.getResultLink(res)}
-                className={classNames({ active: page === res.index })}
-              >
-                <span
-                  className={c(Classes.ICON, `${Classes.ICON}-document`)}
-                />
-                <FormattedMessage
-                  id="document.pdf.search.page"
-                  defaultMessage="Page {page}"
-                  values={{
-                    page: res.getProperty('index'),
-                  }}
-                />
-              </Link>
-            </p>
-            <SearchHighlight highlight={res.highlight} />
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul>
+          {result.results.map((res) => (
+            <li key={`page-${res.id}`}>
+              <p dir={dir}>
+                <Link
+                  to={this.getResultLink(res)}
+                  className={classNames({ active: page === res.index })}
+                >
+                  <span
+                    className={c(Classes.ICON, `${Classes.ICON}-document`)}
+                  />
+                  <FormattedMessage
+                    id="document.pdf.search.page"
+                    defaultMessage="Page {page}"
+                    values={{
+                      page: res.getProperty('index'),
+                    }}
+                  />
+                </Link>
+              </p>
+              <SearchHighlight highlight={res.highlight} />
+            </li>
+          ))}
+        </ul>
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={queryEntities}
+        />
+      </>
     );
   }
 
