@@ -66,7 +66,7 @@ class PdfViewerSearch extends Component {
   }
 
   renderResults() {
-    const { page, dir, result, query } = this.props;
+    const { dir, result, query } = this.props;
 
     return (
       <>
@@ -74,10 +74,7 @@ class PdfViewerSearch extends Component {
           {result.results.map((res) => (
             <li key={`page-${res.id}`}>
               <p dir={dir}>
-                <Link
-                  to={this.getResultLink(res)}
-                  className={classNames({ active: page === res.index })}
-                >
+                <Link to={this.getResultLink(res)}>
                   <span
                     className={c(Classes.ICON, `${Classes.ICON}-document`)}
                   />
