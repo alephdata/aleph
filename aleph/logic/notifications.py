@@ -24,7 +24,7 @@ GLOBAL = "Global"
 
 def channel_tag(obj, clazz=None):
     clazz = clazz or type(obj)
-    if clazz == str:
+    if clazz is str:
         return obj
 
     obj = get_entity_id(obj)
