@@ -101,7 +101,8 @@
                 },
                 { "slug": "/developers/how-to/development/translate-aleph" },
                 { "slug": "/developers/how-to/development/new-languages" },
-                { "slug": "/developers/how-to/development/identity-provider" }
+                { "slug": "/developers/how-to/development/identity-provider" },
+                { "slug": "/developers/how-to/development/blob-storage" }
               ]
             },
             {
