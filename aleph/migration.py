@@ -15,6 +15,10 @@ def upgrade_system():
     upgrade_search()
 
 
+def downgrade_db(revision, sql):
+    flask_migrate.downgrade(revision=revision, sql=sql)
+
+
 def cleanup_deleted():
     from aleph.model import Collection, Role
     from aleph.model import EntitySet, EntitySetItem
