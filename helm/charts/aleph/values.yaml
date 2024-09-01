@@ -63,6 +63,8 @@ api:
 
   podAnnotations: {}
 
+  serviceAnnotations: {}
+
   nodeSelector: {}
 
   podSecurityContext:
