@@ -26,7 +26,7 @@ for res in db.query(query):
 
 links = {}
 for doc_id, mentions in documents.items():
-    for (a, b) in combinations(mentions, 2):
+    for a, b in combinations(mentions, 2):
         link = (max(a, b), min(a, b))
         if link not in links:
             links[link] = 0

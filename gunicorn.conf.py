@@ -28,7 +28,6 @@ if _PROM_ENABLED:
             for file in os.scandir(_PROM_MULTIPROC_DIR):
                 os.unlink(file.path)
 
-
     def child_exit(_, worker):
         if _PROM_ENABLED and _PROM_MULTIPROC_DIR:
             multiprocess.mark_process_dead(worker.pid)
