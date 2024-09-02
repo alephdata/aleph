@@ -184,7 +184,7 @@ def query_delete(index, query, sync=False, **kwargs):
                 request_timeout=MAX_REQUEST_TIMEOUT,
                 timeout=MAX_TIMEOUT,
                 scroll_size=SETTINGS.INDEX_DELETE_BY_QUERY_BATCHSIZE,
-                **kwargs
+                **kwargs,
             )
             return
         except TransportError as exc:
@@ -305,7 +305,9 @@ def configure_index(index, mapping, settings):
         )
         log.info(f"[{index}] New mappings.", index=index, mappings=mapping)
         mapping = rewrite_mapping_safe(mapping, config.get("mappings"))
-        _check_response(index, es.indices.put_mapping(body=mapping, ignore=[400], **options))
+        _check_response(
+            index, es.indices.put_mapping(body=mapping, ignore=[400], **options)
+        )
         _check_response(index, es.indices.open(**options))
     else:
         log.info(f"Creating index: {index}...", index=index)
