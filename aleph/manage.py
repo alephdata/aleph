@@ -19,6 +19,7 @@ from aleph.worker import get_worker
 from aleph.queues import get_status, cancel_queue
 from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
+from aleph.logic.api_keys import reset_api_key_expiration as _reset_api_key_expiration
 from aleph.index.entities import iter_proxies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
@@ -530,3 +531,9 @@ def evilshit():
     delete_index()
     destroy_db()
     upgrade()
+
+
+@cli.command()
+def reset_api_key_expiration():
+    """Reset the expiration date of all legacy, non-expiring API keys."""
+    _reset_api_key_expiration()
