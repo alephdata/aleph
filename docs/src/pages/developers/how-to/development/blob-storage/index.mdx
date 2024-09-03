@@ -1,0 +1,56 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Set Up a Storage Provider
+---
+
+# How to Set Up a Storage Provider for Development
+
+<p class="lead">When making changes to file storage in Aleph, it can be helpful to test changes against a real storage provider. This guide describes how to run the MinIO object storage provider in your local development environment and how to configure Aleph accordingly.</p>
+
+<Callout theme="danger">This guide describes how to set up MinIO in a development environment. If you want to configure a production Aleph instance to use a storage provider, please refer to [our operations guide](/developers/how-to/operations/blob-storage).</Callout>
+
+<Steps>
+  <Step>
+    Run the following command to start a single-node MinIO instance for development:
+
+    ```bash
+    docker run -p "9000:9000" -p "9001:9001" quay.io/minio/minio minio server --console-address :9001 /mnt/data
+    ```
+  </Step>
+
+  <Step>
+    You can access the MinIO console at `http://localhost:9001`. Log in using the default credentials `minioadmin`/`minioadmin`.
+  </Step>
+
+  <Step>
+    In order to create a new bucket, click on "Buckets" in the sidebar, then click on "Create Bucket".
+  </Step>
+
+  <Step>
+    Enter `aleph-archive` as the bucket name and click on "Create Bucket".
+  </Step>
+
+  <Step>
+    Set the following Aleph configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| ARCHIVE_TYPE | s3 |
+| ARCHIVE_BUCKET | aleph-archive |
+| ARCHIVE_ENDPOINT_URL | http://host.docker.internal:9000 |
+| AWS_ACCESS_KEY_ID | minioadmin |
+| AWS_SECRET_ACCESS_KEY | minioadmin |
+  </Step>
+
+  <Step>
+    Restart Aleph.
+  </Step>
+</Steps>
+
+<Callout>
+  Usually, Docker Desktop automatically adds an entry in `/etc/hosts` to resolve `host.docker.internal`. If `host.docker.internal` can’t be resolved, you may need to manually add an entry to `/etc/hosts`:
+
+  ```
+  127.0.0.1 host.docker.internal
+  ```
+</Callout>
