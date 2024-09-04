@@ -126,7 +126,8 @@ class DatabaseCollector(Collector):
         )
 
         for country, type_, count in query:
-            gauge.add_metric([country, type_], count)
+            if country is not None:
+                gauge.add_metric([country, type_], count)
 
         return gauge
 
@@ -149,7 +150,8 @@ class DatabaseCollector(Collector):
         )
 
         for lang, type_, count in query:
-            gauge.add_metric([lang, type_], count)
+            if lang is not None:
+                gauge.add_metric([lang, type_], count)
 
         return gauge
 
