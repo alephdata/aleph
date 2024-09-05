@@ -87,6 +87,7 @@ def create_app(config=None):
             "FLASK_DEBUG": SETTINGS.DEBUG,
             "BABEL_DOMAIN": "aleph",
             "PROFILE": SETTINGS.PROFILE,
+            "SQLALCHEMY_ECHO": True
         }
     )
 

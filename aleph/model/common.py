@@ -2,6 +2,7 @@ import uuid
 import secrets
 import logging
 from sqlalchemy import false
+from sqlalchemy.exc import PendingRollbackError
 from datetime import datetime, date
 from flask_babel import lazy_gettext
 
@@ -43,7 +44,15 @@ class DatedModel(object):
 
     @classmethod
     def all(cls, deleted=False):
+        try:
+            db.session.query(cls)
+            log.critical("query")
+        except PendingRollbackError:
+            db.session.rollback()
+            log.critical("rollback")
+
         return db.session.query(cls)
+
 
     @classmethod
     def all_ids(cls, deleted=False):
