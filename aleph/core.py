@@ -119,12 +119,25 @@ def create_app(config=None):
         "payment": NONE,
         "usb": NONE,
     }
+
+    # This CSP affects Aleph API endpoints only. For the CSP applied to UI responses,
+    # refer to the nginx configuration.
+    #
+    # As JSON API responses do not contain any interactive, in theory, it should be
+    # unnecessary to specify a CSP. However, depending on configuration, the API may
+    # also serve user-uploaded files, so we specify a strict CSP disabling all
+    # directives. Additionally, we also disable framing of API responses.
+    content_security_policy = {
+        "default-src": NONE,
+        "frame-ancestors": NONE,
+    }
+
     talisman.init_app(
         app,
         force_https=SETTINGS.FORCE_HTTPS,
         strict_transport_security=SETTINGS.FORCE_HTTPS,
         feature_policy=feature_policy,
-        content_security_policy=SETTINGS.CONTENT_POLICY,
+        content_security_policy=content_security_policy,
     )
 
     from aleph.views import mount_app_blueprints
