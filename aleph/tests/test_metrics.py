@@ -1,6 +1,6 @@
 import os
 
-from prometheus_client import CollectorRegistry
+from prometheus_client import CollectorRegistry, generate_latest
 import time_machine
 
 from aleph.tests.util import TestCase
@@ -66,6 +66,12 @@ class MetricsTestCase(TestCase):
         with time_machine.travel("2024-01-08T12:00:00Z"):
             reg.collect()
 
+            # Ensure that the collected metrics can be exposed in the Prometheus text format.
+            # The Prometheus client has a few issues (such as [1]), which can cause it to
+            # error at export time (but not when collecting metrics).
+            # [1]: https://github.com/prometheus/client_python/issues/270
+            generate_latest(reg)
+
             de = reg.get_sample_value("aleph_users", {"active": "24h", "locale": "de"})
             en = reg.get_sample_value("aleph_users", {"active": "24h", "locale": "en"})
             assert de == 1
@@ -95,6 +101,7 @@ class MetricsTestCase(TestCase):
         self.create_collection(creator=user, category="leak")
 
         reg.collect()
+        generate_latest(reg)
         casefiles = reg.get_sample_value(
             "aleph_collection_categories",
             {"category": "casefile", "type": "casefile"},
@@ -113,6 +120,12 @@ class MetricsTestCase(TestCase):
         user = self.create_user(is_admin=True)
         self.create_collection(
             creator=user,
+            # I'm not entirely sure why you'd end up with a `None` item instead
+            # of just an empty array, but it has happened before.
+            countries=[None],
+        )
+        self.create_collection(
+            creator=user,
             category="casefile",
             countries=["de", "fr"],
         )
@@ -123,6 +136,7 @@ class MetricsTestCase(TestCase):
         )
 
         reg.collect()
+        generate_latest(reg)
         de = reg.get_sample_value(
             "aleph_collection_countries",
             {"country": "de", "type": "casefile"},
@@ -151,6 +165,12 @@ class MetricsTestCase(TestCase):
         user = self.create_user(is_admin=True)
         self.create_collection(
             creator=user,
+            # I'm not entirely sure why you'd end up with a `None` item instead
+            # of just an empty array, but it has happened before.
+            languages=[None],
+        )
+        self.create_collection(
+            creator=user,
             category="casefile",
             languages=["fra", "eng"],
         )
@@ -161,6 +181,7 @@ class MetricsTestCase(TestCase):
         )
 
         reg.collect()
+        generate_latest(reg)
         eng = reg.get_sample_value(
             "aleph_collection_languages",
             {"language": "eng", "type": "casefile"},
@@ -201,6 +222,7 @@ class MetricsTestCase(TestCase):
         reg.register(DatabaseCollector())
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value("aleph_entitysets", {"type": "diagram"})
         users = reg.get_sample_value("aleph_entityset_users", {"type": "diagram"})
         assert count is None, count
@@ -228,6 +250,7 @@ class MetricsTestCase(TestCase):
         db.session.commit()
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value("aleph_entitysets", {"type": "diagram"})
         users = reg.get_sample_value("aleph_entityset_users", {"type": "diagram"})
         assert count == 2, count
@@ -238,6 +261,7 @@ class MetricsTestCase(TestCase):
         reg.register(DatabaseCollector())
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value("aleph_bookmarks")
         users = reg.get_sample_value("aleph_bookmark_users")
         assert count == 0, count
@@ -256,6 +280,7 @@ class MetricsTestCase(TestCase):
         db.session.commit()
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value("aleph_bookmarks")
         users = reg.get_sample_value("aleph_bookmark_users")
         assert count == 2, count
@@ -266,6 +291,7 @@ class MetricsTestCase(TestCase):
         reg.register(QueuesCollector())
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value(
             "aleph_tasks", {"stage": "index", "status": "pending"}
         )
@@ -282,6 +308,7 @@ class MetricsTestCase(TestCase):
         dataset.add_task(task_id, "index")
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value(
             "aleph_tasks", {"stage": "index", "status": "pending"}
         )
@@ -291,6 +318,7 @@ class MetricsTestCase(TestCase):
         dataset.checkout_task(task_id, "index")
 
         reg.collect()
+        generate_latest(reg)
         count = reg.get_sample_value(
             "aleph_tasks", {"stage": "index", "status": "pending"}
         )
@@ -323,5 +351,6 @@ class MetricsTestCase(TestCase):
         compute_collections()
 
         reg.collect()
+        generate_latest(reg)
         persons = reg.get_sample_value("aleph_entities", {"schema": "Person"})
         assert persons == 2
