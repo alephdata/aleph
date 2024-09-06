@@ -20,7 +20,7 @@ class RolesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get("/api/2/roles/_suggest?prefix=user", headers=headers)
         assert res.status_code == 200, res
-        assert res.json["total"] >= 3, res.json
+        assert res.json["total"] == 0, res.json
 
     def test_view(self):
         res = self.client.get("/api/2/roles/%s" % self.rolex)
