@@ -291,18 +291,10 @@ def configure_index(index, mapping, settings):
         }
         res = es.indices.get(index=index)
 
-        if len(res) == 0:
-            # This case should never occur.
-            raise AlephOperationalException(
-                f"ES response does not contain data for index {index}"
-            )
-
-        if len(res) > 1:
+        if len(res) != 1:
             # This case should never occur.
             log.error("ES response", res=res)
-            raise AlephOperationalException(
-                "ES response is ambiguous, contains data for multple indices"
-            )
+            raise AlephOperationalException("ES response is empty or ambiguous.")
 
         # The ES response is an object with items for every requested index. As we only request
         # a single index, we extract the first and only item from the response. We cannot simply
