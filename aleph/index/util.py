@@ -289,7 +289,19 @@ def configure_index(index, mapping, settings):
             "timeout": MAX_TIMEOUT,
             "master_timeout": MAX_TIMEOUT,
         }
-        config = es.indices.get(index=index).get(index, {})
+        res = es.indices.get(index=index)
+
+        if len(res) != 1:
+            # This case should never occur.
+            log.error("ES response", res=res)
+            raise AlephOperationalException("ES response is empty or ambiguous.")
+
+        # The ES response is an object with items for every requested index. As we only request
+        # a single index, we extract the first and only item from the response. We cannot simply
+        # extract the response data using the index name as the name we use to request the index
+        # may be an alias whereas the response will always contain the actual un-aliased name.
+        config = list(res.values())[0]
+
         settings.get("index").pop("number_of_shards")
         log.info(
             f"[{index}] Current settings.", index=index, settings=config.get("settings")
