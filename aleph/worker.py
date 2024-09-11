@@ -159,6 +159,11 @@ class AlephWorker(Worker):
                 log.exception("Error while executing periodic tasks")
 
     def dispatch_task(self, task: Task) -> Task:
+        try:
+            db.session.remove()
+        except Exception:
+            log.exception("Error cleaning state.")
+
         log.info(
             f"Task [collection:{task.collection_id}]: "
             f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (started)"
