@@ -88,9 +88,9 @@ class CollectionAccessDialog extends Component {
     }
   }
 
-  onAddRole(role) {
+  onAddRole(role, query) {
     const { permissions } = this.state;
-    permissions.push({ role, read: true, write: false });
+    permissions.push({ role, email: query, read: true, write: false });
     this.setState({ permissions });
   }
 

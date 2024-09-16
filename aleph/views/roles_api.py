@@ -4,6 +4,7 @@ from flask_babel import gettext
 from flask import Blueprint, request
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
+from sqlalchemy import func
 
 from aleph.core import db
 from aleph.authz import Authz
@@ -66,8 +67,12 @@ def suggest():
         )
     # this only returns users, not groups
     exclude = ensure_list(parser.excludes.get("id"))
-    q = Role.by_prefix(parser.prefix, exclude=exclude)
-    result = DatabaseQueryResult(request, q, parser=parser)
+    query = (
+        Role.all_users()
+        .where(Role.id.not_in(exclude))
+        .where(func.lower(Role.email) == parser.prefix.lower())
+    )
+    result = DatabaseQueryResult(request, query, parser=parser)
     return RoleSerializer.jsonify_result(result)
 
 
