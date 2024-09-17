@@ -165,40 +165,44 @@ class AlephWorker(Worker):
         )
         handler = OPERATIONS[task.operation]
         collection = None
-        if task.collection_id is not None:
-            collection = Collection.by_id(task.collection_id, deleted=True)
+        with db.session.begin():
+            if task.collection_id is not None:
+                collection = Collection.by_id(task.collection_id, deleted=True)
 
-        # Task batching for index operation
-        if task.operation == SETTINGS.STAGE_INDEX:
-            with indexing_lock:
-                self.indexing_batches[task.collection_id].append(task)
-                self.indexing_batch_last_updated = time.time()
-                if (
-                    sum(
-                        [len(self.indexing_batches[id]) for id in self.indexing_batches]
-                    )
-                    >= SETTINGS.INDEXING_BATCH_SIZE
-                ):
-                    # batch size limit reached; execute the existing batch and reset
-                    op_index(self.indexing_batches, worker=self)
-                    self.indexing_batches = defaultdict(list)
-                    self.indexing_batch_last_updated = 0.0
-                else:
-                    log.info(
-                        f"Task [collection: {task.collection_id}]: "
-                        f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (batched)"
-                    )
-                # skip acknowledgment for batched task; the batch processing function
-                # will acknowledge tasks after execution is complete
-                task.context["skip_ack"] = True
-                return task
+            # Task batching for index operation
+            if task.operation == SETTINGS.STAGE_INDEX:
+                with indexing_lock:
+                    self.indexing_batches[task.collection_id].append(task)
+                    self.indexing_batch_last_updated = time.time()
+                    if (
+                        sum(
+                            [
+                                len(self.indexing_batches[id])
+                                for id in self.indexing_batches
+                            ]
+                        )
+                        >= SETTINGS.INDEXING_BATCH_SIZE
+                    ):
+                        # batch size limit reached; execute the existing batch and reset
+                        op_index(self.indexing_batches, worker=self)
+                        self.indexing_batches = defaultdict(list)
+                        self.indexing_batch_last_updated = 0.0
+                    else:
+                        log.info(
+                            f"Task [collection: {task.collection_id}]: "
+                            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (batched)"
+                        )
+                    # skip acknowledgment for batched task; the batch processing function
+                    # will acknowledge tasks after execution is complete
+                    task.context["skip_ack"] = True
+                    return task
 
-        handler(collection, task)
-        log.info(
-            f"Task [collection:{task.collection_id}]: "
-            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
-        )
-        return task
+            handler(collection, task)
+            log.info(
+                f"Task [collection:{task.collection_id}]: "
+                f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
+            )
+            return task
 
     def after_task(self, task):
         if not SETTINGS.TESTING:
