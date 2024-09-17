@@ -1,7 +1,9 @@
+import contextlib
 import uuid
 import secrets
 import logging
 from sqlalchemy import false
+from sqlalchemy.sql.expression import select
 from datetime import datetime, date
 from flask_babel import lazy_gettext
 
@@ -59,7 +61,7 @@ class DatedModel(object):
     def by_id(cls, id, deleted=False):
         if id is None:
             return
-        return cls.all(deleted=deleted).filter_by(id=id).first()
+        return db.session.scalars(select(cls).filter_by(id=id).limit(1)).first()
 
     def delete(self):
         # hard delete
