@@ -55,7 +55,7 @@ def suggest():
     """
     require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz, limit=10)
-    if parser.prefix is None or len(parser.prefix) < 3:
+    if parser.prefix is None or len(parser.prefix) < 6:
         # Do not return 400 because it's a routine event.
         return jsonify(
             {
