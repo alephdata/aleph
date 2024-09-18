@@ -209,9 +209,12 @@ def reindex(collection_id):
       tags:
       - Collection
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    flush = get_flag("flush", False)
-    queue_task(collection, SETTINGS.STAGE_REINDEX, job_id=get_session_id(), flush=flush)
+    with db.session.begin():
+        collection = get_db_collection(collection_id, request.authz.WRITE)
+        flush = get_flag("flush", False)
+        queue_task(
+            collection, SETTINGS.STAGE_REINDEX, job_id=get_session_id(), flush=flush
+        )
     return ("", 202)
 
 
