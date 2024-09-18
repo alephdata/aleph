@@ -16,6 +16,10 @@ const messages = defineMessages({
     id: 'role.select.user',
     defaultMessage: 'Choose a user',
   },
+  placeholder: {
+    id: 'role.select.placeholder',
+    defaultMessage: 'Enter email address…',
+  },
 });
 
 class RoleLabel extends PureComponent {
@@ -94,13 +98,14 @@ class Select extends Component {
     const { exclude = [] } = this.props;
     const roles = await this.props.suggestRoles(query, exclude);
     this.setState({
+      query,
       suggested: roles.results,
     });
   }
 
   onSelectRole(role, event) {
     event.stopPropagation();
-    this.props.onSelect(role);
+    this.props.onSelect(role, this.state.query);
   }
 
   renderRole = (role, { handleClick, modifiers }) => (
@@ -130,6 +135,7 @@ class Select extends Component {
         }}
         inputProps={{
           fill: true,
+          placeholder: intl.formatMessage(messages.placeholder),
         }}
         activeItem={role}
         filterable={!isFixed}

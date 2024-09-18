@@ -1,11 +1,14 @@
 import logging
+from banal import ensure_list
 from flask_babel import gettext
 from flask import Blueprint, request
 from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
+from sqlalchemy import func
 
 from aleph.core import db
 from aleph.authz import Authz
+from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
 from aleph.util import is_auto_admin
@@ -51,12 +54,26 @@ def suggest():
       - Role
     """
     require(request.authz.logged_in)
-    return jsonify(
-        {
-            "results": [],
-            "total": 0,
-        }
+    parser = QueryParser(request.args, request.authz, limit=10)
+    if parser.prefix is None or len(parser.prefix) < 6:
+        # Do not return 400 because it's a routine event.
+        return jsonify(
+            {
+                "status": "error",
+                "message": gettext("prefix filter is too short"),
+                "results": [],
+                "total": 0,
+            }
+        )
+    # this only returns users, not groups
+    exclude = ensure_list(parser.excludes.get("id"))
+    query = (
+        Role.all_users()
+        .where(Role.id.not_in(exclude))
+        .where(func.lower(Role.email) == parser.prefix.lower())
     )
+    result = DatabaseQueryResult(request, query, parser=parser)
+    return RoleSerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/roles/code", methods=["POST"])

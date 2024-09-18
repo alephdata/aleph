@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Button, Classes, Checkbox, Intent } from '@blueprintjs/core';
+import { Button, Classes, Callout, Checkbox, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -88,9 +88,9 @@ class CollectionAccessDialog extends Component {
     }
   }
 
-  onAddRole(role) {
+  onAddRole(role, query) {
     const { permissions } = this.state;
-    permissions.push({ role, read: true, write: false });
+    permissions.push({ role, email: query, read: true, write: false });
     this.setState({ permissions });
   }
 
@@ -149,6 +149,7 @@ class CollectionAccessDialog extends Component {
     const systemRoles = this.filterPermissions('system');
     const groupRoles = this.filterPermissions('group');
     const userRoles = this.filterPermissions('user');
+    const exclude = userRoles.map((perm) => perm.role.id);
 
     return (
       <FormDialog
@@ -222,6 +223,17 @@ class CollectionAccessDialog extends Component {
                     onToggle={this.onToggle}
                   />
                 ))}
+                <tr key="add">
+                  <td colSpan="3">
+                    <Role.Select onSelect={this.onAddRole} exclude={exclude} />
+                    <Callout intent={Intent.WARNING}>
+                      <FormattedMessage
+                        id="collection.edit.permissions_warning"
+                        defaultMessage="Note: User must already have an Aleph account in order to receive access."
+                      />
+                    </Callout>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
