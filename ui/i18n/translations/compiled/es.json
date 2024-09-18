@@ -219,10 +219,10 @@
   "document.upload.folder": "Si prefiere subir carpetas, { button }.",
   "document.upload.folder-toggle": "Haga clic aquí",
   "document.upload.info": "Si necesita subir muchos documentos (más de 100) considere {link}.",
-  "document.upload.notice": "Se han subido todos los documentos. Todavía tardará un poco el procesamiento que permitirá realizar búsquedas en ellos.",
-  "document.upload.progress": "{done} de {total} archivos terminados, {errors} errores.",
-  "document.upload.rejected": "No se puede subir {fileName} porque no tiene tipo de archivo.",
-  "document.upload.retry": "Reintentar",
+  "document.upload.notice": "The upload is complete. It will take a few moments for the documents to be processed and become searchable.",
+  "document.upload.progress": "{done} of {total} files done, {errors} errors.",
+  "document.upload.rejected": "{fileName} is missing a file type, so it cannot be uploaded.",
+  "document.upload.retry": "Retry",
   "document.upload.save": "Subir",
   "document.upload.summary": "{numberOfFiles, number} files, {totalSize}",
   "document.upload.title": "Upload documents",
@@ -665,6 +665,5 @@
   "xref.score": "Puntuación",
   "xref.sort.default": "Default",
   "xref.sort.label": "Ordenar por:",
-  "xref.sort.random": "Aleatorio"
+  "xref.sort.random": "Random"
 }
-
