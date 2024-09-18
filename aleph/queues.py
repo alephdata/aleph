@@ -34,13 +34,9 @@ def queue_task(collection, stage, job_id=None, context=None, **payload):
     )
     if SETTINGS.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
-        from threading import Thread
 
         worker = get_worker()
-        thread = Thread(target=lambda: worker.process(blocking=False))
-        thread.start()
-        thread.join()
-
+        worker.process(blocking=False)
         lock.release()
 
 

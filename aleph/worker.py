@@ -130,12 +130,11 @@ class AlephWorker(Worker):
         super().on_signal(signal, _)
 
     def process(self, blocking=True):
-        with app.app_context():
-            log.critical("Latest version")
-            if blocking:
+        if blocking:
+            with app.app_context():
                 self.process_blocking()
-            else:
-                self.process_nonblocking()
+        else:
+            self.process_nonblocking()
 
     def periodic(self):
         with app.app_context():
