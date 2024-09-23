@@ -91,8 +91,16 @@ class Select extends Component {
   }
 
   async onSuggest(query) {
+    this.setState({ query });
+
     const { isFixed } = this.state;
     if (isFixed) {
+      return;
+    }
+
+    if (this.state.query === query) {
+      // Prevent loading suggestions if the query hasn't changed.
+      // See https://github.com/palantir/blueprint/issues/2983
       return;
     }
 
