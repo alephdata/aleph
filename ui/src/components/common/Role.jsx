@@ -92,15 +92,18 @@ class Select extends Component {
 
   async onSuggest(query) {
     const { isFixed } = this.state;
-    if (isFixed || query.length < 6) {
+    if (isFixed) {
       return;
     }
+
+    if (query.length < 6) {
+      this.setState({ suggested: [] });
+      return;
+    }
+
     const { exclude = [] } = this.props;
     const roles = await this.props.suggestRoles(query, exclude);
-    this.setState({
-      query,
-      suggested: roles.results,
-    });
+    this.setState({ suggested: roles.results });
   }
 
   onSelectRole(role, event) {
