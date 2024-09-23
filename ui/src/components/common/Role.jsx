@@ -145,6 +145,7 @@ class Select extends Component {
           fill: true,
         }}
         inputProps={{
+          type: 'email',
           fill: true,
           placeholder: intl.formatMessage(messages.placeholder),
         }}
