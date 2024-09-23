@@ -131,7 +131,10 @@ def update(collection_id):
         if (
             role.type == Role.USER
             and role.id not in current
-            and (not permission.get("email") or role.email != permission.get("email"))
+            and (
+                not permission.get("email")
+                or role.email.lower() != permission.get("email", "").lower()
+            )
         ):
             continue
 
