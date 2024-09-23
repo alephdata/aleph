@@ -92,7 +92,7 @@ class Select extends Component {
 
   async onSuggest(query) {
     const { isFixed } = this.state;
-    if (isFixed || query.length <= 3) {
+    if (isFixed || query.length < 6) {
       return;
     }
     const { exclude = [] } = this.props;
