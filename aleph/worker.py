@@ -165,8 +165,12 @@ class AlephWorker(Worker):
         )
         handler = OPERATIONS[task.operation]
         collection = None
-        if task.collection_id is not None:
-            collection = Collection.by_id(task.collection_id, deleted=True)
+        # We call remove here to prevent worker-created SQLa sessions
+        # from interfering with API-created, flask-sqlalchemy managed ones
+        db.session.remove()
+        with db.session.begin():
+            if task.collection_id is not None:
+                collection = Collection.by_id(task.collection_id, deleted=True)
 
         # Task batching for index operation
         if task.operation == SETTINGS.STAGE_INDEX:
