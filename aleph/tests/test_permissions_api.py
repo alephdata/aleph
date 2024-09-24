@@ -62,7 +62,7 @@ class PermissionsApiTestCase(TestCase):
             },
             {
                 "role_id": str(jane.id),
-                "email": "jane.doe@example.org",
+                "email": "JANE.DOE@EXAMPLE.ORG",  # email is normalized
                 "read": True,
                 "write": False,
             },
