@@ -6,6 +6,7 @@ import functools
 import queue
 import copy
 from typing import Dict, Callable
+import sqlalchemy
 
 import structlog
 from servicelayer.taskqueue import Worker, Task
@@ -167,7 +168,10 @@ class AlephWorker(Worker):
         collection = None
         # We call commit here to prevent worker-created SQLa sessions
         # from interfering with API-created, flask-sqlalchemy managed ones
-        db.session.commit()
+        try:
+            db.session.commit()
+        except sqlalchemy.exc.PendingRollbackError:
+            db.session.rollback()
         with db.session.begin():
             if task.collection_id is not None:
                 collection = Collection.by_id(task.collection_id, deleted=True)
