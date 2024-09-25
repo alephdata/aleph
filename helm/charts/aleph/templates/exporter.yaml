@@ -39,6 +39,9 @@ spec:
             {{- toYaml .Values.exporter.containerSecurityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.exporter.containerResources | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: aleph-secrets
           env:
             {{- range $key, $value := .Values.global.commonEnv }}
             - name: {{ $key }}
@@ -48,21 +51,6 @@ spec:
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
-            - name: ALEPH_DATABASE_URI
-              valueFrom:
-                secretKeyRef:
-                  name: aleph-secrets
-                  key: ALEPH_DATABASE_URI
-            - name: ALEPH_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aleph-secrets
-                  key: ALEPH_SECRET_KEY
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: aleph-secrets
-                  key: SENTRY_DSN
           readinessProbe:
             httpGet:
               path: /metrics
