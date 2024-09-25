@@ -1,6 +1,7 @@
 from aleph.settings import SETTINGS
 from banal import ensure_list
 from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
 
 from aleph.core import db
 from aleph.search import CollectionsQuery
@@ -68,7 +69,10 @@ def create():
     require(request.authz.logged_in)
     data = parse_request("CollectionCreate")
     sync = get_flag("sync", True)
-    collection = create_collection(data, request.authz, sync=sync)
+    try:
+        collection = create_collection(data, request.authz, sync=sync)
+    except ValueError:
+        raise BadRequest()
     return view(collection.get("id"))
 
 

@@ -11,6 +11,7 @@ from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
 from servicelayer.taskqueue import declare_rabbitmq_queue, flush_queues
+from ftmstore import settings as ftms, get_store
 from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
@@ -83,6 +84,7 @@ class TestCase(unittest.TestCase):
         sls.WORKER_THREADS = None
         for stage in SETTINGS.ALEPH_STAGES:
             stage = f"test-{stage}-queue"
+        ftms.DATABASE_URI = DB_URI
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
 
         SETTINGS.APP_NAME = APP_NAME
@@ -268,6 +270,10 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         db.session.rollback()
         db.session.close()
+
+        ftm_store = get_store(DB_URI)
+        for dataset in ftm_store.all():
+            dataset.delete()
 
     @classmethod
     def setUpClass(cls):

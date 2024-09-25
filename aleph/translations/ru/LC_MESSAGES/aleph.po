@@ -1,7 +1,7 @@
 # Translations template for PROJECT.
-# Copyright (C) 2023 ORGANIZATION
+# Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 # 
 # Translators:
 # jen occrp, 2022
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-11-27 13:54+0100\n"
+"POT-Creation-Date: 2024-05-22 15:09+0000\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2022\n"
 "Language-Team: Russian (https://app.transifex.com/aleph/teams/76591/ru/)\n"
@@ -30,7 +30,7 @@ msgstr "Алеф"
 msgid "No schema on entity"
 msgstr "Отсутствует схема для сущности"
 
-#: aleph/logic/html.py:63
+#: aleph/logic/html.py:64
 msgid "[HTML removed: could not be sanitized]"
 msgstr "[HTML-код удалён как небезопасный]"
 
@@ -227,7 +227,7 @@ msgstr "Экспорт завершён"
 msgid "{{export}} is ready for download"
 msgstr "{{export}} можно скачать"
 
-#: aleph/search/__init__.py:76
+#: aleph/search/__init__.py:77
 msgid "No schema is specified for the query."
 msgstr "Отсутствует схема данных для запроса."
 
@@ -404,11 +404,11 @@ msgstr ""
 "техническая ошибка. Повторите запрос чуть позже или, если проблема "
 "повторится, обратитесь к администраторам Алефа"
 
-#: aleph/views/sessions_api.py:61
+#: aleph/views/sessions_api.py:69
 msgid "Invalid user or password."
 msgstr "Неверное имя пользователя или пароль."
 
-#: aleph/views/sessions_api.py:95
+#: aleph/views/sessions_api.py:104
 msgid "Authentication has failed."
 msgstr "Ошибка авторизации."
 
