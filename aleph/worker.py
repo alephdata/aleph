@@ -165,9 +165,9 @@ class AlephWorker(Worker):
         )
         handler = OPERATIONS[task.operation]
         collection = None
-        # We call remove here to prevent worker-created SQLa sessions
+        # We call commit here to prevent worker-created SQLa sessions
         # from interfering with API-created, flask-sqlalchemy managed ones
-        db.session.remove()
+        db.session.commit()
         with db.session.begin():
             if task.collection_id is not None:
                 collection = Collection.by_id(task.collection_id, deleted=True)
