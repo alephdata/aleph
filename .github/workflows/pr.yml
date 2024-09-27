@@ -15,6 +15,8 @@ jobs:
 
       - name: Install development dependencies
         run: make dev
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: 1
 
       - name: Check code formatting
         run: make format-check
