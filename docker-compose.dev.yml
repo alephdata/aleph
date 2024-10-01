@@ -52,7 +52,7 @@ services:
     tmpfs: /tmp
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:4.0.0-rc15
+    image: ghcr.io/alephdata/ingest-file:4.0.0-rc28
     # build:
     #   context: ../ingest-file
     hostname: ingest
