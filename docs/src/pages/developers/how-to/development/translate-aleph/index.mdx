@@ -1,0 +1,48 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: How To Translate the Aleph UI
+---
+
+# How To Translate the Aleph UI
+
+<p class="lead">Do you want to contriute to existing translations or even add support for a new language? This guide explains how to translate the Aleph user interface.</p>
+
+## Manage translations using Transifex
+
+We use [Transifex](https://transifex.com) to manage translations for Aleph. All translations are created in the Transifex web app.
+
+<Steps>
+  <Step>Create a Transifex account.</Step>
+
+  <Step>Apply to join the [Aleph organization](https://explore.transifex.com/aleph/) on Transifex.</Step>
+
+  <Step>
+    Most of the user interface messages are translated in the `aleph-ui` project on Transifex. However, the `aleph-api` and `followthemoney` projects do also contain messages that need to be translated. If you want to add support for a new language, add this language to each of these projects in Transifex.
+  </Step>
+
+  <Step>
+    In each of the Transifex projects, select the respective language and add translations for all messages.
+  </Step>
+</Steps>
+
+## Syncing translations with Transifex
+
+After translations in Transifex have been updated, you need to fetch them from Transifex and commit them in the respective repositories of the Aleph GitHub organizations. Fetching the latest translations is usually done as part of the release process.
+
+<Callout theme="danger">
+  The information in this section may be outdated.
+</Callout>
+
+<Steps>
+  <Step>
+    Install the Transifex CLI. Follow the instructions in the [Transifex documentation](https://developers.transifex.com/docs/cli).
+  </Step>
+
+  <Step>
+    Create a Transifex API key and add it as the `TX_TOKEN` environment variable.
+  </Step>
+
+  <Step>
+    Follow the steps in the [Aleph](https://github.com/alephdata/aleph) and [FollowTheMoney](https://github.com/alephdata/followthemoney) repositories to fetch translations.
+  </Step>
+</Steps>

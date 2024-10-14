@@ -1,0 +1,28 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Export Mentions
+---
+
+# How To Export Mentions
+
+<p class="lead">When you upload files, Aleph tries to extract names of people or organizations, also called "mentions". You can view mentions in the UI, but in some cases you may want to export a list of all mentions for further offline processing.</p>
+
+<Steps>
+  <Step>
+    This guide uses the alephclient CLI to export FollowTheMoney data from Aleph. If you don’t have the CLI installed, please refer to [How to install the alephclient CLI](/developers/how-to/data/install-alephclient) for installation instructions.
+  </Step>
+
+  <Step>
+    Under the hood, Aleph stores mentions as normal FollowTheMoney entities using the [Mention](https://followthemoney.tech/explorer/schemata/Mention) schema. That means you can use the alephclient CLI to stream mentions from a collection:
+
+    ```bash
+    alephclient stream-entities --foreign-id 0bdf... --schema Mention --outfile mentions.json
+    ```
+
+    Replace `0bdf...` with the foreign ID of your collection. You can find a collection’s foreign ID in the Aleph UI. Navigate to the collection homepage. The foreign ID is listed in the sidebar on the right.
+  </Step>
+
+  <Step>
+    If you want to export mentions in CSV or Excel format, please refer to [How to export FollowTheMoney data](/developers/how-to/data/export-ftm-data).
+  </Step>
+</Steps>

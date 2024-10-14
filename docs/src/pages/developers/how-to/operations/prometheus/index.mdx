@@ -1,0 +1,97 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Set Up Prometheus Metrics
+---
+
+# How To Set Up Prometheus Metrics
+
+<p class="lead">[Prometheus](https://prometheus.io/) is an open-source monitoring solution that collects and stores time series data. Aleph has built-in support to expose metrics about itself in the Prometheus format. This guide describes how to enable Prometheus metrics in your Aleph instance.</p>
+
+## Prerequisistes
+
+Prometheus uses a pull-based model for metrics collection, i.e. services such as Aleph expose current metric values using an HTTP endpoint and the Prometheus servers "scrapes" the current values in a regular interval by sending a request to this HTTP endpoint.
+
+Aleph consists of multiple different components, including the Aleph API, background workers, ingest-file workers, and a separate Prometheus exporter. Each of these four components exposes metrics in the Prometheus format.
+
+In order to store the metrics data exposed by Aleph, you will need to run your own Prometheus server or use a managed Prometheus service. Please refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/) for installation instructions. If you’re hosting Aleph on using a cloud provider, many cloud providers also provide a managed Prometheus services or services compatible with the Prometheus format.
+
+## Enabling metrics
+
+### Docker Compose
+
+If you have deployed Aleph using Docker Compose, follow these steps to expose Prometheus metrics:
+
+<Steps>
+  <Step>
+    In order to start exposing metrics in the Prometheus format, set the `PROMETHEUS_ENABLED` configuration option to `true` for `api`, `worker`, and `ingest-file` containers.
+  </Step>
+
+  <Step>
+    Additionally, Aleph ships with a Prometheus exporter that serves additional metrics about the Aleph instance such as number of users and collections. In order to expose these metrics, you need to add an additional service to your `docker-compose.yml` configuration file.
+
+    The configuration might look like the following. However, make sure to adjust this to your setup and requirements. Also, make sure to replace the version number with the Aleph version you’re using.
+
+    ```yml
+    exporter:
+      image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.15.4}
+      command: "gunicorn --bind 0.0.0.0:9100 --log-file - aleph.metrics.exporter:app"
+      depends_on:
+        - postgres
+        - elasticsearch
+        - redis
+      tmpfs:
+        - /tmp
+      env_file:
+        - aleph.env
+    ```
+  </Step>
+
+  <Step>
+    The Aleph API uses the Gunicorn WSGI application server, running multiple worker processes. In order to provide complete metrics, data from all processes has to be combined. This is done by storing metrics data in files on the local file system. Set the `PROMETHEUS_MULTIPROC_DIR` configuration option to `/run/prometheus`.
+  </Step>
+
+  <Step>
+    Restart Aleph. The `api`, `worker`, and `ingest-file` containers now expose metrics on port 9100. Run the following command to verify that everything works as expected:
+
+    ```bash
+    docker compose exec api curl http://localhost:9100/metrics
+    docker compose exec worker curl http://localhost:9100/metrics
+    docker compose exec ingest-file curl http://localhost:9100/metrics
+    docker compose exec exporter curl http://localhost:9100/metrics
+    ```
+
+    <Callout theme="danger">
+      You shouldn’t publicly expose the the Prometheus metrics port. Do not map the port to your host system.
+    </Callout>
+  </Step>
+
+  <Step>
+    Finally, you need to configure the Prometheus server to scrape data from the respective metrics endpoints. The exact steps depend on your setup and requirements. However, you might want to use Prometheus’s built-in [DNS service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#dns_sd_config) or [Docker service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#docker_sd_config).
+  </Step>
+</Steps>
+
+### Kubernetes
+
+If you have deployed Aleph to Kubernetes using the Aleph Helm chart, follow these steps to expose Prometheus metrics:
+
+<Steps>
+  <Step>
+    To expose Prometheus values for all Aleph components set the `global.prometheus.enabled` value to `true`.
+  </Step>
+
+  <Step>
+    Additionally, Aleph ships with a Prometheus exporter that serves additional metrics about the Aleph instance such as number of users and collections. In order to expose these metrics, set the `exporter.enabled` value to `true`.
+  </Step>
+
+  <Step>
+    If you use the [Prometheus Operator](https://prometheus-operator.dev/) set the `global.serviceMonitor.enabled` value to `true`. This deploys [ServiceMonitor](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.ServiceMonitor) resources for all Aleph components that expose metrics which automatically configure the Prometheus server to scrape all metrics endpoints.
+  </Step>
+
+  <Step>
+    [Upgrade the Helm release](https://helm.sh/docs/helm/helm_upgrade/) to apply the changes.
+  </Step>
+
+  <Step>
+    Finally, if you do not use the Prometheus Operator, you need to configure the Prometheus server to scrape the metrics endpoints exposed by the various Aleph components. The exact steps depend on your setup and requirements. However, you might want to use the [Kubernetes service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config) built in to Prometheus.
+  </Step>
+</Steps>

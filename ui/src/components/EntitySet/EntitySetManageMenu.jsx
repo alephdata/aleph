@@ -49,25 +49,6 @@ class EntitySetManageMenu extends Component {
     const { exportSvg, intl } = this.props;
     const text = intl.formatMessage(messages.exportAsSvg);
 
-    // We're considering to permanently remove the options to export network diagrams
-    // as FTM files and to create embeddable network diagrams. In a first step, we're hiding
-    // these options, but keep most of the related code around, in order to be able to easily
-    // revert this change.
-
-    // const { entitySet, exportFtm, exportSvg, intl } = this.props;
-    // const text = intl.formatMessage(messages.export);
-    //
-    // const button = (
-    //   <DialogToggleButton
-    //     buttonProps={{
-    //       icon: 'export',
-    //       text: showText && text,
-    //     }}
-    //     Dialog={DiagramExportDialog}
-    //     dialogProps={{ entitySet, exportFtm, exportSvg }}
-    //   />
-    // );
-
     const button = (
       <Button icon="export" text={showText && text} onClick={exportSvg} />
     );

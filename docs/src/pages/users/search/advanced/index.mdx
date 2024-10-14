@@ -123,6 +123,14 @@ You can build on these searches even further like so:
 
 This translates to: Give me all matches in which each match must contain the keyword Trump and must contain either the keyword Salman or the keyword Putin, but must not contain the keywords South Korea.
 
+## Full search syntax
+
+Under the hood, Aleph uses a search engine called Elasticsearch. In addition to the advanced search options explained above, you can also use the full Elasticsearch query syntax. Please refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax) for more information.
+
+<Callout theme="danger">
+  Some search options supported by the Elasticsearch query syntax (such as wildcards and regular expressions) are very slow. Use these features carefully and ideally limit the searches to specific datasetes or investigations.
+</Callout>
+
 ## Putting it all together
 
 You can combine any of the methods supported by Aleph in many combinations to create some very explicit search rules. The complexity, of course, depends on your needs.

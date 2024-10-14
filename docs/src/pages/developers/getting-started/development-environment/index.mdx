@@ -1,0 +1,145 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Development Environment
+---
+
+# Development Environment
+
+<p class="lead">In this guide, you will learn how to set up a local development environment and install Aleph. Follow this guide if you want to install Aleph on your local machine in order to contribute to Aleph’s codebase or to try out Aleph.</p>
+
+<Callout theme="danger">
+  Starting Aleph in a development environment disabled many security measures. Do not follow this guide if you need to set up an Aleph instance that is accessible via the internet! Refer to the [production deployment guide](/developers/getting-started/production-deployment) instead.
+</Callout>
+
+## Install Docker
+
+Aleph requires multiple services to operate. To make it easier to manage these services, Aleph uses Docker containers. In order to install Aleph, you will need to have Docker and Docker Compose installed. A convenient way to install both on your local development machine is Docker Desktop, which is available for macOS, Windows, and Linux.
+
+Follow the [instructions in the Docker documentation](https://docs.docker.com/get-docker/) to install Docker Desktop.
+
+## Clone the repository
+
+Aleph’s source code repository is hosted [on GitHub](https://github.com/alephdata/aleph). Clone it using the following command:
+
+```bash
+git clone https://github.com/alephdata/aleph.git
+cd aleph/
+```
+
+If you want to contribute changes to Aleph, make sure to check out the `develop` branch. The `develop` branch contains the latest unreleased changes. Branching off the `develop` branch ensures that you avoid unnecessary merge opening a pull request with your changes.
+
+```bash
+git checkout develop
+```
+
+## Configure your host system
+
+Aleph uses [Elasticsearch](https://www.elastic.co/elasticsearch/) to store and search data. Elasticsearch maps search indices to memory. The default operating system limits are likely too low and need to be increased.
+
+When you are using Docker Desktop, Docker containers run inside of a virtual machine. That means you need to adjust the operating system limits of the virtual machine. Execute the following command to open a shell in the virtual machine:
+
+```sh
+docker run -it --rm --privileged --pid=host justincormack/nsenter1
+```
+
+Inside the virtual machine shell, run the following command to increase the operating system limits:
+
+```sh
+sysctl -w vm.max_map_count=262144
+```
+
+After running the command, exit the virtual machine shell (for example by pressing Ctrl + D).
+
+## Configure Aleph
+
+Aleph can be configured using environment variables. By default, Aleph loads environment variables from a file named `aleph.env`. Aleph’s source code includes a template for this file. Run the following command to create a copy of the template that you can override:
+
+```sh
+cp aleph.env.tmpl aleph.env
+```
+
+Next, you need to generate a random, secret key that Aleph uses for cryptographic signatures and encryption. Run the following command to generate a 24-character random string:
+
+```sh
+openssl rand -hex 24
+```
+
+Open `aleph.env` in you favorite text editor, copy the generated string and paste it as the value for `ALEPH_SECRET_KEY`.
+
+Most other configuration options use sensible defaults which means you do not need to adjust them unless you have specific requirements. You can find a list of all available configuration options in the [reference section](/developers/reference/configuration-options) of the documentation.
+
+## Start Aleph
+
+With the configuration in place, run the following command to set everything up and launch Aleph:
+
+```sh
+make all
+```
+
+This command is a shortcut and the equivalent of the following steps:
+
+1. `make build` builds the Docker images for Aleph’s backend and frontend.
+2. `make upgrade` migrates Aleph’s database and creates all necessary search indices.
+3. `make web` starts launches the Aleph backend and frontend.
+
+You will also need to start a worker. Workers execute background jobs such as indexing documents or sending email alerts. To start a worker, open a separate shell and run `make worker`.
+
+Once Aleph is up an running, navigate to [http://localhost:8080](http://localhost:8080) in your browser to open the Aleph user interface.
+
+## Create an admin user
+
+In order to log in to your local Aleph installation, you need to create a user account. Aleph includes a small CLI to perform common admin tasks such as creating a new user.
+
+CLI commands need to be executed inside of a backend container. Run the following command to start a container and open a shell:
+
+```sh
+make shell
+```
+
+Next, create a user using the followig CLI command:
+
+```sh
+aleph createuser --name="Alice" --admin --password="123abc" user@example.org
+```
+
+Open the user interface at [http://localhost:8080](http://localhost:8080) and sign in using your new admin user.
+
+## Load sample data
+
+If you want to quickly get some sample data in your Aleph instance you can use the Aleph CLI to index a small test data folder. Execute the following CLI command in a container shell:
+
+```sh
+aleph crawldir /aleph/contrib/testdata
+```
+
+Make sure that a worker is running (see [“Start Aleph”](#start-aleph)), otherwise your data won’t be processed.
+
+## Stop Aleph
+
+Run the following command to stop and delete all containers:
+
+```sh
+make stop
+```
+
+Data you have uploaded to or created in Aleph is stored in a persistent Docker volume and won’t be deleted, so it is available when you start Aleph again.
+
+## Upgrade to a new version
+
+In order to update to the latest version of Aleph in your development environment, simply pull the latest changes via Git:
+
+```bash
+git pull --ff-only
+```
+
+Rebuild the container images:
+
+```bash
+make build
+```
+
+Finally, run the database migrations:
+
+```bash
+make upgrade
+```

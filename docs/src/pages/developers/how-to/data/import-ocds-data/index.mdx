@@ -1,0 +1,58 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Import OCDS Data
+---
+
+# How To Import OCDS Data
+
+<p class="lead">The [Open Contracting Data Standard (OCDS)](https://standard.open-contracting.org/latest/en/) is an open standard for public contracting, implemented by many governments around the world. This guide describes how to import OCDS data into Aleph.</p>
+
+<Callout>
+  Support for OCDS was developed in particular to import data from the DIGIWHIST [OpenTender.eu](https://opentender.eu/all/download) site and may not work with other implementations of OCDS.
+</Callout>
+
+<Steps>
+  <Step>
+    This guide uses the ftm CLI and the alephclient CLI. If you don’t have these two CLIs installed, please refer to [How to install the ftm CLI](/developers/how-to/data/install-ftm) and [How to install the alephclient CLI](/developers/how-to/data/install-alephclient) for installation instructions.
+  </Step>
+
+  <Step>
+    In order to convert OCDS data, you also need to install the OCDS plugin for the ftm CLI:
+
+    ```sh
+    pip3 install followthemoney-ocds
+    ```
+  </Step>
+
+  <Step>
+    You can download OCDS data for many countries from the [OpenTender.eu downloads page](https://opentender.eu/all/download). Choose the NDJSON format. In the following steps, we’ll use Cyprus tenders data from 2023 as an example.
+  </Step>
+
+  <Step>
+    Unzip the OCDS data you downloaded from OpenTender.eu:
+
+    ```sh
+    unzip data-cy-ndjson.zip
+    ```
+  </Step>
+
+  <Step>
+    Convert OCDS data to FollowTheMoney entities:
+
+    ```sh
+    ftm import-ocds --infile data-cy-ndjson/data-cy-ocds-2023.json | ftm aggregate > entities.json
+    ```
+  </Step>
+
+  <Step>
+    You can now import the dataset in FollowTheMoney format using alephclient:
+
+    ```sh
+    alephclient write-entities --infile entities.json --foreign-id cy-tenders
+    ```
+
+    This will import the data into the Aleph collection with the foreign ID `cy-tenders`. If no collection with this foreign ID exists, a new collection is created.
+
+    If you’d like to import data into an existing collection and do not know its foreign ID, you can find the foreign ID in the Aleph UI. Navigate to the dataset or investigation homepage. The foreign ID is listed in the sidebar on the right.
+  </Step>
+</Steps>
