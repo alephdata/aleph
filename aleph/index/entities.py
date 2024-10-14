@@ -162,12 +162,15 @@ def index_entity(entity, sync=False):
 
 def index_proxy(collection, proxy, sync=False):
     delete_entity(proxy.id, exclude=proxy.schema, sync=False)
-    return index_bulk(collection, [proxy], sync=sync)
+    return index_bulk([proxy], collection=collection, sync=sync)
 
 
-def index_bulk(collection, entities, sync=False):
+def index_bulk(entities, collection=None, sync=False):
     """Index a set of entities."""
-    entities = (format_proxy(p, collection) for p in entities)
+    if collection:
+        entities = (format_proxy(p, collection) for p in entities)
+    else:
+        entities = (format_proxy(*p) for p in entities)
     entities = (e for e in entities if e is not None)
     bulk_actions(entities, sync=sync)
 

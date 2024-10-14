@@ -17,10 +17,55 @@ class RolesApiTestCase(TestCase):
     def test_suggest(self):
         res = self.client.get("/api/2/roles/_suggest")
         assert res.status_code == 403, res
-        _, headers = self.login(is_admin=True)
-        res = self.client.get("/api/2/roles/_suggest?prefix=user", headers=headers)
-        assert res.status_code == 200, res
-        assert res.json["total"] >= 3, res.json
+
+        _, headers = self.login(foreign_id="jane", email="jane.doe@example.org")
+        john, _ = self.login(foreign_id="john", email="john.doe@example.org")
+
+        res = self.client.get(
+            "/api/2/roles/_suggest",
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.json["total"] == 0
+        assert res.json["results"] == []
+
+        res = self.client.get(
+            "/api/2/roles/_suggest",
+            query_string={"prefix": "john"},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.json["total"] == 0
+        assert res.json["results"] == []
+
+        res = self.client.get(
+            "/api/2/roles/_suggest",
+            query_string={"prefix": "john.doe@example.org"},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.json["total"] == 1
+        assert len(res.json["results"]) == 1
+        assert res.json["results"][0]["id"] == str(john.id)
+
+        res = self.client.get(
+            "/api/2/roles/_suggest",
+            query_string={"prefix": "JOHN.DOE@EXAMPLE.org"},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.json["total"] == 1
+        assert len(res.json["results"]) == 1
+        assert res.json["results"][0]["id"] == str(john.id)
+
+        res = self.client.get(
+            "/api/2/roles/_suggest",
+            query_string={"prefix": "john.doe@example.org", "exclude:id": john.id},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.json["total"] == 0
+        assert len(res.json["results"]) == 0
 
     def test_view(self):
         res = self.client.get("/api/2/roles/%s" % self.rolex)

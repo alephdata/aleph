@@ -7,7 +7,7 @@ from aleph.settings import SETTINGS
 from aleph.model import Judgement
 from aleph.logic.profiles import get_profile, decide_pairwise
 from aleph.logic.expand import entity_tags, expand_proxies
-from aleph.queues import queue_task, OP_UPDATE_ENTITY
+from aleph.queues import queue_task
 from aleph.search import MatchQuery, QueryParser
 from aleph.views.serializers import ProfileSerializer, SimilarSerializer
 from aleph.views.context import tag_request
@@ -250,6 +250,11 @@ def pairwise():
         authz=request.authz,
     )
     job_id = get_session_id()
-    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=entity.get("id"))
+    queue_task(
+        collection,
+        SETTINGS.STAGE_UPDATE_ENTITY,
+        job_id=job_id,
+        entity_id=entity.get("id"),
+    )
     profile_id = profile.id if profile is not None else None
     return jsonify({"status": "ok", "profile_id": profile_id}, status=200)

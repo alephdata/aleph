@@ -137,9 +137,6 @@ class Settings:
         ui_languages = env.to_list("ALEPH_UI_LANGUAGES", ui_languages)
         self.UI_LANGUAGES = [lang.lower().strip() for lang in ui_languages]
 
-        # Document processing pipeline
-        self.INGEST_PIPELINE = env.to_list("ALEPH_INGEST_PIPELINE", ["analyze"])
-
         # Result high-lighting
         self.RESULT_HIGHLIGHT = env.to_bool("ALEPH_RESULT_HIGHLIGHT", True)
 
@@ -208,6 +205,95 @@ class Settings:
         )
         self.INDEX_DELETE_BY_QUERY_BATCHSIZE = env.to_int(
             "ALEPH_INDEX_DELETE_BY_QUERY_BATCHSIZE", 100
+        )
+        self.INDEXING_BATCH_SIZE = env.to_int(
+            "ALEPH_INDEXING_BATCH_SIZE", 100
+        )  # run indexing jobs in a batch of 100 for better performance
+
+        # Number of seconds during which AlephWorker will amass
+        # a batch of indexing tasks to execute (up to INDEXING_BATCH_SIZE).
+        # If the timeout is reached the worker executes the tasks amassed.
+        self.INDEXING_TIMEOUT = env.to_int("ALEPH_INDEXING_TIMEOUT", 10)
+
+        # TODO, document
+        self.RABBITMQ_MAX_PRIORITY = env.to_int("ALEPH_RABBITMQ_MAX_PRIORITY", 10)
+
+        # Prefetch count values
+        # This is the number of tasks the AlephWorker will grab at any given time
+        self.RABBITMQ_QOS_INDEX_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_INDEX_QUEUE", 100
+        )
+        self.RABBITMQ_QOS_XREF_QUEUE = env.to_int("ALEPH_RABBITMQ_QOS_XREF_QUEUE", 1)
+        self.RABBITMQ_QOS_REINGEST_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_REINGEST_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_REINDEX_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_REINDEX_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_LOAD_MAPPING_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_LOAD_MAPPING_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_FLUSH_MAPPING_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_FLUSH_MAPPING_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_EXPORT_SEARCH_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_EXPORT_SEARCH_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_EXPORT_XREF_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_EXPORT_XREF_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_UPDATE_ENTITY_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_UPDATE_ENTITY_QUEUE", 1
+        )
+        self.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE = env.to_int(
+            "ALEPH_RABBITMQ_QOS_PRUNE_ENTITY_QUEUE", 1
+        )
+
+        self.STAGE_INGEST = "ingest"
+        self.STAGE_ANALYZE = "analyze"
+        self.STAGE_INDEX = "index"
+        self.STAGE_XREF = "xref"
+        self.STAGE_REINGEST = "reingest"
+        self.STAGE_REINDEX = "reindex"
+        self.STAGE_LOAD_MAPPING = "loadmapping"
+        self.STAGE_FLUSH_MAPPING = "flushmapping"
+        self.STAGE_EXPORT_SEARCH = "exportsearch"
+        self.STAGE_EXPORT_XREF = "exportxref"
+        self.STAGE_UPDATE_ENTITY = "updateentity"
+        self.STAGE_PRUNE_ENTITY = "pruneentity"
+
+        self.ALEPH_STAGES = env.to_list(
+            "ALEPH_WORKER_STAGES",
+            [
+                self.STAGE_INDEX,
+                self.STAGE_XREF,
+                self.STAGE_REINGEST,
+                self.STAGE_REINDEX,
+                self.STAGE_LOAD_MAPPING,
+                self.STAGE_FLUSH_MAPPING,
+                self.STAGE_EXPORT_SEARCH,
+                self.STAGE_EXPORT_XREF,
+                self.STAGE_UPDATE_ENTITY,
+                self.STAGE_PRUNE_ENTITY,
+            ],
+        )
+
+        self.QOS_MAPPING = {
+            self.STAGE_INDEX: self.RABBITMQ_QOS_INDEX_QUEUE,
+            self.STAGE_XREF: self.RABBITMQ_QOS_XREF_QUEUE,
+            self.STAGE_REINGEST: self.RABBITMQ_QOS_REINGEST_QUEUE,
+            self.STAGE_REINDEX: self.RABBITMQ_QOS_REINDEX_QUEUE,
+            self.STAGE_LOAD_MAPPING: self.RABBITMQ_QOS_LOAD_MAPPING_QUEUE,
+            self.STAGE_FLUSH_MAPPING: self.RABBITMQ_QOS_FLUSH_MAPPING_QUEUE,
+            self.STAGE_EXPORT_SEARCH: self.RABBITMQ_QOS_EXPORT_SEARCH_QUEUE,
+            self.STAGE_EXPORT_XREF: self.RABBITMQ_QOS_EXPORT_XREF_QUEUE,
+            self.STAGE_UPDATE_ENTITY: self.RABBITMQ_QOS_UPDATE_ENTITY_QUEUE,
+            self.STAGE_PRUNE_ENTITY: self.RABBITMQ_QOS_PRUNE_ENTITY_QUEUE,
+        }
+
+        # Document processing pipeline
+        self.INGEST_PIPELINE = env.to_list(
+            "ALEPH_INGEST_PIPELINE", [self.STAGE_ANALYZE]
         )
 
         ###############################################################################

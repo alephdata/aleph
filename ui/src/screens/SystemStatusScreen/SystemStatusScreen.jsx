@@ -1,5 +1,13 @@
 import React from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  FormattedTime,
+  FormattedRelativeTime,
+  injectIntl,
+  useIntl,
+} from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, ProgressBar, Intent } from '@blueprintjs/core';
@@ -12,6 +20,7 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
 import { selectSystemStatus } from 'selectors';
+import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
 
 import './SystemStatusScreen.scss';
 
@@ -79,9 +88,6 @@ export class SystemStatusScreen extends React.Component {
       <td className="entity">
         <Skeleton.Text type="span" length={30} />
       </td>
-      <td className="numeric narrow">
-        <Skeleton.Text type="span" length={1} />
-      </td>
       <td>
         <Skeleton.Text type="span" length={15} />
       </td>
@@ -103,18 +109,42 @@ export class SystemStatusScreen extends React.Component {
     const active = res.pending + res.running;
     const total = active + res.finished;
     const progress = res.finished / total;
+
     return (
       <tr key={collection?.id || 'null'}>
-        <td className="entity">
-          <Collection.Link collection={res.collection} />
-          {!res.collection && (
-            <FormattedMessage
-              id="status.no_collection"
-              defaultMessage="Other tasks"
-            />
-          )}
+        <td>
+          <strong>
+            <Collection.Link collection={res.collection} />
+            {!res.collection && (
+              <FormattedMessage
+                id="status.no_collection"
+                defaultMessage="Other tasks"
+              />
+            )}
+          </strong>
+          <br />
+          <span className="StatusTable__timestamps">
+            {res.start_time && (
+              <>
+                <FormattedMessage
+                  id="status.started_at"
+                  defaultMessage="started"
+                />{' '}
+                <StatusTimestamp date={res.start_time} />
+              </>
+            )}
+            {res.last_update && (
+              <>
+                {' · '}
+                <FormattedMessage
+                  id="status.last_updated_at"
+                  defaultMessage="last updated"
+                />{' '}
+                <StatusTimestamp date={res.last_update} />
+              </>
+            )}
+          </span>
         </td>
-        <td className="numeric narrow">{res.jobs.length}</td>
         <td>
           <ProgressBar value={progress} intent={Intent.PRIMARY} />
         </td>
@@ -184,12 +214,6 @@ export class SystemStatusScreen extends React.Component {
                         defaultMessage="Dataset"
                       />
                     </th>
-                    <th className="numeric narrow">
-                      <FormattedMessage
-                        id="collection.status.jobs"
-                        defaultMessage="Jobs"
-                      />
-                    </th>
                     <th>
                       <FormattedMessage
                         id="collection.status.progress"
@@ -223,6 +247,44 @@ export class SystemStatusScreen extends React.Component {
       </Screen>
     );
   }
+}
+
+function StatusTimestamp({ date }) {
+  const intl = useIntl();
+  const today = new Date();
+  const localDate = convertUTCDateToLocalDate(date);
+  const isToday = today.toDateString() === localDate.toDateString();
+
+  const formattedDate = isToday ? (
+    // This renders a localized "today"
+    <FormattedRelativeTime numeric="auto" unit="day" value={0} />
+  ) : (
+    <FormattedDate
+      value={localDate}
+      year="numeric"
+      month="short"
+      day="numeric"
+    />
+  );
+
+  const formattedTime = <FormattedTime value={localDate} />;
+
+  return (
+    <span
+      title={intl.formatDate(localDate, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+      })}
+    >
+      {formattedDate}
+      {', '}
+      {formattedTime}
+    </span>
+  );
 }
 
 const mapStateToProps = (state) => {

@@ -1,13 +1,12 @@
 import os
 import logging
-from servicelayer.jobs import Job
 
 from aleph.core import db, archive
 from aleph.settings import SETTINGS
 from aleph.model import Document
 from aleph.queues import ingest_entity
-from aleph.queues import OP_INGEST
 from aleph.logic.aggregator import get_aggregator, MODEL_ORIGIN
+from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ def ingest_flush(collection, entity_id=None, include_ingest=False):
     aggregator = get_aggregator(collection)
     aggregator.delete(entity_id=entity_id, origin=MODEL_ORIGIN)
     if include_ingest:
-        aggregator.delete(entity_id=entity_id, origin=OP_INGEST)
+        aggregator.delete(entity_id=entity_id, origin=SETTINGS.STAGE_INGEST)
     for stage in SETTINGS.INGEST_PIPELINE:
         aggregator.delete(entity_id=entity_id, origin=stage)
 
@@ -37,7 +36,7 @@ def crawl_directory(collection, path, parent=None, job_id=None):
         # to be consistent with the behaviour of alephclient
         if path.is_dir() and job_id is None:
             document = None
-            job_id = Job.random_id()
+            job_id = random_id()
         else:
             meta = {"file_name": path.name}
             document = Document.save(
@@ -48,7 +47,7 @@ def crawl_directory(collection, path, parent=None, job_id=None):
                 meta=meta,
             )
             db.session.commit()
-            job_id = job_id or Job.random_id()
+            job_id = job_id or random_id()
             proxy = document.to_proxy()
             ingest_flush(collection, entity_id=proxy.id)
             ingest_entity(collection, proxy, job_id=job_id)

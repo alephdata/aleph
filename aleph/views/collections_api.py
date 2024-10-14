@@ -1,3 +1,4 @@
+from aleph.settings import SETTINGS
 from banal import ensure_list
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
@@ -5,7 +6,6 @@ from werkzeug.exceptions import BadRequest
 from aleph.core import db
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_REINGEST, OP_REINDEX, OP_INDEX
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, refresh_collection
 from aleph.logic.collections import get_deep_collection
@@ -180,7 +180,9 @@ def reingest(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     index = get_flag("index", False)
-    queue_task(collection, OP_REINGEST, job_id=get_session_id(), index=index)
+    queue_task(
+        collection, SETTINGS.STAGE_REINGEST, job_id=get_session_id(), index=index
+    )
     return ("", 202)
 
 
@@ -213,7 +215,7 @@ def reindex(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     flush = get_flag("flush", False)
-    queue_task(collection, OP_REINDEX, job_id=get_session_id(), flush=flush)
+    queue_task(collection, SETTINGS.STAGE_REINDEX, job_id=get_session_id(), flush=flush)
     return ("", 202)
 
 
@@ -305,7 +307,7 @@ def bulk(collection_id):
             )
     collection.touch()
     db.session.commit()
-    queue_task(collection, OP_INDEX, job_id=job_id, entity_ids=entity_ids)
+    queue_task(collection, SETTINGS.STAGE_INDEX, job_id=job_id, entity_ids=entity_ids)
     return ("", 204)
 
 
@@ -408,3 +410,32 @@ def delete(collection_id):
     sync = get_flag("sync", default=True)
     delete_collection(collection, keep_metadata=keep_metadata, sync=sync)
     return ("", 204)
+
+
+@blueprint.route("/<int:collection_id>/touch", methods=["POST", "PUT"])
+def touch(collection_id):
+    """
+    ---
+    post:
+      summary: Touch a collection
+      description: >
+        Set the timestamp for the most recent change to the data in collection `collection_id`.
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.is_admin)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection_id)
+    return ("", 202)

@@ -1,30 +1,36 @@
 import logging
+
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 
-from aleph.logic.collections import index_aggregator, refresh_collection
+from aleph.logic.collections import (
+    refresh_collection,
+    index_aggregator_bulk,
+)
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
-BATCH_SIZE = 100
 
 
-def index_many(stage, collection, sync=False, entity_ids=None, batch=BATCH_SIZE):
+def index_many(batch, sync=False, skip_errors=False):
     """Project the contents of the collections aggregator into the index."""
-    if entity_ids is not None:
-        entity_ids = ensure_list(entity_ids)
-        # WEIRD: Instead of indexing a single entity, this will try
-        # pull a whole batch of them off the queue and do it at once.
-        tasks = stage.get_tasks(limit=max(1, batch - len(entity_ids)))
-        for task in tasks:
-            entity_ids.extend(ensure_list(task.payload.get("entity_ids")))
-        stage.mark_done(len(tasks))
-    aggregator = get_aggregator(collection)
-    index_aggregator(collection, aggregator, entity_ids=entity_ids, sync=sync)
-    refresh_collection(collection.id)
+    entity_ids = {}
+
+    for collection_id in batch:
+        entity_ids[collection_id] = []
+        for task in batch[collection_id]:
+            entity_ids[collection_id].extend(
+                ensure_list(task.payload.get("entity_ids"))
+            )
+
+    index_aggregator_bulk(entity_ids, sync=sync, skip_errors=skip_errors)
+
+    for collection_id in batch:
+        if collection_id:
+            refresh_collection(collection_id)
 
 
 def bulk_write(

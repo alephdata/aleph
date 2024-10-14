@@ -60,6 +60,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
     locale = db.Column(db.Unicode, nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
 
     permissions = db.relationship("Permission", backref="role")
 

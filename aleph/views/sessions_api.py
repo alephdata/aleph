@@ -1,3 +1,4 @@
+import datetime
 import logging
 from urllib.parse import urlencode
 from flask_babel import gettext
@@ -19,8 +20,8 @@ from aleph.views.util import require, jsonify
 log = logging.getLogger(__name__)
 blueprint = Blueprint("sessions_api", __name__)
 
-AUTH_ATTEMPS = Counter(
-    "aleph_auth_attemps_total",
+AUTH_ATTEMPTS = Counter(
+    "aleph_auth_attempts_total",
     "Total number of successful/failed authentication attemps",
     ["method", "result"],
 )
@@ -66,14 +67,14 @@ def password_login():
     try:
         role = Role.login(data.get("email"), data.get("password"))
     except PasswordCredentialsError:
-        AUTH_ATTEMPS.labels(method="password", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="password", result="failed").inc()
         # Raising a 400 error in this and the following case is technically
         # not 100% correct. This seems to have been introduced in order to simplify
         # error handling in the frontend. Raising a 401 error triggers a
         # hard page reload and state invalidation etc.
         raise BadRequest(gettext("Invalid user or password."))
     except RoleBlockedError:
-        AUTH_ATTEMPS.labels(method="password", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="password", result="failed").inc()
         return jsonify(
             {
                 "status": "error",
@@ -82,9 +83,10 @@ def password_login():
             status=403,
         )
 
+    role.last_login_at = datetime.datetime.now(datetime.timezone.utc)
     role.touch()
     db.session.commit()
-    AUTH_ATTEMPS.labels(method="password", result="success").inc()
+    AUTH_ATTEMPTS.labels(method="password", result="success").inc()
     update_role(role)
     authz = Authz.from_role(role)
     return jsonify({"status": "ok", "token": authz.to_token()})
@@ -118,7 +120,7 @@ def oauth_callback():
     err = Unauthorized(gettext("Authentication has failed."))
     state = cache.get_complex(_oauth_session(request.args.get("state")))
     if state is None:
-        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         raise err
 
     try:
@@ -126,26 +128,27 @@ def oauth_callback():
         uri = state.get("redirect_uri")
         oauth_token = oauth.provider.authorize_access_token(redirect_uri=uri)
     except AuthlibBaseError as err:
-        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         log.warning("Failed OAuth: %r", err)
         raise err
     if oauth_token is None or isinstance(oauth_token, AuthlibBaseError):
-        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         log.warning("Failed OAuth: %r", oauth_token)
         raise err
 
     try:
         role = handle_oauth(oauth.provider, oauth_token)
     except OAuthError:
-        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         raise err
     except RoleBlockedError:
         error_url = ui_url("oauth", status="error", code=403)
         return redirect(error_url)
 
+    role.last_login_at = datetime.datetime.now(datetime.timezone.utc)
     db.session.commit()
     update_role(role)
-    AUTH_ATTEMPS.labels(method="oauth", result="success").inc()
+    AUTH_ATTEMPTS.labels(method="oauth", result="success").inc()
     log.debug("Logged in: %r", role)
     request.authz = Authz.from_role(role)
     token = request.authz.to_token()

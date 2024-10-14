@@ -1,68 +1,43 @@
 import logging
+import threading
 
+from servicelayer import taskqueue
 from servicelayer.rate_limit import RateLimit
-from servicelayer.jobs import Job, Dataset, Stage
+from servicelayer.taskqueue import (
+    Dataset,
+    dataset_from_collection,
+)
 
-from aleph.core import kv
+from aleph.core import kv, rabbitmq_channel
 from aleph.settings import SETTINGS
 from aleph.model import Entity
 
 log = logging.getLogger(__name__)
 
-OP_INGEST = "ingest"
-OP_ANALYZE = "analyze"
-OP_INDEX = "index"
-OP_XREF = "xref"
-OP_REINGEST = "reingest"
-OP_REINDEX = "reindex"
-OP_LOAD_MAPPING = "loadmapping"
-OP_FLUSH_MAPPING = "flushmapping"
-OP_EXPORT_SEARCH = "exportsearch"
-OP_EXPORT_XREF = "exportxref"
-OP_UPDATE_ENTITY = "updateentity"
-OP_PRUNE_ENTITY = "pruneentity"
 
-NO_COLLECTION = "null"
-
-
-def dataset_from_collection(collection):
-    """servicelayer dataset from a collection"""
-    if collection is None:
-        return NO_COLLECTION
-    return str(collection.id)
-
-
-def get_dataset_collection_id(dataset):
-    """Invert the servicelayer dataset into a collection ID"""
-    if dataset == NO_COLLECTION:
-        return None
-    return int(dataset)
+lock = threading.Lock()
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_stage(collection, stage, job_id=None):
-    dataset = dataset_from_collection(collection)
-    job_id = job_id or Job.random_id()
-    job = Job(kv, dataset, job_id)
-    return job.get_stage(stage)
-
-
-def queue_task(dataset, stage, job_id=None, context=None, **payload):
-    stage = get_stage(dataset, stage, job_id=job_id)
-    stage.queue(payload or {}, context or {})
-    if SETTINGS.TESTING:
+def queue_task(collection, stage, job_id=None, context=None, **payload):
+    taskqueue.queue_task(
+        rabbitmq_channel,
+        kv,
+        collection.id if collection else 0,
+        stage,
+        job_id=job_id,
+        context=context,
+        **payload
+    )
+    if SETTINGS.TESTING and lock.acquire(False):
         from aleph.worker import get_worker
 
         worker = get_worker()
-        while True:
-            stages = worker.get_stages()
-            task = Stage.get_task(worker.conn, stages, timeout=None)
-            if task is None:
-                break
-            worker.dispatch_task(task)
+        worker.process(blocking=False)
+        lock.release()
 
 
 def get_status(collection):
@@ -96,12 +71,12 @@ def ingest_entity(collection, proxy, job_id=None, index=True):
     """Send the given entity proxy to the ingest-file service."""
 
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
-    stage = get_stage(collection, OP_INGEST, job_id=job_id)
     pipeline = list(SETTINGS.INGEST_PIPELINE)
     if index:
-        pipeline.append(OP_INDEX)
+        pipeline.append(SETTINGS.STAGE_INDEX)
     context = get_context(collection, pipeline)
-    stage.queue(proxy.to_dict(), context)
+
+    queue_task(collection, SETTINGS.STAGE_INGEST, job_id, context, **proxy.to_dict())
 
 
 def pipeline_entity(collection, proxy, job_id=None):
@@ -111,7 +86,10 @@ def pipeline_entity(collection, proxy, job_id=None):
     if not SETTINGS.TESTING:
         if proxy.schema.is_a(Entity.ANALYZABLE):
             pipeline.extend(SETTINGS.INGEST_PIPELINE)
-    pipeline.append(OP_INDEX)
-    stage = get_stage(collection, pipeline.pop(0), job_id=job_id)
+    pipeline.append(SETTINGS.STAGE_INDEX)
     context = get_context(collection, pipeline)
-    stage.queue({"entity_ids": [proxy.id]}, context)
+
+    operation = pipeline.pop(0)
+    payload = {"entity_ids": [proxy.id]}
+
+    queue_task(collection, operation, job_id, context, **payload)

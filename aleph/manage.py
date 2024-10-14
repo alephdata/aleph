@@ -10,16 +10,18 @@ from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
 from followthemoney.cli.util import write_object
+from servicelayer.taskqueue import flush_queues
 
-from aleph.core import create_app, cache, db
+from aleph.core import create_app, cache, db, rabbitmq_channel, kv
 from aleph.authz import Authz
 from aleph.model import Collection, Role, EntitySet
-from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
+from aleph.migration import upgrade_system, destroy_db, cleanup_deleted, downgrade_db
 from aleph.worker import get_worker
 from aleph.queues import get_status, cancel_queue
 from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.index.entities import iter_proxies
+from aleph.index.util import AlephOperationalException
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
@@ -43,6 +45,7 @@ from aleph.logic.permissions import update_permission
 from aleph.util import JSONEncoder
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.index.entities import get_entity as _get_index_entity
+from aleph.settings import SETTINGS
 
 log = logging.getLogger("aleph")
 
@@ -111,14 +114,11 @@ def collections(secret, casefile):
 
 
 @cli.command()
-@click.option(
-    "--blocking/--non-blocking", default=True, help="Wait for tasks indefinitely."
-)
 @click.option("--threads", required=False, type=int)
-def worker(blocking=True, threads=None):
+def worker(threads=1):
     """Run the queue-based worker service."""
     worker = get_worker(num_threads=threads)
-    code = worker.run(blocking=blocking)
+    code = worker.run()
     sys.exit(code)
 
 
@@ -500,9 +500,40 @@ def publish(foreign_id):
 @cli.command()
 def upgrade():
     """Create or upgrade the search index and database."""
-    upgrade_system()
-    # update_roles()
-    # upgrade_collections()
+    try:
+        upgrade_system()
+    except AlephOperationalException:
+        log.exception("Failed to upgrade.")
+
+
+@cli.command()
+@click.option(
+    "--revision",
+    "-r",
+    default="-1",
+    show_default=True,
+    help="target revision number. Can also be 'head' or '-1'",
+)
+@click.option(
+    "--execute",
+    "-x",
+    default=False,
+    is_flag=True,
+    help="Execute downgrade otherwise just print SQL statements",
+)
+def downgrade_database(revision, execute):
+    """Downgrade the database."""
+    if not execute:
+        click.secho(
+            "Dry run mode. Only printing queries. Run with --execute if you want to actually execute queries.",
+            fg="green",
+        )
+    else:
+        click.secho(
+            "Executing queries",
+            fg="red",
+        )
+    downgrade_db(revision, sql=execute)
 
 
 @cli.command()
@@ -522,6 +553,11 @@ def resetcache():
 @click.option("-p", "--prefix", help="Scan a subset with a prefix")
 def cleanuparchive(prefix):
     cleanup_archive(prefix=prefix)
+
+
+@cli.command()
+def flushqueue():
+    flush_queues(rabbitmq_channel, kv, SETTINGS.ALEPH_STAGES)
 
 
 @cli.command()

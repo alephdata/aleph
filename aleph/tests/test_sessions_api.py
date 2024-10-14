@@ -1,3 +1,4 @@
+import time_machine
 from contextlib import contextmanager
 import unittest.mock as mock
 from urllib.parse import urlparse, parse_qs
@@ -70,6 +71,28 @@ class SessionsApiTestCase(TestCase):
         res = self.client.get("/api/2/roles/%s" % self.role.id, headers=headers)
         assert res.status_code == 200, res
         assert res.json["id"] == str(self.role.id), res
+
+    def test_password_login_last_login(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        secret = self.fake.password()
+        self.role.set_password(secret)
+        assert self.role.last_login_at is None
+
+        data = {"email": self.role.email, "password": "this is not the password"}
+        res = self.client.post("/api/2/sessions/login", data=data)
+        assert res.status_code == 400
+
+        db.session.refresh(self.role)
+        assert self.role.last_login_at is None
+
+        with time_machine.travel("2024-01-01T00:00:00"):
+            data = {"email": self.role.email, "password": secret}
+            res = self.client.post("/api/2/sessions/login", data=data)
+            assert res.status_code == 200
+
+        db.session.refresh(self.role)
+        last_login_at = self.role.last_login_at.isoformat(timespec="seconds")
+        assert last_login_at == "2024-01-01T00:00:00"
 
     def test_password_login_incorrect_email_and_password(self):
         SETTINGS.PASSWORD_LOGIN = True

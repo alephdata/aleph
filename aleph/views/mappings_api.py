@@ -1,4 +1,5 @@
 import logging
+from aleph.settings import SETTINGS
 from banal import first
 from followthemoney import model
 from flask import Blueprint, request
@@ -7,10 +8,10 @@ from werkzeug.exceptions import BadRequest, NotFound
 from aleph.core import db
 from aleph.model import Mapping, Status
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_entityset, parse_request, get_nested
 from aleph.views.util import get_index_entity, get_session_id, require
+from aleph.queues import queue_task
 
 
 blueprint = Blueprint("mappings_api", __name__)
@@ -282,7 +283,9 @@ def trigger(collection_id, mapping_id):
     mapping.set_status(Status.PENDING)
     db.session.commit()
     job_id = get_session_id()
-    queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, mapping_id=mapping.id)
+    queue_task(
+        collection, SETTINGS.STAGE_LOAD_MAPPING, job_id=job_id, mapping_id=mapping.id
+    )
     return MappingSerializer.jsonify(mapping, status=202)
 
 
@@ -328,7 +331,7 @@ def flush(collection_id, mapping_id):
     db.session.commit()
     queue_task(
         collection,
-        OP_FLUSH_MAPPING,
+        SETTINGS.STAGE_FLUSH_MAPPING,
         job_id=get_session_id(),
         mapping_id=mapping_id,
     )
@@ -374,7 +377,7 @@ def delete(collection_id, mapping_id):
     db.session.commit()
     queue_task(
         collection,
-        OP_FLUSH_MAPPING,
+        SETTINGS.STAGE_FLUSH_MAPPING,
         job_id=get_session_id(),
         mapping_id=mapping_id,
     )

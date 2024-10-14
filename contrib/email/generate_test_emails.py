@@ -23,6 +23,7 @@ from email.mime.text import MIMEText
 sender = "john.doe@example.org"
 recipient = "jane.doe@example.org"
 
+
 def plaintext_only():
     """Generate a plaintext-only email."""
     msg = EmailMessage()
@@ -41,7 +42,9 @@ def html_only():
     msg["To"] = recipient
     msg["Subject"] = "HTML only"
 
-    html_part = MIMEText("This is the body of an <strong>HTML</strong> message.", "html")
+    html_part = MIMEText(
+        "This is the body of an <strong>HTML</strong> message.", "html"
+    )
     msg.attach(html_part)
 
     return msg
@@ -55,7 +58,9 @@ def multipart_alternative():
     msg["Subject"] = "Multipart alternative"
 
     text_part = MIMEText("This is a **multipart/alternative** message.\n", "plain")
-    html_part = MIMEText("This is a <strong>multipart/alterantive</strong> message.\n", "html")
+    html_part = MIMEText(
+        "This is a <strong>multipart/alterantive</strong> message.\n", "html"
+    )
 
     msg.attach(text_part)
     msg.attach(html_part)

@@ -1,4 +1,5 @@
 import logging
+from aleph.settings import SETTINGS
 from flask import Blueprint, request
 from pantomime.types import XLSX
 
@@ -6,7 +7,7 @@ from aleph.search import XrefQuery
 from aleph.logic.profiles import pairwise_judgements
 from aleph.logic.export import create_export
 from aleph.views.serializers import XrefSerializer
-from aleph.queues import queue_task, OP_XREF, OP_EXPORT_XREF
+from aleph.queues import queue_task
 from aleph.views.util import (
     get_db_collection,
     get_index_collection,
@@ -93,7 +94,7 @@ def generate(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    queue_task(collection, OP_XREF)
+    queue_task(collection, SETTINGS.STAGE_XREF)
     return jsonify({"status": "accepted"}, status=202)
 
 
@@ -120,12 +121,12 @@ def export(collection_id):
     collection = get_db_collection(collection_id, request.authz.READ)
     label = "%s - Crossreference results" % collection.label
     export = create_export(
-        operation=OP_EXPORT_XREF,
+        operation=SETTINGS.STAGE_EXPORT_XREF,
         role_id=request.authz.id,
         label=label,
         collection=collection,
         mime_type=XLSX,
     )
     job_id = get_session_id()
-    queue_task(None, OP_EXPORT_XREF, job_id=job_id, export_id=export.id)
+    queue_task(None, SETTINGS.STAGE_EXPORT_XREF, job_id=job_id, export_id=export.id)
     return ("", 202)

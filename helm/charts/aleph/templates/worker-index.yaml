@@ -1,54 +1,71 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file
+  name: {{ .Values.global.namingPrefix }}-worker-index
   labels:
-    app: {{ .Values.global.namingPrefix }}-ingest-file
+    app: {{ .Values.global.namingPrefix }}-worker-index
 spec:
+  replicas: {{ .Values.workerindex.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.global.namingPrefix }}-ingest-file
-  strategy: {{- toYaml .Values.ingestfile.strategy | nindent 4 }}
+      app: {{ .Values.global.namingPrefix }}-worker-index
+  strategy: {{- toYaml .Values.workerindex.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.global.namingPrefix }}-ingest-file
-      annotations: {{- toYaml .Values.ingestfile.podAnnotations | nindent 8 }}
+        app: {{ .Values.global.namingPrefix }}-worker-index
+      annotations: {{- toYaml .Values.workerindex.podAnnotations | nindent 8 }}
     spec:
-      nodeSelector: {{- toYaml .Values.ingestfile.nodeSelector | nindent 8 }}
+      nodeSelector: {{- toYaml .Values.workerindex.nodeSelector | nindent 8 }}
       restartPolicy: Always
-      securityContext: {{- toYaml .Values.ingestfile.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds:
-        {{ .Values.ingestfile.terminationGracePeriodSeconds }}
+      securityContext: {{- toYaml .Values.workerindex.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.ingestfile.image.repository }}:{{ .Values.ingestfile.image.tag }}"
-          imagePullPolicy: {{ .Values.ingestfile.image.pullPolicy }}
-          command:
-            - ingestors
-            - process
+          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          command: ["aleph", "worker"]
           volumeMounts:
             {{ if .Values.global.google }}
             - mountPath: /var/secrets/google
               name: service-account-aleph
+              readOnly: true
             {{ end }}
             - mountPath: /tmp
               name: tmp-volume
             - mountPath: /home/app
               name: home-volume
           securityContext:
-            {{- toYaml .Values.ingestfile.containerSecurityContext | nindent 12 }}
+            {{- toYaml .Values.workerindex.containerSecurityContext | nindent 12 }}
           resources:
-            {{- toYaml .Values.ingestfile.containerResources | nindent 12 }}
+            {{- toYaml .Values.workerindex.containerResources | nindent 12 }}
           env:
             {{- range $key, $value := .Values.global.commonEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- range $key, $value := .Values.ingestfile.env }}
+            {{- range $key, $value := .Values.global.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
+            {{- range $key, $value := .Values.workerindex.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_SECRET_KEY
             - name: FTM_STORE_URI
               valueFrom:
                 secretKeyRef:
@@ -92,35 +109,22 @@ spec:
           secret:
             secretName: service-account-aleph
         {{ end }}
-        - name: tmp-volume
-          emptyDir: {}
         - name: home-volume
           emptyDir:
             medium: Memory
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.global.namingPrefix }}-ingest-file
-  minReplicas: {{.Values.ingestfile.hpa.minReplicas}}
-  maxReplicas: {{.Values.ingestfile.hpa.maxReplicas}}
-  metrics: {{- toYaml .Values.ingestfile.hpa.scalingMetrics | nindent 4}}
+        - name: tmp-volume
+          emptyDir: {}
 ---
 {{ if .Values.global.prometheus.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file
+  name: {{ .Values.global.namingPrefix }}-worker-index
   labels:
-    app: {{ .Values.global.namingPrefix }}-ingest-file
+    app: {{ .Values.global.namingPrefix }}-worker-index
 spec:
   selector:
-    app: {{ .Values.global.namingPrefix }}-ingest-file
+    app: {{ .Values.global.namingPrefix }}-worker-index
   ports:
     - port: 9100
       targetPort: 9100
@@ -132,13 +136,13 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ .Values.global.namingPrefix }}-ingest-file
+  name: {{ .Values.global.namingPrefix }}-worker-index
   labels:
-    app: {{ .Values.global.namingPrefix }}-ingest-file
+    app: {{ .Values.global.namingPrefix }}-worker-index
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.global.namingPrefix }}-ingest-file
+      app: {{ .Values.global.namingPrefix }}-worker-index
   endpoints:
     - interval: "30s"
       port: metrics

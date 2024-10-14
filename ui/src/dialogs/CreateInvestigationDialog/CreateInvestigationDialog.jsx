@@ -7,7 +7,7 @@ import c from 'classnames';
 import withRouter from 'app/withRouter';
 import { createCollection, updateCollectionPermissions } from 'actions';
 import { showWarningToast } from 'app/toast';
-import { Language, Role } from 'components/common';
+import { Language } from 'components/common';
 import FormDialog from 'dialogs/common/FormDialog';
 import getCollectionLink from 'util/getCollectionLink';
 
@@ -199,36 +199,6 @@ class CreateInvestigationDialog extends Component {
               />
             </div>
           </div>
-          <div className={Classes.FORM_GROUP}>
-            <label className={Classes.LABEL}>
-              <FormattedMessage
-                id="case.share.with"
-                defaultMessage="Share with"
-              />
-              <Role.Select onSelect={this.onAddRole} exclude={exclude} />
-            </label>
-          </div>
-          {permissions.length !== 0 && (
-            <table className="settings-table">
-              <tbody>
-                {permissions.map((permission) => (
-                  <tr key={permission.role.id + 1}>
-                    <td>
-                      <Role.Label role={permission.role} icon={false} long />
-                    </td>
-                    <td>
-                      <Button
-                        onClick={(e) => this.onDeleteRole(permission, e)}
-                        small
-                        minimal
-                        icon="remove"
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>

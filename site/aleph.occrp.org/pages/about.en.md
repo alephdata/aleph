@@ -17,7 +17,7 @@ Our geographic focus is on Central and Eastern Europe, Sub-Saharan Africa, South
 
 ### Applying for extended data access
 
-Please [fill out this form](https://form.asana.com/?k=hsYmAKHX1ViTzUoe410y8Q&d=24418422500834) if you would like to receive access to protected material and leaks that we curated for journalistic investigations and for activists and researchers.
+Please [fill out this form](https://requests.occrp.org/register) if you would like to receive access to protected material and leaks that we curated for journalistic investigations and for activists and researchers.
 
 ### About OCCRP
 

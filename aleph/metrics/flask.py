@@ -23,7 +23,7 @@ REQUEST_DURATION = Histogram(
 REQUESTS = Counter(
     "aleph_http_requests_total",
     "Total number of Aleph API requests",
-    ["method", "status", "api_endpoint", "logged_in"],
+    ["method", "status", "api_endpoint", "logged_in", "auth_method"],
 )
 
 
@@ -42,11 +42,13 @@ def after_request(response):
     status = response.status_code
 
     logged_in = False
+    auth_method = None
 
     # In theory, there should always be an Authz object. However in practice,
     # this isn’t always the case, but I haven’t been able to reliably reproduce that.
     if hasattr(request, "authz"):
         logged_in = request.authz.logged_in
+        auth_method = request.authz.auth_method
 
     duration = max(0, default_timer() - request.prometheus_start_time)
 
@@ -55,6 +57,7 @@ def after_request(response):
         status=status,
         api_endpoint=api_endpoint,
         logged_in=logged_in,
+        auth_method=auth_method,
     ).inc()
 
     REQUEST_DURATION.labels(

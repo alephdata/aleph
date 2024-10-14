@@ -26,6 +26,7 @@ class Authz(object):
     def __init__(self, role_id, roles, is_admin=False, token_id=None, expire=None):
         self.id = role_id
         self.logged_in = role_id is not None
+        self.auth_method = None
         self.roles = set(roles)
         self.is_admin = is_admin
         self.token_id = token_id
