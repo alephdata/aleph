@@ -67,14 +67,14 @@ def password_login():
     try:
         role = Role.login(data.get("email"), data.get("password"))
     except PasswordCredentialsError:
-        AUTH_ATTEMPS.labels(method="password", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="password", result="failed").inc()
         # Raising a 400 error in this and the following case is technically
         # not 100% correct. This seems to have been introduced in order to simplify
         # error handling in the frontend. Raising a 401 error triggers a
         # hard page reload and state invalidation etc.
         raise BadRequest(gettext("Invalid user or password."))
     except RoleBlockedError:
-        AUTH_ATTEMPS.labels(method="password", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="password", result="failed").inc()
         return jsonify(
             {
                 "status": "error",
@@ -139,7 +139,7 @@ def oauth_callback():
     try:
         role = handle_oauth(oauth.provider, oauth_token)
     except OAuthError:
-        AUTH_ATTEMPS.labels(method="oauth", result="failed").inc()
+        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
         raise err
     except RoleBlockedError:
         error_url = ui_url("oauth", status="error", code=403)
