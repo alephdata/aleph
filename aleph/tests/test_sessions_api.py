@@ -72,7 +72,6 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json["id"] == str(self.role.id), res
 
-
     def test_password_login_last_login(self):
         SETTINGS.PASSWORD_LOGIN = True
         secret = self.fake.password()
