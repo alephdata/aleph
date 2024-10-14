@@ -65,9 +65,6 @@
   "case.save": {
     "defaultMessage": "Lagre"
   },
-  "case.share.with": {
-    "defaultMessage": "Del med"
-  },
   "case.summary": {
     "defaultMessage": "En kort beskrivelse av granskingen"
   },
@@ -354,7 +351,7 @@
     "defaultMessage": "Lag en ny entitetskobling"
   },
   "collection.mappings.create_docs_link": {
-    "defaultMessage": "For mer informasjon, klikk på lenken {link}"
+    "defaultMessage": "For more information, please refer to the {link}."
   },
   "collection.overview.empty": {
     "defaultMessage": "Dette datasettet er tomt."
@@ -403,9 +400,6 @@
   },
   "collection.status.finished_tasks": {
     "defaultMessage": "Ferdig"
-  },
-  "collection.status.jobs": {
-    "defaultMessage": "Jobber"
   },
   "collection.status.message": {
     "defaultMessage": "Ta deg en trall mens dataene dine blir behandlet."
@@ -1005,7 +999,7 @@
     "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, one {E-Mail} other {E-Mails}}"
+    "defaultMessage": "{count, plural, one {Email address} other {Email addresses}}"
   },
   "facet.ibans": {
     "defaultMessage": "{count, plural, one {IBAN} other {IBANs}}"
@@ -1135,9 +1129,6 @@
   },
   "investigation.overview.guides.mappings": {
     "defaultMessage": "Generating entities from a spreadsheet"
-  },
-  "investigation.overview.guides.xref": {
-    "defaultMessage": "Cross-referencing your data"
   },
   "investigation.overview.notifications": {
     "defaultMessage": "Recent activity"
@@ -1290,7 +1281,7 @@
     "defaultMessage": "Are you sure you want to delete this mapping and all generated entities?"
   },
   "mapping.docs.link": {
-    "defaultMessage": "Aleph entity mapping documentation"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "You must create an object of type \"{range}\" to be the {property}"
@@ -1341,10 +1332,10 @@
     "defaultMessage": "Import a mapping"
   },
   "mapping.info": {
-    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured entites. For more information, please refer to the {link}."
   },
   "mapping.info.link": {
-    "defaultMessage": "Aleph data mapping documentation"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1603,6 +1594,9 @@
   },
   "result.solo": {
     "defaultMessage": "One result found"
+  },
+  "role.select.placeholder": {
+    "defaultMessage": "Enter email address…"
   },
   "role.select.user": {
     "defaultMessage": "Choose a user"
@@ -1910,8 +1904,14 @@
   "sources.index.placeholder": {
     "defaultMessage": "Search for a dataset or investigation belonging to {group}..."
   },
+  "status.last_updated_at": {
+    "defaultMessage": "last updated"
+  },
   "status.no_collection": {
     "defaultMessage": "Other tasks"
+  },
+  "status.started_at": {
+    "defaultMessage": "started"
   },
   "tags.results": {
     "defaultMessage": "Mention count"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-05-22 15:09+0000\n"
+"POT-Creation-Date: 2024-10-14 10:03+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Jean-Philippe Menotti, 2022\n"
 "Language-Team: French (https://app.transifex.com/aleph/teams/76591/fr/)\n"
@@ -27,7 +27,7 @@ msgstr ""
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/logic/entities.py:105
+#: aleph/logic/entities.py:107
 msgid "No schema on entity"
 msgstr "Pas de schéma sur l’entité"
 
@@ -376,27 +376,27 @@ msgstr "Le jeton d’accès est non valable."
 msgid "Search: %s"
 msgstr "Rechercher : %s"
 
-#: aleph/views/entitysets_api.py:216
+#: aleph/views/entitysets_api.py:217
 msgid "Only diagrams can be embedded!"
 msgstr "Seuls des diagrammes peuvent être intégrés."
 
-#: aleph/views/roles_api.py:62
+#: aleph/views/roles_api.py:63
 msgid "prefix filter is too short"
 msgstr "le filtre de préfixe est trop court"
 
-#: aleph/views/roles_api.py:107
+#: aleph/views/roles_api.py:112
 msgid "To proceed, please check your email."
 msgstr "Pour continuer, veuillez vérifier votre boîte de réception."
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:145
 msgid "Invalid code"
 msgstr "Code invalide"
 
-#: aleph/views/roles_api.py:146
+#: aleph/views/roles_api.py:151
 msgid "Email is already registered"
 msgstr "L’adresse e-mail est déjà enregistrée"
 
-#: aleph/views/roles_api.py:235
+#: aleph/views/roles_api.py:240
 msgid "Incorrect password."
 msgstr "Mot de passe incorrect."
 
@@ -408,14 +408,14 @@ msgid ""
 "Aleph administrator"
 msgstr ""
 
-#: aleph/views/sessions_api.py:69
+#: aleph/views/sessions_api.py:70
 msgid "Invalid user or password."
 msgstr "Nom d’utilisateur ou mot de passe non valable."
 
-#: aleph/views/sessions_api.py:104
+#: aleph/views/sessions_api.py:106
 msgid "Authentication has failed."
 msgstr "L’authentification a échoué."
 
-#: aleph/views/util.py:78
+#: aleph/views/util.py:77
 msgid "Error during data validation"
 msgstr "Erreur pendant la validation des données"

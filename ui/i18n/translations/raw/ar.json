@@ -65,9 +65,6 @@
   "case.save": {
     "defaultMessage": "حفظ"
   },
-  "case.share.with": {
-    "defaultMessage": "مشاركة مع"
-  },
   "case.summary": {
     "defaultMessage": "A brief description of the investigation"
   },
@@ -354,7 +351,7 @@
     "defaultMessage": "Create a new entity mapping"
   },
   "collection.mappings.create_docs_link": {
-    "defaultMessage": "For more information, please refer to the {link}"
+    "defaultMessage": "For more information, please refer to the {link}."
   },
   "collection.overview.empty": {
     "defaultMessage": "This dataset is empty."
@@ -403,9 +400,6 @@
   },
   "collection.status.finished_tasks": {
     "defaultMessage": "تم الإنتهاء"
-  },
-  "collection.status.jobs": {
-    "defaultMessage": "الوظائف"
   },
   "collection.status.message": {
     "defaultMessage": "استمر في المرح أثناء معالجة البيانات."
@@ -1005,7 +999,7 @@
     "defaultMessage": "{count, plural, one {Date} other {Dates}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, zero {إيميلات} one {ايميل} two {إيميلات} few {إيميلات} many {إيميلات} other {إيميلات}}"
+    "defaultMessage": "{count, plural, one {Email address} other {Email addresses}}"
   },
   "facet.ibans": {
     "defaultMessage": "{count, plural, zero {أرقام الحسابات} one {رقم الحساب} two {أرقام الحسابات} few {أرقام الحسابات} many {أرقام الحسابات} other {أرقام حسابات  IBAN}}"
@@ -1135,9 +1129,6 @@
   },
   "investigation.overview.guides.mappings": {
     "defaultMessage": "Generating entities from a spreadsheet"
-  },
-  "investigation.overview.guides.xref": {
-    "defaultMessage": "Cross-referencing your data"
   },
   "investigation.overview.notifications": {
     "defaultMessage": "Recent activity"
@@ -1290,7 +1281,7 @@
     "defaultMessage": "هل أنت متأكد أنك تريد حذف هذا التعيين وجميع الكيانات التي تم إنشاؤها؟"
   },
   "mapping.docs.link": {
-    "defaultMessage": "Aleph entity mapping documentation"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "يجب إنشاء كائن من النوع \"{range}\" ليكون {property}"
@@ -1341,10 +1332,10 @@
     "defaultMessage": "استيراد البحث الشامل"
   },
   "mapping.info": {
-    "defaultMessage": "Follow the steps below to map items in this investigation to structured Follow the Money entites. For more information, please refer to the {link}"
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured entites. For more information, please refer to the {link}."
   },
   "mapping.info.link": {
-    "defaultMessage": "آلف لتوثيق بيانات البحث الشامل"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "The best keys are columns from your data that contain id numbers, phone numbers, email addresses, or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow Aleph to generate unique entities correctly from your data."
@@ -1603,6 +1594,9 @@
   },
   "result.solo": {
     "defaultMessage": "تم العثور على نتيجة واحدة"
+  },
+  "role.select.placeholder": {
+    "defaultMessage": "Enter email address…"
   },
   "role.select.user": {
     "defaultMessage": "اختر اسم المستخدم"
@@ -1910,8 +1904,14 @@
   "sources.index.placeholder": {
     "defaultMessage": "Search for a dataset or investigation belonging to {group}..."
   },
+  "status.last_updated_at": {
+    "defaultMessage": "last updated"
+  },
   "status.no_collection": {
     "defaultMessage": "Other tasks"
+  },
+  "status.started_at": {
+    "defaultMessage": "started"
   },
   "tags.results": {
     "defaultMessage": "Mention count"
