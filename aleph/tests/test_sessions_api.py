@@ -193,6 +193,34 @@ class SessionsApiOAuthTestCase(TestCase):
         assert res.json["name"] == "John Doe"
         assert res.json["email"] == "john.doe@example.org"
 
+    def test_oauth_callback_last_login(self):
+        role = Role.load_or_create(
+            foreign_id="test-oidc:john.doe@example.org",
+            type_=Role.USER,
+            name="John Doe",
+        )
+        assert role.last_login_at is None
+
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+
+        state = query["state"]
+
+        with mock_oauth_token_exchange(name="John Doe", email="john.doe@example.org"):
+            with time_machine.travel("2024-01-01T00:00:00"):
+                res = self.client.get(
+                    "/api/2/sessions/callback",
+                    query_string={
+                        "code": "example-auth-code",
+                        "state": state,
+                    },
+                )
+
+        db.session.refresh(role)
+        last_login_at = role.last_login_at.isoformat(timespec="seconds")
+        assert last_login_at == "2024-01-01T00:00:00"
+
     def test_oauth_callback_incorrect_state(self):
         with mock_oauth_token_exchange(name="John Doe", email="john.doe@example.org"):
             res = self.client.get(
