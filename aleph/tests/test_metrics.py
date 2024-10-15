@@ -347,7 +347,14 @@ class MetricsTestCase(TestCase):
         index_entity(entity_1)
         index_entity(entity_2)
 
-        # This is usually executed periodically by a worker
+        # Ensure that metric collection succeeds even if the stats for newly collections
+        # haven’t been computed yet
+        reg.collect()
+        generate_latest(reg)
+        persons = reg.get_sample_value("aleph_entities", {"schema": "Person"})
+        assert persons is None
+
+        # This is usually executed periodically by a worker or after collection contents are updated
         compute_collections()
 
         reg.collect()
