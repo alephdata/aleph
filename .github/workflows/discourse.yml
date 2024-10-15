@@ -13,6 +13,6 @@ jobs:
         discourse-api-key: ${{ secrets.DISCOURSE_RELEASES_API_KEY }}
         discourse-base-url: https://aleph.discourse.group/
         discourse-category: 5
-        discourse-tags:
+        discourse-tags: |
           release
           aleph
