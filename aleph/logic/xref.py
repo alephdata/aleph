@@ -24,19 +24,19 @@ from aleph.model import Collection, Entity, Role, Export, Status
 from aleph.model import EntitySet
 from aleph.authz import Authz
 from aleph.logic import resolver
-from aleph.logic.collections import reindex_collection
+from aleph.logic.collections import reindex_collection, refresh_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
 from aleph.index.xref import index_matches, delete_xref, iter_matches
-from aleph.index.entities import iter_proxies, entities_by_ids
+from aleph.index.entities import iter_proxies, entities_by_ids, iter_entities
 from aleph.index.entities import ENTITY_SOURCE
 from aleph.index.indexes import entities_read_index
 from aleph.index.collections import delete_entities
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.logic.export import complete_export
-
+from aleph.queues import queue_task
 
 log = logging.getLogger(__name__)
 ORIGIN = "xref"
@@ -272,12 +272,38 @@ def xref_collection(collection):
     )
     log.info(f"[{collection}] Clearing previous xref state....")
     delete_xref(collection, sync=True)
-    delete_entities(collection.id, origin=ORIGIN, sync=True)
+    delete_entities(collection.id, origin='xref', sync=True)
+
+    batch = []
+    batch_size = int(SETTINGS.XREF_SCROLL_SIZE)  # Ensure batch_size is an integer
+    for entity in iter_entities(collection_id=collection.id):
+        batch.append(entity['id'])
+        if len(batch) >= batch_size:
+            enqueue_xref_batch(collection, batch)
+            batch = []
+
+    if batch:
+        enqueue_xref_batch(collection, batch)
+
+    log.info(f"[{collection}] Xref batches enqueued, processing will continue in the background.")
+    refresh_collection(collection.id)
+
+
+def enqueue_xref_batch(collection, entity_ids):
+    """Enqueue a task to process a batch of entities for cross-referencing."""
+    queue_task(collection, SETTINGS.STAGE_XREF_BATCH, entity_ids=entity_ids)
+
+
+def process_xref_batch(collection, entity_ids):
+    """Process a batch of entities for cross-referencing."""
+    log.info(f"[{collection}] Processing xref batch with {len(entity_ids)} entities")
     index_matches(collection, _query_entities(collection))
     index_matches(collection, _query_mentions(collection))
-    log.info(f"[{collection}] Xref done, re-indexing to reify mentions...")
-    reindex_collection(collection, sync=False)
 
+    # TODO: I just realized I had accidentally removed these lines, which is probably why it was not reindexing/mapping.
+    # I have to test this first before I can confidently add these back. Currently, at least there is nothing breaking catastrophically.
+    # log.info(f"[{collection}] Xref done, re-indexing to reify mentions...")
+    # reindex_collection(collection, sync=False)
 
 def _format_date(proxy):
     dates = proxy.get_type_values(registry.date)

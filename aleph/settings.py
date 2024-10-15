@@ -193,7 +193,7 @@ class Settings:
         self.ELASTICSEARCH_TLS_CLIENT_KEY = env.get("ELASTICSEARCH_TLS_CLIENT_KEY")
         self.ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
         self.XREF_SCROLL = env.get("ALEPH_XREF_SCROLL", "5m")
-        self.XREF_SCROLL_SIZE = env.get("ALEPH_XREF_SCROLL_SIZE", "1000")
+        self.XREF_SCROLL_SIZE = env.to_int("ALEPH_XREF_SCROLL_SIZE", 1000)
 
         # Number of replicas to maintain. '2' means 3 overall copies.
         self.INDEX_REPLICAS = env.to_int("ALEPH_INDEX_REPLICAS", 0)
@@ -253,6 +253,7 @@ class Settings:
         self.STAGE_ANALYZE = "analyze"
         self.STAGE_INDEX = "index"
         self.STAGE_XREF = "xref"
+        self.STAGE_XREF_BATCH = "xref_batch"
         self.STAGE_REINGEST = "reingest"
         self.STAGE_REINDEX = "reindex"
         self.STAGE_LOAD_MAPPING = "loadmapping"
@@ -267,6 +268,7 @@ class Settings:
             [
                 self.STAGE_INDEX,
                 self.STAGE_XREF,
+                self.STAGE_XREF_BATCH,
                 self.STAGE_REINGEST,
                 self.STAGE_REINDEX,
                 self.STAGE_LOAD_MAPPING,
