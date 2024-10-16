@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { SectionLoading, SearchHighlight } from 'components/common';
+import {
+  SectionLoading,
+  SearchHighlight,
+  QueryInfiniteLoad,
+} from 'components/common';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import { queryEntities } from 'actions';
@@ -17,13 +21,13 @@ class PdfViewerSearch extends Component {
   }
 
   componentDidMount() {
-    this.fetchPage();
+    this.fetchSearchResults();
   }
 
   componentDidUpdate(prevProps) {
     const { query } = this.props;
     if (!query.sameAs(prevProps.query)) {
-      this.fetchPage();
+      this.fetchSearchResults();
     }
   }
 
@@ -40,7 +44,7 @@ class PdfViewerSearch extends Component {
     return `#${queryString.stringify(hashQuery)}`;
   }
 
-  fetchPage() {
+  fetchSearchResults() {
     const { query, result } = this.props;
     if (!!query.getString('q') && result.shouldLoad) {
       this.props.queryEntities({ query });
@@ -48,7 +52,7 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { page, dir, result } = this.props;
+    const { result } = this.props;
 
     if (result.total === undefined) {
       return <SectionLoading />;
@@ -56,31 +60,21 @@ class PdfViewerSearch extends Component {
 
     return (
       <div className="pages">
-        {result.total === 0 && (
-          <>
-            <div
-              className={c(
-                Classes.CALLOUT,
-                Classes.INTENT_WARNING,
-                `${Classes.ICON}-search`
-              )}
-            >
-              <FormattedMessage
-                id="document.search.no_match"
-                defaultMessage="No single page within this document matches all your search terms."
-              />
-            </div>
-            {this.props.children}
-          </>
-        )}
+        {result.total === 0 ? this.renderEmptyState() : this.renderResults()}
+      </div>
+    );
+  }
+
+  renderResults() {
+    const { dir, result, query } = this.props;
+
+    return (
+      <>
         <ul>
           {result.results.map((res) => (
             <li key={`page-${res.id}`}>
               <p dir={dir}>
-                <Link
-                  to={this.getResultLink(res)}
-                  className={classNames({ active: page === res.index })}
-                >
+                <Link to={this.getResultLink(res)}>
                   <span
                     className={c(Classes.ICON, `${Classes.ICON}-document`)}
                   />
@@ -97,6 +91,28 @@ class PdfViewerSearch extends Component {
             </li>
           ))}
         </ul>
+        <QueryInfiniteLoad
+          query={query}
+          result={result}
+          fetch={queryEntities}
+        />
+      </>
+    );
+  }
+
+  renderEmptyState() {
+    return (
+      <div
+        className={c(
+          Classes.CALLOUT,
+          Classes.INTENT_WARNING,
+          `${Classes.ICON}-search`
+        )}
+      >
+        <FormattedMessage
+          id="document.search.no_match"
+          defaultMessage="No single page within this document matches all your search terms."
+        />
       </div>
     );
   }
