@@ -35,7 +35,8 @@ class Investigation:
         self.page.get_by_role("dialog", name="Upload documents").get_by_role(
             "button", name="Close"
         ).first.click()
-        self.page.wait_for_selector("div[role='progressbar']", state="detached")
+        progress_bar = self.page.locator("div[role='progressbar']").first
+        progress_bar.wait_for(state="detached")
 
     def open_document(self, name: str):
         # TODO can't use exact=True below because the name is actually `Documents 0`
