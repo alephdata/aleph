@@ -299,6 +299,7 @@ class EntityViews extends React.Component {
             <>
               <Tabs.Expander />
               <form
+                className="EntityViews__search"
                 onSubmit={(event) => {
                   event.preventDefault();
                   this.handleSearch(event.currentTarget.q.value);
