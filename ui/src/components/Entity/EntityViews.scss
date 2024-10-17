@@ -5,4 +5,11 @@
     margin-bottom: $aleph-grid-size * 1.5;
     background-color: $light-gray5;
   }
+
+  &__search {
+    // The search input is placed inside of a Blueprint tab list which has has
+    // `overflow: hidden`. As a result, the outline would be partially clipped
+    // when the input is focused. This is a quick workaround.
+    padding: 2px;
+  }
 }
