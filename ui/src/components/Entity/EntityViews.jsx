@@ -1,6 +1,13 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Callout, Tab, Tabs, Icon } from '@blueprintjs/core';
+import {
+  Callout,
+  Classes,
+  Tab,
+  Tabs,
+  Icon,
+  InputGroup,
+} from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -33,6 +40,7 @@ import EntityTagsMode from 'components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
 import EntityMappingMode from 'components/Entity/EntityMappingMode';
 import DocumentViewMode from 'components/Document/DocumentViewMode';
+import PdfViewerSearch from 'viewers/PdfViewerSearch';
 
 import './EntityViews.scss';
 
@@ -40,6 +48,7 @@ class EntityViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   handleTabChange(mode) {
@@ -50,6 +59,25 @@ class EntityViews extends React.Component {
     } else {
       parsedHash.mode = mode;
     }
+    navigate({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
+  handleSearch(searchQuery) {
+    const { navigate, location, isPreview } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+
+    if (isPreview) {
+      parsedHash['preview:mode'] = 'search';
+      parsedHash['preview:q'] = searchQuery;
+    } else {
+      parsedHash['mode'] = 'search';
+      parsedHash['q'] = searchQuery;
+    }
+
     navigate({
       pathname: location.pathname,
       search: location.search,
@@ -84,6 +112,9 @@ class EntityViews extends React.Component {
     ]);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
+    const hasSearchMode =
+      entity.schema.name == 'Pages' &&
+      entity.getProperty('processingError')?.length == 0;
     const processingError = entity.getProperty('processingError');
     const entityParent = entity.getFirst('parent');
     const showWorkbookWarning =
@@ -264,7 +295,33 @@ class EntityViews extends React.Component {
               panel={<EntityMappingMode document={entity} />}
             />
           )}
+          {hasSearchMode && (
+            <>
+              <Tabs.Expander />
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  this.handleSearch(event.currentTarget.q.value);
+                }}
+              >
+                <InputGroup
+                  name="q"
+                  leftIcon="search"
+                  placeholder="Search in this document"
+                />
+              </form>
+            </>
+          )}
         </Tabs>
+        {entity && activeMode === 'search' && hasSearchMode && (
+          <div className={Classes.TAB_PANEL}>
+            <PdfViewerSearch
+              isPreview={isPreview}
+              document={entity}
+              activeMode={activeMode}
+            />
+          </div>
+        )}
       </>
     );
   }

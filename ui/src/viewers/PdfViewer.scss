@@ -18,60 +18,6 @@ $pagesWidth: 150px;
     overflow-x: hidden;
     overflow-y: visible;
 
-    .pages {
-      display: none;
-
-      .heading {
-        background: $aleph-table-heading-background;
-        padding: $aleph-grid-size;
-        border-bottom: 1px solid $aleph-border-color;
-      }
-    }
-
-    .pages {
-      display: block;
-
-      .ErrorSection {
-        padding-top: $aleph-grid-size * 2;
-      }
-
-      ul {
-        @include rtlSupportInvertedProp(padding, left, 0, null);
-        margin: 0;
-
-        li {
-          list-style: none;
-          padding: $aleph-grid-size;
-          border-bottom: 1px solid $aleph-border-color;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          width: 100%;
-
-          p {
-            margin-bottom: 0;
-
-            .#{$bp-ns}-icon {
-              @include rtlSupportInvertedProp(
-                margin,
-                right,
-                $aleph-icon-padding,
-                null
-              );
-            }
-
-            a {
-              text-decoration: none;
-            }
-          }
-
-          p:first-child {
-            margin-bottom: $aleph-grid-size;
-            font-weight: bold;
-          }
-        }
-      }
-    }
-
     .inner {
       flex: 1;
       width: auto;
@@ -108,17 +54,6 @@ $pagesWidth: 150px;
         font-size: 1.2em;
         width: 100%;
       }
-    }
-  }
-}
-
-/* Don't show padding between list of pages & doc in preview as space limited
- * This is included here and not in Preview just to make it easier follow
- */
-.Preview {
-  .PdfViewer {
-    .outer.with-search-results {
-      @include rtlSupportInvertedProp(padding, left, $pagesWidth, null);
     }
   }
 }
