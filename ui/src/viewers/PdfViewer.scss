@@ -15,8 +15,6 @@ $pagesWidth: 150px;
     height: 100%;
     width: 100%;
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: visible;
 
     .inner {
       flex: 1;
@@ -25,6 +23,7 @@ $pagesWidth: 150px;
 
       .document {
         width: 100%;
+        overflow: hidden;
 
         pre {
           border: unset;
