@@ -1,0 +1,33 @@
+@import 'app/variables.scss';
+@import 'app/mixins.scss';
+
+.PdfViewerSearch__total {
+  margin-bottom: $aleph-grid-size;
+}
+
+.PdfViewerSearch__results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: $pt-elevation-shadow-2;
+}
+
+.PdfViewerSearch__result {
+  padding: $aleph-grid-size;
+  border-bottom: 1px solid $aleph-border-color;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.PdfViewerSearch__result a {
+  font-weight: bold;
+}
+
+.PdfViewerSearch__icon {
+  @include rtlSupportInvertedProp(margin, right, $aleph-icon-padding, null);
+}
+
+.PdfViewerSearch__result p {
+  margin-bottom: 0;
+}
