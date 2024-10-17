@@ -104,7 +104,7 @@
     "@types/d3-force": "^3.0.6",
     "@types/d3-scale": "^4.0.5",
     "@types/dagre": "^0.7.50",
-    "@types/google-libphonenumber": "^7.4.24",
+    "@types/google-libphonenumber": "^7.4.30",
     "@types/jest": "^28.1.4",
     "@types/lodash": "^4.14.199",
     "@types/node": "^18.18.1",
