@@ -123,6 +123,7 @@ class EntitySearchResultsRow extends Component {
       updateSelection,
       selection,
       writeable,
+      showPreview,
     } = this.props;
 
     if (isPending) {
@@ -132,6 +133,7 @@ class EntitySearchResultsRow extends Component {
     const selectedIds = _.map(selection || [], 'id');
     const isSelected = selectedIds.indexOf(entity.id) > -1;
     const parsedHash = queryString.parse(location.hash);
+    const pages = !entity.pages ? [] : entity.pages;
     const highlights = !entity.highlight ? [] : entity.highlight;
     // Select the current row if the ID of the entity matches the ID of the
     // current object being previewed. We do this so that if a link is shared
@@ -139,7 +141,7 @@ class EntitySearchResultsRow extends Component {
     // highlighted automatically.
     const isActive =
       parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
-    const isPrefix = !!highlights.length;
+    const isPrefix = highlights.length > 0 || pages.length > 0;
     const resultClass = c(
       'EntitySearchResultsRow',
       { active: isActive },
@@ -177,6 +179,17 @@ class EntitySearchResultsRow extends Component {
             </td>
           </tr>
         )}
+
+        {!!pages.length && pages.map(page => {
+          return <tr key={`${entity.id}-page-${page.index}`} className={`${highlightsClass} prefix`}>
+            <td colSpan="100%" className="highlights">
+              <Entity.Link preview={showPreview} entity={page}>
+                Page {page.getFirst('index')}
+              </Entity.Link>
+              <SearchHighlight highlight={page.highlight} />
+            </td>
+          </tr>
+        })}
       </>
     );
   }
