@@ -37,6 +37,7 @@ services:
     environment:
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      TAGS_DATABASE_URI: "sqlite:///tags.db"
 
   ui:
     environment:
@@ -58,6 +59,7 @@ services:
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       APP_NAME: "aleph-e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      PROMETHEUS_ENABLE: False
 
 volumes:
   archive-data-e2e: {}
