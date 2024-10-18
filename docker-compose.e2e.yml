@@ -1,5 +1,3 @@
-version: "3.2"
-
 services:
   postgres:
     environment:
@@ -14,6 +12,10 @@ services:
   redis:
     volumes:
       - redis-data-e2e:/data
+
+  rabbitmq:
+    volumes:
+      - rabbitmq-data-e2e:/var/lib/rabbitmq
 
   api:
     volumes:
@@ -39,6 +41,7 @@ services:
     environment:
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      TAGS_DATABASE_URI: "sqlite:///tags.db"
 
   ui:
     environment:
@@ -60,9 +63,11 @@ services:
       ALEPH_DATABASE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
       APP_NAME: "aleph-e2e"
       FTM_STORE_URI: "postgresql://aleph:aleph@postgres/aleph_e2e"
+      PROMETHEUS_ENABLE: False
 
 volumes:
   archive-data-e2e: {}
   elasticsearch-data-e2e: {}
   postgres-data-e2e: {}
   redis-data-e2e: {}
+  rabbitmq-data-e2e: {}

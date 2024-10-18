@@ -107,20 +107,20 @@ e2e/test-results:
 
 services-e2e:
 	$(COMPOSE_E2E) up -d --remove-orphans \
-		postgres elasticsearch ingest-file \
+		postgres elasticsearch ingest-file rabbitmq worker \
 
 e2e: services-e2e e2e/test-results
 	$(COMPOSE_E2E) run --rm app aleph upgrade
 	$(COMPOSE_E2E) run --rm app aleph createuser --name="E2E Admin" --admin --password="admin" admin@admin.admin
-	$(COMPOSE_E2E) up -d api ui worker
-	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure e2e/
+	$(COMPOSE_E2E) up -d api ui
+	BASE_URL=http://ui:8080 $(COMPOSE_E2E) run --rm e2e pytest -s -v --output=/e2e/test-results/ --screenshot=only-on-failure --video=retain-on-failure --tracing retain-on-failure e2e/
 
 e2e-local-setup: dev
 	python3 -m pip install -q -r e2e/requirements.txt
 	playwright install
 
 e2e-local:
-	pytest -s -v --screenshot only-on-failure e2e/
+	pytest -s -v --screenshot only-on-failure --tracing retain-on-failure e2e/
 
 .PHONY: build services e2e
 
