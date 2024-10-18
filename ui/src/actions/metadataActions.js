@@ -3,8 +3,12 @@ import asyncActionCreator from 'actions/asyncActionCreator';
 
 export const fetchMetadata = asyncActionCreator(
   () => async () => {
-    const response = await endpoint.get('metadata');
-    return { metadata: response.data };
+    try {
+      const response = await endpoint.get('metadata');
+      return { metadata: response.data };
+    } catch (e) {
+      throw e;
+    }
   },
   { name: 'FETCH_METADATA' }
 );
