@@ -159,6 +159,8 @@ services:
       - aleph.env
 
   worker:
+    build:
+      context: .
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph worker
     restart: on-failure
@@ -167,6 +169,7 @@ services:
       - elasticsearch
       - redis
       - ingest-file
+      - rabbitmq
     tmpfs:
       - /tmp
     volumes:
