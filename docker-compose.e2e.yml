@@ -13,6 +13,10 @@ services:
     volumes:
       - redis-data-e2e:/data
 
+  rabbitmq:
+    volumes:
+      - rabbitmq-data-e2e:/var/lib/rabbitmq
+
   api:
     volumes:
       - archive-data-e2e:/data
@@ -66,3 +70,4 @@ volumes:
   elasticsearch-data-e2e: {}
   postgres-data-e2e: {}
   redis-data-e2e: {}
+  rabbitmq-data-e2e: {}
