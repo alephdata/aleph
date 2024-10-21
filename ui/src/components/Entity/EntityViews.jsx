@@ -48,7 +48,7 @@ class EntityViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.handlePdfSearch = this.handlePdfSearch.bind(this);
   }
 
   handleTabChange(mode) {
@@ -66,7 +66,7 @@ class EntityViews extends React.Component {
     });
   }
 
-  handleSearch(searchQuery) {
+  handlePdfSearch(searchQuery) {
     const { navigate, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
@@ -85,59 +85,24 @@ class EntityViews extends React.Component {
     });
   }
 
+  hasProcessingErrors() {
+    return this.props.entity.getProperty('processingError')?.length >= 1;
+  }
+
+  hasPdfSearchMode() {
+    return this.props.entity.schema.isA('Pages') && !this.hasProcessingErrors();
+  }
+
   render() {
-    const {
-      isPreview,
-      activeMode,
-      entity,
-      references,
-      tags,
-      similar,
-      children,
-      reference,
-      referenceQuery,
-      location,
-    } = this.props;
+    const { activeMode, references } = this.props;
+
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
     }
-    const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
-    const hasBrowseMode = entity.schema.isA('Folder');
-    const hasViewer = entity.schema.isAny([
-      'Pages',
-      'Email',
-      'Image',
-      'HyperText',
-      'Table',
-      'PlainText',
-    ]);
-    const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
-    const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
-    const hasSearchMode =
-      entity.schema.name == 'Pages' &&
-      entity.getProperty('processingError')?.length == 0;
-    const parsedHash = queryString.parse(location.hash);
-    const searchQuery = isPreview ? parsedHash['preview:q'] : parsedHash['q'];
-    const processingError = entity.getProperty('processingError');
-    const entityParent = entity.getFirst('parent');
-    const showWorkbookWarning =
-      !isPreview &&
-      entity.schema.name === 'Table' &&
-      entityParent?.schema?.name === 'Workbook';
 
     return (
       <>
-        {showWorkbookWarning && (
-          <Callout className="EntityViews__workbook-warning">
-            <FormattedMessage
-              id="entity.info.workbook_warning"
-              defaultMessage="This sheet is part of workbook {link}"
-              values={{
-                link: <Entity.Link entity={entityParent} icon />,
-              }}
-            />
-          </Callout>
-        )}
+        {this.renderWorkbookWarning()}
         <Tabs
           id="EntityInfoTabs"
           onChange={this.handleTabChange}
@@ -145,189 +110,320 @@ class EntityViews extends React.Component {
           renderActiveTabPanelOnly
           className="info-tabs-padding"
         >
-          {isPreview && (
-            <Tab
-              id="info"
-              title={
-                <>
-                  <Icon icon="info" className="left-icon" />
-                  <span className="tab-padding">
-                    <FormattedMessage
-                      id="entity.info.info"
-                      defaultMessage="Info"
-                    />
-                  </span>
-                </>
-              }
-              panel={<EntityProperties entity={entity} />}
-            />
-          )}
-          {hasViewMode && (
-            <Tab
-              id="view"
-              title={
-                <>
-                  <Icon icon="documentation" className="left-icon" />
-                  <FormattedMessage
-                    id="entity.info.view"
-                    defaultMessage="View"
-                  />
-                </>
-              }
-              panel={
-                <DocumentViewMode document={entity} activeMode={activeMode} />
-              }
-            />
-          )}
-          {hasTextMode && (
-            <Tab
-              id="text"
-              title={
-                <>
-                  <Icon icon="plaintext" className="left-icon" />
-                  <FormattedMessage
-                    id="entity.info.text"
-                    defaultMessage="Text"
-                  />
-                </>
-              }
-              panel={
-                <DocumentViewMode document={entity} activeMode={activeMode} />
-              }
-            />
-          )}
-          {hasBrowseMode && (
-            <Tab
-              id="browse"
-              disabled={children.total < 1}
-              title={
-                <TextLoading loading={children.isPending}>
-                  <Icon icon="folder" className="left-icon" />
-                  {entity.schema.isA('Email') && (
-                    <FormattedMessage
-                      id="entity.info.attachments"
-                      defaultMessage="Attachments"
-                    />
-                  )}
-                  {!entity.schema.isA('Email') && (
-                    <FormattedMessage
-                      id="entity.info.documents"
-                      defaultMessage="Documents"
-                    />
-                  )}
-                  <ResultCount result={children} />
-                </TextLoading>
-              }
-              panel={
-                <DocumentViewMode document={entity} activeMode={activeMode} />
-              }
-            />
-          )}
-          {references.results.map((ref) => (
-            <Tab
-              id={ref.property.qname}
-              key={ref.property.qname}
-              title={
-                <>
-                  <Schema.Icon schema={ref.schema} className="left-icon" />
-                  <Property.Reverse prop={ref.property} />
-                  <Count count={ref.count} />
-                </>
-              }
-              panel={
-                <EntityReferencesMode
-                  entity={entity}
-                  mode={activeMode}
-                  query={referenceQuery}
-                  reference={reference}
-                  hideCollection={true}
-                />
-              }
-            />
-          ))}
-          {!references.total && references.isPending && (
-            <Tab id="loading" title={<TextLoading loading={true} />} />
-          )}
-          {entity.schema.isDocument() &&
-            (!processingError || !processingError.length) && (
-              <Tab
-                id="tags"
-                disabled={tags.total < 1}
-                title={
-                  <TextLoading loading={tags.isPending}>
-                    <Icon icon="assessment" className="left-icon" />
-                    <FormattedMessage
-                      id="entity.info.tags"
-                      defaultMessage="Mentions"
-                    />
-                    <ResultCount result={tags} />
-                  </TextLoading>
-                }
-                panel={<EntityTagsMode entity={entity} />}
-              />
-            )}
-          {entity?.schema?.matchable && !isPreview && (
-            <Tab
-              id="similar"
-              disabled={similar.total === 0}
-              title={
-                <TextLoading loading={similar.total === undefined}>
-                  <Icon icon="similar" className="left-icon" />
-                  <FormattedMessage
-                    id="entity.info.similar"
-                    defaultMessage="Similar"
-                  />
-                  <ResultCount result={similar} />
-                </TextLoading>
-              }
-              panel={<EntitySimilarMode entity={entity} />}
-            />
-          )}
-          {entity?.collection?.writeable && entity.schema.isA('Table') && (
-            <Tab
-              id="mapping"
-              title={
-                <>
-                  <Icon icon="new-object" className="left-icon" />
-                  <FormattedMessage
-                    id="entity.mapping.view"
-                    defaultMessage="Generate entities"
-                  />
-                </>
-              }
-              panel={<EntityMappingMode document={entity} />}
-            />
-          )}
-          {hasSearchMode && (
+          {this.renderInfoMode()}
+          {this.renderViewMode()}
+          {this.renderTextMode()}
+          {this.renderBrowseMode()}
+          {this.renderReferenceModes()}
+          {this.renderTagsMode()}
+          {this.renderSimilarMode()}
+          {this.renderMappingMode()}
+          {this.hasPdfSearchMode() && (
             <>
               <Tabs.Expander />
-              <form
-                className="EntityViews__search"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  this.handleSearch(event.currentTarget.q.value);
-                }}
-              >
-                <InputGroup
-                  name="q"
-                  leftIcon="search"
-                  placeholder="Search in this document"
-                  defaultValue={searchQuery}
-                />
-              </form>
+              {this.renderPdfSearchForm()}
             </>
           )}
         </Tabs>
-        {entity && activeMode === 'search' && hasSearchMode && (
-          <div className={Classes.TAB_PANEL}>
-            <PdfViewerSearch
-              isPreview={isPreview}
-              document={entity}
-              activeMode={activeMode}
-            />
-          </div>
-        )}
+        {this.renderPdfSearchMode()}
       </>
+    );
+  }
+
+  renderWorkbookWarning() {
+    const { entity, isPreview } = this.props;
+    const parent = entity.getFirst('parent');
+
+    if (isPreview) {
+      return;
+    }
+
+    if (!entity.schema.isA('Table') || !parent?.schema?.isA('Workbook')) {
+      return;
+    }
+
+    return (
+      <Callout className="EntityViews__workbook-warning">
+        <FormattedMessage
+          id="entity.info.workbook_warning"
+          defaultMessage="This sheet is part of workbook {link}"
+          values={{
+            link: <Entity.Link entity={parent} icon />,
+          }}
+        />
+      </Callout>
+    );
+  }
+
+  renderInfoMode() {
+    const { entity, isPreview } = this.props;
+
+    // The info tab is only rendered in entity previews. When viewing an entity
+    // directly, the entity properties are always displayed in a sidebar, no
+    // matter which tab is selected.
+    if (!isPreview) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="info"
+        title={
+          <>
+            <Icon icon="info" className="left-icon" />
+            <span className="tab-padding">
+              <FormattedMessage id="entity.info.info" defaultMessage="Info" />
+            </span>
+          </>
+        }
+        panel={<EntityProperties entity={entity} />}
+      />
+    );
+  }
+
+  renderViewMode() {
+    const { entity, activeMode } = this.props;
+
+    if (!entity.schema.isDocument()) {
+      return;
+    }
+
+    // The view mode is the default mode. It is rendered for almost all document-like
+    // entities (except folders) and renders an empty state if no viewer is available
+    // for a specific file type.
+    if (entity.schema.isA('Folder')) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="view"
+        title={
+          <>
+            <Icon icon="documentation" className="left-icon" />
+            <FormattedMessage id="entity.info.view" defaultMessage="View" />
+          </>
+        }
+        panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+      />
+    );
+  }
+
+  renderTextMode() {
+    const { entity, activeMode } = this.props;
+
+    if (!entity.schema.isAny(['Pages', 'Image'])) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="text"
+        title={
+          <>
+            <Icon icon="plaintext" className="left-icon" />
+            <FormattedMessage id="entity.info.text" defaultMessage="Text" />
+          </>
+        }
+        panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+      />
+    );
+  }
+
+  renderBrowseMode() {
+    const { entity, children, activeMode } = this.props;
+
+    if (!entity.schema.isA('Folder')) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="browse"
+        disabled={children.total < 1}
+        title={
+          <TextLoading loading={children.isPending}>
+            <Icon icon="folder" className="left-icon" />
+            {entity.schema.isA('Email') && (
+              <FormattedMessage
+                id="entity.info.attachments"
+                defaultMessage="Attachments"
+              />
+            )}
+            {!entity.schema.isA('Email') && (
+              <FormattedMessage
+                id="entity.info.documents"
+                defaultMessage="Documents"
+              />
+            )}
+            <ResultCount result={children} />
+          </TextLoading>
+        }
+        panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+      />
+    );
+  }
+
+  renderReferenceModes() {
+    const { entity, references, reference, referenceQuery, activeMode } =
+      this.props;
+
+    if (!references.total && references.isPending) {
+      return <Tab id="loading" title={<TextLoading loading={true} />} />;
+    }
+
+    return references.results.map((ref) => (
+      <Tab
+        id={ref.property.qname}
+        key={ref.property.qname}
+        title={
+          <>
+            <Schema.Icon schema={ref.schema} className="left-icon" />
+            <Property.Reverse prop={ref.property} />
+            <Count count={ref.count} />
+          </>
+        }
+        panel={
+          <EntityReferencesMode
+            entity={entity}
+            mode={activeMode}
+            query={referenceQuery}
+            reference={reference}
+            hideCollection={true}
+          />
+        }
+      />
+    ));
+  }
+
+  renderTagsMode() {
+    const { entity, tags } = this.props;
+
+    if (!entity.schema.isDocument()) {
+      return;
+    }
+
+    if (this.hasProcessingErrors()) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="tags"
+        disabled={tags.total < 1}
+        title={
+          <TextLoading loading={tags.isPending}>
+            <Icon icon="assessment" className="left-icon" />
+            <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
+            <ResultCount result={tags} />
+          </TextLoading>
+        }
+        panel={<EntityTagsMode entity={entity} />}
+      />
+    );
+  }
+
+  renderSimilarMode() {
+    const { entity, similar, isPreview } = this.props;
+
+    if (!entity.schema.matchable || isPreview) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="similar"
+        disabled={similar.total === 0}
+        title={
+          <TextLoading loading={similar.total === undefined}>
+            <Icon icon="similar" className="left-icon" />
+            <FormattedMessage
+              id="entity.info.similar"
+              defaultMessage="Similar"
+            />
+            <ResultCount result={similar} />
+          </TextLoading>
+        }
+        panel={<EntitySimilarMode entity={entity} />}
+      />
+    );
+  }
+
+  renderMappingMode() {
+    const { entity } = this.props;
+
+    if (this.hasProcessingErrors()) {
+      return;
+    }
+
+    if (!entity.collection.writeable || !entity.schema.isA('Table')) {
+      return;
+    }
+
+    return (
+      <Tab
+        id="mapping"
+        title={
+          <>
+            <Icon icon="new-object" className="left-icon" />
+            <FormattedMessage
+              id="entity.mapping.view"
+              defaultMessage="Generate entities"
+            />
+          </>
+        }
+        panel={<EntityMappingMode document={entity} />}
+      />
+    );
+  }
+
+  renderPdfSearchMode() {
+    const { entity, isPreview, activeMode } = this.props;
+
+    if (!this.hasPdfSearchMode()) {
+      return;
+    }
+
+    if (activeMode !== 'search') {
+      return;
+    }
+
+    return (
+      <div className={Classes.TAB_PANEL}>
+        <PdfViewerSearch
+          isPreview={isPreview}
+          document={entity}
+          activeMode={activeMode}
+        />
+      </div>
+    );
+  }
+
+  renderPdfSearchForm() {
+    const { location, isPreview, activeMode } = this.props;
+
+    if (!this.hasPdfSearchMode()) {
+      return;
+    }
+
+    const parsedHash = queryString.parse(location.hash);
+    const searchQuery = isPreview ? parsedHash['preview:q'] : parsedHash['q'];
+
+    return (
+      <form
+        className="EntityViews__search"
+        onSubmit={(event) => {
+          event.preventDefault();
+          this.handlePdfSearch(event.currentTarget.q.value);
+        }}
+      >
+        <InputGroup
+          name="q"
+          leftIcon="search"
+          placeholder="Search in this document"
+          defaultValue={searchQuery}
+        />
+      </form>
     );
   }
 }
