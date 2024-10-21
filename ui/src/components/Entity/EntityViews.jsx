@@ -111,14 +111,10 @@ class EntityViews extends React.Component {
           {this.renderTagsMode()}
           {this.renderSimilarMode()}
           {this.renderMappingMode()}
-          {this.hasPdfSearchMode() && (
-            <>
-              <Tabs.Expander />
-              {this.renderPdfSearchForm()}
-            </>
-          )}
+          {this.renderPdfSearchMode()}
+          <Tabs.Expander />
+          {this.renderPdfSearchForm()}
         </Tabs>
-        {this.renderPdfSearchMode()}
       </>
     );
   }
@@ -361,18 +357,18 @@ class EntityViews extends React.Component {
       return;
     }
 
-    if (activeMode !== 'search') {
-      return;
-    }
-
     return (
-      <div className={Classes.TAB_PANEL}>
-        <PdfViewerSearch
-          isPreview={isPreview}
-          document={entity}
-          activeMode={activeMode}
-        />
-      </div>
+      <Tab
+        id="search"
+        title={<span className="visually-hidden">Search results</span>}
+        panel={
+          <PdfViewerSearch
+            isPreview={isPreview}
+            document={entity}
+            activeMode={activeMode}
+          />
+        }
+      />
     );
   }
 
