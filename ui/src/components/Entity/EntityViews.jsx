@@ -102,6 +102,7 @@ class EntityViews extends React.Component {
           selectedTabId={activeMode}
           renderActiveTabPanelOnly
           className="info-tabs-padding"
+          animate={false}
         >
           {this.renderInfoMode()}
           {this.renderViewMode()}
