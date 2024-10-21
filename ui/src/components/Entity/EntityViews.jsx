@@ -1,13 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-  Callout,
-  Classes,
-  Tab,
-  Tabs,
-  Icon,
-  InputGroup,
-} from '@blueprintjs/core';
+import { Callout, Classes, Tab, Tabs, InputGroup } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -168,14 +161,8 @@ class EntityViews extends React.Component {
     return (
       <Tab
         id="info"
-        title={
-          <>
-            <Icon icon="info" className="left-icon" />
-            <span className="tab-padding">
-              <FormattedMessage id="entity.info.info" defaultMessage="Info" />
-            </span>
-          </>
-        }
+        icon="info"
+        title={<FormattedMessage id="entity.info.info" defaultMessage="Info" />}
         panel={<EntityProperties entity={entity} />}
       />
     );
@@ -198,12 +185,8 @@ class EntityViews extends React.Component {
     return (
       <Tab
         id="view"
-        title={
-          <>
-            <Icon icon="documentation" className="left-icon" />
-            <FormattedMessage id="entity.info.view" defaultMessage="View" />
-          </>
-        }
+        icon="documentation"
+        title={<FormattedMessage id="entity.info.view" defaultMessage="View" />}
         panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
       />
     );
@@ -219,12 +202,8 @@ class EntityViews extends React.Component {
     return (
       <Tab
         id="text"
-        title={
-          <>
-            <Icon icon="plaintext" className="left-icon" />
-            <FormattedMessage id="entity.info.text" defaultMessage="Text" />
-          </>
-        }
+        icon="plaintext"
+        title={<FormattedMessage id="entity.info.text" defaultMessage="Text" />}
         panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
       />
     );
@@ -241,9 +220,9 @@ class EntityViews extends React.Component {
       <Tab
         id="browse"
         disabled={children.total < 1}
+        icon="folder"
         title={
           <TextLoading loading={children.isPending}>
-            <Icon icon="folder" className="left-icon" />
             {entity.schema.isA('Email') && (
               <FormattedMessage
                 id="entity.info.attachments"
@@ -276,9 +255,9 @@ class EntityViews extends React.Component {
       <Tab
         id={ref.property.qname}
         key={ref.property.qname}
+        icon={<Schema.Icon schema={ref.schema} className="left-icon" />}
         title={
           <>
-            <Schema.Icon schema={ref.schema} className="left-icon" />
             <Property.Reverse prop={ref.property} />
             <Count count={ref.count} />
           </>
@@ -311,9 +290,9 @@ class EntityViews extends React.Component {
       <Tab
         id="tags"
         disabled={tags.total < 1}
+        icon="assessment"
         title={
           <TextLoading loading={tags.isPending}>
-            <Icon icon="assessment" className="left-icon" />
             <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
             <ResultCount result={tags} />
           </TextLoading>
@@ -334,9 +313,9 @@ class EntityViews extends React.Component {
       <Tab
         id="similar"
         disabled={similar.total === 0}
+        icon="similar"
         title={
           <TextLoading loading={similar.total === undefined}>
-            <Icon icon="similar" className="left-icon" />
             <FormattedMessage
               id="entity.info.similar"
               defaultMessage="Similar"
@@ -363,14 +342,12 @@ class EntityViews extends React.Component {
     return (
       <Tab
         id="mapping"
+        icon="new-object"
         title={
-          <>
-            <Icon icon="new-object" className="left-icon" />
-            <FormattedMessage
-              id="entity.mapping.view"
-              defaultMessage="Generate entities"
-            />
-          </>
+          <FormattedMessage
+            id="entity.mapping.view"
+            defaultMessage="Generate entities"
+          />
         }
         panel={<EntityMappingMode document={entity} />}
       />
