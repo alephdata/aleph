@@ -96,6 +96,7 @@ class EntityViews extends React.Component {
       children,
       reference,
       referenceQuery,
+      location,
     } = this.props;
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
@@ -115,6 +116,8 @@ class EntityViews extends React.Component {
     const hasSearchMode =
       entity.schema.name == 'Pages' &&
       entity.getProperty('processingError')?.length == 0;
+    const parsedHash = queryString.parse(location.hash);
+    const searchQuery = isPreview ? parsedHash['preview:q'] : parsedHash['q'];
     const processingError = entity.getProperty('processingError');
     const entityParent = entity.getFirst('parent');
     const showWorkbookWarning =
@@ -309,6 +312,7 @@ class EntityViews extends React.Component {
                   name="q"
                   leftIcon="search"
                   placeholder="Search in this document"
+                  defaultValue={searchQuery}
                 />
               </form>
             </>
