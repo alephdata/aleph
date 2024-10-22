@@ -119,8 +119,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def add_role(self, role):
         """Adds an existing role as a membership of a group."""
-        self.roles.append(role)
-        db.session.add(role)
+        if role not in self.roles:
+            self.roles.append(role)
+            db.session.add(role)
+        else:
+            log.warning(f"Tried to add duplicate role membership: {self} {role}")
         db.session.add(self)
         self.updated_at = datetime.utcnow()
 
