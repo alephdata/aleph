@@ -1,7 +1,8 @@
 import React, { Component, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Spinner, Classes } from '@blueprintjs/core';
+import { Button, Spinner, Classes } from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { fetchMetadata, fetchMessages, dismissMessage } from 'actions';
 import {
@@ -60,11 +61,11 @@ class Router extends Component {
   fetchIfNeeded() {
     const { metadata, messages } = this.props;
 
-    if (metadata.shouldLoad) {
+    if (metadata.shouldLoad && !metadata.isError) {
       this.props.fetchMetadata();
     }
 
-    if (messages.shouldLoad) {
+    if (messages.shouldLoad && !messages.isError) {
       this.fetchMessages();
     }
   }
@@ -92,23 +93,44 @@ class Router extends Component {
     const { metadata, session, pinnedMessage, dismissMessage } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
-    const Loading = (
-      <div className="RouterLoading">
-        <div className="spinner">
+    if (metadata.isError) {
+      return (
+        <div className="Router">
+          <div className="Router__error">
+            <p className={Classes.TEXT_LARGE}>
+              <FormattedMessage
+                id="router.error.message"
+                defaultMessage="Sorry, something went wrong and Aleph couldn’t load. Please try again in a few minutes or contact an administrator if the error persists."
+              />
+            </p>
+            <Button large icon="reset" onClick={() => window.location.reload()}>
+              <FormattedMessage
+                id="router.error.retry"
+                defaultMessage="Retry"
+              />
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    const loading = (
+      <div className="Router">
+        <div className="Router__spinner">
           <Spinner className={Classes.LARGE} />
         </div>
       </div>
     );
 
     if (!isLoaded) {
-      return Loading;
+      return loading;
     }
 
     return (
       <>
         <Navbar />
         <MessageBanner message={pinnedMessage} onDismiss={dismissMessage} />
-        <Suspense fallback={Loading}>
+        <Suspense fallback={loading}>
           <Routes>
             <Route path="oauth" element={<OAuthScreen />} />
             <Route path="logout" element={<LogoutScreen />} />
@@ -164,4 +186,5 @@ export default connect(mapStateToProps, {
   fetchMetadata,
   fetchMessages,
   dismissMessage,
+  injectIntl,
 })(Router);
