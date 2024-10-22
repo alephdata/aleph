@@ -1,7 +1,7 @@
 """API key expiration
 
 Revision ID: d46fc882ec6b
-Revises: c52a1f469ac7
+Revises: 8adf50aadcb0
 Create Date: 2024-05-02 11:43:50.993948
 
 """
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = "d46fc882ec6b"
-down_revision = "c52a1f469ac7"
+down_revision = "8adf50aadcb0"
 
 
 def upgrade():
