@@ -362,13 +362,7 @@ class EntityViews extends React.Component {
       <Tab
         id="search"
         title={<span className="visually-hidden">Search results</span>}
-        panel={
-          <PdfViewerSearch
-            isPreview={isPreview}
-            document={entity}
-            activeMode={activeMode}
-          />
-        }
+        panel={<PdfViewerSearch isPreview={isPreview} document={entity} />}
       />
     );
   }
