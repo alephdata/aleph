@@ -43,7 +43,10 @@ format-check-ui:
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
-	sleep 10
+	# wait for postgres to be available
+	@$(COMPOSE) exec postgres pg_isready --timeout=30
+	# wait for elasticsearch to be available
+	@$(COMPOSE) exec elasticsearch timeout 30 bash -c "printf 'Waiting for elasticsearch'; until curl --silent --output /dev/null localhost:9200/_cat/health?h=st; do printf '.'; sleep 1; done; printf '\n'"
 	$(APPDOCKER) aleph upgrade
 
 api: services
