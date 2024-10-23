@@ -39,7 +39,7 @@ export default function PasswordSettings() {
 
   const isValidCurrentPassword = currentPassword !== '';
   const isValidNewPassword = newPassword && newPassword.length >= 6;
-  const isValidPasswordConfirmation = newPassword == passwordConfirmation;
+  const isValidPasswordConfirmation = newPassword === passwordConfirmation;
 
   const newPasswordIntent =
     newPassword && !isValidNewPassword ? Intent.DANGER : null;
