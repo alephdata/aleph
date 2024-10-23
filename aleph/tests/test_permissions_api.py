@@ -94,6 +94,16 @@ class PermissionsApiTestCase(TestCase):
         assert res.json["results"][0]["role"]["id"] == str(self.role.id)
 
         self.role.add_role(group)
+
+        # The user's group memberships are cached in Redis when the user signs in.
+        # As we've updated the group memberships, we need to reauthenticate the
+        # user to update the cache.
+        self.role, self.headers = self.login(
+            foreign_id="john",
+            name="John Doe",
+            email="john.doe@example.org",
+        )
+
         res = self.client.put(url, headers=self.headers, json=data)
         assert res.status_code == 200
         assert len(res.json["results"]) == 2
