@@ -244,10 +244,6 @@ class EntityViews extends React.Component {
     const { entity, references, reference, referenceQuery, activeMode } =
       this.props;
 
-    if (!references.total && references.isPending) {
-      return <Tab id="loading" title={<TextLoading loading={true} />} />;
-    }
-
     return references.results.map((ref) => (
       <Tab
         id={ref.property.qname}
