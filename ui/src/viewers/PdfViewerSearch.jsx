@@ -2,17 +2,23 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import {
   SectionLoading,
   SearchHighlight,
   QueryInfiniteLoad,
+  ResultText,
 } from 'components/common';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
+import Query from 'app/Query';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
+import withRouter from 'app/withRouter';
+
+import './PdfViewerSearch.scss';
 
 class PdfViewerSearch extends Component {
   constructor(props) {
@@ -32,16 +38,19 @@ class PdfViewerSearch extends Component {
   }
 
   getResultLink(result) {
-    const { activeMode, query } = this.props;
-    const page = result.getProperty('index').toString();
+    const { query, document, location, isPreview } = this.props;
+    const parsedHash = queryString.parse(location.hash);
 
-    const hashQuery = {
-      page,
-      mode: activeMode,
-      q: query.getString('q'),
-    };
+    if (isPreview) {
+      parsedHash['preview:mode'] = 'view';
+    } else {
+      parsedHash['mode'] = 'view';
+    }
 
-    return `#${queryString.stringify(hashQuery)}`;
+    parsedHash['page'] = result.getProperty('index').toString();
+    parsedHash['q'] = query.getString('q');
+
+    return `#${queryString.stringify(parsedHash)}`;
   }
 
   fetchSearchResults() {
@@ -52,14 +61,18 @@ class PdfViewerSearch extends Component {
   }
 
   render() {
-    const { result } = this.props;
+    const { result, query } = this.props;
+
+    if (!query.getString('q')) {
+      return this.renderEmptyState();
+    }
 
     if (result.total === undefined) {
       return <SectionLoading />;
     }
 
     return (
-      <div className="pages">
+      <div className="PdfViewerSearch">
         {result.total === 0 ? this.renderEmptyState() : this.renderResults()}
       </div>
     );
@@ -70,13 +83,20 @@ class PdfViewerSearch extends Component {
 
     return (
       <>
-        <ul>
+        <div className="PdfViewerSearch__total">
+          <ResultText result={result} />
+        </div>
+        <ul className="PdfViewerSearch__results">
           {result.results.map((res) => (
-            <li key={`page-${res.id}`}>
+            <li key={`page-${res.id}`} className="PdfViewerSearch__result">
               <p dir={dir}>
-                <Link to={this.getResultLink(res)}>
+                <a href={this.getResultLink(res)}>
                   <span
-                    className={c(Classes.ICON, `${Classes.ICON}-document`)}
+                    className={c(
+                      Classes.ICON,
+                      `${Classes.ICON}-document`,
+                      'PdfViewerSearch__icon'
+                    )}
                   />
                   <FormattedMessage
                     id="document.pdf.search.page"
@@ -85,7 +105,7 @@ class PdfViewerSearch extends Component {
                       page: res.getProperty('index'),
                     }}
                   />
-                </Link>
+                </a>
               </p>
               <SearchHighlight highlight={res.highlight} />
             </li>
@@ -119,11 +139,25 @@ class PdfViewerSearch extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { query } = ownProps;
+  const { isPreview, document, location } = ownProps;
+
+  const parsedHash = queryString.parse(location.hash);
+  const q = isPreview ? parsedHash['preview:q'] : parsedHash['q'];
+
+  const query = new Query('entities', {}, {}, 'search')
+    .setFilter('properties.document', document.id)
+    .setFilter('schema', 'Page')
+    .set('highlight', true)
+    .set('q', q)
+    .sortBy('properties.index', 'asc');
 
   return {
+    query,
     result: selectEntitiesResult(state, query),
   };
 };
 
-export default connect(mapStateToProps, { queryEntities })(PdfViewerSearch);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, { queryEntities })
+)(PdfViewerSearch);
