@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Callout, Classes, Tab, Tabs, InputGroup } from '@blueprintjs/core';
+import { Callout, Tab, Tabs, InputGroup } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
