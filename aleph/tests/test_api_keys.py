@@ -41,8 +41,8 @@ class ApiKeysTestCase(TestCase):
             msg = outbox[0]
             assert msg.recipients == ["john.doe@example.org"]
             assert msg.subject == "[Aleph] API key generated"
-            assert "An API key has been generated for your account" in msg.body
-            assert "An API key has been generated for your account" in msg.html
+            assert "An Aleph API key has been generated for your account" in msg.body
+            assert "An Aleph API key has been generated for your account" in msg.html
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0
@@ -52,8 +52,8 @@ class ApiKeysTestCase(TestCase):
             msg = outbox[0]
             assert msg.recipients == ["john.doe@example.org"]
             assert msg.subject == "[Aleph] API key regenerated"
-            assert "Your API key has been regenerated" in msg.body
-            assert "Your API key has been regenerated" in msg.html
+            assert "Your Aleph API key has been regenerated" in msg.body
+            assert "Your Aleph API key has been regenerated" in msg.html
 
     def test_send_api_key_expiration_notifications(self):
         role = self.create_user(email="john.doe@example.org")
@@ -82,11 +82,11 @@ class ApiKeysTestCase(TestCase):
                 assert msg.recipients == ["john.doe@example.org"]
                 assert msg.subject == "[Aleph] Your API key will expire in 7 days"
                 assert (
-                    "Your API key will expire in 7 days, on Mar 31, 2024, 12:00:00\u202fAM UTC."
+                    "Your Aleph API key will expire in 7 days, on Mar 31, 2024, 12:00:00\u202fAM UTC."
                     in msg.body
                 )
                 assert (
-                    "Your API key will expire in 7 days, on Mar 31, 2024, 12:00:00\u202fAM UTC."
+                    "Your Aleph API key will expire in 7 days, on Mar 31, 2024, 12:00:00\u202fAM UTC."
                     in msg.html
                 )
 
@@ -106,11 +106,11 @@ class ApiKeysTestCase(TestCase):
                 assert msg.recipients == ["john.doe@example.org"]
                 assert msg.subject == "[Aleph] Your API key has expired"
                 assert (
-                    "Your API key has expired on Mar 31, 2024, 12:00:00\u202fAM UTC."
+                    "Your Aleph API key has expired on Mar 31, 2024, 12:00:00\u202fAM UTC."
                     in msg.body
                 )
                 assert (
-                    "Your API key has expired on Mar 31, 2024, 12:00:00\u202fAM UTC."
+                    "Your Aleph API key has expired on Mar 31, 2024, 12:00:00\u202fAM UTC."
                     in msg.html
                 )
 

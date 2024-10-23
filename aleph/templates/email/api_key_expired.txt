@@ -2,10 +2,10 @@
 
 {% block content -%}
 {% trans expires_at=(expires_at | datetimeformat) -%}
-Your API key has expired on {{expires_at}} UTC.
+Your Aleph API key has expired on {{expires_at}} UTC.
 {%- endtrans %}
 
 {% trans settings_url=settings_url -%}
-If you do not use the Aleph API you can ignore this email. If you use the Aleph API you will need to regenerate your API key ({{settings_url}}) and update any applications or scripts that use your API key.
+If you do not use the Aleph API, or only use the API to access public data you can ignore this email. If you use the Aleph API to access data that is not publicly accessible then you’ll need to regenerate your API key ({{settings_url}}) to maintain access.
 {%- endtrans %}
 {%- endblock %}
