@@ -216,7 +216,10 @@ function ApiKeyDialog({
         <p>
           <FormattedMessage
             id="settings.api_key.success"
-            defaultMessage="Your new API key has been generated. Be sure to copy it below as you won’t be able to view it again later. We recommend storing your API key in a password manager. Do not share your API key with anyone else."
+            defaultMessage="Your new API key has been generated and is valid for {days, number} days. Be sure to copy it below as you won’t be able to view it again later. We recommend storing your API key in a password manager. Do not share your API key with anyone else."
+            // Right now, the key lifetime isn't configurable, but that might
+            // change in the future
+            values={{ days: 90 }}
           />
         </p>
         <p>
