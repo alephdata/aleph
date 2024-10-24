@@ -1,9 +1,9 @@
 import logging
 import warnings
 from sqlalchemy.exc import SAWarning
-from pkg_resources import get_distribution
+from importlib.metadata import version
 
-__version__ = get_distribution("aleph").version
+__version__ = version("aleph")
 
 # shut up useless SA warning:
 warnings.filterwarnings(
