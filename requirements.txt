@@ -24,7 +24,7 @@ elasticsearch==7.17.0
 marshmallow==3.21.1
 gunicorn[eventlet]==22.0.0
 jsonschema==4.22.0
-apispec==6.3.1
+apispec==6.7.0
 apispec-webframeworks==0.5.2
 blinker==1.8.1
 Babel==2.12.1
