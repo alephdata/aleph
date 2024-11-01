@@ -21,7 +21,7 @@ alembic==1.13.1
 authlib==0.15.5
 
 elasticsearch==7.17.0
-marshmallow==3.21.1
+marshmallow==3.23.0
 gunicorn[eventlet]==22.0.0
 jsonschema==4.22.0
 apispec==6.3.1
