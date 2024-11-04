@@ -11,6 +11,7 @@ from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
+from aleph.logic.api_keys import generate_user_api_key
 from aleph.util import is_auto_admin
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
@@ -244,3 +245,40 @@ def update(id):
     db.session.commit()
     update_role(role)
     return RoleSerializer.jsonify(role)
+
+
+@blueprint.route("/api/2/roles/<int:id>/generate_api_key", methods=["POST"])
+def generate_api_key(id):
+    """Reset the role’s API key.
+    ---
+    post:
+      summary: Reset API key
+      description: >
+        Reset the role’s API key. This will invalidate the current
+        API key and generate a new one.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: role ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      tags:
+      - Role
+    """
+    role = obj_or_404(Role.by_id(id))
+    require(request.authz.can_write_role(role.id))
+    api_key = generate_user_api_key(role)
+    data = RoleSerializer().serialize(role)
+    # The API key usually isn’t included in API responses, but we return it
+    # exactly once after it has been (re-)generated.
+    data["api_key"] = api_key
+
+    return jsonify(data)

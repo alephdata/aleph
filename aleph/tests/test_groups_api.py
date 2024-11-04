@@ -15,11 +15,24 @@ class GroupsApiTestCase(TestCase):
     def test_index(self):
         res = self.client.get("/api/2/groups")
         assert res.status_code == 403, res
+
         _, headers = self.login(foreign_id="user_1")
         res = self.client.get("/api/2/groups", headers=headers)
         assert res.status_code == 200, res
         assert res.json["total"] == 2, res.json
         validate(res.json["results"][0], "Role")
+        assert set(res.json["results"][0].keys()) == {
+            "id",
+            "created_at",
+            "updated_at",
+            "type",
+            "name",
+            "label",
+            "writeable",
+            "shallow",
+            "links",
+        }
+
         _, headers = self.login(foreign_id="other")
         res = self.client.get("/api/2/groups", headers=headers)
         assert res.status_code == 200, res

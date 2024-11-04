@@ -11,14 +11,13 @@ from aleph.model import Collection, Role
 from aleph.logic.collections import update_collection
 from aleph.views.base_api import _metadata_locale
 from aleph.tests.util import TestCase
-from aleph.tests.factories.models import RoleFactory
 from aleph.oauth import oauth
 
 
 class SessionsApiTestCase(TestCase):
     def setUp(self):
         super().setUp()
-        self.role = RoleFactory.create()
+        self.role = self.create_user()
 
     def test_admin_all_access(self):
         self.wl = Collection()
@@ -121,6 +120,22 @@ class SessionsApiTestCase(TestCase):
         res = self.client.post("/api/2/sessions/login", data=data)
         assert res.status_code == 403, res
         assert res.json["message"] == "Your account has been blocked."
+
+    def test_password_login_no_api_key(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        secret = self.fake.password()
+        self.role.set_password(secret)
+        data = {
+            "email": self.role.email,
+            "password": secret,
+        }
+        assert self.role.api_key is None
+
+        res = self.client.post("/api/2/sessions/login", data=data)
+        assert res.status_code == 200
+
+        db.session.refresh(self.role)
+        assert self.role.api_key is None
 
 
 class SessionsApiOAuthTestCase(TestCase):

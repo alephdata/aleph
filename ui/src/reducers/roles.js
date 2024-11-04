@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryRoles, fetchRole, updateRole } from 'actions';
+import { queryRoles, fetchRole, updateRole, generateApiKey } from 'actions';
 import {
   resultObjects,
   objectLoadStart,
@@ -20,6 +20,8 @@ export default createReducer(
       objectLoadComplete(state, id, data),
     [updateRole.COMPLETE]: (state, { id, data }) =>
       objectLoadComplete(state, id, data),
+    [generateApiKey.COMPLETE]: (state, { id, data }) =>
+      objectLoadComplete(state, id, { ...data, api_key: null }),
   },
   initialState
 );

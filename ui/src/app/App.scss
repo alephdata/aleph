@@ -141,8 +141,11 @@ a {
   );
 }
 
-/* This causes toasts to appear *below* the navbar instead of on top of it */
 .aleph-toaster {
+  /* Hacky workaround to ensure toasts are visible even when scrolling */
+  position: fixed !important;
+
+  /* This causes toasts to appear *below* the navbar instead of on top of it */
   margin-top: $aleph-grid-size * 5;
 }
 
