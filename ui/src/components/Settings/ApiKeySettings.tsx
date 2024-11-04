@@ -107,6 +107,8 @@ export default function ApiKeySettings() {
   const expiresAt =
     role.api_key_expires_at &&
     convertUTCDateToLocalDate(new Date(role.api_key_expires_at));
+  const now = new Date();
+  const hasExpired = expiresAt <= now;
 
   return (
     <>
@@ -118,25 +120,43 @@ export default function ApiKeySettings() {
           />
         </h4>
 
-        <p>
-          {expiresAt && (
-            <FormattedMessage
-              id="settings.api_key.text_expiration"
-              defaultMessage="Your API key will expire on {date}, {time}."
-              values={{
-                date: <FormattedDate value={expiresAt} />,
-                time: <FormattedTime value={expiresAt} />,
-              }}
-            />
-          )}
-        </p>
+        {role.has_api_key && expiresAt && (
+          <p>
+            {hasExpired ? (
+              <FormattedMessage
+                id="settings.api_key.text_expired"
+                defaultMessage="Your API key expired on {date}, {time}."
+                values={{
+                  date: <FormattedDate value={expiresAt} />,
+                  time: <FormattedTime value={expiresAt} />,
+                }}
+              />
+            ) : (
+              <FormattedMessage
+                id="settings.api_key.text_expiration"
+                defaultMessage="Your API key will expire on {date}, {time}."
+                values={{
+                  date: <FormattedDate value={expiresAt} />,
+                  time: <FormattedTime value={expiresAt} />,
+                }}
+              />
+            )}
+          </p>
+        )}
 
         <p>
           {role.has_api_key ? (
-            <FormattedMessage
-              id="settings.api_key.text_regenerate"
-              defaultMessage="When you regenerate your API key, your old key will stop working."
-            />
+            hasExpired ? (
+              <FormattedMessage
+                id="settings.api_key.text_regenerate_expired"
+                defaultMessage="Regenerate your API key in order to access the Aleph API."
+              />
+            ) : (
+              <FormattedMessage
+                id="settings.api_key.text_regenerate"
+                defaultMessage="When you regenerate your API key, your old key will stop working."
+              />
+            )
           ) : (
             <FormattedMessage
               id="settings.api_key.text_generate"
