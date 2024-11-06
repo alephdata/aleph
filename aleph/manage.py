@@ -1,4 +1,6 @@
 # coding: utf-8
+import importlib.metadata
+import platform
 import sys
 import json
 import click
@@ -8,6 +10,7 @@ from pprint import pprint  # noqa
 from itertools import count
 from normality import slugify
 from tabulate import tabulate
+from typing import Any
 from flask.cli import FlaskGroup
 from followthemoney.cli.util import write_object
 from servicelayer.taskqueue import flush_queues
@@ -82,7 +85,28 @@ def ensure_collection(foreign_id, label):
     return collection
 
 
-@click.group(cls=FlaskGroup, create_app=create_app)
+def get_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> None:
+    if not value or ctx.resilient_parsing:
+        return
+
+    click.echo(
+        f"Aleph {importlib.metadata.version('aleph')}\n"
+        f"Python {platform.python_version()}\n"
+        f"Flask {importlib.metadata.version('flask')}\n"
+        f"Werkzeug {importlib.metadata.version('werkzeug')}\n",
+    )
+    ctx.exit()
+
+
+@click.group(cls=FlaskGroup, create_app=create_app, add_version_option=False)
+@click.option(
+    "-v",
+    "--version",
+    help="Show the Aleph version.",
+    callback=get_aleph_version,
+    expose_value=False,
+    is_flag=True,
+)
 def cli():
     """Server-side command line for aleph."""
 
