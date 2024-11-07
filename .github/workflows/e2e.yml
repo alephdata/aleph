@@ -9,9 +9,9 @@ on:
   push:
     tags:
       - '*'
-    schedule:
-      # Run weekly
-      - cron: '30 15 * * 0'
+  schedule:
+    # Run weekly
+    - cron: '30 15 * * 0'
   workflow_dispatch:
 
 jobs:
