@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: pip
     directory: "/"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
     groups:
@@ -17,7 +17,7 @@ updates:
   - package-ecosystem: pip
     directory: "/e2e"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
     groups:
@@ -28,7 +28,7 @@ updates:
   - package-ecosystem: npm
     directory: "/ui"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
     groups:
@@ -49,20 +49,20 @@ updates:
   - package-ecosystem: docker
     directory: "/"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
 
   - package-ecosystem: docker
     directory: "/ui"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 99
     target-branch: develop
