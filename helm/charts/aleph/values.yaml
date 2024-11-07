@@ -332,7 +332,7 @@ exporter:
 
   containerResources:
     requests:
-      memory: 250Mi
-      cpu: 10m
+      memory: 300Mi
+      cpu: 150m
     limits:
-      memory: 500Mi
+      memory: 1Gi

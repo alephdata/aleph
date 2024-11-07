@@ -65,12 +65,14 @@ spec:
                   key: SENTRY_DSN
           readinessProbe:
             httpGet:
-              path: /metrics
+              # Unselect all metrics as generating them can take multiple seconds
+              path: /metrics?name[]=None
               port: 9100
             initialDelaySeconds: 5
           livenessProbe:
             httpGet:
-              path: /metrics
+              # Unselect all metrics as generating them can take multiple seconds
+              path: /metrics?name[]=None
               port: 9100
             initialDelaySeconds: 5
       volumes:
