@@ -1,0 +1,165 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    command: >
+      -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - aleph
+    volumes:
+      - ./volumes/postgres-data:/var/lib/postgresql/data
+      - ./conf/postgres.conf:/etc/postgresql/postgresql.conf
+      - ./conf/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./step:/certs
+    environment:
+      POSTGRES_USER: aleph-staging
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DB: aleph
+
+  postgres_ftm:
+    image: postgres:16
+    command: >
+      -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - aleph
+    volumes:
+      - ./volumes/postgres-data-ftm:/var/lib/postgresql/data
+      - ./conf/postgres-ftm.conf:/etc/postgresql/postgresql.conf
+      - ./conf/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./step:/certs
+    environment:
+      POSTGRES_USER: aleph-staging
+      POSTGRES_PASSWORD: ftm
+      POSTGRES_DB: ftm
+
+  elasticsearch:
+    user: "1000:1000"
+    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
+    networks:
+      - aleph
+    environment:
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/aleph-staging-elastic.key
+      - xpack.security.http.ssl.certificate=certs/aleph-staging-elastic.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca.crt
+      - xpack.security.http.ssl.client_authentication=required
+      - xpack.security.http.ssl.verification_mode=certificate
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=elast1c
+    volumes:
+      - ./volumes/elasticsearch-data:/usr/share/elasticsearch/data
+      - ./step:/usr/share/elasticsearch/config/certs
+
+  redis:
+    image: redis:7
+    networks:
+      - aleph
+    command: >
+       redis-server
+       --save 3600 10
+       --requirepass red1s
+       --tls-port 6379 --port 0
+       --tls-ca-cert-file /certs/ca.crt
+       --tls-cert-file /certs/aleph-staging-redis.crt
+       --tls-key-file /certs/aleph-staging-redis.key
+       --tls-auth-clients yes
+    volumes:
+      - ./volumes/redis-data:/data
+      - ./step:/certs
+
+  ingest-file:
+    image: ghcr.io/alephdata/ingest-file:3.22.0
+    tmpfs:
+      - /tmp:mode=777
+    volumes:
+      - ./volumes/archive-data:/data
+      - ./step:/certs
+    depends_on:
+      - postgres
+      - redis
+    restart: on-failure
+    env_file:
+      - aleph.env
+
+  worker:
+    image: aleph-local:latest
+    hostname: aleph-staging-worker
+    networks:
+      - aleph
+    command: aleph worker
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./volumes/archive-data:/data
+      - ./step:/certs
+    env_file:
+      - aleph.env
+
+  shell:
+    user: "1000:1000"
+    image: aleph-local:latest
+    command: /bin/bash
+    networks:
+      - aleph
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - ingest-file
+      - worker
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./volumes/archive-data:/data
+      - "./mappings:/aleph/mappings"
+      - "~:/host"
+      - ./step:/certs
+    env_file:
+      - aleph.env
+
+  api:
+    user: "1000:1000"
+    image: aleph-local:latest
+    hostname: aleph-staging-api
+    networks:
+      - aleph
+    command: gunicorn --keyfile /certs/aleph-staging-api.key --certfile /certs/aleph-staging-api.crt --ca-certs /certs/ca.crt -w 6 -b 0.0.0.0:8000 --timeout 3600 --log-level debug --log-file - aleph.wsgi:app
+    expose:
+      - 8000
+    depends_on:
+      - postgres
+      - elasticsearch
+      - redis
+      - worker
+      - ingest-file
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./volumes/archive-data:/data
+      - ./step:/certs
+    env_file:
+      - aleph.env
+
+  ui:
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-3.17.0}
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./step:/certs
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+
+volumes:
+  archive-data: {}
+  postgres-data: {}
+  redis-data: {}
+  elasticsearch-data: {}
