@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-10-14 10:03+0200\n"
+"POT-Creation-Date: 2024-11-11 12:15+0000\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Jean-Philippe Menotti, 2022\n"
 "Language-Team: French (https://app.transifex.com/aleph/teams/76591/fr/)\n"
@@ -232,6 +232,38 @@ msgstr "{{export}} est prêt au téléchargement"
 msgid "No schema is specified for the query."
 msgstr "Aucun schéma n’est spécifié pour la requête."
 
+#: aleph/templates/email/api_key_expired.html:5
+#, python-format
+msgid "Your Aleph API key has expired on %(expires_at)s UTC."
+msgstr ""
+
+#: aleph/templates/email/api_key_expired.html:11
+#: aleph/templates/email/api_key_expires_soon.html:11
+#, python-format
+msgid ""
+"If you do not use the Aleph API, or only use the API to access public data "
+"you can ignore this email. If you use the Aleph API to access data that is "
+"not publicly accessible then you’ll need to <a "
+"href=\"%(settings_url)s\">regenerate your API key</a> to maintain access."
+msgstr ""
+
+#: aleph/templates/email/api_key_expires_soon.html:5
+#, python-format
+msgid "Your Aleph API key will expire in 7 days, on %(expires_at)s UTC."
+msgstr ""
+
+#: aleph/templates/email/api_key_generated.html:5
+msgid ""
+"Your Aleph API key has been regenerated. If that wasn’t you, please contact "
+"an administrator."
+msgstr ""
+
+#: aleph/templates/email/api_key_generated.html:9
+msgid ""
+"An Aleph API key has been generated for your account. If that wasn’t you, "
+"please contact an administrator."
+msgstr ""
+
 #: aleph/templates/email/export.html:5
 msgid ""
 "\n"
@@ -355,19 +387,19 @@ msgstr "Nom de schéma non valable : %s"
 msgid "Invalid date: %s"
 msgstr "Date non valable : %s"
 
-#: aleph/views/base_api.py:226
+#: aleph/views/base_api.py:238
 msgid "You are not authorized to do this."
 msgstr "Vous n’êtes pas autorisé à réaliser cette action."
 
-#: aleph/views/base_api.py:235
+#: aleph/views/base_api.py:247
 msgid "This path does not exist."
 msgstr "Ce chemin n’existe pas."
 
-#: aleph/views/base_api.py:242
+#: aleph/views/base_api.py:254
 msgid "Internal server error."
 msgstr "Erreur interne du serveur."
 
-#: aleph/views/base_api.py:256
+#: aleph/views/base_api.py:268
 msgid "Access token is invalid."
 msgstr "Le jeton d’accès est non valable."
 
@@ -376,27 +408,23 @@ msgstr "Le jeton d’accès est non valable."
 msgid "Search: %s"
 msgstr "Rechercher : %s"
 
-#: aleph/views/entitysets_api.py:217
-msgid "Only diagrams can be embedded!"
-msgstr "Seuls des diagrammes peuvent être intégrés."
-
-#: aleph/views/roles_api.py:63
+#: aleph/views/roles_api.py:64
 msgid "prefix filter is too short"
 msgstr "le filtre de préfixe est trop court"
 
-#: aleph/views/roles_api.py:112
+#: aleph/views/roles_api.py:113
 msgid "To proceed, please check your email."
 msgstr "Pour continuer, veuillez vérifier votre boîte de réception."
 
-#: aleph/views/roles_api.py:145
+#: aleph/views/roles_api.py:146
 msgid "Invalid code"
 msgstr "Code invalide"
 
-#: aleph/views/roles_api.py:151
+#: aleph/views/roles_api.py:152
 msgid "Email is already registered"
 msgstr "L’adresse e-mail est déjà enregistrée"
 
-#: aleph/views/roles_api.py:240
+#: aleph/views/roles_api.py:241
 msgid "Incorrect password."
 msgstr "Mot de passe incorrect."
 
@@ -408,11 +436,11 @@ msgid ""
 "Aleph administrator"
 msgstr ""
 
-#: aleph/views/sessions_api.py:70
+#: aleph/views/sessions_api.py:75
 msgid "Invalid user or password."
 msgstr "Nom d’utilisateur ou mot de passe non valable."
 
-#: aleph/views/sessions_api.py:106
+#: aleph/views/sessions_api.py:120
 msgid "Authentication has failed."
 msgstr "L’authentification a échoué."
 

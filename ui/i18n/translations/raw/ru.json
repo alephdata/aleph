@@ -38,6 +38,18 @@
   "auth.unknown_error": {
     "defaultMessage": "Произошла ошибка"
   },
+  "bookmarks.bookmark": {
+    "defaultMessage": "Bookmark"
+  },
+  "bookmarks.bookmarked": {
+    "defaultMessage": "Bookmarked"
+  },
+  "bookmarks.empty": {
+    "defaultMessage": "You haven’t bookmarked anything yet. Add documents or entities such as people or companies to your bookmarks to easily get back to them later."
+  },
+  "bookmarks.title": {
+    "defaultMessage": "Your bookmarks"
+  },
   "case.choose.name": {
     "defaultMessage": "Название"
   },
@@ -485,6 +497,12 @@
   "dataset.search.placeholder": {
     "defaultMessage": "Поиск этом в наборе данных"
   },
+  "delete_dialog.confirmation_label": {
+    "defaultMessage": "Confirmation"
+  },
+  "delete_dialog.enter_label": {
+    "defaultMessage": "Please enter {expectedConfirmationValue} to confirm:"
+  },
   "diagram.create.button": {
     "defaultMessage": "Новая диаграмма"
   },
@@ -503,35 +521,8 @@
   "diagram.create.title": {
     "defaultMessage": "Создать диаграмму"
   },
-  "diagram.embed.error": {
-    "defaultMessage": "Ошибка создания встраиваемой диаграммы"
-  },
-  "diagram.export.embed.description": {
-    "defaultMessage": "Создать встраиваемую интерактивную версию диаграммы для вставки в статьи. Сгенерированная встраиваемая диаграмма не будет отражать более поздние изменения в основной диаграмме."
-  },
   "diagram.export.error": {
     "defaultMessage": "Ошибка экспорта диаграммы"
-  },
-  "diagram.export.ftm": {
-    "defaultMessage": "Экспорт в формате .ftm"
-  },
-  "diagram.export.ftm.description": {
-    "defaultMessage": "Скачать диаграмму в виде файла данных, который можно использовать в {link} или на другом сайте с Алефом."
-  },
-  "diagram.export.ftm.link": {
-    "defaultMessage": "Алеф Дата Десктоп"
-  },
-  "diagram.export.iframe": {
-    "defaultMessage": "Вставить iframe"
-  },
-  "diagram.export.svg": {
-    "defaultMessage": "Экспорт в формате SVG"
-  },
-  "diagram.export.svg.description": {
-    "defaultMessage": "Скачать векторную графику с содержимым диаграммы."
-  },
-  "diagram.export.title": {
-    "defaultMessage": "Настройки экспорта"
   },
   "diagram.import.button": {
     "defaultMessage": "Импортировать диаграмму"
@@ -574,6 +565,51 @@
   },
   "diagrams.title": {
     "defaultMessage": "Диаграммы"
+  },
+  "dialog.edge_create.source_label": {
+    "defaultMessage": "Коллекция"
+  },
+  "dialog.edge_create.submit": {
+    "defaultMessage": "Создать"
+  },
+  "dialog.edge_create.target_label": {
+    "defaultMessage": "Target"
+  },
+  "dialog.edge_create.title": {
+    "defaultMessage": "Add link"
+  },
+  "dialog.edge_create.type_label": {
+    "defaultMessage": "Тип"
+  },
+  "dialog.edge_create.type_placeholder": {
+    "defaultMessage": "Select type"
+  },
+  "dialog.grouping_create.placeholder": {
+    "defaultMessage": "Select a label for the grouping"
+  },
+  "dialog.grouping_create.title": {
+    "defaultMessage": "Group items"
+  },
+  "dialog.settings.pivot_types.help_text": {
+    "defaultMessage": "The selected property types above will be used to draw connections between nodes when values are shared"
+  },
+  "dialog.settings.pivot_types.label": {
+    "defaultMessage": "Connect shared values"
+  },
+  "dialog.settings.submit": {
+    "defaultMessage": "Сохранить изменения"
+  },
+  "dialog.settings.title": {
+    "defaultMessage": "Настройки"
+  },
+  "dialog.vertex_create.no_suggestions": {
+    "defaultMessage": "No suggestions found"
+  },
+  "dialog.vertex_create.title": {
+    "defaultMessage": "Add entity"
+  },
+  "dialog.vertex_create.type_placeholder": {
+    "defaultMessage": "Pick a type"
   },
   "document.download": {
     "defaultMessage": "Скачать"
@@ -682,6 +718,57 @@
   },
   "document.viewer.no_viewer": {
     "defaultMessage": "Просмотр документа невозможен"
+  },
+  "editor.color_picker.blue": {
+    "defaultMessage": "Blue"
+  },
+  "editor.color_picker.custom": {
+    "defaultMessage": "Custom"
+  },
+  "editor.color_picker.green": {
+    "defaultMessage": "Green"
+  },
+  "editor.color_picker.orange": {
+    "defaultMessage": "Orange"
+  },
+  "editor.color_picker.red": {
+    "defaultMessage": "Red"
+  },
+  "editor.color_picker.turquoise": {
+    "defaultMessage": "Turquoise"
+  },
+  "editor.color_picker.violet": {
+    "defaultMessage": "Violet"
+  },
+  "editor.entity.create_entity": {
+    "defaultMessage": "Create a new entity"
+  },
+  "editor.entity.no_results": {
+    "defaultMessage": "No existing entities found"
+  },
+  "editor.entity.placeholder": {
+    "defaultMessage": "Select an entity"
+  },
+  "editor.property_add": {
+    "defaultMessage": "Add a property"
+  },
+  "editor.validation.country_invalid": {
+    "defaultMessage": "Invalid country"
+  },
+  "editor.validation.date_invalid": {
+    "defaultMessage": "Date format: yyyy-m-d"
+  },
+  "editor.validation.phone_invalid": {
+    "defaultMessage": "Invalid phone number: try adding a country code if available"
+  },
+  "editor.validation.required": {
+    "defaultMessage": "This property is required"
+  },
+  "editor.validation.topic_invalid": {
+    "defaultMessage": "Invalid topic"
+  },
+  "editor.validation.url_invalid": {
+    "defaultMessage": "Invalid URL format"
   },
   "email.body.empty": {
     "defaultMessage": "Текст письма отсутствует"
@@ -836,6 +923,18 @@
   "entity.similar.found_text": {
     "defaultMessage": "Найдено {resultCount} {resultCount, plural, one {похожая запись} other {похожие записи}} из {datasetCount} {datasetCount, plural, one {набор данных} other {наборы данных}}"
   },
+  "entity.status.error": {
+    "defaultMessage": "Ошибка сохранения"
+  },
+  "entity.status.in_progress": {
+    "defaultMessage": "Saving"
+  },
+  "entity.status.offline": {
+    "defaultMessage": "Offline"
+  },
+  "entity.status.success": {
+    "defaultMessage": "Сохранено"
+  },
   "entity.tags.no_tags": {
     "defaultMessage": "В данной записи селекторов нет"
   },
@@ -941,6 +1040,9 @@
   "entityset.update.submit": {
     "defaultMessage": "Сохранить изменения"
   },
+  "enum_value_select.no_results": {
+    "defaultMessage": "Ничего не найдено"
+  },
   "error.screen.not_found": {
     "defaultMessage": "Запрашиваемая страница не найдена"
   },
@@ -1033,6 +1135,12 @@
   },
   "group.page.search.description": {
     "defaultMessage": "Если вы хотите поискать определённые сущности или документы в наборах данных, относящихся к этой группе, <link> нажмите здесь </link>."
+  },
+  "grouping.label": {
+    "defaultMessage": "Group"
+  },
+  "hint_popover.dismiss": {
+    "defaultMessage": "Don’t show this again"
   },
   "home.access_disabled": {
     "defaultMessage": "Публичный доступ временно закрыт"
@@ -1496,6 +1604,9 @@
   "notifications.type_filter.all": {
     "defaultMessage": "Все"
   },
+  "oauth.role_blocked.dialog.title": {
+    "defaultMessage": "User account deactivated"
+  },
   "pages.not.found": {
     "defaultMessage": "Страница не найдена"
   },
@@ -1556,8 +1667,14 @@
   "profile.similar.no_results": {
     "defaultMessage": "Дополнительные сведения для профиля не найдены."
   },
-  "profileinfo.api_desc": {
-    "defaultMessage": "API-ключ для редактирования данных через сторонние приложения"
+  "property.inverse": {
+    "defaultMessage": "'{label}' ..."
+  },
+  "property.values.truncate_hide": {
+    "defaultMessage": "- Show fewer"
+  },
+  "property.values.truncate_show": {
+    "defaultMessage": "+{truncateCount} More"
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Очистить все"
@@ -1600,6 +1717,12 @@
   },
   "role.select.user": {
     "defaultMessage": "Выберите пользователя"
+  },
+  "router.error.message": {
+    "defaultMessage": "Sorry, something went wrong and Aleph couldn’t load. Please try again in a few minutes or contact an administrator if the error persists."
+  },
+  "router.error.retry": {
+    "defaultMessage": "Попробовать ещё раз"
   },
   "schemaSelect.button.relationship": {
     "defaultMessage": "Добавить новую связь"
@@ -1742,6 +1865,15 @@
   "search.placeholder_label": {
     "defaultMessage": "Поиск в {label}"
   },
+  "search.results_text.multiple": {
+    "defaultMessage": "Found {count} results"
+  },
+  "search.results_text.none": {
+    "defaultMessage": "Ничего не найдено"
+  },
+  "search.results_text.one": {
+    "defaultMessage": "Found 1 result"
+  },
   "search.screen.dates.show-all": {
     "defaultMessage": "* Показаны все настройки фильтра дат. { button } отобразить только ближайшие даты."
   },
@@ -1784,14 +1916,38 @@
   "search.title_emptyq": {
     "defaultMessage": "Поиск"
   },
-  "settings.api_key": {
-    "defaultMessage": "API-ключ"
+  "settings.api_key.confirm_regenerate": {
+    "defaultMessage": "You are about to regenerate your API key. When you regenerate your API key, your old key will stop working. If you are currently using your API key in applications or scripts, you will need to update them to keep them working."
   },
-  "settings.confirm": {
-    "defaultMessage": "(подтверждение)"
+  "settings.api_key.generate": {
+    "defaultMessage": "Generate API key"
+  },
+  "settings.api_key.regenerate": {
+    "defaultMessage": "Regenerate API key"
+  },
+  "settings.api_key.success": {
+    "defaultMessage": "Your new API key has been generated and is valid for {days, number} days. Be sure to copy it below as you won’t be able to view it again later. We recommend storing your API key in a password manager. Do not share your API key with anyone else."
+  },
+  "settings.api_key.text_expiration": {
+    "defaultMessage": "Your API key will expire on {date}, {time}."
+  },
+  "settings.api_key.text_expired": {
+    "defaultMessage": "Your API key expired on {date}, {time}."
+  },
+  "settings.api_key.text_generate": {
+    "defaultMessage": "You need an API key in order to access the Aleph API. Generate an API key to get started."
+  },
+  "settings.api_key.text_regenerate": {
+    "defaultMessage": "When you regenerate your API key, your old key will stop working."
+  },
+  "settings.api_key.text_regenerate_expired": {
+    "defaultMessage": "Regenerate your API key in order to access the Aleph API."
+  },
+  "settings.api_key.title": {
+    "defaultMessage": "API key"
   },
   "settings.current_explain": {
-    "defaultMessage": "Введите текущий пароль для установки нового."
+    "defaultMessage": "Enter your current password to set a new one"
   },
   "settings.current_password": {
     "defaultMessage": "Действующий пароль"
@@ -1800,16 +1956,16 @@
     "defaultMessage": "Электронный адрес"
   },
   "settings.email.muted": {
-    "defaultMessage": "Получать ежедневные уведомления по эл. почте"
+    "defaultMessage": "Receive daily notification emails"
   },
-  "settings.email.no_change": {
-    "defaultMessage": "Ваш эл. адрес не изменён"
-  },
-  "settings.email.tester": {
-    "defaultMessage": "Принимать участие в тестировании новых функций"
+  "settings.email_no_change": {
+    "defaultMessage": "Your email address cannot be changed"
   },
   "settings.locale": {
     "defaultMessage": "Язык"
+  },
+  "settings.locale.success": {
+    "defaultMessage": "Your language preference has been updated."
   },
   "settings.name": {
     "defaultMessage": "Название"
@@ -1817,26 +1973,59 @@
   "settings.new_password": {
     "defaultMessage": "Новый пароль"
   },
-  "settings.password.missmatch": {
-    "defaultMessage": "Пароли не совпадают"
+  "settings.notifications.success": {
+    "defaultMessage": "Your notification preferences have been updated."
   },
-  "settings.password.rules": {
-    "defaultMessage": "Минимум 6 символов"
+  "settings.notifications.text": {
+    "defaultMessage": "Aleph can send you email notification when something happens in an investigation or dataset you have access to, for example when someone else uploads a new file."
+  },
+  "settings.notifications.title": {
+    "defaultMessage": "Уведомления"
+  },
+  "settings.password.change": {
+    "defaultMessage": "Change password"
+  },
+  "settings.password.success": {
+    "defaultMessage": "Your password has been updated."
   },
   "settings.password.title": {
     "defaultMessage": "Поменять пароль"
   },
+  "settings.password_confirmation": {
+    "defaultMessage": "Confirm new password"
+  },
+  "settings.password_rules": {
+    "defaultMessage": "Минимум 6 символов"
+  },
+  "settings.passwords.missmatch": {
+    "defaultMessage": "Пароли не совпадают"
+  },
+  "settings.profile.title": {
+    "defaultMessage": "Профиль"
+  },
   "settings.save": {
-    "defaultMessage": "Обновить"
+    "defaultMessage": "Сохранить"
   },
   "settings.saved": {
-    "defaultMessage": "Ваша учётная запись обновлена"
+    "defaultMessage": "It’s official, your profile is updated."
   },
   "settings.title": {
     "defaultMessage": "Настройки"
   },
+  "sidebar.default.multiple": {
+    "defaultMessage": "{count} entities"
+  },
+  "sidebar.edit.hide": {
+    "defaultMessage": "Hide"
+  },
+  "sidebar.edit.show": {
+    "defaultMessage": "Edit all"
+  },
   "sidebar.open": {
     "defaultMessage": "Развернуть"
+  },
+  "sidebar.selected.multiple": {
+    "defaultMessage": "{count} выбрано"
   },
   "signup.activate": {
     "defaultMessage": "Активирируйте учётную запись"
@@ -1904,6 +2093,9 @@
   "sources.index.placeholder": {
     "defaultMessage": "Поиск наборов данных или расследований, относящихся к {group}..."
   },
+  "ssettings.locale.text": {
+    "defaultMessage": "Change the language of the Aleph user interface."
+  },
   "status.last_updated_at": {
     "defaultMessage": "last updated"
   },
@@ -1913,6 +2105,15 @@
   "status.started_at": {
     "defaultMessage": "started"
   },
+  "table_editor.add_row": {
+    "defaultMessage": "Add a new {schema} row"
+  },
+  "table_editor.add_schema": {
+    "defaultMessage": "Add an entity type"
+  },
+  "table_editor.remove_row": {
+    "defaultMessage": "Remove new {schema} row"
+  },
   "tags.results": {
     "defaultMessage": "Количество упоминаний"
   },
@@ -1921,6 +2122,12 @@
   },
   "text.loading": {
     "defaultMessage": "Загрузка..."
+  },
+  "timeline.actions.add_item": {
+    "defaultMessage": "Add item"
+  },
+  "timeline.actions.renderer.label": {
+    "defaultMessage": "Change view"
   },
   "timeline.create.button": {
     "defaultMessage": "Создать хронологию"
@@ -1940,6 +2147,54 @@
   "timeline.create.title": {
     "defaultMessage": "Создать хронологию"
   },
+  "timeline.create_entitity.title": {
+    "defaultMessage": "Add new item to timeline"
+  },
+  "timeline.create_entity.submit": {
+    "defaultMessage": "Добавить"
+  },
+  "timeline.empty_state.message": {
+    "defaultMessage": "Add an item to get started."
+  },
+  "timeline.empty_state.title": {
+    "defaultMessage": "This timeline is still empty"
+  },
+  "timeline.invalid_dates_warning": {
+    "defaultMessage": "This timeline has items with invalid or missing dates. Check the list below and add dates or remove items."
+  },
+  "timeline.item.invalid_date": {
+    "defaultMessage": "Invalid or no date"
+  },
+  "timeline.item.remove.long": {
+    "defaultMessage": "Удалить из хронологии"
+  },
+  "timeline.item.remove.short": {
+    "defaultMessage": "Удалить"
+  },
+  "timeline.item_create_form.optional": {
+    "defaultMessage": "(optional)"
+  },
+  "timeline.list.actions": {
+    "defaultMessage": "Actions"
+  },
+  "timeline.list.caption": {
+    "defaultMessage": "Caption"
+  },
+  "timeline.list.date": {
+    "defaultMessage": "Дата"
+  },
+  "timeline.list.end_date": {
+    "defaultMessage": "Дата окончания"
+  },
+  "timeline.list.start_date": {
+    "defaultMessage": "Start date"
+  },
+  "timeline.renderer.chart": {
+    "defaultMessage": "Chart"
+  },
+  "timeline.renderer.list": {
+    "defaultMessage": "List"
+  },
   "timeline.selector.create": {
     "defaultMessage": "Создать новую хронологию"
   },
@@ -1958,6 +2213,18 @@
   "timeline.update.title": {
     "defaultMessage": "Настройки хронологии"
   },
+  "timeline.zoom_levels.days": {
+    "defaultMessage": "Days"
+  },
+  "timeline.zoom_levels.months": {
+    "defaultMessage": "Months"
+  },
+  "timeline.zoom_levels.unavailable": {
+    "defaultMessage": "The “{label}” view is not available because this timeline covers a period of {maxYears} years or more."
+  },
+  "timeline.zoom_levels.years": {
+    "defaultMessage": "Years"
+  },
   "timelines": {
     "defaultMessage": "Хронологии"
   },
@@ -1970,8 +2237,92 @@
   "timelines.title": {
     "defaultMessage": "Хронологии"
   },
+  "toasts.expand_none": {
+    "defaultMessage": "All expansion results are already present in the diagram"
+  },
+  "toasts.expand_success": {
+    "defaultMessage": "Successfully added {vertices} new {vertices, plural, one {node} other {nodes}} and {edges} new {edges, plural, one {link} other {links}} to the diagram"
+  },
+  "tooltip.add_edges": {
+    "defaultMessage": "Add link"
+  },
+  "tooltip.add_entities": {
+    "defaultMessage": "Add entities"
+  },
+  "tooltip.delete": {
+    "defaultMessage": "Удалить выбранное"
+  },
+  "tooltip.expand": {
+    "defaultMessage": "Discover links"
+  },
+  "tooltip.export_svg": {
+    "defaultMessage": "Экспорт в формате SVG"
+  },
+  "tooltip.group": {
+    "defaultMessage": "Group selected"
+  },
+  "tooltip.layout_auto": {
+    "defaultMessage": "Auto-layout"
+  },
+  "tooltip.layout_center": {
+    "defaultMessage": "Center"
+  },
+  "tooltip.layout_circle": {
+    "defaultMessage": "Arrange as circle"
+  },
+  "tooltip.layout_hierarchy": {
+    "defaultMessage": "Arrange as hierarchy"
+  },
+  "tooltip.layout_horizontal": {
+    "defaultMessage": "Align horizontal"
+  },
+  "tooltip.layout_vertical": {
+    "defaultMessage": "Align vertical"
+  },
+  "tooltip.layouts": {
+    "defaultMessage": "Layouts"
+  },
+  "tooltip.pan_mode": {
+    "defaultMessage": "Toggle pan mode"
+  },
+  "tooltip.redo": {
+    "defaultMessage": "Redo"
+  },
+  "tooltip.select_mode": {
+    "defaultMessage": "Toggle select mode"
+  },
+  "tooltip.settings": {
+    "defaultMessage": "Настройки"
+  },
+  "tooltip.sidebar_view": {
+    "defaultMessage": "Show sidebar"
+  },
+  "tooltip.table_view": {
+    "defaultMessage": "Show table"
+  },
+  "tooltip.undo": {
+    "defaultMessage": "Undo"
+  },
+  "tooltip.ungroup": {
+    "defaultMessage": "Ungroup selected"
+  },
+  "tooltips.fit_to_selection": {
+    "defaultMessage": "Fit view to selection"
+  },
   "valuelink.tooltip": {
     "defaultMessage": "Упоминаний в {appName}: {count}"
+  },
+  "vertex_menu.add_link": {
+    "defaultMessage": "Add link"
+  },
+  "vertex_menu.expand": {
+    "defaultMessage": "Discover {property}"
+  },
+  "vertex_menu.expand_all": {
+    "defaultMessage": "all links"
+  },
+  "vertex_menu.expand_none": {
+    "defaultMessage": "No additional links found"
   },
   "xref.compute": {
     "defaultMessage": "Обработать"
