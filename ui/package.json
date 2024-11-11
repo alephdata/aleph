@@ -66,7 +66,7 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
     "translate": "npm run messages && npm run compile-translations && npm run concat-translations",
-    "messages": "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx}'",
+    "messages": "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx,ts,tsx}' --ignore 'src/**/*.d.ts'",
     "compile-translations": "formatjs compile-folder i18n/translations/raw i18n/translations/compiled",
     "concat-translations": "node i18n/concatTranslations.js"
   },
