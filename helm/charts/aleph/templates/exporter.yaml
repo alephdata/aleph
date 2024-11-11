@@ -69,12 +69,14 @@ spec:
               path: /metrics?name[]=None
               port: 9100
             initialDelaySeconds: 5
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
               # Unselect all metrics as generating them can take multiple seconds
               path: /metrics?name[]=None
               port: 9100
             initialDelaySeconds: 5
+            timeoutSeconds: 3
       volumes:
         - name: tmp-volume
           emptyDir: {}
