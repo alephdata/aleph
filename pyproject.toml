@@ -2,7 +2,11 @@
 name = "aleph"
 version = "3.17.0"
 description = "Search and browse documents and data; find the people and companies you look for."
-authors = ["OCCRP Data Team <data@occrp.org>"]
+authors = [
+    "Friedrich Lindenberg <friedrich@pudo.org>",
+    "OCCRP Data Team <data@occrp.org>",
+    "ID.IO <hi@investigativedata.org>"
+]
 license = "MIT"
 readme = "README.rst"
 
@@ -13,9 +17,9 @@ aleph = "aleph.manage:cli"
 python = ">3.10,<3.14"
 banal = "^1.0.6"
 followthemoney = "^3.7.4"
-followthemoney-store = {extras = ["postgresql"], version = "^3.1.0"}
+followthemoney-store = { extras = ["postgresql"], version = "^3.1.0" }
 fingerprints = "^1.2.3"
-servicelayer = {extras = ["amazon"], version = "^1.23.1"}
+servicelayer = { extras = ["amazon"], version = "^1.23.1" }
 normality = "^2.5.0"
 pantomime = "^0.6.1"
 Flask = "<3"
@@ -30,7 +34,7 @@ alembic = "^1.14.0"
 Authlib = "<1"
 elasticsearch = "7.17.0"
 marshmallow = "^3.23.1"
-gunicorn = {extras = ["eventlet"], version = "^23.0.0"}
+gunicorn = { extras = ["eventlet"], version = "^23.0.0" }
 jsonschema = "^4.23.0"
 apispec = "^6.7.1"
 apispec-webframeworks = "^1.2.0"
@@ -40,7 +44,7 @@ pyyaml = "^6.0.2"
 python-frontmatter = "^1.1.0"
 pyjwt = "^2.9.0"
 cryptography = "^43.0.3"
-requests = {extras = ["security"], version = "^2.32.3"}
+requests = { extras = ["security"], version = "^2.32.3" }
 tabulate = "^0.9.0"
 zipstream-new = "^1.1.8"
 sentry-sdk = "^2.18.0"
