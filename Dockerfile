@@ -20,6 +20,11 @@ ENV LANG='en_US.UTF-8'
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app
 
+# Add ftm-compare model data
+ADD ./contrib/glm_bernoulli_2e_wf-v0.4.1.pkl /opt/ftm-compare/model.pkl
+ADD ./contrib/word_frequencies-v0.4.1.zip /opt/ftm-compare/word-frequencies/word-frequencies.zip
+RUN python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequencies.zip /opt/ftm-compare/word-frequencies/ 
+
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six lxml lxml_html_clean
 
@@ -31,10 +36,6 @@ COPY . /aleph
 WORKDIR /aleph
 ENV PYTHONPATH /aleph
 RUN pip install --no-cache-dir -q -e /aleph
-
-ADD ./contrib/glm_bernoulli_2e_wf-v0.4.1.pkl /opt/ftm-compare/model.pkl
-ADD ./contrib/word_frequencies-v0.4.1.zip /opt/ftm-compare/word-frequencies/word-frequencies.zip
-RUN python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequencies.zip /opt/ftm-compare/word-frequencies/ 
 
 # Configure some docker defaults:
 ENV FTM_COMPARE_FREQUENCIES_DIR=/opt/ftm-compare/word-frequencies/ \
