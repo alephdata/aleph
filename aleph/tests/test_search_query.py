@@ -85,7 +85,8 @@ class QueryTestCase(TestCase):
     def test_offset(self):
         q = query([("offset", 10), ("limit", 100)])
         body = q.get_body()
-        self.assertDictContainsSubset({"from": 10, "size": 100}, body)
+        # https://stackoverflow.com/questions/20050913/python-unittests-assertdictcontainssubset-recommended-alternative
+        self.assertEqual(body, body | {"from": 10, "size": 100})
 
     def test_post_filters(self):
         q = query(
