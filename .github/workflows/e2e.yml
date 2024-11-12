@@ -28,7 +28,7 @@ jobs:
           sudo echo "ALEPH_SECRET_KEY=batman\n" >> aleph.env
           echo "${GITHUB_REF}"
           docker --version
-          docker-compose --version
+          docker compose --version
 
       - name: Build e2e image
         run: make build-e2e
