@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
   push:
     paths:
-      - aleph-ui/*
+      - ui/*
       - .github/workflows/aleph-ui.yml
 
 permissions:
@@ -21,7 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/investigativedata/aleph-ui-base
+          images: ghcr.io/investigativedata/aleph-ui-base-tmp
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -57,7 +57,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/investigativedata/aleph-ui
+          images: ghcr.io/investigativedata/aleph-ui-tmp
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -75,7 +75,7 @@ jobs:
       - name: Build and push release
         uses: docker/build-push-action@v3
         with:
-          context: ./aleph-ui
+          context: ./ui
           build-args: |
             ALEPH_TAG=${{ version }}
           push: true
