@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.12-slim
 ENV DEBIAN_FRONTEND noninteractive
 LABEL org.opencontainers.image.source = "https://github.com/investigativedata/aleph"
 
