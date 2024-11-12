@@ -45,9 +45,9 @@ ENV FTM_COMPARE_FREQUENCIES_DIR=/opt/ftm-compare/word-frequencies/ \
 
 RUN mkdir /run/prometheus
 
-# COPY docker-entrypoint.sh /docker-entrypoint.sh
-# COPY docker-entrypoint.d /docker-entrypoint.d/
-# RUN chmod +x /docker-entrypoint.sh
-# ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.d /docker-entrypoint.d/
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 # Run the green unicorn
 CMD gunicorn --config /aleph/gunicorn.conf.py --workers 6 --log-level info --log-file -
