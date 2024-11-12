@@ -14,7 +14,7 @@ Flask-SQLAlchemy==3.0.5
 Flask-Mail==0.9.1
 Flask-Migrate==4.0.7
 Flask-Cors==4.0.0
-Flask-Babel==4.0.0
+Flask-Babel>=4.0.0
 flask-talisman==1.1.0
 SQLAlchemy==2.0.21
 alembic==1.13.1
@@ -27,7 +27,7 @@ jsonschema==4.22.0
 apispec==6.3.1
 apispec-webframeworks==0.5.2
 blinker==1.8.1
-Babel==2.12.1
+Babel>=2.12.1
 PyYAML==6.0.1
 python-frontmatter==1.1.0
 pyjwt >= 2.0.1, < 2.9.0
