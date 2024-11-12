@@ -1,6 +1,7 @@
-name: Build
+name: Build aleph
 
 on:
+  workflow_dispatch: {}
   push:
     paths-ignore:
       - "ui/**"
@@ -10,50 +11,38 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up
-        run: |
-          sudo sysctl -w vm.max_map_count=262144
-          sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
-          echo "${GITHUB_REF}"
-          docker --version
-          docker-compose --version
-
-      - name: Docker pull services
-        run: |
-          docker-compose pull --quiet elasticsearch ingest-file
-          make ALEPH_TAG=${GITHUB_SHA} services
-
-      - name: Build docker image
-        run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
-
-      - name: Install development dependencies
-        run: make dev
-
-      - name: Check code formatting
-        run: make format-check
-
-      - name: Run linter
-        run: make lint
-
-      - name: Run aleph tests
-        run: make ALEPH_TAG=${GITHUB_SHA} test
-
-      - name: Push docker images for tags
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          export ALEPH_TAG=${GITHUB_REF/refs\/tags\//}
-          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:${ALEPH_TAG};
-          docker push ghcr.io/alephdata/aleph:${ALEPH_TAG};
-
-      - name: Tag latest image
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && !startsWith(github.ref, 'refs/tags/test-')
-        run: |
-          docker tag ghcr.io/alephdata/aleph:${GITHUB_SHA} ghcr.io/alephdata/aleph:latest;
-          docker push ghcr.io/alephdata/aleph:latest;
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/investigativedata/aleph
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push release
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          # platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
