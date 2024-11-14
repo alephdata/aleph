@@ -85,7 +85,7 @@ def ensure_collection(foreign_id, label):
     return collection
 
 
-def get_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> None:
+def print_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> None:
     if not value or ctx.resilient_parsing:
         return
 
@@ -93,7 +93,7 @@ def get_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> Non
         f"Aleph {importlib.metadata.version('aleph')}\n"
         f"Python {platform.python_version()}\n"
         f"Flask {importlib.metadata.version('flask')}\n"
-        f"Werkzeug {importlib.metadata.version('werkzeug')}\n",
+        f"Werkzeug {importlib.metadata.version('werkzeug')}",
     )
     ctx.exit()
 
@@ -103,7 +103,7 @@ def get_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> Non
     "-v",
     "--version",
     help="Show the Aleph version.",
-    callback=get_aleph_version,
+    callback=print_aleph_version,
     expose_value=False,
     is_flag=True,
 )
