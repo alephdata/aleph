@@ -76,6 +76,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./ui
+          file: Dockerfile.production
           build-args: |
             ALEPH_TAG={{ version }}
           push: true
