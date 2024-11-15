@@ -21,7 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/investigativedata/aleph-tmp
+          images: ghcr.io/investigativedata/aleph
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
