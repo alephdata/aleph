@@ -91,3 +91,9 @@ Aleph also stores each extracted person or company as a [Mention](https://follow
 ### Extracting entities in (semi-)structured data
 
 The default spaCy models Aleph uses are trained on generic web content. They tend to show lower recall for (semi-)structured data such as listings from database websites. If you’re handling (semi-)structured files, we recommend that you manually parse the relevant data from these documents. To learn about this approach read ["How to create mixed document/entity graphs"](/developers/how-to/data/mixed-graphs).
+
+### Viewing extracted data in the UI
+
+Aleph currently doesn’t display all extracted data in the UI. The "Mentions" tab for a file will only list names of people and companies, email addresses, phone numbers, IBANs, and addresses if there is at least one other occurrence of the mention in another dataset or investigation the current user has access to.
+
+For example, if you upload a PDF document to Aleph that mentions the company name "ACME, Inc.", it will only be displayed in the "Mentions" tab if searching for "ACME, Inc." in Aleph would return at least one result.
