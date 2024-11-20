@@ -54,7 +54,7 @@ services:
       - "traefik.enable=false"
 
   worker:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc1}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc2}
     command: aleph worker
     restart: on-failure
     links:
@@ -79,7 +79,7 @@ services:
       - "traefik.enable=false"
 
   shell:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc1}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc2}
     command: /bin/bash
     depends_on:
       - postgres
@@ -99,7 +99,7 @@ services:
       - "traefik.enable=false"
 
   api:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc1}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc2}
     command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.wsgi:app
     expose:
       - 8000
@@ -121,7 +121,7 @@ services:
       - "traefik.enable=false"
 
   ui:
-    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc1}
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc2}
     depends_on:
       - api
       - traefik
