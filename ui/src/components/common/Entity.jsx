@@ -20,7 +20,14 @@ class EntityLink extends PureComponent {
   }
 
   onClick(event) {
-    const { entity, navigate, location, preview, profile = true } = this.props;
+    const {
+      entity,
+      navigate,
+      location,
+      preview,
+      previewQueryText,
+      profile = true,
+    } = this.props;
     const modifierPressed =
       event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
@@ -29,7 +36,7 @@ class EntityLink extends PureComponent {
     }
 
     event.preventDefault();
-    togglePreview(navigate, location, entity, profile);
+    togglePreview(navigate, location, entity, profile, previewQueryText);
   }
 
   render() {
