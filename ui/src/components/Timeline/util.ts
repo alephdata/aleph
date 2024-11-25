@@ -118,7 +118,7 @@ export class TimelineItem {
   }
 
   getColor() {
-    if (!this.layout) {
+    if (!this.layout || !this.layout.vertices) {
       return DEFAULT_COLOR;
     }
 

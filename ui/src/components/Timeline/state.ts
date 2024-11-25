@@ -168,7 +168,7 @@ export function reducer(state: State, action: Action): State {
 export function useTimelineState(entities: Array<Entity>, layout?: Layout) {
   return useReducer(reducer, {
     entities,
-    layout: layout || { vertices: [] },
+    layout: (layout && layout.vertices) ? layout : {vertices: []},
     selectedId: null,
     renderer: 'list',
     zoomLevel: 'months',
