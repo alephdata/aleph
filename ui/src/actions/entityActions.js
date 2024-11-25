@@ -41,7 +41,7 @@ export const createEntity = asyncActionCreator(
       const config = { params: { sync: true } };
       const payload = entity.toJSON();
       payload.collection_id = collection_id;
-      const response = await endpoint.put(
+      const response = await endpoint.post(
         `entities/${entity.id}`,
         payload,
         config
@@ -55,7 +55,7 @@ export const updateEntity = asyncActionCreator(
   (entity) => async () => {
     const config = { params: { sync: true } };
     const payload = entity.toJSON();
-    const response = await endpoint.put(
+    const response = await endpoint.post(
       `entities/${entity.id}`,
       payload,
       config

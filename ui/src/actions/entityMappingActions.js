@@ -20,7 +20,7 @@ export const fetchEntityMapping = asyncActionCreator(
 );
 
 const executeTrigger = async (collectionId, mappingId) =>
-  endpoint.put(`collections/${collectionId}/mappings/${mappingId}/trigger`);
+  endpoint.post(`collections/${collectionId}/mappings/${mappingId}/trigger`);
 
 export const createEntityMapping = asyncActionCreator(
   ({ id, collection }, mapping) =>
@@ -51,7 +51,7 @@ export const deleteEntityMapping = asyncActionCreator(
 export const flushEntityMapping = asyncActionCreator(
   ({ id, collection }, mappingId) =>
     async () => {
-      await endpoint.put(
+      await endpoint.post(
         `collections/${collection.id}/mappings/${mappingId}/flush`
       );
       return { id };
@@ -62,7 +62,7 @@ export const flushEntityMapping = asyncActionCreator(
 export const updateEntityMapping = asyncActionCreator(
   ({ id, collection }, mappingId, mapping) =>
     async () => {
-      const response = await endpoint.put(
+      const response = await endpoint.post(
         `collections/${collection.id}/mappings/${mappingId}`,
         mapping
       );
