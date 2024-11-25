@@ -301,12 +301,6 @@ class Settings:
         self.XREF_MODEL = env.get("FTM_COMPARE_MODEL", None)
 
         ###############################################################################
-        # Feature flags
-        self.ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE = env.get(
-            "ALEPH_ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE", False
-        )
-
-        ###############################################################################
         # Feedback
         self.FEEDBACK_URL_DOCUMENTS = env.get("ALEPH_FEEDBACK_URL_DOCUMENTS", None)
         self.FEEDBACK_URL_TIMELINES = env.get("ALEPH_FEEDBACK_URL_TIMELINES", None)

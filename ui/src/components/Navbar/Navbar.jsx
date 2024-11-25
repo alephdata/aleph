@@ -20,7 +20,6 @@ import {
   selectSession,
   selectPages,
   selectEntitiesResult,
-  selectExperimentalBookmarksFeatureEnabled,
 } from 'selectors';
 import SearchAlert from 'components/SearchAlert/SearchAlert';
 import { DialogToggleButton } from 'components/Toolbar';
@@ -96,7 +95,6 @@ export class Navbar extends React.Component {
       query,
       result,
       isHomepage,
-      bookmarksEnabled,
       intl,
     } = this.props;
     const { advancedSearchOpen, mobileSearchOpen } = this.state;
@@ -211,21 +209,19 @@ export class Navbar extends React.Component {
                       />
                     </LinkButton>
                   )}
-                  {bookmarksEnabled && (
-                    <DialogToggleButton
-                      buttonProps={{
-                        text: (
-                          <FormattedMessage
-                            id="nav.bookmarks"
-                            defaultMessage="Bookmarks"
-                          />
-                        ),
-                        icon: 'star',
-                        minimal: true,
-                      }}
-                      Dialog={BookmarksDrawer}
-                    />
-                  )}
+                  <DialogToggleButton
+                    buttonProps={{
+                      text: (
+                        <FormattedMessage
+                          id="nav.bookmarks"
+                          defaultMessage="Bookmarks"
+                        />
+                      ),
+                      icon: 'star',
+                      minimal: true,
+                    }}
+                    Dialog={BookmarksDrawer}
+                  />
                   {menuPages.map((page) => (
                     <LinkButton
                       key={page.name}
@@ -278,7 +274,6 @@ const mapStateToProps = (state, ownProps) => {
     metadata: selectMetadata(state),
     session: selectSession(state),
     pages: selectPages(state),
-    bookmarksEnabled: selectExperimentalBookmarksFeatureEnabled(state),
   };
 };
 

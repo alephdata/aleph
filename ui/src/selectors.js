@@ -82,17 +82,6 @@ export function selectMetadata(state) {
   return metadata;
 }
 
-export function selectFeatureFlags(state) {
-  return selectMetadata(state).feature_flags;
-}
-
-export function selectExperimentalBookmarksFeatureEnabled(state) {
-  const loggedIn = !!selectSession(state).loggedIn;
-  const featureFlag = !!selectFeatureFlags(state).bookmarks;
-
-  return loggedIn && featureFlag;
-}
-
 export function selectFeedbackUrls(state) {
   return selectMetadata(state)?.feedback_urls;
 }
