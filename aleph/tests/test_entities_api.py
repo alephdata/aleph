@@ -716,4 +716,21 @@ class EntitiesApiTestCase(TestCase):
             prop = res["property"]
             assert prop == "holder", prop
             assert res["count"] == 1, pformat(res)
-            assert len(res["entities"]) == 1, pformat(res)
+        assert len(res["entities"]) == 1, pformat(res)
+
+    def test_view_transliterate(self):
+        _, headers = self.login(is_admin=True)
+
+        data = {
+            "id": "1",
+            "schema": "Person",
+            "properties": {
+                "name": ["İlham Əliyev"],
+            },
+        }
+        entity = self.create_entity(data, self.col)
+        index_entity(entity)
+
+        res = self.client.get(f"/api/2/entities/{entity.id}", headers=headers)
+        assert res.json["properties"]["name"][0] == "İlham Əliyev"
+        assert res.json["latinized"]["İlham Əliyev"] == "Ilham Aliyev"
