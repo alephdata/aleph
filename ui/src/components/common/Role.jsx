@@ -16,6 +16,10 @@ const messages = defineMessages({
     id: 'role.select.user',
     defaultMessage: 'Choose a user',
   },
+  placeholder: {
+    id: 'role.select.placeholder',
+    defaultMessage: 'Enter email address…',
+  },
 });
 
 class RoleLabel extends PureComponent {
@@ -87,20 +91,32 @@ class Select extends Component {
   }
 
   async onSuggest(query) {
+    this.setState({ query });
+
     const { isFixed } = this.state;
-    if (isFixed || query.length <= 3) {
+    if (isFixed) {
       return;
     }
+
+    if (this.state.query === query) {
+      // Prevent loading suggestions if the query hasn't changed.
+      // See https://github.com/palantir/blueprint/issues/2983
+      return;
+    }
+
+    if (query.length < 6) {
+      this.setState({ suggested: [] });
+      return;
+    }
+
     const { exclude = [] } = this.props;
     const roles = await this.props.suggestRoles(query, exclude);
-    this.setState({
-      suggested: roles.results,
-    });
+    this.setState({ suggested: roles.results });
   }
 
   onSelectRole(role, event) {
     event.stopPropagation();
-    this.props.onSelect(role);
+    this.props.onSelect(role, this.state.query);
   }
 
   renderRole = (role, { handleClick, modifiers }) => (
@@ -129,7 +145,9 @@ class Select extends Component {
           fill: true,
         }}
         inputProps={{
+          type: 'email',
           fill: true,
+          placeholder: intl.formatMessage(messages.placeholder),
         }}
         activeItem={role}
         filterable={!isFixed}

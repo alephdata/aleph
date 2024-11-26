@@ -1,0 +1,30 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Run Behind a Reverse Proxy
+---
+
+# How To Run Aleph Behind a Reverse Proxy
+
+<p class="lead">For production use cases, you will usually want to deploy Aleph behind a reverse proxy that handles TLS termination etc. In this guide, you will learn how to configure Aleph to run behind a TLS reverse proxy. However, this guide won’t cover configuring a specific reverse proxy.</p>
+
+<Steps>
+  <Step>  
+    Set the following configuration options:
+
+| Configuration option | Value |
+| --- | --- |
+| `ALEPH_UI_URL` | The URL of your Aleph instance, for example `https://example.org` |
+| `ALEPH_URL_SCHEME` | `https` |
+| `ALEPH_FORCE_HTTPS` | `false` |
+
+    Setting `ALEPH_UI_URL` ensures that links in the Aleph UI, in notification emails, etc. point to the correct URL. Setting `ALEPH_URL_SCHEME` to `https` ensures that all links use HTTPS. Setting `ALEPH_FORCE_HTTPS` to `false` prevents infinite redirect loops.
+  </Step>
+
+  <Step>
+    Configure the reverse proxy to proxy requests to the Aleph UI. As Aleph won’t automatically redirect HTTP requests to HTTPS, make sure to configiure the reverse proxy to either redirect or block HTTP requests.
+  </Step>
+
+  <Step>
+    Restart Aleph.
+  </Step>
+</Steps>

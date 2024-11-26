@@ -53,6 +53,7 @@ import WidthBoundary from './WidthBoundary';
 import DeleteDialog from './DeleteDialog';
 import FeedbackButton from './FeedbackButton';
 import HintPopover from './HintPopover';
+import RoleBlockedMessage from './RoleBlockedMessage';
 
 export {
   AnimatedCount,
@@ -110,6 +111,7 @@ export {
   DeleteDialog,
   FeedbackButton,
   HintPopover,
+  RoleBlockedMessage,
 };
 
 export * from './types';

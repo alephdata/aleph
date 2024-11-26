@@ -1,5 +1,5 @@
-COMPOSE=docker-compose -f docker-compose.dev.yml
-COMPOSE_E2E=docker-compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
+COMPOSE=docker compose -f docker-compose.dev.yml
+COMPOSE_E2E=docker compose -f docker-compose.dev.yml -f docker-compose.e2e.yml
 APPDOCKER=$(COMPOSE) run --rm app
 UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
@@ -9,7 +9,8 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		postgres elasticsearch ingest-file
+		postgres elasticsearch ingest-file  \
+    redis rabbitmq
 
 shell: services
 	$(APPDOCKER) /bin/bash

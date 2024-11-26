@@ -1,0 +1,110 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Manage Users and Groups
+---
+
+# How To Manage Users and Groups
+
+<p class="lead">Sharing files and data with other users is a core feature in Aleph. This guide describes how to manage users and user groups in Aleph.</p>
+
+Many organizations delegate user management to a seperate identity provider, and we recommend that you do so, too! Aleph supports the OAuth2/OpenID Connect standards and works with a wide range of identity providers. Please refer to ["How To Configure an Identity Provider"](/developers/how-to/operations/identity-provider) for details.
+
+For this reason, we do not provide user interfaces for user and groups management and do not plan to implement this in the future. However, the Aleph CLI supports a limited set of commands for user and group management.
+
+## Prerequisites
+
+The Aleph CLI is available in Aleph containers. If you have deployed Aleph using Docker Compose, start a shell session in an Aleph container:
+
+```
+docker compose run --rm shell bash
+```
+
+## Manage users
+
+### List users
+
+Run the following CLI command to print a list of all users, including the groups each user belongs to:
+
+```
+aleph users
+```
+
+### Create or update a user
+
+Run the follwoing CLI command (replacing the placeholder values) to create a new user. If a user with the given email address exits already, it will be updated.
+
+```
+aleph createuser --name "John Doe" --password "SECURE_PASSWORD" john.doe@example.org
+```
+
+You can optionally pass the `--admin` flag to create an admin user:
+
+```
+aleph createuser --name "John Doe" --admin --password "SECURE_PASSWORD" john.doe@example.org
+```
+
+### Reset a password
+
+Aleph doesn’t have a self-service password reset for users. However, you can update a user’s password using the CLI. The `createuser` command updates a user instead of creating a new user if a user with the given email address already exists.
+
+```
+aleph createuser --password "NEW_PASSWORD" john.doe@example.org
+```
+
+### Delete a user
+
+In order to delete a user using the CLI, you will need to know the user’s foreign ID. The foreign ID consists of two parts, the authentication method and the user’s email address or the ID of the identification provider.
+
+For example, the foreign ID of a user authenticated using Aleph’s built-in password authentication system will be in the format `password:john.doe@example.org`. The foreign ID of a user authenticated using an OAuth identity provider would be in the format `oidc:e5d5735d-...` where the second part is the user’s ID with the identity provider.
+
+You can also retrieve a user’s foreign ID by [listing all users](#list-users).
+
+Run the following command to delete a user. Replace "password:john.doe@example.org" with the user’s foreign ID.
+
+```
+aleph deleterole password:john.doe@example.org
+```
+
+## Manage groups
+
+Users can belong to one or more user groups. User groups make it easier to manage access, especially when you’re collaborating with many users. You 
+
+### List groups
+
+Run the following CLI command to list all groups:
+
+```
+aleph groups
+```
+
+### Create a group
+
+Run the following CLI command to create a user group. Replace "my-group" with the name of your group.
+
+```
+aleph creategroup my-group
+```
+
+### Delete a group
+
+Run the following CLI command to delete a user group. Replace "my-group" with the name of the group to delete.
+
+```
+aleph deleterole group:my-group
+```
+
+### Add a user to a group
+
+Run the following command to add a user to a group. Replace john.doe@example.org with the user’s email address and "my-group" with the name of the group.
+
+```
+aleph useradd my-group john.doe@example.org
+```
+
+### Remove a user from a group
+
+Run the following command to remove a user from a group. Replace john.doe@example.org with the user’s email address and "my-group" with the name of the group.
+
+```
+aleph userdel my-group john.doe@example.org
+```

@@ -43,7 +43,6 @@ export {
   createEntitySetNoMutate,
   deleteEntitySet,
   entitySetAddEntity,
-  fetchDiagramEmbed,
   queryEntitySetItems,
   updateEntitySetItemMutate,
   updateEntitySetItemNoMutate,
@@ -70,7 +69,6 @@ export {
   queryBookmarks,
   createBookmark,
   deleteBookmark,
-  migrateLocalBookmarks,
 } from './bookmarkActions';
 
 export { createAction };

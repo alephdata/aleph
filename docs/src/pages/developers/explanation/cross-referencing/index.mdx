@@ -1,0 +1,85 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Cross-referencing
+---
+
+# Cross-referencing
+
+<p class="lead">Aleph allows you to find matches of similar entities (such as people, companies, airplanes, etc.) across collections, a feature called cross-referencing. This article describes how cross-referencing works and how Aleph calculates similarity scores.</p>
+
+## Overview
+
+Aleph currently allows cross-referencing an entire collection, that is, comparing all entities in that particular collection against entities in all other collections. Users need to explicitly start the cross-referencing process for a collection. Additionally, Aleph automatically cross-references individual entities in investigations whenever a user updates them.
+
+Cross-referencing is a two-step process. In order to cross-reference an entity, Aleph first searches Elasticsearch for a limited number potential matches, called *candidates*. In a second step, Aleph computes a similarity score for each of the top candidiates« using a machine learning model.
+
+In order to cross-reference an entire collection, Aleph simply iterates over every entity in the collection and repeates the process for each of them.
+
+## Searching for candidates
+
+Aleph searches for similar entities based on the entity’s properties. For example, consider the following `Company` entity:
+
+| Property | Type | Value |
+| --- | --- | --- |
+| Name | Name | ACME, Inc. |
+| Registration number | Identifier | 123456 |
+| Incorporation date | Date | 1995 | 
+
+### Required properties
+
+Aleph considers names and identifiers to be very important with regards to entity smiliarity and considers only entities as candidates that have the same or similar property values. In the example, other entities would need to also include a name property that has a value similar to `ACME, Inc.`.
+
+### Fingerprints
+
+Aleph computes *fingerprints* for values of name properties. Fingerprints are normalized forms derived from names. For example, "Siemens Aktiengesellschaft" and "Siemens AG" are both normalized to "ag siemens".
+
+### Optional properties
+
+Other properties (such as a person’s nationality or a company’s incorporation date) are optional, but increase the likelihood of a candidate to be propagated to the second step of the cross-referencing process. In the above example, other `Company` entities would be considered, even if their incorporation date isn’t known or it is not 1995, but only after any candidates that were incorporated in 1995.
+
+## Computing similarity scores
+
+In the second step, Aleph computes a similarity score for each of the top candidates. Similarity scores are computed by a [machine learning model](https://github.com/alephdata/followthemoney-compare).
+
+The model’s features include the similarity of properties such as names, countries, identifiers, and addresses, as well as the number of properties that both entities share. The method used to calculate the similarity of two property values depends on the property type. For example, names are compared using Levenshtein distance.
+
+The model is trained based on real-world training data and manual judgements by journalists about the similarity of entities.
+
+## Storing matches
+
+Aleph stores cross-referencing matches in a separate Elasticsearch index. Matches contain the IDs of the matched entities and their collections. Additionally, Aleph also stores the captions and name properties of the matched entities to allow for basic searches in the cross-referencing results.
+
+## Limitations and known issues
+
+### Elasticsearch scroll timeouts
+
+When cross-referencing an entire collection, Aleph uses the [Elasticsearch scroll API](https://www.elastic.co/guide/en/elasticsearch/reference/current/scroll-api.html) to iterate over all entities in the collection in batches. For every batch of entities, Aleph computes the cross-referencing as described above.
+
+The scroll API has a timeout for the maximum time between requesting two batches of entities. If fetching candidates and computing the similarity score for a batch of entities takes longer than the timeout, Elasticsearch will raise an error when Aleph tries to request the next batch of entities.
+
+A short term workaround for this is to increase the scroll timeout using the `ALEPH_XREF_SCROLL` configuration option or to decrease the batch size using the `ALEPH_XREF_SCROLL_SIZE` configuration option.
+
+### Progress and retries
+
+In Aleph, a task is a single unit of background work. Aleph tracks progress of background jobs at the task-level (i.e. it stores how many tasks have been processed so far and how many are still pending). If a task fails, the entire task is retried.
+
+Cross-referencing an entire collection is implemented as a single task. That means that Aleph currently isn’t able to display information about the progress of the cross-referencing process (besides the fact that it is still running).
+
+Additionally, if the task fails, it is retried from the beginning, re-computing cross-referencings for entities that have already been processed. Depending on the size of the Aleph instance and the size of the collection, computing cross-referencings can take hours, sometimes even days.
+
+### Searching and filtering matches
+
+[Matches store only the IDs of the matched entities](#storing-matches) along with some additional metadata. As Elasticsearch doesn’t support joins in a way a relational database would, searching and filtering cross-referencing results is limited to this metadata.
+
+### Mentions
+
+Mentions are names of people or companies that Aleph automatically extracts from files you upload. Aleph includes mentions when cross-referencing a collection, but only in one direction.
+
+Consider the following example:
+
+* "Collection A" contains a file. The file mentions "John Doe".
+* "Collection B" contains a `Person` entity named "John Doe".
+
+If you cross-reference "Collection A", Aleph includes the mention of "John Doe" in the cross-referencing and will find a match for it in "Collection B".
+
+However, if you cross-reference "Collection B", Aleph doesn’t consider mentions when trying to find a match for the `Person` entity.

@@ -1,25 +1,22 @@
+from pprint import pformat  # noqa
+from collections import defaultdict
+import time
+import threading
+import functools
+import queue
+import copy
+from typing import Dict, Callable
+import sqlalchemy
+
 import structlog
-from servicelayer.jobs import Dataset
-from servicelayer.worker import Worker
-from servicelayer.logs import apply_task_context
+from servicelayer.taskqueue import Worker, Task
+from servicelayer import settings as sls
 
 from aleph import __version__
 from aleph.core import kv, db, create_app
 from aleph.settings import SETTINGS
 from aleph.model import Collection
-from aleph.queues import get_rate_limit, get_dataset_collection_id
-from aleph.queues import (
-    OP_INDEX,
-    OP_REINDEX,
-    OP_REINGEST,
-    OP_XREF,
-    OP_EXPORT_SEARCH,
-    OP_EXPORT_XREF,
-    OP_LOAD_MAPPING,
-    OP_FLUSH_MAPPING,
-    OP_UPDATE_ENTITY,
-    OP_PRUNE_ENTITY,
-)
+from aleph.queues import get_rate_limit
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.collections import compute_collections, refresh_collection
@@ -31,18 +28,52 @@ from aleph.logic.xref import xref_collection, export_matches
 from aleph.logic.entities import update_entity, prune_entity
 from aleph.logic.mapping import load_mapping, flush_mapping
 
+INDEXING_TIMEOUT = (
+    SETTINGS.INDEXING_TIMEOUT
+)  # run all available indexing jobs in a batch after 10 seconds
+
 log = structlog.get_logger(__name__)
 
+
 app = create_app(config={"SERVER_NAME": SETTINGS.APP_UI_URL})
+indexing_lock = threading.Lock()
 
 
-def op_index(collection, task):
-    sync = task.context.get("sync", False)
-    index_many(task.stage, collection, sync=sync, **task.payload)
+def op_index(batch, worker: Worker):
+    sync = False
+    for collection_id in batch:
+        for task in batch[collection_id]:
+            if task.context.get("sync", False):
+                sync = True
+                break
+
+    item_count = sum(map(len, batch.values()))
+    log.debug(
+        f"Running batch indexing with {item_count}"
+        f" items from {len(batch.keys())} collections"
+    )
+
+    # we want skip_errors=True because we can't recover from ftm merge related errors
+    index_many(batch, sync=sync, skip_errors=True)
+
+    for collection_id, tasks in batch.items():
+        for task in tasks:
+            # acknowledge batched tasks
+            log.info(
+                f"Task [collection: {task.collection_id}]: "
+                f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
+            )
+            # avoid data race with the main thread by using a copy of the task
+            channel = task._channel
+            delattr(task, "_channel")
+            task = copy.deepcopy(task)
+            task.context["skip_ack"] = False
+            cb = functools.partial(worker.ack_message, task, channel)
+            channel.connection.add_callback_threadsafe(cb)
 
 
 def op_reingest(collection, task):
-    reingest_collection(collection, job_id=task.stage.job.id, **task.payload)
+    reingest_collection(collection, job_id=task.job_id, **task.payload)
 
 
 def op_reindex(collection, task):
@@ -57,75 +88,166 @@ def op_flush_mapping(collection, task):
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = {
-    OP_INDEX: op_index,
-    OP_XREF: lambda c, _: xref_collection(c),
-    OP_REINGEST: op_reingest,
-    OP_REINDEX: op_reindex,
-    OP_LOAD_MAPPING: lambda c, t: load_mapping(c, **t.payload),
-    OP_FLUSH_MAPPING: op_flush_mapping,
-    OP_EXPORT_SEARCH: lambda _, t: export_entities(**t.payload),
-    OP_EXPORT_XREF: lambda _, t: export_matches(**t.payload),
-    OP_UPDATE_ENTITY: lambda c, t: update_entity(c, job_id=t.stage.job.id, **t.payload),
-    OP_PRUNE_ENTITY: lambda c, t: prune_entity(c, job_id=t.stage.job.id, **t.payload),
+OPERATIONS: Dict[str, Callable] = {
+    SETTINGS.STAGE_INDEX: op_index,
+    SETTINGS.STAGE_XREF: lambda c, _: xref_collection(c),
+    SETTINGS.STAGE_REINGEST: op_reingest,
+    SETTINGS.STAGE_REINDEX: op_reindex,
+    SETTINGS.STAGE_LOAD_MAPPING: lambda c, t: load_mapping(c, **t.payload),
+    SETTINGS.STAGE_FLUSH_MAPPING: op_flush_mapping,
+    SETTINGS.STAGE_EXPORT_SEARCH: lambda _, t: export_entities(**t.payload),
+    SETTINGS.STAGE_EXPORT_XREF: lambda _, t: export_matches(**t.payload),
+    SETTINGS.STAGE_UPDATE_ENTITY: lambda c, t: update_entity(
+        c, job_id=t.job_id, **t.payload
+    ),
+    SETTINGS.STAGE_PRUNE_ENTITY: lambda c, t: prune_entity(
+        c, job_id=t.job_id, **t.payload
+    ),
 }
 
 
 class AlephWorker(Worker):
-    def boot(self):
+    def __init__(
+        self,
+        queues,
+        conn=None,
+        num_threads=sls.WORKER_THREADS,
+        version=None,
+        prefetch_count_mapping=defaultdict(lambda: 1),
+    ):
+        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
+        # special treatment for indexing jobs - indexing jobs need to be batched
+        # in batches of 100 (specified by INDEXING_BATCH_SIZE) or we wait for 10
+        # seconds (specified by INDEXING_TIMEOUT) before triggering an batched
+        # run of all available indexing tasks
+        self.indexing_batch_last_updated = 0.0
+        self.indexing_batches = defaultdict(list)
+        self.local_queue = queue.Queue()
+        self.prefetch_count_mapping = prefetch_count_mapping
+
+    def on_signal(self, signal, _):
+        super().on_signal(signal, _)
+
+    def process(self, blocking=True):
+        if blocking:
+            with app.app_context():
+                self.process_blocking()
+        else:
+            self.process_nonblocking()
 
     def periodic(self):
         with app.app_context():
-            db.session.remove()
-            if self.often.check():
-                self.often.update()
-                log.info("Self-check...")
-                self.cleanup_jobs()
-                compute_collections()
+            try:
+                db.session.remove()
+                if self.often.check():
+                    self.often.update()
+                    log.info("Self-check...")
+                    compute_collections()
 
-            if self.daily.check():
-                self.daily.update()
-                log.info("Running daily tasks...")
-                update_roles()
-                check_alerts()
-                generate_digest()
-                delete_expired_exports()
-                delete_old_notifications()
+                if self.daily.check():
+                    self.daily.update()
+                    log.info("Running daily tasks...")
+                    update_roles()
+                    check_alerts()
+                    generate_digest()
+                    delete_expired_exports()
+                    delete_old_notifications()
 
-    def dispatch_task(self, task):
-        collection = get_dataset_collection_id(task.job.dataset.name)
-        if collection is not None:
-            collection = Collection.by_id(collection, deleted=True)
-        log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (started)")
-        handler = OPERATIONS[task.stage.stage]
+                self.run_indexing_batches()
+            except Exception:
+                log.exception("Error while executing periodic tasks")
+
+    def dispatch_task(self, task: Task) -> Task:
+        log.info(
+            f"Task [collection:{task.collection_id}]: "
+            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (started)"
+        )
+        handler = OPERATIONS[task.operation]
+        collection = None
+        # We call commit here to prevent worker-created SQLa sessions
+        # from interfering with API-created, flask-sqlalchemy managed ones
+        try:
+            db.session.commit()
+        except sqlalchemy.exc.PendingRollbackError:
+            db.session.rollback()
+        with db.session.begin():
+            if task.collection_id is not None:
+                collection = Collection.by_id(task.collection_id, deleted=True)
+
+        # Task batching for index operation
+        if task.operation == SETTINGS.STAGE_INDEX:
+            with indexing_lock:
+                self.indexing_batches[task.collection_id].append(task)
+                self.indexing_batch_last_updated = time.time()
+                if (
+                    sum(
+                        [len(self.indexing_batches[id]) for id in self.indexing_batches]
+                    )
+                    >= SETTINGS.INDEXING_BATCH_SIZE
+                ):
+                    # batch size limit reached; execute the existing batch and reset
+                    op_index(self.indexing_batches, worker=self)
+                    self.indexing_batches = defaultdict(list)
+                    self.indexing_batch_last_updated = 0.0
+                else:
+                    log.info(
+                        f"Task [collection: {task.collection_id}]: "
+                        f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (batched)"
+                    )
+                # skip acknowledgment for batched task; the batch processing function
+                # will acknowledge tasks after execution is complete
+                task.context["skip_ack"] = True
+                return task
+
         handler(collection, task)
-        log.info(f"Task [{task.job.dataset}]: {task.stage.stage} (done)")
-
-    def handle(self, task):
-        with app.app_context():
-            apply_task_context(task, v=__version__)
-            self.dispatch_task(task)
-
-    def cleanup_job(self, job):
-        if job.is_done():
-            collection = Collection.by_foreign_id(job.dataset.name)
-            if collection is not None:
-                refresh_collection(collection.id)
-            job.remove()
-
-    def cleanup_jobs(self):
-        for dataset in Dataset.get_active_datasets(kv):
-            for job in dataset.get_jobs():
-                self.cleanup_job(job)
+        log.info(
+            f"Task [collection:{task.collection_id}]: "
+            f"op:{task.operation} task_id:{task.task_id} priority: {task.priority} (done)"
+        )
+        return task
 
     def after_task(self, task):
-        with app.app_context():
-            self.cleanup_job(task.job)
+        if not SETTINGS.TESTING:
+            if task.collection_id and task.get_dataset(conn=kv).is_done():
+                refresh_collection(task.collection_id)
+
+    def run_indexing_batches(self):
+        """Run remaining batched indexing tasks after waiting for a maximum of
+        INDEXING_TIMEOUT seconds"""
+        # is the lock needed?
+        with indexing_lock:
+            now = time.time()
+            since_last_update = int(now - self.indexing_batch_last_updated)
+            if since_last_update > INDEXING_TIMEOUT:
+                batched_item_count = sum(
+                    [len(self.indexing_batches[id]) for id in self.indexing_batches]
+                )
+                if batched_item_count:
+                    op_index(self.indexing_batches, worker=self)
+                    self.indexing_batches = defaultdict(list)
+                    self.indexing_batch_last_updated = 0.0
 
 
-def get_worker(num_threads=None):
-    operations = tuple(OPERATIONS.keys())
-    log.info(f"Worker active, stages: {operations}")
-    return AlephWorker(conn=kv, stages=operations, num_threads=num_threads)
+def get_worker(num_threads=1):
+    # The stages performed by AlephWorker correspond to
+    # RabbitMQ queues. Both use the same string as a name,
+    # By default, AlephWorker implements all stages
+    # (and reads from all queues) except "index" and "analyze".
+    aleph_worker_stages = list(SETTINGS.ALEPH_STAGES)
+
+    log.info(f"Worker active, stages: {aleph_worker_stages}")
+
+    qos_mapping = {}
+    for stage in aleph_worker_stages:
+        if stage not in qos_mapping:
+            qos_mapping[stage] = SETTINGS.QOS_MAPPING.get(stage, 1)
+
+    return AlephWorker(
+        queues=aleph_worker_stages,
+        conn=kv,
+        num_threads=num_threads or 1,
+        version=__version__,
+        prefetch_count_mapping=qos_mapping,
+    )

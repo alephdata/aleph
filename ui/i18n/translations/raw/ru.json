@@ -65,9 +65,6 @@
   "case.save": {
     "defaultMessage": "Сохранить"
   },
-  "case.share.with": {
-    "defaultMessage": "Предоставить доступ"
-  },
   "case.summary": {
     "defaultMessage": "Краткое описание расследования"
   },
@@ -354,7 +351,7 @@
     "defaultMessage": "Создать новый маппинг сущностей"
   },
   "collection.mappings.create_docs_link": {
-    "defaultMessage": "Подробнее см. {link}"
+    "defaultMessage": "For more information, please refer to the {link}."
   },
   "collection.overview.empty": {
     "defaultMessage": "Пустой набор данных."
@@ -403,9 +400,6 @@
   },
   "collection.status.finished_tasks": {
     "defaultMessage": "Выполнено"
-  },
-  "collection.status.jobs": {
-    "defaultMessage": "Задачи"
   },
   "collection.status.message": {
     "defaultMessage": "Данные загружаются."
@@ -1005,7 +999,7 @@
     "defaultMessage": "{count, plural, one {Дата} few {Даты} many {Даты} other {Даты}}"
   },
   "facet.emails": {
-    "defaultMessage": "{count, plural, one {E-мэйл} few {E-мэйлы} many {E-мэйлы} other {E-мэйлы}}"
+    "defaultMessage": "{count, plural, one {Email address} other {Email addresses}}"
   },
   "facet.ibans": {
     "defaultMessage": "{count, plural, one {IBAN-код} few {IBAN-коды} many {IBAN-коды} other {IBAN-коды}}"
@@ -1135,9 +1129,6 @@
   },
   "investigation.overview.guides.mappings": {
     "defaultMessage": "Создание сущностей из таблиц"
-  },
-  "investigation.overview.guides.xref": {
-    "defaultMessage": "Перекрёстное сравнение данных"
   },
   "investigation.overview.notifications": {
     "defaultMessage": "Недавние события"
@@ -1290,7 +1281,7 @@
     "defaultMessage": "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
   },
   "mapping.docs.link": {
-    "defaultMessage": "Помощь по маппингу сущностей в Алефе"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.entityAssign.helpText": {
     "defaultMessage": "Необходимо создать объект типа \"{range}\" для {property}"
@@ -1341,10 +1332,10 @@
     "defaultMessage": "Импорт маппинга"
   },
   "mapping.info": {
-    "defaultMessage": "Выполните нижеследующие действия для маппинга данных в этом расследовании с сущностями модели Follow the Money. Подробнее см. {link}"
+    "defaultMessage": "Follow the steps below to map items in this investigation to structured entites. For more information, please refer to the {link}."
   },
   "mapping.info.link": {
-    "defaultMessage": "Помощь по маппингу данных в Алефе"
+    "defaultMessage": "Aleph user guide"
   },
   "mapping.keyAssign.additionalHelpText": {
     "defaultMessage": "Используйте колонки с идентификационными номерами, телефонными номерами, эл. адресами\n                и прочей уникальной информацией. Если колонки с уникальными значениями отсутствуют,\n                выберите одновременно несколько колонок, чтобы Алеф сгенерировал уникальные сущности из ваших данных."
@@ -1603,6 +1594,9 @@
   },
   "result.solo": {
     "defaultMessage": "Один результат"
+  },
+  "role.select.placeholder": {
+    "defaultMessage": "Enter email address…"
   },
   "role.select.user": {
     "defaultMessage": "Выберите пользователя"
@@ -1910,8 +1904,14 @@
   "sources.index.placeholder": {
     "defaultMessage": "Поиск наборов данных или расследований, относящихся к {group}..."
   },
+  "status.last_updated_at": {
+    "defaultMessage": "last updated"
+  },
   "status.no_collection": {
     "defaultMessage": "Прочие задачи"
+  },
+  "status.started_at": {
+    "defaultMessage": "started"
   },
   "tags.results": {
     "defaultMessage": "Количество упоминаний"

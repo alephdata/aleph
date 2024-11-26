@@ -44,16 +44,22 @@ spec:
             {{- range $key, $value := .Values.global.commonEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}
-            {{- end }}  
+            {{- end }}
             {{- range $key, $value := .Values.ingestfile.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
-            {{- end }} 
+            {{- end }}
             - name: FTM_STORE_URI
               valueFrom:
                 secretKeyRef:
                   name: aleph-secrets
                   key: FTM_STORE_URI
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aleph-secrets
+                  key: RABBITMQ_PASSWORD
+                  optional: true
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

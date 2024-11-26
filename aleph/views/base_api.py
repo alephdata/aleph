@@ -30,13 +30,25 @@ def _metadata_locale(locale):
     # This is cached in part because latency on this endpoint is
     # particularly relevant to the first render being shown to a
     # user.
-    auth = {"oauth": SETTINGS.OAUTH, "require_logged_in": SETTINGS.REQUIRE_LOGGED_IN}
+    auth = {
+        "oauth": SETTINGS.OAUTH,
+        "require_logged_in": SETTINGS.REQUIRE_LOGGED_IN,
+        "role_blocked": {
+            "message": SETTINGS.ROLE_BLOCKED_MESSAGE,
+            "link": SETTINGS.ROLE_BLOCKED_LINK,
+            "link_label": SETTINGS.ROLE_BLOCKED_LINK_LABEL,
+        },
+    }
+
     if SETTINGS.PASSWORD_LOGIN:
         auth["password_login_uri"] = url_for("sessions_api.password_login")
+
     if SETTINGS.PASSWORD_LOGIN and not SETTINGS.MAINTENANCE:
         auth["registration_uri"] = url_for("roles_api.create_code")
+
     if SETTINGS.OAUTH:
         auth["oauth_uri"] = url_for("sessions_api.oauth_init")
+
     locales = SETTINGS.UI_LANGUAGES
     locales = {loc: Locale(loc).get_language_name(loc) for loc in locales}
 

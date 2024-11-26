@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
+from servicelayer.taskqueue import declare_rabbitmq_queue, flush_queues
 from ftmstore import settings as ftms, get_store
 from followthemoney import model
 from followthemoney.cli.util import read_entity
@@ -25,7 +26,7 @@ from aleph.logic.aggregator import get_aggregator
 from aleph.logic.collections import update_collection, reindex_collection
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
-from aleph.core import db, kv, create_app
+from aleph.core import db, kv, create_app, rabbitmq_channel
 from aleph.oauth import oauth
 
 log = logging.getLogger(__name__)
@@ -81,13 +82,15 @@ class TestCase(unittest.TestCase):
         # have actually been evaluated.
         sls.REDIS_URL = None
         sls.WORKER_THREADS = None
+        for stage in SETTINGS.ALEPH_STAGES:
+            stage = f"test-{stage}-queue"
         ftms.DATABASE_URI = DB_URI
         # ftms.DATABASE_URI = "sqlite:///%s/ftm.store" % self.temp_dir
+
         SETTINGS.APP_NAME = APP_NAME
         SETTINGS.TESTING = True
         SETTINGS.DEBUG = True
         SETTINGS.CACHE = True
-        SETTINGS.OAUTH = False
         SETTINGS.SECRET_KEY = "batman"
         SETTINGS.APP_UI_URL = UI_URL
         SETTINGS.ARCHIVE_TYPE = "file"
@@ -100,8 +103,17 @@ class TestCase(unittest.TestCase):
         SETTINGS.INDEX_READ = [SETTINGS.INDEX_WRITE]
         SETTINGS.TAG_ENTITIES = True
         SETTINGS._gcp_logger = None
+
         app = create_app({})
         return app
+
+    def initialize_aleph_worker(self):
+        for stage in SETTINGS.ALEPH_STAGES:
+            try:
+                rabbitmq_channel.queue_delete(stage)
+            except ValueError:
+                pass
+            declare_rabbitmq_queue(rabbitmq_channel, stage)
 
     def create_user(self, foreign_id="tester", name=None, email=None, is_admin=False):
         role = Role.load_or_create(
@@ -233,6 +245,8 @@ class TestCase(unittest.TestCase):
         self._ctx = self.app.test_request_context()
         self._ctx.push()
 
+        self.initialize_aleph_worker()
+
     def setUp(self):
         if not hasattr(SETTINGS, "_global_test_state"):
             SETTINGS._global_test_state = True
@@ -249,6 +263,7 @@ class TestCase(unittest.TestCase):
                     conn.commit()
 
         kv.flushall()
+        flush_queues(rabbitmq_channel, kv, SETTINGS.ALEPH_STAGES)
         create_system_roles()
 
     def tearDown(self):

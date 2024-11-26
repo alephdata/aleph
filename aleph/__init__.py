@@ -23,6 +23,7 @@ logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("pdfminer").setLevel(logging.WARNING)
 logging.getLogger("httpstream").setLevel(logging.WARNING)
 logging.getLogger("factory").setLevel(logging.WARNING)
+logging.getLogger("pika").setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(log_level)

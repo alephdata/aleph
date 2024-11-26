@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from collections import defaultdict
-from servicelayer.jobs import Job
 
 from aleph.core import db, cache
 from aleph.authz import Authz
@@ -14,6 +13,7 @@ from aleph.index import entities as entities_index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.documents import ingest_flush, MODEL_ORIGIN
 from aleph.logic.aggregator import get_aggregator
+from aleph.util import random_id
 
 log = logging.getLogger(__name__)
 
@@ -127,14 +127,37 @@ def index_aggregator(
             yield proxy
         log.debug("[%s] Indexed %s entities", collection, idx)
 
-    entities_index.index_bulk(collection, _generate(), sync=sync)
+    entities_index.index_bulk(_generate(), collection=collection, sync=sync)
+
+
+def index_aggregator_bulk(entity_ids, skip_errors=False, sync=False):
+    def _generate():
+        idx = 0
+        for collection_id in entity_ids.keys():
+            collection = Collection.by_id(collection_id)
+            if collection:
+                aggregator = get_aggregator(collection)
+                entities = aggregator.iterate(
+                    entity_id=entity_ids[collection_id], skip_errors=skip_errors
+                )
+                for idx, proxy in enumerate(entities, 1):
+                    if idx > 0 and idx % 1000 == 0:
+                        log.debug("[%s] Index: %s...", collection_id, idx)
+                    yield (proxy, collection)
+                log.debug("[%s] Indexed %s entities", collection_id, idx)
+            else:
+                log.debug(
+                    f"Bulk indexing for inexistent collection id: {collection_id}"
+                )
+
+    entities_index.index_bulk(_generate(), sync=sync)
 
 
 def reingest_collection(
     collection, job_id=None, index=False, flush=True, include_ingest=False
 ):
     """Trigger a re-ingest for all documents in the collection."""
-    job_id = job_id or Job.random_id()
+    job_id = job_id or random_id()
     if flush:
         ingest_flush(collection, include_ingest=include_ingest)
     for document in Document.by_collection(collection.id):

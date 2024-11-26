@@ -24,8 +24,16 @@ services:
     volumes:
       - redis-data:/data
 
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    ports:
+      - '127.0.0.1:5672:5672'
+      - '127.0.0.1:15672:15672'
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.22.0
+    image: ghcr.io/alephdata/ingest-file:4.0.0
     tmpfs:
       - /tmp:mode=777
     volumes:
@@ -38,7 +46,7 @@ services:
       - aleph.env
 
   worker:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.17.0}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.0.2}
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -54,7 +62,7 @@ services:
       - aleph.env
 
   shell:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.17.0}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.0.2}
     command: /bin/bash
     depends_on:
       - postgres
@@ -72,7 +80,7 @@ services:
       - aleph.env
 
   api:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-3.17.0}
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.0.2}
     expose:
       - 8000
     depends_on:
@@ -89,7 +97,7 @@ services:
       - aleph.env
 
   ui:
-    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-3.17.0}
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-ALEPH_TAG:-4.0.2}
     depends_on:
       - api
     ports:
@@ -100,3 +108,4 @@ volumes:
   postgres-data: {}
   redis-data: {}
   elasticsearch-data: {}
+  rabbitmq-data: {}

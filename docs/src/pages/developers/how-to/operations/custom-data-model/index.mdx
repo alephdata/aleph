@@ -1,0 +1,96 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Customize the Data Model
+---
+
+# How To Customize the Data Model
+
+<p class="lead">Aleph heavily relies on the [FollowTheMoney](https://followthemoney.tech) data model. FollowTheMoney is a data model primarily aimed at anti-corruption investigations, but you can extend FollowTheMoney with your own entity schemas.</p>
+
+## Prerequisites
+
+* Before extending the FollowTheMoney data model, make sure to take a look at the [schemata available in the default model](https://followthemoney.tech/explorer/). The default model includes schemata that can be used to represent a wide range of use cases.
+
+* If your use case isn’t covered by the default model, but you think it’s a common use case for journalists or anti-corruption investigations, feel free to [open an issue on GitHub](https://github.com/alephdata/followthemoney/) to suggest an addition to the default model.
+
+* If your use case is not covered by the default model and you really want to extend/customize the data model, make sure you understand the [fundamental concepts](https://followthemoney.tech/docs/) and have read the [Schema Extensions](https://followthemoney.tech/docs/custom/) documentation.
+
+## Customize the data model
+
+<Callout theme="danger">
+  Aleph heavily relies on the default FollowTheMoney model. Aleph uses FollowTheMoney entities to represent structured data as well as any files that you upload. If you delete or alter entity schemata that Aleph relies on, you may experience errors, data issues, or unexpected behavior.
+
+  For this reason, we recommend that you extend the default model with new schemata or properties, but do not remove or alter existing schemata or properties.
+
+  Please note that you may have to sync your custom model with the upstream default model when you upgrade Aleph.
+</Callout>
+
+<Steps>
+  <Step>
+    The FollowTheMoney data model consists of entity schemata. Schemata are defined using YAML files. Obtain a copy of the default YAML definitions from the [FollowTheMoney GitHub repository](https://github.com/alephdata/followthemoney/tree/main/followthemoney/schema) 
+  </Step>
+
+  <Step>
+    Customize the default model by editing existing YAML files to edit existing schemata or creating new YAML files for new schemata.
+  </Step>
+</Steps>
+
+## Load the customized model
+
+Aleph Docker images ship with a copy of the default model. In order to get Aleph to load your custom model, you need to make it available inside of the Aleph containers. There are two options to achieve that, and you may prefer one or the other depending on your setup:
+
+### Mount a volume
+
+If you deploy Aleph using Docker Compose, this is the most straight-forward approach.
+
+<Steps>
+  <Step>
+    Add a separate item to the `volumes` configuration of the `api` and `worker` service in `docker-compose.yml` as shown below. This will make the contents of the `my-custom-schema` directory available inside of the Docker container at `/usr/local/my-custom-schema`.
+
+    ```yaml title="docker-compose.yml"
+    api:
+      # ...
+      volumes:
+        # ...
+        - ./my-custom-schema:/usr/local/my-custom-schema # Append this line
+
+    worker:
+      # ...
+      volumes:
+        # ...
+        - ./my-custom-schema:/usr/local/my-custom-schema # Append this line
+    ```
+  </Step>
+
+  <Step>
+    Set the `FTM_MODEL_PATH` configuration option to point to the directory that contains your custom model, for example `/usr/local/my-custom-schema`.
+  </Step>
+
+  <Step>
+    Apply the changes:
+
+    ```sh
+    docker compose -d up
+    ```
+  </Step>
+</Steps>
+
+### Build a custom Docker image
+
+This approach works whether you deploy Aleph using Docker Compose or Kubernetes, but it’s likely more complex to set up.
+
+<Steps>
+  <Step>
+    Build a custom Docker image based on the [official Aleph Docker image](https://github.com/alephdata/aleph/pkgs/container/aleph):
+
+    ```docker title="Dockerfile"
+    FROM ghcr.io/alephdata/aleph:3.17.0
+    COPY ./my-custom-schema /usr/local/my-custom-schema
+    ENV FTM_MODEL_PATH=/usr/local/my-custom-schema
+    ```
+  </Step>
+
+  <Step>
+    Use your custom image in place of the official Docker image and restart Aleph.
+  </Step>
+</Steps>

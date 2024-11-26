@@ -20,6 +20,14 @@ membership = db.Table(
 )
 
 
+class PasswordCredentialsError(Exception):
+    pass
+
+
+class RoleBlockedError(Exception):
+    pass
+
+
 class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
 
@@ -52,6 +60,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
     locale = db.Column(db.Unicode, nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
 
     permissions = db.relationship("Permission", backref="role")
 
@@ -270,10 +279,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def login(cls, email, password):
         """Attempt to log a user in via an email/password method."""
         role = cls.by_email(email)
-        if role is None or not role.is_actor or not role.has_password:
-            return
-        if role.check_password(password):
-            return role
+        if role is None:
+            raise PasswordCredentialsError()
+        if not role.check_password(password):
+            raise PasswordCredentialsError()
+        if role.is_blocked:
+            raise RoleBlockedError()
+        if not role.is_actor:
+            raise PasswordCredentialsError()
+        return role
 
     def __repr__(self):
         return "<Role(%r,%r)>" % (self.id, self.foreign_id)

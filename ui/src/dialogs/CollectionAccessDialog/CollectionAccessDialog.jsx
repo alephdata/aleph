@@ -88,9 +88,9 @@ class CollectionAccessDialog extends Component {
     }
   }
 
-  onAddRole(role) {
+  onAddRole(role, query) {
     const { permissions } = this.state;
-    permissions.push({ role, read: true, write: false });
+    permissions.push({ role, email: query, read: true, write: false });
     this.setState({ permissions });
   }
 
@@ -146,10 +146,11 @@ class CollectionAccessDialog extends Component {
       return null;
     }
 
-    const exclude = permissions.map((perm) => perm.role.id);
     const systemRoles = this.filterPermissions('system');
     const groupRoles = this.filterPermissions('group');
     const userRoles = this.filterPermissions('user');
+    const exclude = userRoles.map((perm) => perm.role.id);
+
     return (
       <FormDialog
         processing={blocking}

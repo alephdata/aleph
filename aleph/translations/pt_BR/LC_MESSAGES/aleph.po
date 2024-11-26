@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-05-22 15:09+0000\n"
+"POT-Creation-Date: 2024-10-14 10:03+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Laura M <kokoroko2@protonmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/aleph/teams/76591/pt_BR/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/logic/entities.py:105
+#: aleph/logic/entities.py:107
 msgid "No schema on entity"
 msgstr ""
 
@@ -367,27 +367,27 @@ msgstr "Token de acesso inválido."
 msgid "Search: %s"
 msgstr ""
 
-#: aleph/views/entitysets_api.py:216
+#: aleph/views/entitysets_api.py:217
 msgid "Only diagrams can be embedded!"
 msgstr ""
 
-#: aleph/views/roles_api.py:62
+#: aleph/views/roles_api.py:63
 msgid "prefix filter is too short"
 msgstr "filtro de prefixo muito curto"
 
-#: aleph/views/roles_api.py:107
+#: aleph/views/roles_api.py:112
 msgid "To proceed, please check your email."
 msgstr "Para continuar, por favor verifque seu email."
 
-#: aleph/views/roles_api.py:140
+#: aleph/views/roles_api.py:145
 msgid "Invalid code"
 msgstr "Código inválido"
 
-#: aleph/views/roles_api.py:146
+#: aleph/views/roles_api.py:151
 msgid "Email is already registered"
 msgstr "Email já cadastrado"
 
-#: aleph/views/roles_api.py:235
+#: aleph/views/roles_api.py:240
 msgid "Incorrect password."
 msgstr "Senha incorreta."
 
@@ -399,14 +399,14 @@ msgid ""
 "Aleph administrator"
 msgstr ""
 
-#: aleph/views/sessions_api.py:69
+#: aleph/views/sessions_api.py:70
 msgid "Invalid user or password."
 msgstr "Usuário ou senha inválida."
 
-#: aleph/views/sessions_api.py:104
+#: aleph/views/sessions_api.py:106
 msgid "Authentication has failed."
 msgstr "Autenticação falhou."
 
-#: aleph/views/util.py:78
+#: aleph/views/util.py:77
 msgid "Error during data validation"
 msgstr "Erro durante a validação do dado"

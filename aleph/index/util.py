@@ -1,4 +1,4 @@
-import logging
+import structlog
 from pprint import pprint  # noqa
 from banal import ensure_list, is_mapping
 from elasticsearch import TransportError
@@ -9,7 +9,7 @@ from servicelayer.util import backoff, service_retries
 from aleph.core import es
 from aleph.settings import SETTINGS
 
-log = logging.getLogger(__name__)
+log = structlog.get_logger(__name__)
 
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
@@ -54,6 +54,10 @@ SHARD_WEIGHTS = {
     "Pages": SHARDS_HEAVY,
     "Table": SHARDS_HEAVY,
 }
+
+
+class AlephOperationalException(Exception):
+    pass
 
 
 def get_shard_weight(schema):
@@ -180,7 +184,7 @@ def query_delete(index, query, sync=False, **kwargs):
                 request_timeout=MAX_REQUEST_TIMEOUT,
                 timeout=MAX_TIMEOUT,
                 scroll_size=SETTINGS.INDEX_DELETE_BY_QUERY_BATCHSIZE,
-                **kwargs
+                **kwargs,
             )
             return
         except TransportError as exc:
@@ -237,8 +241,7 @@ def _check_response(index, res):
     if res.get("status", 0) > 399 and not res.get("acknowledged"):
         error = res.get("error", {}).get("reason")
         log.error("Index [%s] error: %s", index, error)
-        return False
-    return True
+        raise AlephOperationalException(f"Index {index} error: {error}")
 
 
 def rewrite_mapping_safe(pending, existing):
@@ -286,26 +289,42 @@ def configure_index(index, mapping, settings):
             "timeout": MAX_TIMEOUT,
             "master_timeout": MAX_TIMEOUT,
         }
-        config = es.indices.get(index=index).get(index, {})
+        res = es.indices.get(index=index)
+
+        if len(res) != 1:
+            # This case should never occur.
+            log.error("ES response", res=res)
+            raise AlephOperationalException("ES response is empty or ambiguous.")
+
+        # The ES response is an object with items for every requested index. As we only request
+        # a single index, we extract the first and only item from the response. We cannot simply
+        # extract the response data using the index name as the name we use to request the index
+        # may be an alias whereas the response will always contain the actual un-aliased name.
+        config = list(res.values())[0]
+
         settings.get("index").pop("number_of_shards")
+        log.info(
+            f"[{index}] Current settings.", index=index, settings=config.get("settings")
+        )
         if check_settings_changed(settings, config.get("settings")):
-            res = es.indices.close(ignore_unavailable=True, **options)
-            res = es.indices.put_settings(body=settings, **options)
-            if not _check_response(index, res):
-                return False
+            log.info(f"[{index}] Updated settings.", index=index, settings=settings)
+            _check_response(index, es.indices.close(ignore_unavailable=True, **options))
+            _check_response(index, es.indices.put_settings(body=settings, **options))
+        else:
+            log.info(f"[{index}] No changes detected in settings.", index=index)
+        log.info(
+            f"[{index}] Current mappings.", index=index, mappings=config.get("mappings")
+        )
+        log.info(f"[{index}] New mappings.", index=index, mappings=mapping)
         mapping = rewrite_mapping_safe(mapping, config.get("mappings"))
-        res = es.indices.put_mapping(body=mapping, ignore=[400], **options)
-        if not _check_response(index, res):
-            return False
-        res = es.indices.open(**options)
-        return True
+        _check_response(
+            index, es.indices.put_mapping(body=mapping, ignore=[400], **options)
+        )
+        _check_response(index, es.indices.open(**options))
     else:
-        log.info("Creating index: %s...", index)
+        log.info(f"Creating index: {index}...", index=index)
         body = {"settings": settings, "mappings": mapping}
-        res = es.indices.create(index, body=body)
-        if not _check_response(index, res):
-            return False
-        return True
+        _check_response(index, es.indices.create(index, body=body))
 
 
 def index_settings(shards=5, replicas=SETTINGS.INDEX_REPLICAS):

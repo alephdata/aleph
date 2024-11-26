@@ -22,11 +22,11 @@ jobs:
           sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
           echo "${GITHUB_REF}"
           docker --version
-          docker-compose --version
+          docker compose --version
 
       - name: Docker pull services
         run: |
-          docker-compose pull --quiet elasticsearch ingest-file
+          docker compose pull --quiet elasticsearch ingest-file
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image
@@ -34,6 +34,8 @@ jobs:
 
       - name: Install development dependencies
         run: make dev
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: 1
 
       - name: Check code formatting
         run: make format-check

@@ -117,14 +117,30 @@ def update(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    current = Permission.all().where(Permission.collection_id == collection.id)
+    current = [permission.role_id for permission in current]
+
     for permission in parse_request("PermissionUpdateList"):
         role_obj = ensure_dict(permission.get("role"))
         role_id = permission.get("role_id", role_obj.get("id"))
         role = Role.by_id(role_id)
+
         if not check_visible(role, request.authz):
             continue
+
+        if (
+            role.type == Role.USER
+            and role.id not in current
+            and (
+                not permission.get("email")
+                or role.email.lower() != permission.get("email", "").lower()
+            )
+        ):
+            continue
+
         if role.is_public:
             permission["write"] = False
+
         if collection.casefile and role.is_public:
             permission["read"] = False
 
@@ -135,6 +151,7 @@ def update(collection_id):
             permission["write"],
             editor_id=request.authz.id,
         )
+
     collection.updated_at = datetime.utcnow()
     update_collection(collection)
     db.session.commit()

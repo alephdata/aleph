@@ -2,7 +2,6 @@ import logging
 from urllib.parse import urlencode, urljoin
 
 from banal import clean_dict
-from elasticsearch import Elasticsearch, TransportError
 from flask import Flask, request
 from flask import url_for as flask_url_for
 from flask_babel import Babel
@@ -11,13 +10,16 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+from elasticsearch import Elasticsearch, TransportError
+
 from followthemoney import set_model_locale
-from servicelayer import settings as sls
-from servicelayer.archive import init_archive
 from servicelayer.cache import get_redis
+from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
-from servicelayer.logs import LOG_FORMAT_JSON, configure_logging
-from servicelayer.util import backoff, service_retries
+from servicelayer.util import service_retries, backoff
+from servicelayer.logs import configure_logging, LOG_FORMAT_JSON
+from servicelayer.taskqueue import get_rabbitmq_channel
+from servicelayer import settings as sls
 from werkzeug.local import LocalProxy
 from werkzeug.middleware.profiler import ProfilerMiddleware
 
@@ -46,7 +48,13 @@ prometheus = PrometheusExtension()
 def determine_locale():
     try:
         options = SETTINGS.UI_LANGUAGES
-        locale = request.accept_languages.best_match(options)
+        if str(request.accept_languages) == "*":
+            # For #3704: if any language is fine pick the default one
+            locale = SETTINGS.DEFAULT_LANGUAGE
+        else:
+            locale = request.accept_languages.best_match(
+                options, default=SETTINGS.DEFAULT_LANGUAGE
+            )
         locale = locale or str(babel.default_locale)
     except RuntimeError:
         locale = str(babel.default_locale)
@@ -189,6 +197,7 @@ es = LocalProxy(get_es)
 kv = LocalProxy(get_redis)
 cache = LocalProxy(get_cache)
 archive = LocalProxy(get_archive)
+rabbitmq_channel = LocalProxy(get_rabbitmq_channel)
 
 
 def url_for(*a, **kw):

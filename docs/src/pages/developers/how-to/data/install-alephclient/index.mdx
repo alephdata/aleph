@@ -1,0 +1,39 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Install the alephclient CLI
+---
+
+# How To Install the alephclient CLI
+
+<p class="lead">alephclient is a command-line client for Aleph. It can be used to bulk import structured data and files and more via the API, without direct access to the server. This guide describes how to install and configure the alephclient CLI on your computer.</p>
+
+<Steps>
+  <Step>
+    alephclient is written in Python and in order to use it you need to have Python 3 installed on your computer. Please refer to the [Python documentation](https://wiki.python.org/moin/BeginnersGuide/Download) for instructions on how to install Python.
+  </Step>
+
+  <Step>
+    You can now install alephclient using pip:
+
+    ```bash
+    pip3 install alephclient
+    ```
+  </Step>
+
+  <Step>
+    alephclient needs to know the URL of the Aleph instance to connect to. For privileged operations (e.g. accessing private datasets or writing data), it also needs your API key. You can find your API key in your user profile in the the Aleph UI.
+
+    Both settings can be provided by setting the environment variables `ALEPHCLIENT_HOST` and `ALEPHCLIENT_API_KEY`, respectively, or by passing them in with `--host` and `--api-key` options.
+
+    For example, to configure alephclient to connect to the [public Aleph instance](https://aleph.occrp.org) operated by the OCCRP, run the following commands to set the environment variables. Replace `YOUR_SECRET_API_KEY` with the API key from your user profile.
+
+    ```bash
+    export ALEPHCLIENT_HOST=https://aleph.occrp.org/
+    export ALEPHCLIENT_API_KEY=YOUR_SECRET_API_KEY
+    ```
+  </Step>
+
+  <Step>
+    You can now start using alephclient, for example to [upload an entire directory](/developers/how-to/data/upload-directory) to Aleph.
+  </Step>
+</Steps>

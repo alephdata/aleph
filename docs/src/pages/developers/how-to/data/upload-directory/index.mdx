@@ -1,0 +1,26 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Upload a Directory of Files
+---
+
+# How To Upload a Directory of Files
+
+<p class="lead">While you can upload multiple files and even entire directories at once via the Aleph UI, using the alephclient CLI allows you to upload files in bulk much quicker and more reliable. This guide describes how to upload an entire directory to Aleph using alephclient.</p>
+
+<Steps>
+  <Step>
+    This guide uses the alephclient CLI to upload files to Aleph in bulk. If you haven’t yet set up alephclient on your computer, refer to [this how-to guide](/developers/how-to/data/install-alephclient) to install and configure alephclient.
+  </Step>
+
+  <Step>
+    Run the following alephclient command to upload an entire directory to Aleph:
+
+    ```bash
+    alephclient crawldir --foreign-id wikileaks-cable /Users/sunu/data/cable
+    ```
+
+    This will upload all files in the directory `/Users/sunu/data/cable` (inlcuding its subdirectories) into an investigation with the foreign ID `wikileaks-cable`. If no investigation with this foreign ID exists, a new investigation is created.
+
+    If you’d like to import data into an existing investigation and do not know its foreign ID, you can find the foreign ID in the Aleph UI. Navigate to the investigation homepage. The foreign ID is listed in the sidebar on the right.
+  </Step>
+</Steps>

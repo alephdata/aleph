@@ -25,18 +25,3 @@ BookmarkCreate:
       format: entity-id
   required:
     - entity_id
-
-BookmarkMigrate:
-  type: array
-  items:
-    type: object
-    properties:
-      entity_id:
-        type: string
-        format: entity-id
-      created_at:
-        type: string
-        format: date-time
-    required:
-      - entity_id
-      - created_at

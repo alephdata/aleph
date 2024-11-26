@@ -1,4 +1,5 @@
 import logging
+from aleph.settings import SETTINGS
 from banal import ensure_dict
 from pprint import pformat  # noqa
 from flask_babel import gettext
@@ -10,7 +11,6 @@ from aleph.core import db, cache
 from aleph.model import Entity, Document, EntitySetItem, Mapping, Bookmark
 from aleph.index import entities as index
 from aleph.queues import pipeline_entity, queue_task
-from aleph.queues import OP_UPDATE_ENTITY, OP_PRUNE_ENTITY
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.logic.collections import MODEL_ORIGIN
@@ -47,7 +47,9 @@ def upsert_entity(data, collection, authz=None, sync=False, sign=False, job_id=N
 
     index.index_proxy(collection, proxy, sync=sync)
     refresh_entity(collection, proxy.id)
-    queue_task(collection, OP_UPDATE_ENTITY, job_id=job_id, entity_id=proxy.id)
+    queue_task(
+        collection, SETTINGS.STAGE_UPDATE_ENTITY, job_id=job_id, entity_id=proxy.id
+    )
     return entity.id
 
 
@@ -142,7 +144,9 @@ def delete_entity(collection, entity, sync=False, job_id=None):
     entity_id = collection.ns.sign(entity.get("id"))
     index.delete_entity(entity_id, sync=sync)
     refresh_entity(collection, entity_id)
-    queue_task(collection, OP_PRUNE_ENTITY, job_id=job_id, entity_id=entity_id)
+    queue_task(
+        collection, SETTINGS.STAGE_PRUNE_ENTITY, job_id=job_id, entity_id=entity_id
+    )
 
 
 def prune_entity(collection, entity_id=None, job_id=None):

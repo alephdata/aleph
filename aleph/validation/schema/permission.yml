@@ -20,6 +20,8 @@ PermissionUpdate:
       type: boolean
     role_id:
       type: string
+    email:
+      type: string
     role:
       $ref: "#/components/schemas/Role"
 
