@@ -4,8 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # build-essential
 RUN apt-get -qq -y update \
   && apt-get -qq --no-install-recommends -y install locales \
-  ca-certificates postgresql-client libpq-dev curl jq git \
-  libxml2-dev libxslt1-dev python3-dev \
+  postgresql-client jq python3-dev \
   && apt-get -qq -y autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
