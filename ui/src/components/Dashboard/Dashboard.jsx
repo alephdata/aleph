@@ -92,14 +92,14 @@ class Dashboard extends React.Component {
               <LinkMenuItem
                 icon="feed"
                 text={intl.formatMessage(messages.alerts)}
-                label={<Count count={role?.counts?.alerts} />}
+                label={<Count count={role?.counts?.alerts || 0} />}
                 to="/alerts"
                 active={current === '/alerts'}
               />
               <LinkMenuItem
                 icon="export"
                 text={intl.formatMessage(messages.exports)}
-                label={<Count count={role?.counts?.exports} />}
+                label={<Count count={role?.counts?.exports || 0} />}
                 to="/exports"
                 active={current === '/exports'}
               />
@@ -115,28 +115,28 @@ class Dashboard extends React.Component {
               <LinkMenuItem
                 icon="briefcase"
                 text={intl.formatMessage(messages.cases)}
-                label={<Count count={role?.counts?.casefiles} />}
+                label={<Count count={role?.counts?.casefiles || 0} />}
                 to="/investigations"
                 active={current === '/investigations'}
               />
               <LinkMenuItem
                 icon="graph"
                 text={intl.formatMessage(messages.diagrams)}
-                label={<Count count={role?.counts?.entitysets?.diagram} />}
+                label={<Count count={role?.counts?.entitysets?.diagram || 0} />}
                 to="/diagrams"
                 active={current === '/diagrams'}
               />
               <LinkMenuItem
                 icon="gantt-chart"
                 text={intl.formatMessage(messages.timelines)}
-                label={<Count count={role?.counts?.entitysets?.timeline} />}
+                label={<Count count={role?.counts?.entitysets?.timeline || 0} />}
                 to="/timelines"
                 active={current === '/timelines'}
               />
               <LinkMenuItem
                 icon="list"
                 text={intl.formatMessage(messages.lists)}
-                label={<Count count={role?.counts?.entitysets?.list} />}
+                label={<Count count={role?.counts?.entitysets?.list || 0} />}
                 to="/lists"
                 active={current === '/lists'}
               />
