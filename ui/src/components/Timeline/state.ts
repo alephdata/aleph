@@ -168,7 +168,7 @@ export function reducer(state: State, action: Action): State {
 export function useTimelineState(entities: Array<Entity>, layout?: Layout) {
   return useReducer(reducer, {
     entities,
-    layout: layout || { vertices: [] },
+    layout: layout || {},
     selectedId: null,
     renderer: 'list',
     zoomLevel: 'months',
@@ -190,10 +190,10 @@ export function selectSelectedVertex(state: State): Vertex | null {
   }
 
   const defaultVertex = { entityId: entity.id };
+  const vertices = state.layout.vertices || [];
 
   return (
-    state.layout.vertices.find((vertex) => vertex.entityId === entity.id) ||
-    defaultVertex
+    vertices.find((vertex) => vertex.entityId === entity.id) || defaultVertex
   );
 }
 
