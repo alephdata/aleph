@@ -30,7 +30,9 @@ const DeleteDialog: FC<DeleteDialogProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [confirmationValue, setConfirmationValue] = useState<string>('');
-  const enabled = confirmationValue.toLowerCase().trim() === expectedConfirmationValue.toLowerCase().trim();
+  const enabled =
+    confirmationValue.toLowerCase().trim() ===
+    expectedConfirmationValue.toLowerCase().trim();
 
   return (
     <Dialog isOpen={isOpen} title={title} icon="trash" onClose={onClose}>

@@ -129,7 +129,9 @@ class Dashboard extends React.Component {
               <LinkMenuItem
                 icon="gantt-chart"
                 text={intl.formatMessage(messages.timelines)}
-                label={<Count count={role?.counts?.entitysets?.timeline || 0} />}
+                label={
+                  <Count count={role?.counts?.entitysets?.timeline || 0} />
+                }
                 to="/timelines"
                 active={current === '/timelines'}
               />
