@@ -56,6 +56,7 @@ class EntitySearchResults extends Component {
       showPreview = true,
       updateSelection,
       selection,
+      query,
     } = this.props;
 
     if (result.isError) {
@@ -89,6 +90,7 @@ class EntitySearchResults extends Component {
                   selection={selection}
                   writeable={writeable}
                   columns={columns}
+                  queryText={query.getString('q')}
                 />
               ))}
               {result.isPending &&

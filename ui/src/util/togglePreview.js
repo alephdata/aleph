@@ -1,12 +1,21 @@
 import queryString from 'query-string';
 
-export default function togglePreview(navigate, location, entity, profile) {
+export default function togglePreview(
+  navigate,
+  location,
+  entity,
+  profile,
+  queryText
+) {
   const parsed = queryString.parse(location.hash);
   parsed['preview:mode'] = undefined;
   if (entity) {
     parsed['preview:id'] =
       parsed['preview:id'] === entity.id ? undefined : entity.id;
     parsed['preview:profile'] = profile;
+    if (queryText) {
+      parsed['preview:q'] = queryText;
+    }
   } else {
     parsed['preview:id'] = undefined;
     parsed['preview:profile'] = undefined;
