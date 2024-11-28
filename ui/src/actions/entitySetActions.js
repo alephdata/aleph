@@ -35,7 +35,10 @@ export const createEntitySetNoMutate = asyncActionCreator(createEntitySet, {
 
 export const updateEntitySet = asyncActionCreator(
   (entitySetId, entitySet) => async () => {
-    const response = await endpoint.post(`entitysets/${entitySetId}`, entitySet);
+    const response = await endpoint.post(
+      `entitysets/${entitySetId}`,
+      entitySet
+    );
     return { entitySetId, data: response.data };
   },
   { name: 'UPDATE_ENTITYSET' }
