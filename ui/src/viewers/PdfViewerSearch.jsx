@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';

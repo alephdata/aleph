@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { Classes, Drawer, DrawerSize } from '@blueprintjs/core';
 import BookmarksList from './BookmarksList';
 

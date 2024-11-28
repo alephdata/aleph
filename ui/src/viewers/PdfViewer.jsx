@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import { compose } from 'redux';
@@ -12,7 +12,6 @@ import { SectionLoading, Skeleton } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import EntityActionBar from 'components/Entity/EntityActionBar';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
