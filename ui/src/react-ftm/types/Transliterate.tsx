@@ -44,7 +44,7 @@ class Transliterate extends React.PureComponent<ITransliterateProps> {
     if (!lookup || !lookup[value]) {
       return truncate ? truncateText(value, truncate) : value;
     }
-    const symbol = navigator.userAgent.indexOf('Mac OS X') != -1 ? '⌘' : 'Ctl';
+    const symbol = navigator.userAgent.indexOf('Mac OS X') !== -1 ? '⌘' : 'Ctl';
 
     return (
       <>
