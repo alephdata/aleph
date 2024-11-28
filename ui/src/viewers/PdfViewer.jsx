@@ -17,13 +17,6 @@ import PdfViewerPage from 'viewers/PdfViewerPage';
 import './PdfViewer.scss';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-const messages = defineMessages({
-  placeholder: {
-    id: 'entity.viewer.search_placeholder',
-    defaultMessage: 'Search in {label}',
-  },
-});
-
 export class PdfViewer extends Component {
   constructor(props) {
     super(props);
@@ -219,17 +212,7 @@ export class PdfViewer extends Component {
   }
 
   render() {
-    const {
-      document,
-      dir,
-      activeMode,
-      pageQuery,
-      searchQuery,
-      intl,
-      page,
-      numPages,
-      shouldRenderSearch,
-    } = this.props;
+    const { document, dir, activeMode, pageQuery, page, numPages } = this.props;
 
     if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;

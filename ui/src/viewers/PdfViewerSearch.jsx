@@ -36,7 +36,7 @@ class PdfViewerSearch extends Component {
   }
 
   getResultLink(result) {
-    const { query, document, location, isPreview } = this.props;
+    const { query, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     if (isPreview) {
