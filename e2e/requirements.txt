@@ -1,2 +1,2 @@
-playwright==1.43.0
-pytest-playwright==0.5.2
+playwright==1.49.0
+pytest-playwright==0.6.2
