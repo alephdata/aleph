@@ -28,7 +28,7 @@ interface IEntityViewerProps {
 }
 
 interface IEntityViewerState {
-  visibleProps: FTMProperty[];
+  selectedProperties: FTMProperty[];
   currEditing: FTMProperty | null;
 }
 
@@ -46,8 +46,8 @@ export class EntityViewer extends React.PureComponent<
       .sort((a, b) => a.label.localeCompare(b.label));
 
     this.state = {
-      visibleProps: this.getVisibleProperties(props),
       currEditing: null,
+      selectedProperties: [],
     };
 
     this.onNewPropertySelected = this.onNewPropertySelected.bind(this);
@@ -56,29 +56,21 @@ export class EntityViewer extends React.PureComponent<
     this.onEditPropertyClick = this.onEditPropertyClick.bind(this);
   }
 
-  getVisibleProperties(props = this.props) {
-    const { entity } = props;
+  getVisibleProperties(): FTMProperty[] {
+    const { entity } = this.props;
 
     return Array.from(
       new Set([
         ...entity.schema.getFeaturedProperties(),
         ...entity.getProperties(),
+        ...this.state.selectedProperties,
       ])
     );
   }
 
-  componentWillReceiveProps(nextProps: Readonly<IEntityViewerProps>): void {
-    if (this.props.entity !== nextProps.entity) {
-      this.schemaProperties = nextProps.entity.schema.getEditableProperties();
-      this.setState({
-        visibleProps: this.getVisibleProperties(nextProps),
-      });
-    }
-  }
-
   onNewPropertySelected(p: FTMProperty) {
-    this.setState(({ visibleProps }) => ({
-      visibleProps: [...visibleProps, ...[p]],
+    this.setState(({ selectedProperties }) => ({
+      selectedProperties: [...selectedProperties, p],
       currEditing: null,
     }));
   }
@@ -127,7 +119,7 @@ export class EntityViewer extends React.PureComponent<
   render() {
     const { writeable } = this.context;
     const { entity, vertexRef } = this.props;
-    const { visibleProps } = this.state;
+    const visibleProps = this.getVisibleProperties();
     const availableProperties = this.schemaProperties.filter(
       (p) => visibleProps.indexOf(p) < 0
     );
