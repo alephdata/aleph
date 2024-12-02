@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { loginWithToken } from 'actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, DialogBody, AnchorButton, Intent } from '@blueprintjs/core';
+import { Dialog, DialogBody } from '@blueprintjs/core';
 import { RoleBlockedMessage } from 'components/common';
 
 import withRouter from 'app/withRouter';

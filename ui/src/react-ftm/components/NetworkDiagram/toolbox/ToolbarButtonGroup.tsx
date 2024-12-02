@@ -30,10 +30,6 @@ interface IToolbarButtonGroupProps {
 }
 
 export class ToolbarButtonGroup extends React.PureComponent<IToolbarButtonGroupProps> {
-  constructor(props: Readonly<IToolbarButtonGroupProps>) {
-    super(props);
-  }
-
   renderVisible(items: any) {
     const { editorTheme } = this.props;
 

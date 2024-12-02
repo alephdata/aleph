@@ -60,7 +60,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "lint": "eslint --ext js,jsx,ts,tsx src",
+    "lint": "eslint --ext js,jsx,ts,tsx src --max-warnings 0",
     "test": "craco test",
     "eject": "craco eject",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
@@ -72,13 +72,7 @@
   },
   "proxy": "http://api:5000/",
   "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "no-console": "error",
-      "no-debugger": "error",
-      "react/no-unknown-property": "error",
-      "react/jsx-key": "error"
-    }
+    "extends": "react-app"
   },
   "jest": {
     "transformIgnorePatterns": []

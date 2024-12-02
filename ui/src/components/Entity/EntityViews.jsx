@@ -348,7 +348,7 @@ class EntityViews extends React.Component {
   }
 
   renderPdfSearchMode() {
-    const { entity, isPreview, activeMode } = this.props;
+    const { entity, isPreview } = this.props;
 
     if (!this.hasPdfSearchMode()) {
       return;
@@ -364,7 +364,7 @@ class EntityViews extends React.Component {
   }
 
   renderPdfSearchForm() {
-    const { location, isPreview, activeMode } = this.props;
+    const { location, isPreview } = this.props;
 
     if (!this.hasPdfSearchMode()) {
       return;

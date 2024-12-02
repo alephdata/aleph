@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
@@ -38,7 +36,7 @@ class PdfViewerSearch extends Component {
   }
 
   getResultLink(result) {
-    const { query, document, location, isPreview } = this.props;
+    const { query, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     if (isPreview) {

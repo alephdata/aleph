@@ -27,10 +27,6 @@ interface IEdgeTypeSelectProps {
 }
 
 class EdgeTypeSelect extends React.PureComponent<IEdgeTypeSelectProps> {
-  constructor(props: any) {
-    super(props);
-  }
-
   getEdgeTypeIcon(type?: EdgeType) {
     if (type?.schema) {
       return <Schema.Icon schema={type.schema} />;
