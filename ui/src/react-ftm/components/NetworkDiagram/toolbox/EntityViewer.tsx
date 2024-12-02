@@ -37,13 +37,9 @@ export class EntityViewer extends React.PureComponent<
   IEntityViewerState
 > {
   static contextType = GraphContext;
-  private schemaProperties: FTMProperty[];
 
   constructor(props: IEntityViewerProps) {
     super(props);
-    this.schemaProperties = props.entity.schema
-      .getEditableProperties()
-      .sort((a, b) => a.label.localeCompare(b.label));
 
     this.state = {
       currEditing: null,
@@ -54,6 +50,12 @@ export class EntityViewer extends React.PureComponent<
     this.renderProperty = this.renderProperty.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onEditPropertyClick = this.onEditPropertyClick.bind(this);
+  }
+
+  getSchemaProperties(): FTMProperty[] {
+    return this.props.entity.schema
+      .getEditableProperties()
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   getVisibleProperties(): FTMProperty[] {
@@ -120,7 +122,7 @@ export class EntityViewer extends React.PureComponent<
     const { writeable } = this.context;
     const { entity, vertexRef } = this.props;
     const visibleProps = this.getVisibleProperties();
-    const availableProperties = this.schemaProperties.filter(
+    const availableProperties = this.getSchemaProperties().filter(
       (p) => visibleProps.indexOf(p) < 0
     );
     const hasCaption = entity.getCaption() !== entity.schema.label;
