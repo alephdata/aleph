@@ -28,7 +28,7 @@ interface IEntityViewerProps {
 }
 
 interface IEntityViewerState {
-  visibleProps: FTMProperty[];
+  selectedProperties: FTMProperty[];
   currEditing: FTMProperty | null;
 }
 
@@ -37,17 +37,13 @@ export class EntityViewer extends React.PureComponent<
   IEntityViewerState
 > {
   static contextType = GraphContext;
-  private schemaProperties: FTMProperty[];
 
   constructor(props: IEntityViewerProps) {
     super(props);
-    this.schemaProperties = props.entity.schema
-      .getEditableProperties()
-      .sort((a, b) => a.label.localeCompare(b.label));
 
     this.state = {
-      visibleProps: this.getVisibleProperties(props),
       currEditing: null,
+      selectedProperties: [],
     };
 
     this.onNewPropertySelected = this.onNewPropertySelected.bind(this);
@@ -56,29 +52,27 @@ export class EntityViewer extends React.PureComponent<
     this.onEditPropertyClick = this.onEditPropertyClick.bind(this);
   }
 
-  getVisibleProperties(props = this.props) {
-    const { entity } = props;
+  getSchemaProperties(): FTMProperty[] {
+    return this.props.entity.schema
+      .getEditableProperties()
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }
+
+  getVisibleProperties(): FTMProperty[] {
+    const { entity } = this.props;
 
     return Array.from(
       new Set([
         ...entity.schema.getFeaturedProperties(),
         ...entity.getProperties(),
+        ...this.state.selectedProperties,
       ])
     );
   }
 
-  componentWillReceiveProps(nextProps: Readonly<IEntityViewerProps>): void {
-    if (this.props.entity !== nextProps.entity) {
-      this.schemaProperties = nextProps.entity.schema.getEditableProperties();
-      this.setState({
-        visibleProps: this.getVisibleProperties(nextProps),
-      });
-    }
-  }
-
   onNewPropertySelected(p: FTMProperty) {
-    this.setState(({ visibleProps }) => ({
-      visibleProps: [...visibleProps, ...[p]],
+    this.setState(({ selectedProperties }) => ({
+      selectedProperties: [...selectedProperties, p],
       currEditing: null,
     }));
   }
@@ -127,8 +121,8 @@ export class EntityViewer extends React.PureComponent<
   render() {
     const { writeable } = this.context;
     const { entity, vertexRef } = this.props;
-    const { visibleProps } = this.state;
-    const availableProperties = this.schemaProperties.filter(
+    const visibleProps = this.getVisibleProperties();
+    const availableProperties = this.getSchemaProperties().filter(
       (p) => visibleProps.indexOf(p) < 0
     );
     const hasCaption = entity.getCaption() !== entity.schema.label;
