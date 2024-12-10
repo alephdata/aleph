@@ -1,4 +1,5 @@
 import jwt
+import hashlib
 from normality import ascii_text
 from urllib.parse import urlencode, urljoin
 from datetime import datetime, timedelta
@@ -58,3 +59,11 @@ def archive_token(token):
     token = jwt.decode(token, key=SETTINGS.SECRET_KEY, algorithms=DECODE, verify=True)
     expire = datetime.utcfromtimestamp(token["exp"])
     return token.get("c"), token.get("f"), token.get("m"), expire
+
+
+def hash_api_key(api_key):
+    if api_key is None:
+        return None
+
+    digest = hashlib.sha256(api_key.encode("utf-8")).hexdigest()
+    return f"sha256${digest}"
