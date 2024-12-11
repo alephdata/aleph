@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonProps } from '@blueprintjs/core';
 import { Entity } from '@alephdata/followthemoney';
 
-import { selectExperimentalBookmarksFeatureEnabled } from 'selectors';
 import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';
 
 type BookmarkButtonProps = ButtonProps & {
@@ -13,12 +12,7 @@ type BookmarkButtonProps = ButtonProps & {
 
 const BookmarkButton: FC<BookmarkButtonProps> = ({ entity, ...props }) => {
   const dispatch = useDispatch();
-  const enabled = useSelector(selectExperimentalBookmarksFeatureEnabled);
   const { bookmarked } = entity;
-
-  if (!enabled) {
-    return null;
-  }
 
   const icon = bookmarked ? 'star' : 'star-empty';
   const label = bookmarked ? (

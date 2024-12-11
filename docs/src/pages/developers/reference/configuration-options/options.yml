@@ -243,11 +243,6 @@ email:
   - name: 'ALEPH_MAIL_DEBUG'
     defaultValue: 'false'
 
-featureFlags:
-  - name: ALEPH_ENABLE_EXPERIMENTAL_BOOKMARKS_FEATURE
-    description: Enable experimental bookmarks feature. Bookmarks are stored client-side and users may accidentally delete them when clearing browser data.
-    defaultValue: 'false'
-
 monitoring:
   - name: 'SENTRY_DSN'
     description: 'Sentry DSN. Refer to the [Sentry documentation](https://docs.sentry.io/platforms/python/configuration/options/#common-options) for details.'
