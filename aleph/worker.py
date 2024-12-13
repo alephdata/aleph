@@ -155,7 +155,8 @@ class AlephWorker(Worker):
                     delete_expired_exports()
                     delete_old_notifications()
 
-                self.run_indexing_batches()
+                if SETTINGS.STAGE_INDEX in SETTINGS.ALEPH_STAGES:
+                    self.run_indexing_batches()
             except Exception:
                 log.exception("Error while executing periodic tasks")
 
