@@ -37,7 +37,11 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 NONE = "'none'"
 log = logging.getLogger(__name__)
 
-db = SQLAlchemy()
+# This allow to prevent http 500 error when postgres session is invalid
+# see: https://docs.sqlalchemy.org/en/20/core/pooling.html#disconnect-handling-pessimistic
+SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
+db = SQLAlchemy(engine_options=SQLALCHEMY_ENGINE_OPTIONS)
+
 migrate = Migrate()
 mail = Mail()
 babel = Babel()
