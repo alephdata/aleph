@@ -9,7 +9,7 @@ title: Export Network Graphs
 
 ## Transformation strategy
 
-Data in Aleph ist stored using [FollowTheMoney](/developers/explanation/followthemoney). FollowTheMoney sees every unit of information as an entity with a set of properties. To analyze this information as a network with nodes and edges, we need to decide what logic should rule the transformation of entities into nodes and edges. Different strategies are available:
+Data in Aleph is stored using [FollowTheMoney](/developers/explanation/followthemoney). FollowTheMoney sees every unit of information as an entity with a set of properties. To analyze this information as a network with nodes and edges, we need to decide what logic should rule the transformation of entities into nodes and edges. Different strategies are available:
 
 * Some entity schemata, such as `Directorship`, `Ownership`, `Family` or `Payment`, contain annotations that define how they can be transformed into an edge with a source and target.
 * Entities also naturally reference others. For example, an `Email` has an emitters property that refers to a `LegalEntity`, the sender. The emitters property connects the two entities and can also be turned into an edge.
