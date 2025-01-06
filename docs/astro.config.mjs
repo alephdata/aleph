@@ -8,9 +8,7 @@ const root = path.dirname(url.fileURLToPath(import.meta.url));
 const base = path.join(root, 'src/components');
 
 export default defineConfig({
-  experimental: {
-    redirects: true,
-  },
+  scopedStyleStrategy: 'where',
   redirects: {
     '/how-aleph-is-used': '/about',
     '/guide': '/users',
