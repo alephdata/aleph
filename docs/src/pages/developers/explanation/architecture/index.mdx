@@ -39,7 +39,11 @@ Elasticsearch is used to make data searchable. Aleph maintains [multiple indexes
 
 ### Redis
 
-Aleph uses Redis in many ways, for example as a task queue, to store user sessions, and to cache collection statistics.
+Aleph uses Redis in many ways, for example to keep metadata about background tasks, to store user sessions, and to cache collection statistics.
+
+### RabbitMQ
+
+Aleph uses RabbitMQ as a disk-based queue for background tasks.
 
 ### File archive
 
