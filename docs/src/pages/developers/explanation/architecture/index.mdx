@@ -9,53 +9,6 @@ title: Architecture Overview
 
 ## Components
 
-<Mermaid
-  straightEdges
-  highlightActive
-  content={`
-    graph TB
-      memorious("Memorious")
-      ui("UI")
-      alephclient("alephclient")
-
-      subgraph level2
-        api("API")
-        workers("Workers")
-        ingest("ingest-file")
-      end
-
-      subgraph level3
-        ftm("FtM store")
-        files("File archive")
-        db("App database")
-        es("Elasticsearch")
-        redis("Redis")
-      end
-
-      class level2 dummy
-      class level3 dummy
-
-      ui-->api
-      memorious-->api
-      alephclient-->api
-
-      api-->db
-      api-->es
-      api-->redis
-      api-->files
-
-      ingest-->redis
-      ingest-->files
-      ingest-->ftm
-
-      workers-->db
-      workers-->es
-      workers-->redis
-      workers-->files
-      workers-->ftm 
-  `}
-/>
-
 ### API
 
 The Aleph API is a Flask application. It powers the web UI and alephclient, can be used to ingest data scraped using [Memorious crawlers](https://alephdata.github.io/memorious) or custom scripts.
