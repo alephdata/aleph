@@ -9,53 +9,6 @@ title: Architecture Overview
 
 ## Components
 
-<Mermaid
-  straightEdges
-  highlightActive
-  content={`
-    graph TB
-      memorious("Memorious")
-      ui("UI")
-      alephclient("alephclient")
-
-      subgraph level2
-        api("API")
-        workers("Workers")
-        ingest("ingest-file")
-      end
-
-      subgraph level3
-        ftm("FtM store")
-        files("File archive")
-        db("App database")
-        es("Elasticsearch")
-        redis("Redis")
-      end
-
-      class level2 dummy
-      class level3 dummy
-
-      ui-->api
-      memorious-->api
-      alephclient-->api
-
-      api-->db
-      api-->es
-      api-->redis
-      api-->files
-
-      ingest-->redis
-      ingest-->files
-      ingest-->ftm
-
-      workers-->db
-      workers-->es
-      workers-->redis
-      workers-->files
-      workers-->ftm 
-  `}
-/>
-
 ### API
 
 The Aleph API is a Flask application. It powers the web UI and alephclient, can be used to ingest data scraped using [Memorious crawlers](https://alephdata.github.io/memorious) or custom scripts.
@@ -66,7 +19,7 @@ The Aleph UI is a single-page application implemented using React. End users can
 
 ### Workers
 
-Workers process background tasks such as [exporting search results](/users/search/basics#export-multiple-search-results), indexing updated new or entities in Elasticsearch, or [cross-referencing data against other datasets](/users/investigations/cross-referencing).
+Workers process background tasks such as [exporting search results](/users/search/basics#export-multiple-search-results), indexing updated or new entities in Elasticsearch, or [cross-referencing data against other datasets](/users/investigations/cross-referencing).
 
 ### ingest-file
 
@@ -86,7 +39,11 @@ Elasticsearch is used to make data searchable. Aleph maintains [multiple indexes
 
 ### Redis
 
-Aleph uses Redis in many ways, for example as a task queue, to store user sessions, and to cache collection statistics.
+Aleph uses Redis in many ways, for example to keep metadata about background tasks, to store user sessions, and to cache collection statistics.
+
+### RabbitMQ
+
+Aleph uses RabbitMQ as a disk-based queue for background tasks.
 
 ### File archive
 
@@ -95,10 +52,6 @@ The file archive stores all files uploaded to Aleph. It supports multiple storag
 ### alephclient
 
 alephclient is a Python library and CLI that simplifies common tasks (e.g. batch uploads). It interacts with Aleph via the API.
-
-### Memorious
-
-Memorious is a scraping toolkit that facilitates fast development and easy maintenance of scrapers. While Memorious integrates with Aleph and can emit data as FollowTheMoney entities, Memorious is a completely optional component.
 
 ## Code repositories
 
