@@ -68,7 +68,7 @@ def create_app(config=None):
 
     configure_logging(level=logging.DEBUG)
 
-    if SETTINGS.SENTRY_DSN:
+    if SETTINGS.SENTRY_DSN and not sentry_sdk.get_client().is_active():
         sentry_sdk.init(
             dsn=SETTINGS.SENTRY_DSN,
             integrations=[
