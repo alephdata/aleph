@@ -64,6 +64,21 @@ const svgIcon = (path, selectors) => {
 };
 
 module.exports = {
+  webpack: {
+    configure: (config) => ({
+      ...config,
+      resolve: {
+        ...config.resolve,
+        fallback: {
+          // The Node.js crypto module isn’t available in browser contexts. However,
+          // code paths that require it aren’t actually called in the Aleph UI, so we
+          // resolve to an empty module.
+          // https://webpack.js.org/configuration/resolve/#resolvefallback
+          'crypto': false,
+        },
+      },
+    }),
+  },
   style: {
     sass: {
       implementation: sass,
