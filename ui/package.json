@@ -18,7 +18,6 @@
     "bezier-js": "^6.1.4",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",
-    "crypto": "npm:crypto-browserify@3.12.0",
     "d3-force": "^3.0.0",
     "d3-scale": "^4.0.2",
     "dagre": "^0.8.5",
@@ -55,9 +54,6 @@
     "typescript": "^4.9.5",
     "uuid": "^11.0.3",
     "yaml": "^2.7.0"
-  },
-  "overrides": {
-    "browserify-sign": "<=4.2.2"
   },
   "scripts": {
     "start": "craco start",
