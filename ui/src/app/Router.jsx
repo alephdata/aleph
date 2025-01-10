@@ -61,7 +61,10 @@ class Router extends Component {
   fetchIfNeeded() {
     const { metadata, messages } = this.props;
 
-    if (metadata.shouldLoad && !metadata.isError) {
+    if (
+      metadata.shouldLoad &&
+      (!metadata.isError || metadata.error?.response?.status === 401)
+    ) {
       this.props.fetchMetadata();
     }
 
