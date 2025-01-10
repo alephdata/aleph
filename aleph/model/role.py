@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -7,8 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db
 from aleph.settings import SETTINGS
-from aleph.model.common import SoftDeleteModel, IdModel, make_token, query_like
+from aleph.model.common import SoftDeleteModel, IdModel, query_like
 from aleph.util import anonymize_email
+from aleph.logic.util import hash_api_key
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +53,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     email = db.Column(db.Unicode, nullable=True)
     type = db.Column(db.Enum(*TYPES, name="role_type"), nullable=False)
     api_key = db.Column(db.Unicode, nullable=True)
+    api_key_digest = db.Column(db.Unicode, nullable=True)
+    api_key_expires_at = db.Column(db.DateTime, nullable=True)
+    api_key_expiration_notification_sent = db.Column(db.Integer, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_muted = db.Column(db.Boolean, nullable=False, default=False)
     is_tester = db.Column(db.Boolean, nullable=False, default=False)
@@ -67,6 +71,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @property
     def has_password(self):
         return self.password_digest is not None
+
+    @property
+    def has_api_key(self):
+        return self.api_key_digest is not None
 
     @property
     def is_public(self):
@@ -119,8 +127,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def add_role(self, role):
         """Adds an existing role as a membership of a group."""
-        self.roles.append(role)
-        db.session.add(role)
+        if role not in self.roles:
+            self.roles.append(role)
+            db.session.add(role)
+        else:
+            log.warning(f"Tried to add duplicate role membership: {self} {role}")
         db.session.add(self)
         self.updated_at = datetime.utcnow()
 
@@ -157,11 +168,12 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 "label": self.label,
                 "email": self.email,
                 "locale": self.locale,
-                "api_key": self.api_key,
                 "is_admin": self.is_admin,
                 "is_muted": self.is_muted,
                 "is_tester": self.is_tester,
                 "has_password": self.has_password,
+                "has_api_key": self.has_api_key,
+                "api_key_expires_at": self.api_key_expires_at,
                 # 'notified_at': self.notified_at
             }
         )
@@ -187,10 +199,25 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def by_api_key(cls, api_key):
         if api_key is None:
             return None
+
         q = cls.all()
-        q = q.filter_by(api_key=api_key)
+
+        digest = hash_api_key(api_key)
+        q = q.filter(cls.api_key_digest == digest)
+
+        utcnow = datetime.now(timezone.utc)
+        # TODO: Exclude API keys without expiration date after deadline
+        # See https://github.com/alephdata/aleph/issues/3729
+        q = q.filter(
+            or_(
+                cls.api_key_expires_at == None,  # noqa: E711
+                utcnow < cls.api_key_expires_at,
+            )
+        )
+
         q = q.filter(cls.type == cls.USER)
         q = q.filter(cls.is_blocked == False)  # noqa
+
         return q.first()
 
     @classmethod
@@ -207,9 +234,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_tester = False
             role.is_blocked = False
             role.notified_at = datetime.utcnow()
-
-        if role.api_key is None:
-            role.api_key = make_token()
 
         if email is not None:
             role.email = email

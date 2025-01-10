@@ -29,7 +29,7 @@ Please file a request with [OCCRP ID](https://id.occrp.org) to suggest a dataset
 
 Yes! Much of the software we’re building at OCCRP is open source, and we invest a lot of time in making sure other organizations can benefit from this technology as well.
 
-Please visit the [Aleph software documentation](/developers/installation) page for information on how to install and operate the software.
+Please visit the [Aleph Technical Documentation](https://docs.aleph.occrp.org/developers/) page for information on how to install and operate the software.
 
 ### Can I use the Aleph API?
 
@@ -41,6 +41,6 @@ Using the Aleph API is not a valid approach to “know your customer” (KYC) ch
 
 ### How do I get access to bulk data?
 
-A number of datasets that are available in OCCRP’s Aleph instance can also be downloaded in the FollowTheMoney format. Please check out the [Data Commons](/developers/datacommons) page for more information. We’re also happy to [work with](https://requests.occrp.org/datadesk) other journalists or media organizations to provide bulk exports for specific datasets for your data project.
+A number of datasets that are available in OCCRP’s Aleph instance can also be downloaded in the FollowTheMoney format. Please check out the [Aleph Technical Documentation](https://docs.aleph.occrp.org/developers/getting-started/find-datasets/) for more information. We’re also happy to [work with](https://requests.occrp.org/datadesk) other journalists or media organizations to provide bulk exports for specific datasets for your data project.
 
 It is our policy not to provide bulk exports to non-journalists. This specifically includes banks, due diligence firms, and machine learning researchers.

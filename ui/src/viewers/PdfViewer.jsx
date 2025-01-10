@@ -13,7 +13,6 @@ import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
 import EntityActionBar from 'components/Entity/EntityActionBar';
-import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
@@ -238,26 +237,10 @@ export class PdfViewer extends Component {
     }
     return (
       <div className="PdfViewer">
-        <EntityActionBar
-          query={shouldRenderSearch ? searchQuery : pageQuery}
-          onSearchSubmit={this.onSearch}
-          searchPlaceholder={intl.formatMessage(messages.placeholder, {
-            label: document.getCaption(),
-          })}
-          searchDisabled={document.getProperty('processingError')?.length}
-        />
         <div className="outer">
           <div id="PdfViewer" className="inner">
             <div className="document">
-              {shouldRenderSearch && (
-                <PdfViewerSearch
-                  document={document}
-                  dir={dir}
-                  activeMode={activeMode}
-                  query={searchQuery}
-                />
-              )}
-              {activeMode === 'text' && !shouldRenderSearch && (
+              {activeMode === 'text' && (
                 <PdfViewerPage
                   document={document}
                   dir={dir}
@@ -266,7 +249,7 @@ export class PdfViewer extends Component {
                   query={pageQuery}
                 />
               )}
-              {activeMode === 'view' && !shouldRenderSearch && this.renderPdf()}
+              {activeMode === 'view' && this.renderPdf()}
             </div>
           </div>
         </div>

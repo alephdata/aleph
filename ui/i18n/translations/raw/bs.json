@@ -38,6 +38,18 @@
   "auth.unknown_error": {
     "defaultMessage": "Desila se neočekivana greška"
   },
+  "bookmarks.bookmark": {
+    "defaultMessage": "Bookmark"
+  },
+  "bookmarks.bookmarked": {
+    "defaultMessage": "Bookmarked"
+  },
+  "bookmarks.empty": {
+    "defaultMessage": "You haven’t bookmarked anything yet. Add documents or entities such as people or companies to your bookmarks to easily get back to them later."
+  },
+  "bookmarks.title": {
+    "defaultMessage": "Your bookmarks"
+  },
   "case.choose.name": {
     "defaultMessage": "Title"
   },
@@ -485,6 +497,12 @@
   "dataset.search.placeholder": {
     "defaultMessage": "Search this dataset"
   },
+  "delete_dialog.confirmation_label": {
+    "defaultMessage": "Confirmation"
+  },
+  "delete_dialog.enter_label": {
+    "defaultMessage": "Please enter {expectedConfirmationValue} to confirm:"
+  },
   "diagram.create.button": {
     "defaultMessage": "New diagram"
   },
@@ -503,35 +521,8 @@
   "diagram.create.title": {
     "defaultMessage": "Create a diagram"
   },
-  "diagram.embed.error": {
-    "defaultMessage": "Error generating diagram embed"
-  },
-  "diagram.export.embed.description": {
-    "defaultMessage": "Generate an embeddable interactive version of the diagram that can be used in an article. The embed will not reflect future changes in the diagram."
-  },
   "diagram.export.error": {
     "defaultMessage": "Error exporting diagram"
-  },
-  "diagram.export.ftm": {
-    "defaultMessage": "Export as .ftm"
-  },
-  "diagram.export.ftm.description": {
-    "defaultMessage": "Download the diagram as a data file that can be used in {link} or another Aleph site."
-  },
-  "diagram.export.ftm.link": {
-    "defaultMessage": "Aleph Data Desktop"
-  },
-  "diagram.export.iframe": {
-    "defaultMessage": "Embed iframe"
-  },
-  "diagram.export.svg": {
-    "defaultMessage": "Export as SVG"
-  },
-  "diagram.export.svg.description": {
-    "defaultMessage": "Download a vector graphic with the contents of the diagram."
-  },
-  "diagram.export.title": {
-    "defaultMessage": "Export options"
   },
   "diagram.import.button": {
     "defaultMessage": "Import diagram"
@@ -574,6 +565,51 @@
   },
   "diagrams.title": {
     "defaultMessage": "Network diagrams"
+  },
+  "dialog.edge_create.source_label": {
+    "defaultMessage": "Izvor"
+  },
+  "dialog.edge_create.submit": {
+    "defaultMessage": "Kreiraj"
+  },
+  "dialog.edge_create.target_label": {
+    "defaultMessage": "Target"
+  },
+  "dialog.edge_create.title": {
+    "defaultMessage": "Add link"
+  },
+  "dialog.edge_create.type_label": {
+    "defaultMessage": "Tip"
+  },
+  "dialog.edge_create.type_placeholder": {
+    "defaultMessage": "Select type"
+  },
+  "dialog.grouping_create.placeholder": {
+    "defaultMessage": "Select a label for the grouping"
+  },
+  "dialog.grouping_create.title": {
+    "defaultMessage": "Group items"
+  },
+  "dialog.settings.pivot_types.help_text": {
+    "defaultMessage": "The selected property types above will be used to draw connections between nodes when values are shared"
+  },
+  "dialog.settings.pivot_types.label": {
+    "defaultMessage": "Connect shared values"
+  },
+  "dialog.settings.submit": {
+    "defaultMessage": "Sačuvaj izmjene"
+  },
+  "dialog.settings.title": {
+    "defaultMessage": "Podešavanja"
+  },
+  "dialog.vertex_create.no_suggestions": {
+    "defaultMessage": "No suggestions found"
+  },
+  "dialog.vertex_create.title": {
+    "defaultMessage": "Add entity"
+  },
+  "dialog.vertex_create.type_placeholder": {
+    "defaultMessage": "Pick a type"
   },
   "document.download": {
     "defaultMessage": "Preuzmi"
@@ -682,6 +718,57 @@
   },
   "document.viewer.no_viewer": {
     "defaultMessage": "Pregled ovog dokumenta nije dostupan"
+  },
+  "editor.color_picker.blue": {
+    "defaultMessage": "Blue"
+  },
+  "editor.color_picker.custom": {
+    "defaultMessage": "Custom"
+  },
+  "editor.color_picker.green": {
+    "defaultMessage": "Green"
+  },
+  "editor.color_picker.orange": {
+    "defaultMessage": "Orange"
+  },
+  "editor.color_picker.red": {
+    "defaultMessage": "Red"
+  },
+  "editor.color_picker.turquoise": {
+    "defaultMessage": "Turquoise"
+  },
+  "editor.color_picker.violet": {
+    "defaultMessage": "Violet"
+  },
+  "editor.entity.create_entity": {
+    "defaultMessage": "Create a new entity"
+  },
+  "editor.entity.no_results": {
+    "defaultMessage": "No existing entities found"
+  },
+  "editor.entity.placeholder": {
+    "defaultMessage": "Select an entity"
+  },
+  "editor.property_add": {
+    "defaultMessage": "Add a property"
+  },
+  "editor.validation.country_invalid": {
+    "defaultMessage": "Invalid country"
+  },
+  "editor.validation.date_invalid": {
+    "defaultMessage": "Date format: yyyy-m-d"
+  },
+  "editor.validation.phone_invalid": {
+    "defaultMessage": "Invalid phone number: try adding a country code if available"
+  },
+  "editor.validation.required": {
+    "defaultMessage": "This property is required"
+  },
+  "editor.validation.topic_invalid": {
+    "defaultMessage": "Invalid topic"
+  },
+  "editor.validation.url_invalid": {
+    "defaultMessage": "Invalid URL format"
   },
   "email.body.empty": {
     "defaultMessage": "Nema sadržaja."
@@ -836,6 +923,18 @@
   "entity.similar.found_text": {
     "defaultMessage": "Found {resultCount} {resultCount, plural, one {similar entity} other {similar entities}} from {datasetCount} {datasetCount, plural, one {dataset} other {datasets}}"
   },
+  "entity.status.error": {
+    "defaultMessage": "Error saving"
+  },
+  "entity.status.in_progress": {
+    "defaultMessage": "Saving"
+  },
+  "entity.status.offline": {
+    "defaultMessage": "Offline"
+  },
+  "entity.status.success": {
+    "defaultMessage": "Saved"
+  },
   "entity.tags.no_tags": {
     "defaultMessage": "No selectors were extracted from this entity."
   },
@@ -941,6 +1040,9 @@
   "entityset.update.submit": {
     "defaultMessage": "Sačuvaj izmjene"
   },
+  "enum_value_select.no_results": {
+    "defaultMessage": "No results found"
+  },
   "error.screen.not_found": {
     "defaultMessage": "Tražena stranica nije pronađena."
   },
@@ -1033,6 +1135,12 @@
   },
   "group.page.search.description": {
     "defaultMessage": "If you would like to search for specific entities or documents within the datasets that this group has access to, <link>click here</link> instead."
+  },
+  "grouping.label": {
+    "defaultMessage": "Group"
+  },
+  "hint_popover.dismiss": {
+    "defaultMessage": "Don’t show this again"
   },
   "home.access_disabled": {
     "defaultMessage": "Public access temporarily disabled"
@@ -1496,6 +1604,9 @@
   "notifications.type_filter.all": {
     "defaultMessage": "All"
   },
+  "oauth.role_blocked.dialog.title": {
+    "defaultMessage": "User account deactivated"
+  },
   "pages.not.found": {
     "defaultMessage": "Stranica nije pronađena"
   },
@@ -1556,8 +1667,14 @@
   "profile.similar.no_results": {
     "defaultMessage": "No suggested additions for this profile were found."
   },
-  "profileinfo.api_desc": {
-    "defaultMessage": "Koristi API ključ za čitanje i pisanje podataka pomoću udaljene aplikacije."
+  "property.inverse": {
+    "defaultMessage": "'{label}' of …"
+  },
+  "property.values.truncate_hide": {
+    "defaultMessage": "- Show fewer"
+  },
+  "property.values.truncate_show": {
+    "defaultMessage": "+{truncateCount} More"
   },
   "queryFilters.clearAll": {
     "defaultMessage": "Clear all"
@@ -1600,6 +1717,12 @@
   },
   "role.select.user": {
     "defaultMessage": "Izaberi korisnika"
+  },
+  "router.error.message": {
+    "defaultMessage": "Sorry, something went wrong and Aleph couldn’t load. Please try again in a few minutes or contact an administrator if the error persists."
+  },
+  "router.error.retry": {
+    "defaultMessage": "Retry"
   },
   "schemaSelect.button.relationship": {
     "defaultMessage": "Add a new relationship"
@@ -1742,6 +1865,15 @@
   "search.placeholder_label": {
     "defaultMessage": "Search in {label}"
   },
+  "search.results_text.multiple": {
+    "defaultMessage": "Found {count} results"
+  },
+  "search.results_text.none": {
+    "defaultMessage": "No results found"
+  },
+  "search.results_text.one": {
+    "defaultMessage": "Found 1 result"
+  },
   "search.screen.dates.show-all": {
     "defaultMessage": "* Showing all date filter options. { button } to view recent dates only."
   },
@@ -1784,32 +1916,56 @@
   "search.title_emptyq": {
     "defaultMessage": "Pretraži"
   },
-  "settings.api_key": {
-    "defaultMessage": "API tajni pristupni ključ"
+  "settings.api_key.confirm_regenerate": {
+    "defaultMessage": "You are about to regenerate your API key. When you regenerate your API key, your old key will stop working. If you are currently using your API key in applications or scripts, you will need to update them to keep them working."
   },
-  "settings.confirm": {
-    "defaultMessage": "(potvrdi)"
+  "settings.api_key.generate": {
+    "defaultMessage": "Generate API key"
+  },
+  "settings.api_key.regenerate": {
+    "defaultMessage": "Regenerate API key"
+  },
+  "settings.api_key.success": {
+    "defaultMessage": "Your new API key has been generated and is valid for {days, number} days. Be sure to copy it below as you won’t be able to view it again later. We recommend storing your API key in a password manager. Do not share your API key with anyone else."
+  },
+  "settings.api_key.text_expiration": {
+    "defaultMessage": "Your API key will expire on {date}, {time}."
+  },
+  "settings.api_key.text_expired": {
+    "defaultMessage": "Your API key expired on {date}, {time}."
+  },
+  "settings.api_key.text_generate": {
+    "defaultMessage": "You need an API key in order to access the Aleph API. Generate an API key to get started."
+  },
+  "settings.api_key.text_regenerate": {
+    "defaultMessage": "When you regenerate your API key, your old key will stop working."
+  },
+  "settings.api_key.text_regenerate_expired": {
+    "defaultMessage": "Regenerate your API key in order to access the Aleph API."
+  },
+  "settings.api_key.title": {
+    "defaultMessage": "API key"
   },
   "settings.current_explain": {
-    "defaultMessage": "Enter your current password to set a new one."
+    "defaultMessage": "Enter your current password to set a new one"
   },
   "settings.current_password": {
     "defaultMessage": "Current password"
   },
   "settings.email": {
-    "defaultMessage": "E-mail adrese"
+    "defaultMessage": "E-mail adresa"
   },
   "settings.email.muted": {
-    "defaultMessage": "Receive daily notification e-mails"
+    "defaultMessage": "Receive daily notification emails"
   },
-  "settings.email.no_change": {
-    "defaultMessage": "Vaša e-mail adresa ne može se promijeniti"
-  },
-  "settings.email.tester": {
-    "defaultMessage": "Test new features before they are finished"
+  "settings.email_no_change": {
+    "defaultMessage": "Your email address cannot be changed"
   },
   "settings.locale": {
     "defaultMessage": "Jezik"
+  },
+  "settings.locale.success": {
+    "defaultMessage": "Your language preference has been updated."
   },
   "settings.name": {
     "defaultMessage": "Ime"
@@ -1817,26 +1973,59 @@
   "settings.new_password": {
     "defaultMessage": "New password"
   },
-  "settings.password.missmatch": {
-    "defaultMessage": "Šifre nisu iste"
+  "settings.notifications.success": {
+    "defaultMessage": "Your notification preferences have been updated."
   },
-  "settings.password.rules": {
-    "defaultMessage": "Koristi najmaje šest karaktera"
+  "settings.notifications.text": {
+    "defaultMessage": "Aleph can send you email notification when something happens in an investigation or dataset you have access to, for example when someone else uploads a new file."
+  },
+  "settings.notifications.title": {
+    "defaultMessage": "Notifikacije"
+  },
+  "settings.password.change": {
+    "defaultMessage": "Change password"
+  },
+  "settings.password.success": {
+    "defaultMessage": "Your password has been updated."
   },
   "settings.password.title": {
     "defaultMessage": "Change your password"
   },
+  "settings.password_confirmation": {
+    "defaultMessage": "Confirm new password"
+  },
+  "settings.password_rules": {
+    "defaultMessage": "Koristi najmaje šest karaktera"
+  },
+  "settings.passwords.missmatch": {
+    "defaultMessage": "Šifre nisu iste"
+  },
+  "settings.profile.title": {
+    "defaultMessage": "Profil"
+  },
   "settings.save": {
-    "defaultMessage": "Ažuriraj"
+    "defaultMessage": "Sačuvaj"
   },
   "settings.saved": {
-    "defaultMessage": "It's official, your profile is updated."
+    "defaultMessage": "It’s official, your profile is updated."
   },
   "settings.title": {
     "defaultMessage": "Podešavanja"
   },
+  "sidebar.default.multiple": {
+    "defaultMessage": "{count} entities"
+  },
+  "sidebar.edit.hide": {
+    "defaultMessage": "Hide"
+  },
+  "sidebar.edit.show": {
+    "defaultMessage": "Edit all"
+  },
   "sidebar.open": {
     "defaultMessage": "Expand"
+  },
+  "sidebar.selected.multiple": {
+    "defaultMessage": "{count} odabrano"
   },
   "signup.activate": {
     "defaultMessage": "Aktiviraj svoj profil"
@@ -1904,6 +2093,9 @@
   "sources.index.placeholder": {
     "defaultMessage": "Search for a dataset or investigation belonging to {group}..."
   },
+  "ssettings.locale.text": {
+    "defaultMessage": "Change the language of the Aleph user interface."
+  },
   "status.last_updated_at": {
     "defaultMessage": "last updated"
   },
@@ -1913,6 +2105,15 @@
   "status.started_at": {
     "defaultMessage": "started"
   },
+  "table_editor.add_row": {
+    "defaultMessage": "Add a new {schema} row"
+  },
+  "table_editor.add_schema": {
+    "defaultMessage": "Add an entity type"
+  },
+  "table_editor.remove_row": {
+    "defaultMessage": "Remove new {schema} row"
+  },
   "tags.results": {
     "defaultMessage": "Mention count"
   },
@@ -1921,6 +2122,12 @@
   },
   "text.loading": {
     "defaultMessage": "Učitavanje..."
+  },
+  "timeline.actions.add_item": {
+    "defaultMessage": "Add item"
+  },
+  "timeline.actions.renderer.label": {
+    "defaultMessage": "Change view"
   },
   "timeline.create.button": {
     "defaultMessage": "New timeline"
@@ -1940,6 +2147,54 @@
   "timeline.create.title": {
     "defaultMessage": "Create a timeline"
   },
+  "timeline.create_entitity.title": {
+    "defaultMessage": "Add new item to timeline"
+  },
+  "timeline.create_entity.submit": {
+    "defaultMessage": "Dodaj"
+  },
+  "timeline.empty_state.message": {
+    "defaultMessage": "Add an item to get started."
+  },
+  "timeline.empty_state.title": {
+    "defaultMessage": "This timeline is still empty"
+  },
+  "timeline.invalid_dates_warning": {
+    "defaultMessage": "This timeline has items with invalid or missing dates. Check the list below and add dates or remove items."
+  },
+  "timeline.item.invalid_date": {
+    "defaultMessage": "Invalid or no date"
+  },
+  "timeline.item.remove.long": {
+    "defaultMessage": "Remove from timeline"
+  },
+  "timeline.item.remove.short": {
+    "defaultMessage": "Ukloni"
+  },
+  "timeline.item_create_form.optional": {
+    "defaultMessage": "(optional)"
+  },
+  "timeline.list.actions": {
+    "defaultMessage": "Actions"
+  },
+  "timeline.list.caption": {
+    "defaultMessage": "Caption"
+  },
+  "timeline.list.date": {
+    "defaultMessage": "Datum"
+  },
+  "timeline.list.end_date": {
+    "defaultMessage": "End date"
+  },
+  "timeline.list.start_date": {
+    "defaultMessage": "Start date"
+  },
+  "timeline.renderer.chart": {
+    "defaultMessage": "Chart"
+  },
+  "timeline.renderer.list": {
+    "defaultMessage": "List"
+  },
   "timeline.selector.create": {
     "defaultMessage": "Create a new timeline"
   },
@@ -1958,6 +2213,18 @@
   "timeline.update.title": {
     "defaultMessage": "Timeline settings"
   },
+  "timeline.zoom_levels.days": {
+    "defaultMessage": "Days"
+  },
+  "timeline.zoom_levels.months": {
+    "defaultMessage": "Months"
+  },
+  "timeline.zoom_levels.unavailable": {
+    "defaultMessage": "The “{label}” view is not available because this timeline covers a period of {maxYears} years or more."
+  },
+  "timeline.zoom_levels.years": {
+    "defaultMessage": "Years"
+  },
   "timelines": {
     "defaultMessage": "Timelines"
   },
@@ -1970,8 +2237,92 @@
   "timelines.title": {
     "defaultMessage": "Timelines"
   },
+  "toasts.expand_none": {
+    "defaultMessage": "All expansion results are already present in the diagram"
+  },
+  "toasts.expand_success": {
+    "defaultMessage": "Successfully added {vertices} new {vertices, plural, one {node} other {nodes}} and {edges} new {edges, plural, one {link} other {links}} to the diagram"
+  },
+  "tooltip.add_edges": {
+    "defaultMessage": "Add link"
+  },
+  "tooltip.add_entities": {
+    "defaultMessage": "Add entities"
+  },
+  "tooltip.delete": {
+    "defaultMessage": "Izbriši selektovano"
+  },
+  "tooltip.expand": {
+    "defaultMessage": "Discover links"
+  },
+  "tooltip.export_svg": {
+    "defaultMessage": "Export as SVG"
+  },
+  "tooltip.group": {
+    "defaultMessage": "Group selected"
+  },
+  "tooltip.layout_auto": {
+    "defaultMessage": "Auto-layout"
+  },
+  "tooltip.layout_center": {
+    "defaultMessage": "Center"
+  },
+  "tooltip.layout_circle": {
+    "defaultMessage": "Arrange as circle"
+  },
+  "tooltip.layout_hierarchy": {
+    "defaultMessage": "Arrange as hierarchy"
+  },
+  "tooltip.layout_horizontal": {
+    "defaultMessage": "Align horizontal"
+  },
+  "tooltip.layout_vertical": {
+    "defaultMessage": "Align vertical"
+  },
+  "tooltip.layouts": {
+    "defaultMessage": "Layouts"
+  },
+  "tooltip.pan_mode": {
+    "defaultMessage": "Toggle pan mode"
+  },
+  "tooltip.redo": {
+    "defaultMessage": "Redo"
+  },
+  "tooltip.select_mode": {
+    "defaultMessage": "Toggle select mode"
+  },
+  "tooltip.settings": {
+    "defaultMessage": "Podešavanja"
+  },
+  "tooltip.sidebar_view": {
+    "defaultMessage": "Show sidebar"
+  },
+  "tooltip.table_view": {
+    "defaultMessage": "Show table"
+  },
+  "tooltip.undo": {
+    "defaultMessage": "Undo"
+  },
+  "tooltip.ungroup": {
+    "defaultMessage": "Ungroup selected"
+  },
+  "tooltips.fit_to_selection": {
+    "defaultMessage": "Fit view to selection"
+  },
   "valuelink.tooltip": {
     "defaultMessage": "{count} mentions in {appName}"
+  },
+  "vertex_menu.add_link": {
+    "defaultMessage": "Add link"
+  },
+  "vertex_menu.expand": {
+    "defaultMessage": "Discover {property}"
+  },
+  "vertex_menu.expand_all": {
+    "defaultMessage": "all links"
+  },
+  "vertex_menu.expand_none": {
+    "defaultMessage": "No additional links found"
   },
   "xref.compute": {
     "defaultMessage": "Compute"

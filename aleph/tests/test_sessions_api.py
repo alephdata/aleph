@@ -3,6 +3,7 @@ from contextlib import contextmanager
 import unittest.mock as mock
 from urllib.parse import urlparse, parse_qs
 from requests import Response
+from typing import List
 
 from aleph.core import db
 from aleph.settings import SETTINGS
@@ -10,14 +11,13 @@ from aleph.model import Collection, Role
 from aleph.logic.collections import update_collection
 from aleph.views.base_api import _metadata_locale
 from aleph.tests.util import TestCase
-from aleph.tests.factories.models import RoleFactory
 from aleph.oauth import oauth
 
 
 class SessionsApiTestCase(TestCase):
     def setUp(self):
         super().setUp()
-        self.role = RoleFactory.create()
+        self.role = self.create_user()
 
     def test_admin_all_access(self):
         self.wl = Collection()
@@ -121,10 +121,26 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 403, res
         assert res.json["message"] == "Your account has been blocked."
 
+    def test_password_login_no_api_key(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        secret = self.fake.password()
+        self.role.set_password(secret)
+        data = {
+            "email": self.role.email,
+            "password": secret,
+        }
+        assert self.role.api_key is None
+
+        res = self.client.post("/api/2/sessions/login", data=data)
+        assert res.status_code == 200
+
+        db.session.refresh(self.role)
+        assert self.role.api_key is None
+
 
 class SessionsApiOAuthTestCase(TestCase):
     def setUp(self):
-        super().setUpClass()
+        super().setUp()
 
         SETTINGS.OAUTH = True
         SETTINGS.OAUTH_HANDLER = "test-oidc"
@@ -193,6 +209,34 @@ class SessionsApiOAuthTestCase(TestCase):
         assert res.json["name"] == "John Doe"
         assert res.json["email"] == "john.doe@example.org"
 
+    def test_oauth_callback_last_login(self):
+        role = Role.load_or_create(
+            foreign_id="test-oidc:john.doe@example.org",
+            type_=Role.USER,
+            name="John Doe",
+        )
+        assert role.last_login_at is None
+
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+
+        state = query["state"]
+
+        with mock_oauth_token_exchange(name="John Doe", email="john.doe@example.org"):
+            with time_machine.travel("2024-01-01T00:00:00"):
+                res = self.client.get(
+                    "/api/2/sessions/callback",
+                    query_string={
+                        "code": "example-auth-code",
+                        "state": state,
+                    },
+                )
+
+        db.session.refresh(role)
+        last_login_at = role.last_login_at.isoformat(timespec="seconds")
+        assert last_login_at == "2024-01-01T00:00:00"
+
     def test_oauth_callback_incorrect_state(self):
         with mock_oauth_token_exchange(name="John Doe", email="john.doe@example.org"):
             res = self.client.get(
@@ -243,9 +287,78 @@ class SessionsApiOAuthTestCase(TestCase):
         assert query["status"] == ["error"]
         assert query["code"] == ["403"]
 
+    def test_oauth_callback_sync_groups(self):
+        # Start OAuth flow
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+        state = query["state"]
+
+        # Exchange auth code for an OAuth token
+        with mock_oauth_token_exchange(
+            name="John Doe",
+            email="john.doe@example.org",
+            groups=["group-a", "group-b"],
+        ):
+            res = self.client.get(
+                "/api/2/sessions/callback",
+                query_string={
+                    "code": "example-auth-code",
+                    "state": state,
+                },
+            )
+
+        location = urlparse(res.headers["Location"])
+        fragment_query = parse_qs(location.fragment)
+        auth_token = fragment_query["token"][0]
+
+        # Get the users groups
+        res = self.client.get(
+            "/api/2/groups",
+            headers={"Authorization": f"Token {auth_token}"},
+        )
+        assert len(res.json["results"]) == 2
+        assert res.json["results"][0]["name"] == "group-a"
+        assert res.json["results"][1]["name"] == "group-b"
+
+        # Start another OAuth flow. In real life, the user's group memberships
+        # would have changed with the ID provider. In this test, the mocked token
+        # exchange will simply return a different set of groups.
+        res = self.client.get("/api/2/sessions/oauth")
+        location = urlparse(res.headers["Location"])
+        query = parse_qs(location.query)
+        state = query["state"]
+
+        # Exchange the auth code for an OAuth token
+        with mock_oauth_token_exchange(
+            name="John Doe",
+            email="john.doe@example.org",
+            groups=["project-b", "project-c"],
+        ):
+            res = self.client.get(
+                "/api/2/sessions/callback",
+                query_string={
+                    "code": "example-auth-code",
+                    "state": state,
+                },
+            )
+
+        location = urlparse(res.headers["Location"])
+        fragment_query = parse_qs(location.fragment)
+        auth_token = fragment_query["token"][0]
+
+        # The groups have been updated
+        res = self.client.get(
+            "/api/2/groups",
+            headers={"Authorization": f"Token {auth_token}"},
+        )
+        assert len(res.json["results"]) == 2
+        assert res.json["results"][0]["name"] == "project-b"
+        assert res.json["results"][1]["name"] == "project-c"
+
 
 @contextmanager
-def mock_oauth_token_exchange(name: str, email: str):
+def mock_oauth_token_exchange(name: str, email: str, groups: List[str] = []):
     patch_send = mock.patch("requests.sessions.Session.send")
     patch_parse = mock.patch(
         "authlib.integrations.flask_client.remote_app.FlaskRemoteApp.parse_id_token"
@@ -259,8 +372,9 @@ def mock_oauth_token_exchange(name: str, email: str):
 
         # https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
         parse_mock.return_value = {
-            "name": "John Doe",
-            "email": "john.doe@example.org",
+            "name": name,
+            "email": email,
+            "groups": groups,  # This is not standardized/provider specific
         }
 
         yield

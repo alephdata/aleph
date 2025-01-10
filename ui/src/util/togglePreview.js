@@ -10,6 +10,7 @@ export default function togglePreview(navigate, location, entity, profile) {
   } else {
     parsed['preview:id'] = undefined;
     parsed['preview:profile'] = undefined;
+    parsed['preview:q'] = undefined;
     parsed.page = undefined;
   }
   navigate({

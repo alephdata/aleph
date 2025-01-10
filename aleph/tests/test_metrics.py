@@ -335,22 +335,29 @@ class MetricsTestCase(TestCase):
         collection_1 = self.create_collection()
         entity_1 = self.create_entity(
             collection=collection_1,
-            data={"schema": "Person", "properties": {}},
+            data={"schema": "Airplane", "properties": {}},
         )
 
         collection_2 = self.create_collection()
         entity_2 = self.create_entity(
             collection=collection_2,
-            data={"schema": "Person", "properties": {}},
+            data={"schema": "Airplane", "properties": {}},
         )
 
         index_entity(entity_1)
         index_entity(entity_2)
 
-        # This is usually executed periodically by a worker
+        # Ensure that metric collection succeeds even if the stats for newly collections
+        # haven’t been computed yet
+        reg.collect()
+        generate_latest(reg)
+        planes = reg.get_sample_value("aleph_entities", {"schema": "Airplane"})
+        assert planes is None
+
+        # This is usually executed periodically by a worker or after collection contents are updated
         compute_collections()
 
         reg.collect()
         generate_latest(reg)
-        persons = reg.get_sample_value("aleph_entities", {"schema": "Person"})
-        assert persons == 2
+        planes = reg.get_sample_value("aleph_entities", {"schema": "Airplane"})
+        assert planes == 2
