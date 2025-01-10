@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Truncate from 'react-truncate';
 import { Button, Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 
@@ -156,9 +155,9 @@ export class AuthButtons extends Component {
             }
           >
             <Button icon="user" minimal rightIcon="caret-down">
-              <Truncate lines={2} width={120}>
+              <span className="AuthButtons__label">
                 {role ? role.name : 'Profile'}
-              </Truncate>
+              </span>
             </Button>
           </Popover>
         </span>

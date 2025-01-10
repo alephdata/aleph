@@ -248,7 +248,7 @@ class TableEditorBase extends React.Component<
       this.getHeaderCell(property)
     );
     const entityLinkPlaceholder =
-      visitEntity != undefined ? [this.getEntityLinkCell()] : [];
+      visitEntity !== undefined ? [this.getEntityLinkCell()] : [];
 
     if (writeable) {
       const addEntityCell = this.getAddEntityCell();
@@ -288,7 +288,7 @@ class TableEditorBase extends React.Component<
     });
 
     const entityLinkCell =
-      visitEntity != undefined ? [this.getEntityLinkCell(entity)] : [];
+      visitEntity !== undefined ? [this.getEntityLinkCell(entity)] : [];
 
     if (!writeable) {
       return [...entityLinkCell, ...propCells];
@@ -335,7 +335,7 @@ class TableEditorBase extends React.Component<
 
     const skeletonRowCount = 8;
     const entityLinkPlaceholder =
-      visitEntity != undefined ? [this.getEntityLinkCell()] : [];
+      visitEntity !== undefined ? [this.getEntityLinkCell()] : [];
     const actionCellPlaceholder = writeable
       ? [{ ...getCellBase('checkbox') }]
       : [];
@@ -356,7 +356,7 @@ class TableEditorBase extends React.Component<
     const { visibleProps } = this.state;
 
     const entityLinkPlaceholder =
-      visitEntity != undefined ? [this.getEntityLinkCell()] : [];
+      visitEntity !== undefined ? [this.getEntityLinkCell()] : [];
 
     const addRowCells = visibleProps.map((property) => ({
       ...getCellBase('property'),
@@ -591,7 +591,7 @@ class TableEditorBase extends React.Component<
 
   renderEntityLinkButton = ({ entity }: { entity: FTMEntity }) => {
     const { visitEntity } = this.props;
-    if (visitEntity == undefined) return null;
+    if (visitEntity === undefined) return null;
 
     return (
       <Button

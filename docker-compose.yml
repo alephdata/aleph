@@ -46,7 +46,11 @@ services:
       - aleph.env
 
   worker:
+<<<<<<< HEAD
     image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc4}
+=======
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-4.0.2}
+>>>>>>> develop
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -62,7 +66,11 @@ services:
       - aleph.env
 
   shell:
+<<<<<<< HEAD
     image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc4}
+=======
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-4.0.2}
+>>>>>>> develop
     command: /bin/bash
     depends_on:
       - postgres
@@ -80,7 +88,11 @@ services:
       - aleph.env
 
   api:
+<<<<<<< HEAD
     image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc4}
+=======
+    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-4.0.2}
+>>>>>>> develop
     expose:
       - 8000
     depends_on:
@@ -97,7 +109,11 @@ services:
       - aleph.env
 
   ui:
+<<<<<<< HEAD
     image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-ALEPH_TAG:-4.1.0-rc4}
+=======
+    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-4.0.2}
+>>>>>>> develop
     depends_on:
       - api
     ports:

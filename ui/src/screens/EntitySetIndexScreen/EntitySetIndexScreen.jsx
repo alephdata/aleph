@@ -117,7 +117,7 @@ const mapStateToProps = (state, ownProps) => {
     location,
     context,
     'entitySets'
-  ).defaultSortBy('created_at', 'asc');
+  ).defaultSortBy('updated_at', 'desc');
   return {
     query,
     result: selectEntitySetsResult(state, query),
