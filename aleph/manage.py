@@ -28,7 +28,6 @@ from aleph.logic.api_keys import (
     hash_plaintext_api_keys as _hash_plaintext_api_keys,
 )
 from aleph.index.entities import iter_proxies
-from aleph.index.util import AlephOperationalException
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
@@ -527,11 +526,11 @@ def publish(foreign_id):
 
 @cli.command()
 def upgrade():
-    """Create or upgrade the search index and database."""
-    try:
-        upgrade_system()
-    except AlephOperationalException:
-        log.exception("Failed to upgrade.")
+    """Create or upgrade the search index and database.
+
+    :raises AlephOperationalException:
+    """
+    upgrade_system()
 
 
 @cli.command()
