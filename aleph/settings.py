@@ -148,7 +148,9 @@ class Settings:
 
         # API rate limiting (req/min for anonymous users)
         self.API_RATE_LIMIT = env.to_int("ALEPH_API_RATE_LIMIT", 30)
-        self.API_RATE_WINDOW = 15  # minutes
+
+        # API rate window (in minutes)
+        self.API_RATE_WINDOW = env.to_int("ALEPH_API_RATE_WINDOW", 15)
 
         # Export file size limit
         self.EXPORT_MAX_SIZE = env.to_int(
