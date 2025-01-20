@@ -75,11 +75,19 @@ class ViewContextTest(TestCase):
         res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
         assert res.status_code == 403
 
+        headers = {"Authorization": "ApiKey   "}
+        res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
+        assert res.status_code == 403
+
         headers = {"Authorization": ""}
         res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
         assert res.status_code == 403
 
         headers = {"Authorization": "INVALID"}
+        res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
+        assert res.status_code == 403
+
+        headers = {"Authorization": "   "}
         res = self.client.get(f"/api/2/roles/{self.role.id}", headers=headers)
         assert res.status_code == 403
 
@@ -95,5 +103,9 @@ class ViewContextTest(TestCase):
         assert res.status_code == 403
 
         query_string = {"api_key": ""}
+        res = self.client.get(f"/api/2/roles/{self.role.id}", query_string=query_string)
+        assert res.status_code == 403
+
+        query_string = {"api_key": "   "}
         res = self.client.get(f"/api/2/roles/{self.role.id}", query_string=query_string)
         assert res.status_code == 403

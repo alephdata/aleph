@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timezone
 from normality import stringify
-from sqlalchemy import or_, not_, func
+from sqlalchemy import and_, or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -197,13 +197,18 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def by_api_key(cls, api_key):
-        if api_key is None:
+        if api_key is None or not len(api_key.strip()):
             return None
 
         q = cls.all()
 
         digest = hash_api_key(api_key)
-        q = q.filter(cls.api_key_digest == digest)
+        q = q.filter(
+            and_(
+                cls.api_key_digest != None,  # noqa: E711
+                cls.api_key_digest == digest,
+            )
+        )
 
         utcnow = datetime.now(timezone.utc)
         # TODO: Exclude API keys without expiration date after deadline
