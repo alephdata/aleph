@@ -13,16 +13,16 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
+    image: ghcr.io/investigativedata/aleph-elasticsearch:latest
     restart: on-failure
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - "http.cors.enabled=true"
-      - "http.cors.allow-origin=*"
-      - "http.cors.allow-headers=*"
-      - "http.cors.allow-credentials=true"
+      # - "http.cors.enabled=true"
+      # - "http.cors.allow-origin=*"
+      # - "http.cors.allow-headers=*"
+      # - "http.cors.allow-credentials=true"
     ports:
       - "127.0.0.1:9200:9200"
     volumes:
