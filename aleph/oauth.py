@@ -1,7 +1,6 @@
 import logging
 from authlib.jose import JsonWebToken, JsonWebKey
 from authlib.integrations.flask_client import OAuth
-from authlib.jose.errors import DecodeError
 
 from aleph.settings import SETTINGS
 from aleph.util import is_auto_admin
