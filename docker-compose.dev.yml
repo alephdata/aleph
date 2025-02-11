@@ -16,17 +16,12 @@ services:
     image: ghcr.io/investigativedata/aleph-elasticsearch:latest
     restart: on-failure
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      # - "http.cors.enabled=true"
-      # - "http.cors.allow-origin=*"
-      # - "http.cors.allow-headers=*"
-      # - "http.cors.allow-credentials=true"
     ports:
       - "127.0.0.1:9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./contrib/es/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   redis:
     image: redis:alpine
