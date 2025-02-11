@@ -84,8 +84,9 @@ ingest-restart:
 	$(COMPOSE) up -d --no-deps --remove-orphans --force-recreate ingest-file
 
 dev:
-	python3 -m pip install --upgrade pip setuptools poetry
-	python3 -m poetry install --with dev
+	python3 -m pip install --upgrade pip
+	python3 -m pip install -q -r requirements.txt
+	python3 -m pip install -q -r requirements-dev.txt
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
@@ -121,4 +122,3 @@ e2e-local:
 	pytest -s -v --screenshot only-on-failure e2e/
 
 .PHONY: build services e2e
-
