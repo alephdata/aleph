@@ -1,3 +1,5 @@
+import logging
+
 from aleph.core import create_app
 from aleph.settings import SETTINGS
 from aleph import __version__ as aleph_version
