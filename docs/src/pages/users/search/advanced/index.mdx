@@ -77,9 +77,7 @@ What this translates to: Give me matches that include the keyword "Putin", but a
   density={2}
 />
 
-<Callout>Using this operator with too high a number (greater than 3, for example) will cause slow searches and may return too many false results.</Callout>
-
-{/* TODO The max value for fuzzy searches is 2. */}
+<Callout>You can only search for spelling variations with a maximum difference of two letters.</Callout>
 
 ## Search for words that should be in proximity to each other
 
@@ -123,7 +121,109 @@ You can build on these searches even further like so:
 
 This translates to: Give me all matches in which each match must contain the keyword Trump and must contain either the keyword Salman or the keyword Putin, but must not contain the keywords South Korea.
 
-## Full search syntax
+## Filter search results based on specific properties
+
+You can filter search results based on the values of specific entity properties. For example, the following query will return only entities with `john.doe@example.org` as a value of the `email` property:
+
+```
+properties.email:john.doe@example.org
+```
+
+An important difference to other search queries is that these filters only match exact values. For example, the query above wouldn’t match an entity with `johndoe@example.org` (without the dot between the first and last name). If you want to match such variations, you can use the `~` operator introduced above or a regular expression search.
+
+Using the spelling variations operator:
+
+```
+properties.email:john.doe@example.org~1
+```
+
+Using a regular expression:
+
+```
+properties.email:/john.?doe@example.org/
+```
+
+<Callout>
+  Filtering search results based on property values isn’t available for properties of type [`text`](https://followthemoney.tech/explorer/types/text/). For example, the following query won’t return any results (even if there is an entity with a matching `notes` property), because [`notes`](https://followthemoney.tech/explorer/schemata/Thing/#property-notes) is of the `text` property type.
+</Callout>
+
+### Filter based on date properties
+
+In addition to the queries described in the previous section, you can use special operators to filter search results based on date properties.
+
+For example, the following query returns only entities with a value greater than `2010-07-01` (July 1st, 2010) in the `incorporationDate` property:
+
+```
+properties.incorporationDate:>2010-07-01
+```
+
+To search for entities with an incorporation date including July 1st, use the `>=` operator:
+
+```
+properties.incorporationDate:>=2010-07-01
+```
+
+Searching for values less than a value works analogously:
+
+```
+properties.incorporationDate:<2010-07-01
+properties.incorporationDate:<=2017-07-01
+```
+
+You can also query results with values in a range. FOr example, the following query returns only entities with a value between `2010-01-01` and `2015-12-31`:
+
+```
+properties.incorporationDate:[2010-01-01 TO 2015-12-31]
+```
+
+The bounds of the range are inclusive, that is, in case of the query above, it includes entities with values of `2015-01-01` and `2015-12-31` in the `incorporationDate` property.
+
+### Filter based on numeric properties
+
+You can use the same operators described in the previous section to filter search results based on numeric properties. However, you need to prefix the property names with `numeric.` instead of `properties.`.
+
+For example, the following query returns only entities with a value greater than `99` in the `rowCount` property:
+
+```
+numeric.rowCount:>99
+```
+
+## Filter search results based on metadata
+
+Aleph stores additional information about entities that isn’t part of the entity properties. This includes the entity schema and the ID of the dataset or investigation the entity is part of. While you can filter based on this information using Aleph’s search UI, you can also use it in search queries:
+
+### Filter based on entity schema
+
+The following query returns only `LegalEntity` entities:
+
+```
+schema:LegalEntity
+```
+
+Note that this does not include entities with a schema that inherits from `LegalEntity`. For example, while the `Company` schema inherits from `LegalEntity`, it wouldn’t return `Company` entities.
+
+Instead, you can use the following query to return only entities that use the `LegalEntity` schema or any schema inheriting from `LegalEntity` (such as `Person` or `Company`):
+
+```
+schemata:LegalEntity
+```
+
+### Filter based on dataset or investigation
+
+To filter based on a dataset or investigation, you need to know its ID. You can find the ID in the URL of the dataset or investigation. For example, in the following two URLs, the IDs are `123` and `456`, respectively.
+
+```
+https://aleph.occrp.org/datasets/123
+https://aleph.occrp.org/investigations/456
+```
+
+You can then use the ID to filter search results to include only entities from a particular dataset or investigation. For example, the following query returns only entities from the dataset with the ID `123`:
+
+```
+collection_id:123
+```
+
+## Full search query syntax
 
 Under the hood, Aleph uses a search engine called Elasticsearch. In addition to the advanced search options explained above, you can also use the full Elasticsearch query syntax. Please refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax) for more information.
 
