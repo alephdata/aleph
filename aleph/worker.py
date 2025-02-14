@@ -3,7 +3,6 @@ from collections import defaultdict
 import time
 import threading
 import functools
-import queue
 import copy
 from typing import Dict, Callable
 import sqlalchemy
