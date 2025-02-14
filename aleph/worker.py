@@ -125,7 +125,6 @@ class AlephWorker(Worker):
         # run of all available indexing tasks
         self.indexing_batch_last_updated = 0.0
         self.indexing_batches = defaultdict(list)
-        self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
 
     def on_signal(self, signal, _):
