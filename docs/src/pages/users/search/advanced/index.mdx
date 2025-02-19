@@ -145,6 +145,10 @@ properties.email:/john.?doe@example.org/
 
 <Callout>
   Filtering search results based on property values isn’t available for properties of type [`text`](https://followthemoney.tech/explorer/types/text/). For example, the following query won’t return any results (even if there is an entity with a matching `notes` property), because [`notes`](https://followthemoney.tech/explorer/schemata/Thing/#property-notes) is of the `text` property type.
+
+  ```
+  properties.notes:"Lorem ipsum"
+  ```
 </Callout>
 
 ### Filter based on date properties
