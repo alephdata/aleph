@@ -180,7 +180,7 @@ def query_delete(index, query, sync=False, **kwargs):
                 request_timeout=MAX_REQUEST_TIMEOUT,
                 timeout=MAX_TIMEOUT,
                 scroll_size=SETTINGS.INDEX_DELETE_BY_QUERY_BATCHSIZE,
-                **kwargs
+                **kwargs,
             )
             return
         except TransportError as exc:

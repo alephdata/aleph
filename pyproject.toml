@@ -1,55 +1,63 @@
-[tool.poetry]
+[project]
 name = "aleph"
 version = "3.17.0"
 description = "Search and browse documents and data; find the people and companies you look for."
 authors = [
-    "Friedrich Lindenberg <friedrich@pudo.org>",
-    "OCCRP Data Team <data@occrp.org>",
-    "ID.IO <hi@investigativedata.org>"
+    { name = "Friedrich Lindenberg", email = "friedrich@pudo.org" },
+    { name = "OCCRP Data Team", email = "data@occrp.org" },
+    { name = "ID.IO", email = "hi@investigativedata.org" },
 ]
 license = "MIT"
 readme = "README.rst"
+requires-python = ">= 3.11, <4.0.0"
+dependencies = [
+    "banal (==1.0.6)",
+    "followthemoney (==3.7.4)",
+    "followthemoney-store[postgresql] (>=3.1.0,<3.2.0)",
+    "fingerprints (==1.2.3)",
+    "servicelayer @ git+https://github.com/investigativedata/servicelayer.git@main",
+    "normality (==2.5.0)",
+    "pantomime (==0.6.1)",
+    "Flask (<3.0)",
+    "Flask-SQLAlchemy (==3.1.1)",
+    "Flask-Mail (==0.10.0)",
+    "Flask-Migrate  (==4.0.7)",
+    "Flask-Cors (==5.0.0)",
+    "flask-babel (==4.0.0)",
+    "flask-talisman (==1.1.0)",
+    "SQLAlchemy (==2.0.36)",
+    "alembic (==1.14.0)",
+    "Authlib (==0.15.5)",
+    "elasticsearch (==7.17.0)",
+    "marshmallow (==3.23.1)",
+    "gunicorn[eventlet] (==23.0.0)",
+    "jsonschema (==4.23.0)",
+    "apispec (==6.7.1)",
+    "apispec-webframeworks (==1.2.0)",
+    "blinker (==1.9.0)",
+    "babel (==2.16.0)",
+    "pyyaml (==6.0.2)",
+    "python-frontmatter (==1.1.0)",
+    "pyjwt (==2.9.0)",
+    "cryptography (==43.0.3)",
+    "requests[security] (==2.32.3)",
+    "tabulate (==0.9.0)",
+    "zipstream-new (==1.1.8)",
+    "prometheus-client (==0.17.1)",
+    "followthemoney-compare (==0.4.4)",
+    "nomenklatura (==3.15.2)",
+    # servicelayer extras requirements
+    "boto3 (>=1.11.9,<2.0.0)",
+    "grpcio (>=1.32.0,<2.0.0)",
+    "google-cloud-storage (>=1.31.0,<3.0.0)",
+    "pydantic (>=2.10.6,<3.0.0)"
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 aleph = "aleph.manage:cli"
 
-[tool.poetry.dependencies]
-python = ">3.10,<3.14"
-banal = "^1.0.6"
-followthemoney = "^3.7.4"
-followthemoney-store = { extras = ["postgresql"], version = "^3.1.0" }
-fingerprints = "^1.2.3"
-servicelayer = { extras = ["amazon"], version = "^1.23.1" }
-normality = "^2.5.0"
-pantomime = "^0.6.1"
-Flask = "<3"
-Flask-SQLAlchemy = "^3.1.1"
-Flask-Mail = "^0.10.0"
-Flask-Migrate = "^4.0.7"
-Flask-Cors = "^5.0.0"
-flask-babel = "^4.0.0"
-flask-talisman = "^1.1.0"
-SQLAlchemy = "^2.0.36"
-alembic = "^1.14.0"
-Authlib = "<1"
-elasticsearch = "7.17.0"
-marshmallow = "^3.23.1"
-gunicorn = { extras = ["eventlet"], version = "^23.0.0" }
-jsonschema = "^4.23.0"
-apispec = "^6.7.1"
-apispec-webframeworks = "^1.2.0"
-blinker = "^1.9.0"
-babel = "^2.16.0"
-pyyaml = "^6.0.2"
-python-frontmatter = "^1.1.0"
-pyjwt = "^2.9.0"
-cryptography = "^43.0.3"
-requests = { extras = ["security"], version = "^2.32.3" }
-tabulate = "^0.9.0"
-zipstream-new = "^1.1.8"
-sentry-sdk = "^2.18.0"
-prometheus-client = "<0.21"
-followthemoney-compare = "^0.4.4"
+[project.gui-scripts]
+aleph = "aleph.manage:cli"
 
 [tool.poetry.group.dev.dependencies]
 factory-boy = "^3.3.1"
