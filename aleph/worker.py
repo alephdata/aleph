@@ -115,7 +115,13 @@ class AlephWorker(Worker):
         version=None,
         prefetch_count_mapping=defaultdict(lambda: 1),
     ):
-        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
+        super().__init__(
+            queues,
+            conn=conn,
+            num_threads=num_threads,
+            version=version,
+            prefetch_count_mapping=prefetch_count_mapping,
+        )
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
         # special treatment for indexing jobs - indexing jobs need to be batched
