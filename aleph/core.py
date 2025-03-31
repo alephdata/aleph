@@ -140,6 +140,7 @@ def get_es():
             "verify_certs": SETTINGS.ELASTICSEARCH_TLS_VERIFY_CERTS,
             "client_cert": SETTINGS.ELASTICSEARCH_TLS_CLIENT_CERT,
             "client_key": SETTINGS.ELASTICSEARCH_TLS_CLIENT_KEY,
+            "api_key": SETTINGS.ELASTICSEARCH_API_KEY,
         }
     )
     for attempt in service_retries():
@@ -150,12 +151,24 @@ def get_es():
                 if sls.LOG_FORMAT == LOG_FORMAT_JSON:
                     es = Elasticsearch(
                         url,
+                        api_key=(
+                            SETTINGS.ELASTICSEARCH_API_ID,
+                            SETTINGS.ELASTICSEARCH_API_KEY,
+                        ),
                         transport_class=LoggingTransport,
                         timeout=timeout,
                         **con_opts,
                     )
                 else:
-                    es = Elasticsearch(url, timeout=timeout, **con_opts)
+                    es = Elasticsearch(
+                        url,
+                        api_key=(
+                            SETTINGS.ELASTICSEARCH_API_ID,
+                            SETTINGS.ELASTICSEARCH_API_KEY,
+                        ),
+                        timeout=timeout,
+                        **con_opts,
+                    )
                 es.info()
                 SETTINGS._es_instance = es
             return SETTINGS._es_instance
