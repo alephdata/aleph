@@ -84,6 +84,12 @@ spec:
                 secretKeyRef:
                   name: aleph-secrets
                   key: ALEPH_SECRET_KEY
+            - name: ALEPH_MAIL_PASSWORD
+              valueFrom:
+              secretKeyRef:
+                  name: aleph-secrets
+                  key: ALEPH_MAIL_PASSWORD
+                  optional: true
             - name: FTM_STORE_URI
               valueFrom:
                 secretKeyRef:
