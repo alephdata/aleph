@@ -283,6 +283,11 @@ class StatisticsCollector(Collector):
             collection_stats = get_collection_stats(collection.id)
             schemata = collection_stats["schema"]["values"]
 
+            # For some reason, the default/fallback value returned by `get_collection_stats`
+            # is a list, not an empty object, so we need to handle this explicitly.
+            if not schemata:
+                continue
+
             for schema, count in schemata.items():
                 stats[schema] += count
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import { compose } from 'redux';
@@ -12,19 +12,10 @@ import { SectionLoading, Skeleton } from 'components/common';
 import { queryEntities } from 'actions';
 import { selectEntitiesResult } from 'selectors';
 import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import EntityActionBar from 'components/Entity/EntityActionBar';
-import PdfViewerSearch from 'viewers/PdfViewerSearch';
 import PdfViewerPage from 'viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-
-const messages = defineMessages({
-  placeholder: {
-    id: 'entity.viewer.search_placeholder',
-    defaultMessage: 'Search in {label}',
-  },
-});
 
 export class PdfViewer extends Component {
   constructor(props) {
@@ -221,43 +212,17 @@ export class PdfViewer extends Component {
   }
 
   render() {
-    const {
-      document,
-      dir,
-      activeMode,
-      pageQuery,
-      searchQuery,
-      intl,
-      page,
-      numPages,
-      shouldRenderSearch,
-    } = this.props;
+    const { document, dir, activeMode, pageQuery, page, numPages } = this.props;
 
     if (document.isPending || numPages === undefined || numPages === null) {
       return <SectionLoading />;
     }
     return (
       <div className="PdfViewer">
-        <EntityActionBar
-          query={shouldRenderSearch ? searchQuery : pageQuery}
-          onSearchSubmit={this.onSearch}
-          searchPlaceholder={intl.formatMessage(messages.placeholder, {
-            label: document.getCaption(),
-          })}
-          searchDisabled={document.getProperty('processingError')?.length}
-        />
         <div className="outer">
           <div id="PdfViewer" className="inner">
             <div className="document">
-              {shouldRenderSearch && (
-                <PdfViewerSearch
-                  document={document}
-                  dir={dir}
-                  activeMode={activeMode}
-                  query={searchQuery}
-                />
-              )}
-              {activeMode === 'text' && !shouldRenderSearch && (
+              {activeMode === 'text' && (
                 <PdfViewerPage
                   document={document}
                   dir={dir}
@@ -266,7 +231,7 @@ export class PdfViewer extends Component {
                   query={pageQuery}
                 />
               )}
-              {activeMode === 'view' && !shouldRenderSearch && this.renderPdf()}
+              {activeMode === 'view' && this.renderPdf()}
             </div>
           </div>
         </div>

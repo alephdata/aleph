@@ -1,5 +1,7 @@
 import json
 
+import time_machine
+
 from aleph.core import db, mail
 from aleph.settings import SETTINGS
 from aleph.model import Role
@@ -67,13 +69,80 @@ class RolesApiTestCase(TestCase):
         assert res.json["total"] == 0
         assert len(res.json["results"]) == 0
 
+    def test_view_auth(self):
+        _, other_headers = self.login(foreign_id="other")
+        role, _ = self.login(
+            foreign_id="john",
+            name="John Doe",
+            email="john@example.org",
+        )
+
+        # Unauthenticated request
+        res = self.client.get(f"/api/2/roles/{role.id}")
+        assert res.status_code == 403
+
+        # Authenticated but unauthorized request
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=other_headers)
+        assert res.status_code == 403
+
     def test_view(self):
-        res = self.client.get("/api/2/roles/%s" % self.rolex)
-        assert res.status_code == 404, res
-        role, headers = self.login()
-        res = self.client.get("/api/2/roles/%s" % role.id, headers=headers)
-        assert res.status_code == 200, res
-        # assert res.json['total'] >= 6, res.json
+        role, headers = self.login(
+            foreign_id="john",
+            name="John Doe",
+            email="john@example.org",
+        )
+
+        # Authenticated and authorized request
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+
+        assert set(res.json.keys()) == {
+            "id",
+            "type",
+            "name",
+            "email",
+            "label",
+            "created_at",
+            "updated_at",
+            "is_admin",
+            "is_muted",
+            "is_tester",
+            "has_password",
+            "has_api_key",
+            "counts",
+            "shallow",
+            "writeable",
+            "links",
+        }
+
+        assert res.json["id"] == str(role.id)
+        assert res.json["type"] == "user"
+        assert res.json["name"] == "John Doe"
+        assert res.json["email"] == "john@example.org"
+        assert res.json["label"] == "John Doe <j***@example.org>"
+        assert res.json["is_admin"] is False
+        assert res.json["shallow"] is False
+        assert res.json["writeable"] is True
+
+    def test_view_api_key(self):
+        role, headers = self.login(foreign_id="john", email="john.doe@example.org")
+
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+        assert res.json["has_api_key"] is False
+        assert "api_key_expires_at" not in res.json
+
+        with time_machine.travel("2024-01-01T00:00:00Z"):
+            res = self.client.post(
+                f"/api/2/roles/{role.id}/generate_api_key",
+                headers=headers,
+            )
+            assert res.status_code == 200
+
+        res = self.client.get(f"/api/2/roles/{role.id}", headers=headers)
+        assert res.status_code == 200
+        assert res.json["has_api_key"] is True
+        assert res.json["api_key_expires_at"] == "2024-03-31T00:00:00"
 
     def test_update(self):
         res = self.client.post("/api/2/roles/%s" % self.rolex)
@@ -183,3 +252,65 @@ class RolesApiTestCase(TestCase):
         res = self.client.post("/api/2/roles", data=payload)
 
         self.assertEqual(res.status_code, 409)
+
+    def test_generate_api_key_auth(self):
+        url = f"/api/2/roles/{self.rolex.id}/generate_api_key"
+
+        # Anonymous request
+        res = self.client.post(url)
+        self.assertEqual(res.status_code, 403)
+
+        # Authenticated request, but for a different role
+        _, headers = self.login()
+        res = self.client.post(url, headers=headers)
+        self.assertEqual(res.status_code, 403)
+
+    def test_generate_api_key(self):
+        role, headers = self.login()
+        assert role.api_key is None
+
+        # Generate initial API key for new user
+        url = f"/api/2/roles/{role.id}/generate_api_key"
+        res = self.client.post(url, headers=headers)
+        new_key = res.json["api_key"]
+        assert res.status_code == 200
+        assert new_key is not None
+
+        # The new API key can be used for authentication
+        url = f"/api/2/roles/{role.id}"
+        res = self.client.get(url, headers={"Authorization": new_key})
+        assert res.status_code == 200
+
+        old_key = new_key
+
+        # Regenerate API key
+        url = f"/api/2/roles/{role.id}/generate_api_key"
+        res = self.client.post(url, headers=headers)
+        new_key = res.json["api_key"]
+
+        assert res.status_code == 200
+        assert new_key is not None
+        assert new_key != old_key
+
+        # Old key cannot be used for authentication anymore
+        url = f"/api/2/roles/{role.id}"
+        res = self.client.get(url, headers={"Authorization": old_key})
+        self.assertEqual(res.status_code, 403)
+
+        # New key can be used for authentication
+        res = self.client.get(url, headers={"Authorization": new_key})
+        self.assertEqual(res.status_code, 200)
+
+    def test_new_roles_no_api_key(self):
+        SETTINGS.PASSWORD_LOGIN = True
+        email = "john.doe@example.org"
+        data = {
+            "password": "12345678",
+            "code": Role.SIGNATURE.dumps(email),
+        }
+        res = self.client.post("/api/2/roles", data=data)
+        assert res.status_code == 201
+
+        role = Role.by_email(email)
+        assert role is not None
+        assert role.api_key is None

@@ -1,13 +1,20 @@
 @import 'app/variables.scss';
 
-.RouterLoading {
+.Router {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+}
 
-  .spinner {
-    align-self: center;
-    margin: auto;
-  }
+.Router__error,
+.Router__spinner {
+  align-self: center;
+  margin: auto;
+}
+
+.Router__error {
+  max-width: $aleph-screen-sm-max-width;
+  padding: $aleph-content-padding;
+  text-align: center;
 }

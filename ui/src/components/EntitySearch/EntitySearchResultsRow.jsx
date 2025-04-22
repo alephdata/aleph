@@ -40,11 +40,18 @@ class EntitySearchResultsRow extends Component {
   }
 
   renderCellContent(column) {
-    const { entity, model, showPreview } = this.props;
+    const { entity, model, showPreview, queryText } = this.props;
     const { isProperty, name, type } = column;
 
     if (name === 'caption') {
-      return <Entity.Link preview={showPreview} entity={entity} icon />;
+      return (
+        <Entity.Link
+          preview={showPreview}
+          previewQueryText={queryText}
+          entity={entity}
+          icon
+        />
+      );
     } else if (name === 'collection_id') {
       return (
         <Collection.Link

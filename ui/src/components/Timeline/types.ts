@@ -15,7 +15,7 @@ export type Vertex = {
 };
 
 export type Layout = {
-  vertices: Array<Vertex>;
+  vertices?: Array<Vertex>;
 };
 
 export type EdgeSchema = Schema & {

@@ -137,7 +137,11 @@ class TestCase(unittest.TestCase):
         role = self.create_user(
             foreign_id=foreign_id, name=name, email=email, is_admin=is_admin
         )
-        headers = {"Authorization": role.api_key}
+
+        authz = Authz.from_role(role)
+        token = authz.to_token()
+
+        headers = {"Authorization": f"Token {token}"}
         return role, headers
 
     def create_collection(self, creator=None, **kwargs):

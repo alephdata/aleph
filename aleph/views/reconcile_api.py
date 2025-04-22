@@ -57,8 +57,6 @@ def reconcile_index(collection=None):
     domain = SETTINGS.APP_UI_URL.strip("/")
     label = SETTINGS.APP_TITLE
     suggest_query = []
-    if request.authz.id:
-        suggest_query.append(("api_key", request.authz.role.api_key))
     schemata = list(model)
     if collection is not None:
         label = "%s (%s)" % (collection.get("label"), label)

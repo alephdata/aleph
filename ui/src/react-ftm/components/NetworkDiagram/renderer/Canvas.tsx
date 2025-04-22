@@ -209,11 +209,11 @@ export class Canvas extends React.Component<ICanvasProps> {
     this.props.actions.addVertex({ initialPosition: gridTarget });
   }
 
-  componentWillReceiveProps(nextProps: Readonly<ICanvasProps>): void {
+  componentDidUpdate(prevProps: Readonly<ICanvasProps>): void {
     this.animationHandler(
-      nextProps.animateTransition,
-      this.props.viewBox || '',
-      nextProps.viewBox || ''
+      this.props.animateTransition,
+      prevProps.viewBox || '',
+      this.props.viewBox || ''
     );
   }
 

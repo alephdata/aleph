@@ -137,6 +137,7 @@ export class Sidebar extends React.Component<ISidebarProps> {
       }
       contents = (
         <EntityViewer
+          key={entity.id}
           entity={entity}
           onEntityChanged={this.onEntityChanged}
           vertexRef={vertexRef}

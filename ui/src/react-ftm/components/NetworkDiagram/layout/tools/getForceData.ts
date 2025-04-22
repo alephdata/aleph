@@ -39,8 +39,8 @@ const getForceData = ({
   let groupingLinks: Array<any> = [];
   groupings.forEach((grouping) => {
     const gVerts = grouping.getVertexIds();
-    gVerts.map((v1) => {
-      gVerts.map((v2) => {
+    gVerts.forEach((v1) => {
+      gVerts.forEach((v2) => {
         groupingLinks.push({
           source: nodes.find((n) => n.id === v1),
           target: nodes.find((n) => n.id === v2),

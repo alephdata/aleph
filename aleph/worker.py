@@ -3,7 +3,6 @@ from collections import defaultdict
 import time
 import threading
 import functools
-import queue
 import copy
 from typing import Dict, Callable
 import sqlalchemy
@@ -18,6 +17,7 @@ from aleph.settings import SETTINGS
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.logic.alerts import check_alerts
+from aleph.logic.api_keys import send_api_key_expiration_notifications
 from aleph.logic.collections import reingest_collection, reindex_collection
 from aleph.logic.collections import compute_collections, refresh_collection
 from aleph.logic.notifications import generate_digest, delete_old_notifications
@@ -115,7 +115,13 @@ class AlephWorker(Worker):
         version=None,
         prefetch_count_mapping=defaultdict(lambda: 1),
     ):
-        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
+        super().__init__(
+            queues,
+            conn=conn,
+            num_threads=num_threads,
+            version=version,
+            prefetch_count_mapping=prefetch_count_mapping,
+        )
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
         # special treatment for indexing jobs - indexing jobs need to be batched
@@ -124,7 +130,6 @@ class AlephWorker(Worker):
         # run of all available indexing tasks
         self.indexing_batch_last_updated = 0.0
         self.indexing_batches = defaultdict(list)
-        self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
 
     def on_signal(self, signal, _):
@@ -152,10 +157,12 @@ class AlephWorker(Worker):
                     update_roles()
                     check_alerts()
                     generate_digest()
+                    send_api_key_expiration_notifications()
                     delete_expired_exports()
                     delete_old_notifications()
 
-                self.run_indexing_batches()
+                if SETTINGS.STAGE_INDEX in SETTINGS.ALEPH_STAGES:
+                    self.run_indexing_batches()
             except Exception:
                 log.exception("Error while executing periodic tasks")
 
