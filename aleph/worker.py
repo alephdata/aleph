@@ -3,7 +3,6 @@ from collections import defaultdict
 import time
 import threading
 import functools
-import queue
 import copy
 from typing import Dict, Callable
 import sqlalchemy
@@ -116,7 +115,13 @@ class AlephWorker(Worker):
         version=None,
         prefetch_count_mapping=defaultdict(lambda: 1),
     ):
-        super().__init__(queues, conn=conn, num_threads=num_threads, version=version)
+        super().__init__(
+            queues,
+            conn=conn,
+            num_threads=num_threads,
+            version=version,
+            prefetch_count_mapping=prefetch_count_mapping,
+        )
         self.often = get_rate_limit("often", unit=300, interval=1, limit=1)
         self.daily = get_rate_limit("daily", unit=3600, interval=24, limit=1)
         # special treatment for indexing jobs - indexing jobs need to be batched
@@ -125,7 +130,6 @@ class AlephWorker(Worker):
         # run of all available indexing tasks
         self.indexing_batch_last_updated = 0.0
         self.indexing_batches = defaultdict(list)
-        self.local_queue = queue.Queue()
         self.prefetch_count_mapping = prefetch_count_mapping
 
     def on_signal(self, signal, _):

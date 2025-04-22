@@ -129,7 +129,6 @@ def hash_plaintext_api_keys():
     for index, partition in enumerate(results.partitions()):
         for role in partition:
             role.api_key_digest = hash_api_key(role.api_key)
-            role.api_key = None
             db.session.add(role)
             log.info(f"Hashing API key: {role}")
         log.info(f"Comitting partition {index}")

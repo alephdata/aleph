@@ -174,8 +174,9 @@ class EntityViews extends React.Component {
 
     // The view mode is the default mode. It is rendered for almost all document-like
     // entities (except folders) and renders an empty state if no viewer is available
-    // for a specific file type.
-    if (entity.schema.isA('Folder')) {
+    // for a specific file type. Email is special cased, because it inherits from Folder,
+    // but still has a normal view.
+    if (entity.schema.isA('Folder') && !entity.schema.isA('Email')) {
       return;
     }
 

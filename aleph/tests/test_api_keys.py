@@ -211,7 +211,12 @@ class ApiKeysTestCase(TestCase):
         hash_plaintext_api_keys()
 
         db.session.refresh(user_1)
-        assert user_1.api_key is None
+
+        # Do not delete the plaintext API key to allow for version rollbacks.
+        # `api_key` column will be removed in the next version at which point all
+        # plaintext keys will be deleted.
+        assert user_1.api_key == "1234567890"
+
         assert user_1.api_key_digest == hash_api_key("1234567890")
 
         db.session.refresh(user_2)
