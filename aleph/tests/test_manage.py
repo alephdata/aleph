@@ -308,3 +308,9 @@ class ManageTestCase(TestCase):
         )
         assert result.exit_code != 0
         assert isinstance(result.exception, SystemExit)
+
+    def test_version_option_shows_aleph_version(self):
+        for option in ["-v", "--version"]:
+            result = self.runner.invoke(manage.cli, option)
+            assert result.exit_code == 0
+            assert "Aleph" in result.output

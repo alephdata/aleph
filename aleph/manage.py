@@ -1,4 +1,6 @@
 # coding: utf-8
+import importlib.metadata
+import platform
 import sys
 import json
 import click
@@ -8,6 +10,7 @@ from pprint import pprint  # noqa
 from itertools import count
 from normality import slugify
 from tabulate import tabulate
+from typing import Any
 from flask.cli import FlaskGroup
 from followthemoney.cli.util import write_object
 from servicelayer.taskqueue import flush_queues
@@ -25,7 +28,6 @@ from aleph.logic.api_keys import (
     hash_plaintext_api_keys as _hash_plaintext_api_keys,
 )
 from aleph.index.entities import iter_proxies
-from aleph.index.util import AlephOperationalException
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import delete_collection, reindex_collection
 from aleph.logic.collections import upgrade_collections, reingest_collection
@@ -85,7 +87,28 @@ def ensure_collection(foreign_id, label):
     return collection
 
 
-@click.group(cls=FlaskGroup, create_app=create_app)
+def print_aleph_version(ctx: click.Context, _: click.Parameter, value: Any) -> None:
+    if not value or ctx.resilient_parsing:
+        return
+
+    click.echo(
+        f"Aleph {importlib.metadata.version('aleph')}\n"
+        f"Python {platform.python_version()}\n"
+        f"Flask {importlib.metadata.version('flask')}\n"
+        f"Werkzeug {importlib.metadata.version('werkzeug')}",
+    )
+    ctx.exit()
+
+
+@click.group(cls=FlaskGroup, create_app=create_app, add_version_option=False)
+@click.option(
+    "-v",
+    "--version",
+    help="Show the Aleph version.",
+    callback=print_aleph_version,
+    expose_value=False,
+    is_flag=True,
+)
 def cli():
     """Server-side command line for aleph."""
 
@@ -503,11 +526,11 @@ def publish(foreign_id):
 
 @cli.command()
 def upgrade():
-    """Create or upgrade the search index and database."""
-    try:
-        upgrade_system()
-    except AlephOperationalException:
-        log.exception("Failed to upgrade.")
+    """Create or upgrade the search index and database.
+
+    :raises AlephOperationalException:
+    """
+    upgrade_system()
 
 
 @cli.command()

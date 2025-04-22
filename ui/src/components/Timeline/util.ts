@@ -118,7 +118,7 @@ export class TimelineItem {
   }
 
   getColor() {
-    if (!this.layout) {
+    if (!this.layout || !this.layout.vertices) {
       return DEFAULT_COLOR;
     }
 
@@ -403,8 +403,8 @@ export function useFormValidity(formRef: RefObject<HTMLFormElement>) {
  * Return a new layout object, replacing or inserting the given vertex.
  */
 export function updateVertex(layout: Layout, updatedVertex: Vertex): Layout {
-  const { vertices } = layout;
-  const index = layout.vertices.findIndex(
+  const vertices = layout.vertices || [];
+  const index = vertices.findIndex(
     (vertex) => vertex.entityId === updatedVertex.entityId
   );
 

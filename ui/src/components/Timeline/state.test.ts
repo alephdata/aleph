@@ -12,7 +12,7 @@ let state: State;
 beforeEach(() => {
   state = {
     entities: [entity],
-    layout: { vertices: [] },
+    layout: {},
     selectedId: null,
     renderer: 'list',
     zoomLevel: 'months',
@@ -65,17 +65,19 @@ describe('UPDATE_VERTEX', () => {
     });
 
     expect(newState.layout.vertices).toHaveLength(1);
-    expect(newState.layout.vertices[0]).toEqual({
+    expect(newState.layout.vertices?.[0]).toEqual({
       entityId: '123',
       color: 'pink',
     });
   });
 
   it('updates existing vertex', () => {
-    state.layout.vertices.push({
-      entityId: '123',
-      color: 'blue',
-    });
+    state.layout.vertices = [
+      {
+        entityId: '123',
+        color: 'blue',
+      },
+    ];
 
     const vertex = {
       entityId: '123',
@@ -88,7 +90,7 @@ describe('UPDATE_VERTEX', () => {
     });
 
     expect(newState.layout.vertices).toHaveLength(1);
-    expect(newState.layout.vertices[0]).toEqual({
+    expect(newState.layout.vertices?.[0]).toEqual({
       entityId: '123',
       color: 'pink',
     });

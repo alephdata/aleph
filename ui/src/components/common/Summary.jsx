@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import Truncate from 'react-truncate';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
+
+import './Summary.scss';
 
 // formats markdown elements to plain text
 const simpleRenderer = ({ children }) => (
@@ -28,13 +29,21 @@ const Summary = ({ className, text, truncate }) => {
   return (
     <div
       className={c(
+        'Summary',
         className,
         Classes.RUNNING_TEXT,
         Classes.TEXT_MUTED,
         'text-markdown'
       )}
     >
-      {truncate && <Truncate lines={truncate}>{content}</Truncate>}
+      {truncate && (
+        <span
+          className="Summary__truncate"
+          style={{ '--truncate-lines': truncate }}
+        >
+          {content}
+        </span>
+      )}
       {!truncate && content}
     </div>
   );

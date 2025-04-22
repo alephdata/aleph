@@ -38,6 +38,9 @@ jobs:
       - name: Run tests
         run: make test-ui
 
+      - name: Build
+        run: make build-ui
+
       - name: Build production image
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: docker build -t ghcr.io/alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
