@@ -29,6 +29,12 @@ export default defineConfig(() => {
         },
       },
     },
+    resolve: {
+      alias: {
+        // Use Axios ESM build
+        axios: '/node_modules/axios/dist/esm/axios.js',
+      },
+    },
   };
 });
 
