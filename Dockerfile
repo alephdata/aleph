@@ -37,9 +37,23 @@ WORKDIR /aleph
 ENV PYTHONPATH /aleph
 RUN pip install --no-cache-dir -q -e /aleph
 
+ENV ALEPH_WORD_FREQUENCY_URI=https://public.data.occrp.org/develop/models/word-frequencies/word_frequencies-v0.4.1.zip
+ENV ALEPH_FTM_COMPARE_MODEL_URI=https://public.data.occrp.org/develop/models/xref/glm_bernoulli_2e_wf-v0.4.1.pkl
+RUN mkdir -p /opt/ftm-compare/word-frequencies/ && \
+    curl -L -o "/opt/ftm-compare/word-frequencies/word-frequencies.zip" "$ALEPH_WORD_FREQUENCY_URI" && \
+    python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequencies.zip /opt/ftm-compare/word-frequencies/ && \
+    curl -L -o "/opt/ftm-compare/model.pkl" "$ALEPH_FTM_COMPARE_MODEL_URI"
+
 # Configure some docker defaults:
-ENV FTM_COMPARE_FREQUENCIES_DIR=/opt/ftm-compare/word-frequencies/ \
+ENV ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
+    ALEPH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
+    FTM_STORE_URI=postgresql://aleph:aleph@postgres/aleph \
+    REDIS_URL=redis://redis:6379/0 \
+    ARCHIVE_TYPE=file \
+    ARCHIVE_PATH=/data \
+    FTM_COMPARE_FREQUENCIES_DIR=/opt/ftm-compare/word-frequencies/ \
     FTM_COMPARE_MODEL=/opt/ftm-compare/model.pkl
+
 
 RUN mkdir /run/prometheus
 

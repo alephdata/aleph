@@ -9,7 +9,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/alephdata/aleph-elasticsearch:3bb5dbed97cfdb9955324d11e5c623a5c5bbc410
+    image: ghcr.io/dataresearchcenter/aleph-elasticsearch:latest
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -23,7 +23,7 @@ services:
       - redis-data:/data
 
   ingest-file:
-    image: ghcr.io/alephdata/ingest-file:3.22.0
+    image: ghcr.io/dataresearchcenter/ingest-file:latest
     tmpfs:
       - /tmp:mode=777
     volumes:
@@ -36,7 +36,7 @@ services:
       - aleph.env
 
   worker:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-3.17.0}
+    image: ghcr.io/dataresearchcenter/openaleph:latest
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -52,7 +52,7 @@ services:
       - aleph.env
 
   shell:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-3.17.0}
+    image: ghcr.io/dataresearchcenter/openaleph:latest
     command: /bin/bash
     depends_on:
       - postgres
@@ -70,7 +70,7 @@ services:
       - aleph.env
 
   api:
-    image: ghcr.io/alephdata/aleph:${ALEPH_TAG:-ALEPH_TAG:-3.17.0}
+    image: ghcr.io/dataresearchcenter/openaleph:latest
     expose:
       - 8000
     depends_on:
@@ -87,7 +87,7 @@ services:
       - aleph.env
 
   ui:
-    image: ghcr.io/alephdata/aleph-ui-production:${ALEPH_TAG:-ALEPH_TAG:-3.17.0}
+    image: ghcr.io/dataresearchcenter/aleph-ui:latest
     depends_on:
       - api
     ports:
