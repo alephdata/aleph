@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import fileDownload from 'js-file-download';
 
 import withRouter from '/src/app/withRouter.jsx';
 import { fetchEntitySet, queryEntitySetEntities } from '/src/actions/index.js';
@@ -22,8 +23,6 @@ import {
   UpdateStatus,
 } from '/src/components/common/index.jsx';
 import { showErrorToast } from '/src/app/toast';
-
-const fileDownload = require('js-file-download');
 
 const messages = defineMessages({
   export_error: {

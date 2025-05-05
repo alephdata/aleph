@@ -1,6 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import fileDownload from 'js-file-download';
 import {
   exportSvg,
   NetworkDiagram,
@@ -13,8 +14,6 @@ import { updateEntitySet } from '/src/actions/index.js';
 import { UpdateStatus } from '/src/components/common/index.jsx';
 
 import './DiagramEditor.scss';
-
-const fileDownload = require('js-file-download');
 
 const config = new GraphConfig({
   editorTheme: 'light',
