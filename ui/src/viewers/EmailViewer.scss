@@ -22,5 +22,10 @@
       border: 0;
       box-shadow: unset;
     }
+
+    a {
+      pointer-events: none;
+      cursor: default;
+   }
   }
 }
