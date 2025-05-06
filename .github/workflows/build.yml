@@ -11,7 +11,7 @@ permissions:
   packages: write
 
 jobs:
-  docker:
+  docker-build-aleph:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image
-        run: docker build -t ghcr.io/alephdata/aleph:${GITHUB_SHA} .
+        run: docker build -t ghcr.io/dataresearchcenter/openaleph:${GITHUB_SHA} .
 
       - name: Install development dependencies
         run: make dev

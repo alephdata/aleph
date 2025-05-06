@@ -1,6 +1,6 @@
 name: Docs
 
-on: 
+on:
   push:
     paths:
       - "docs/**"
@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-latest
 
     permissions:
@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           docs-path: ./docs
 
-  deploy:
+  deploy-docs:
     if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
     needs: build
     runs-on: ubuntu-latest
