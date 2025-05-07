@@ -1,4 +1,4 @@
-import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
+import convertUTCDateToLocalDate from '/src/util/convertUTCDateToLocalDate.js';
 import { selectUnit } from '@formatjs/intl-utils';
 import { FormattedRelativeTime } from 'react-intl';
 

@@ -12,10 +12,10 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 
-import { GROUP_FIELDS, getGroupField } from 'components/SearchField/util';
-import SearchField from 'components/SearchField/SearchField';
-import { SelectWrapper } from 'components/common';
-import { selectModel } from 'selectors';
+import { GROUP_FIELDS, getGroupField } from '/src/components/SearchField/util';
+import SearchField from '/src/components/SearchField/SearchField';
+import { SelectWrapper } from '/src/components/common/index.jsx';
+import { selectModel } from '/src/selectors.js';
 
 import './SearchFieldSelect.scss';
 

@@ -2,15 +2,15 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import { Entity, Schema, RelativeTime } from 'components/common';
+import { Entity, Schema, RelativeTime } from '/src/components/common/index.jsx';
 
-import 'components/common/ItemOverview.scss';
+import '/src/components/common/ItemOverview.scss';
 
 class EntityHeading extends React.PureComponent {
   render() {
     const { entity, isProfile = false } = this.props;
     const lastViewedDate = entity.lastViewed
-      ? new Date(parseInt(entity.lastViewed, 10))
+      ? new Date(Number.parseInt(entity.lastViewed, 10))
       : Date.now();
 
     return (

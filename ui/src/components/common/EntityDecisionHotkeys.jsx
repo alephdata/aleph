@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { HotkeysContainer } from 'components/common';
+import withRouter from '/src/app/withRouter.jsx';
+import { HotkeysContainer } from '/src/components/common/index.jsx';
 
 const messages = defineMessages({
   groupLabel: {

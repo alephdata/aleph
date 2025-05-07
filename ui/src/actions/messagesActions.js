@@ -1,5 +1,5 @@
 import axios from 'axios';
-import asyncActionCreator from 'actions/asyncActionCreator';
+import asyncActionCreator from '/src/actions/asyncActionCreator.js';
 import { createAction } from 'redux-act';
 
 export const fetchMessages = asyncActionCreator(

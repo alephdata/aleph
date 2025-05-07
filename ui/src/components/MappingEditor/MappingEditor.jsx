@@ -6,15 +6,19 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 
-import { selectModel } from 'selectors';
-import { Collection, EntitySet, Schema } from 'components/common';
-import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import MappingList from 'components/MappingEditor/MappingList';
-import MappingKeyAssign from 'components/MappingEditor/MappingKeyAssign';
-import MappingManageMenu from 'components/MappingEditor/MappingManageMenu';
-import MappingPropertyAssign from 'components/MappingEditor/MappingPropertyAssign';
-import MappingSplitSection from 'components/MappingEditor/MappingSplitSection';
-import MappingVerify from 'components/MappingEditor/MappingVerify';
+import { selectModel } from '/src/selectors.js';
+import {
+  Collection,
+  EntitySet,
+  Schema,
+} from '/src/components/common/index.jsx';
+import EntitySetSelector from '/src/components/EntitySet/EntitySetSelector';
+import MappingList from '/src/components/MappingEditor/MappingList';
+import MappingKeyAssign from '/src/components/MappingEditor/MappingKeyAssign';
+import MappingManageMenu from '/src/components/MappingEditor/MappingManageMenu';
+import MappingPropertyAssign from '/src/components/MappingEditor/MappingPropertyAssign';
+import MappingSplitSection from '/src/components/MappingEditor/MappingSplitSection';
+import MappingVerify from '/src/components/MappingEditor/MappingVerify';
 
 import './MappingEditor.scss';
 

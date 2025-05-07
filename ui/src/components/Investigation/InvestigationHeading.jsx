@@ -2,10 +2,10 @@ import React from 'react';
 import { Button } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Summary } from 'components/common';
-import CollectionInfo from 'components/Collection/CollectionInfo';
-import CollectionStatus from 'components/Collection/CollectionStatus';
-import CollectionHeading from 'components/Collection/CollectionHeading';
+import { Summary } from '/src/components/common/index.jsx';
+import CollectionInfo from '/src/components/Collection/CollectionInfo';
+import CollectionStatus from '/src/components/Collection/CollectionStatus';
+import CollectionHeading from '/src/components/Collection/CollectionHeading';
 
 import './InvestigationHeading.scss';
 

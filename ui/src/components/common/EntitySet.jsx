@@ -5,8 +5,8 @@ import { Select } from '@blueprintjs/select';
 import { Link } from 'react-router-dom';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import getEntitySetLink from 'util/getEntitySetLink';
+import withRouter from '/src/app/withRouter.jsx';
+import getEntitySetLink from '/src/util/getEntitySetLink.js';
 
 const ICONS = {
   diagram: 'graph',

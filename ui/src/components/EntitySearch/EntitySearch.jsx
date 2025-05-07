@@ -4,12 +4,15 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult } from '/src/selectors.js';
 import EntitySearchResults from './EntitySearchResults';
-import { ErrorSection, QueryInfiniteLoad } from 'components/common';
-import { getGroupField } from 'components/SearchField/util';
+import {
+  ErrorSection,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import { getGroupField } from '/src/components/SearchField/util';
 
 import './EntitySearch.scss';
 

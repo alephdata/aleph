@@ -140,23 +140,15 @@ services:
   ui:
     build:
       context: ui
+      target: builder
     image: ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest}
     depends_on:
       - api
-    command: "bash -c 'rsync --archive --inplace --no-compress --whole-file /node_modules /alephui && npm run start'"
+    command: "bash -c 'npm install && npm start'"
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8080:8080"
     volumes:
-      - "./ui/src:/alephui/src:cached"
-      - "./ui/package.json:/alephui/package.json:cached"
-      - "./ui/package-lock.json:/alephui/package-lock.json:cached"
-      - "./ui/craco.config.js:/alephui/craco.config.js:cached"
-      - "./ui/node_modules:/alephui/node_modules:delegated"
-    environment:
-      PORT: "8080"
-      CI: "true"
-    env_file:
-      - aleph.env
+      - "./ui:/alephui"
 
   worker:
     build:

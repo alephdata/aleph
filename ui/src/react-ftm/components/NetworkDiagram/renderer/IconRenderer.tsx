@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Entity, IconRegistry } from '@alephdata/followthemoney';
+import { type Entity, IconRegistry } from '@alephdata/followthemoney';
 import { Colors } from '@blueprintjs/core';
 
 interface IIconRendererProps {

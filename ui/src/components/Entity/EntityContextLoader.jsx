@@ -2,26 +2,26 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   fetchEntity,
   fetchEntityTags,
   queryEntities,
   querySimilar,
   queryEntityExpand,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   selectEntity,
   selectEntityTags,
   selectEntitiesResult,
   selectSimilarResult,
   selectEntityExpandResult,
-} from 'selectors';
+} from '/src/selectors.js';
 import {
   entitySimilarQuery,
   folderDocumentsQuery,
   entityReferencesQuery,
-} from 'queries';
+} from '/src/queries.js';
 
 class EntityContextLoader extends PureComponent {
   componentDidMount() {

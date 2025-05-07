@@ -1,5 +1,5 @@
 import partition from 'lodash/partition';
-import { defaultModel, Entity, Model } from '@alephdata/followthemoney';
+import { defaultModel, type Entity, Model } from '@alephdata/followthemoney';
 
 const rtlLangs = [
   'ara',

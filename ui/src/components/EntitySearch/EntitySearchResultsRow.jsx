@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { selectModel } from 'selectors';
+import { selectModel } from '/src/selectors.js';
 import {
   Collection,
   Entity,
@@ -14,7 +14,7 @@ import {
   Schema,
   SearchHighlight,
   Skeleton,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
 class EntitySearchResultsRow extends Component {
   renderSkeleton() {

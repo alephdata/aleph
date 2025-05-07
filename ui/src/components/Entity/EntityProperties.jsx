@@ -1,7 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { Mention, Property, Collection, Role, Date } from 'components/common';
+import {
+  Mention,
+  Property,
+  Collection,
+  Role,
+  Date,
+} from '/src/components/common/index.jsx';
 
 import './EntityProperties.scss';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Cell, Column, Table, TruncatedFormat } from '@blueprintjs/table';
-import { csvContextLoader } from 'components/common';
+import { csvContextLoader } from '/src/components/common/index.jsx';
 
 import './TableViewer.scss';
 

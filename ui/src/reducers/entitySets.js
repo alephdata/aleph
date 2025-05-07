@@ -8,14 +8,14 @@ import {
   createEntitySetMutate,
   createEntitySetNoMutate,
   deleteEntitySet,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   objectLoadComplete,
   objectLoadError,
   objectLoadStart,
   objectDelete,
   resultObjects,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = {};
 

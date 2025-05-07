@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { render, screen } from 'testUtils';
 import TimelineListItem from './TimelineListItem';
-import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
+import { type Entity, Model, defaultModel } from '@alephdata/followthemoney';
 
 const model = new Model(defaultModel);
 

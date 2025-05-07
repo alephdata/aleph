@@ -4,12 +4,15 @@ import { Classes, Dialog } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { ingestDocument as ingestDocumentAction, forceMutate } from 'actions';
-import convertPathsToTree from 'util/convertPathsToTree';
+import {
+  ingestDocument as ingestDocumentAction,
+  forceMutate,
+} from '/src/actions/index.js';
+import convertPathsToTree from '/src/util/convertPathsToTree.js';
 import DocumentUploadForm from './DocumentUploadForm';
 import DocumentUploadStatus, { UPLOAD_STATUS } from './DocumentUploadStatus';
 import DocumentUploadView from './DocumentUploadView';
-import { Entity } from 'components/common';
+import { Entity } from '/src/components/common/index.jsx';
 
 import './DocumentUploadDialog.scss';
 

@@ -1,7 +1,7 @@
-import { FC, createContext, Dispatch, useContext } from 'react';
-import { Entity } from '@alephdata/followthemoney';
-import { Layout } from './types';
-import { State, Action, useTimelineState } from './state';
+import { type FC, createContext, type Dispatch, useContext } from 'react';
+import type { Entity } from '@alephdata/followthemoney';
+import type { Layout } from './types';
+import { type State, type Action, useTimelineState } from './state';
 
 const TimelineStateContext = createContext<State | null>(null);
 const TimelineStateDispatchContext = createContext<Dispatch<Action> | null>(

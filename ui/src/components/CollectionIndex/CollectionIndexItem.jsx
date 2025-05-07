@@ -11,7 +11,7 @@ import {
   Summary,
   Skeleton,
   Frequency,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
 class CollectionIndexItem extends PureComponent {
   renderSkeleton = () => (

@@ -12,26 +12,26 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import AdvancedSearch from 'components/AdvancedSearch/AdvancedSearch';
-import AuthButtons from 'components/AuthButtons/AuthButtons';
+import withRouter from '/src/app/withRouter.jsx';
+import AdvancedSearch from '/src/components/AdvancedSearch/AdvancedSearch';
+import AuthButtons from '/src/components/AuthButtons/AuthButtons';
 import {
   selectMetadata,
   selectSession,
   selectPages,
   selectEntitiesResult,
   selectExperimentalBookmarksFeatureEnabled,
-} from 'selectors';
-import SearchAlert from 'components/SearchAlert/SearchAlert';
-import { DialogToggleButton } from 'components/Toolbar';
+} from '/src/selectors.js';
+import SearchAlert from '/src/components/SearchAlert/SearchAlert';
+import { DialogToggleButton } from '/src/components/Toolbar';
 import {
   HotkeysContainer,
   SearchBox,
   LinkButton,
   BookmarksDrawer,
-} from 'components/common';
-import getPageLink from 'util/getPageLink';
-import { entitiesQuery } from 'queries';
+} from '/src/components/common/index.jsx';
+import getPageLink from '/src/util/getPageLink.js';
+import { entitiesQuery } from '/src/queries.js';
 
 import './Navbar.scss';
 

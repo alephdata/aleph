@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Colors } from '@blueprintjs/colors';
-import { Schema, Entity, Model } from '@alephdata/followthemoney';
+import type { Schema, Entity, Model } from '@alephdata/followthemoney';
 import c from 'classnames';
-import { Layout, Vertex } from './types';
+import type { Layout, Vertex } from './types';
 import { updateVertex } from './util';
 import {
   selectSelectedEntity,

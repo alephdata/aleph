@@ -1,5 +1,5 @@
-@import 'app/mixins.scss';
-@import 'app/variables.scss';
+@import '/src/app/mixins.scss';
+@import '/src/app/variables.scss';
 
 .CollectionMappingsMode {
   max-width: $aleph-content-width-limit;

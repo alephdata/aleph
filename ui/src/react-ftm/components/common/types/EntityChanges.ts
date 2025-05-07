@@ -1,4 +1,4 @@
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 
 export interface EntityChangeUpdate {
   prev: Entity;

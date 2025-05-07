@@ -3,19 +3,30 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectEntitiesResult, selectModel } from 'selectors';
-import { entitySetSchemaCountsQuery, entitySetEntitiesQuery } from 'queries';
-import Screen from 'components/Screen/Screen';
-import EntityTable from 'components/EntityTable/EntityTable';
-import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, DualPane, SchemaCounts } from 'components/common';
+import withRouter from '/src/app/withRouter.jsx';
+import { fetchEntitySet, queryEntitySetEntities } from '/src/actions/index.js';
+import {
+  selectEntitySet,
+  selectEntitiesResult,
+  selectModel,
+} from '/src/selectors.js';
+import {
+  entitySetSchemaCountsQuery,
+  entitySetEntitiesQuery,
+} from '/src/queries.js';
+import Screen from '/src/components/Screen/Screen';
+import EntityTable from '/src/components/EntityTable/EntityTable';
+import EntitySetManageMenu from '/src/components/EntitySet/EntitySetManageMenu';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionView from '/src/components/Collection/CollectionView';
+import {
+  Breadcrumbs,
+  DualPane,
+  SchemaCounts,
+} from '/src/components/common/index.jsx';
 
 import './ListScreen.scss';
 

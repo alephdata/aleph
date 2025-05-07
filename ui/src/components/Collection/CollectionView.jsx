@@ -5,15 +5,15 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
-import { Count, ResultCount } from 'components/common';
-import { collectionXrefFacetsQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import { Count, ResultCount } from '/src/components/common/index.jsx';
+import { collectionXrefFacetsQuery } from '/src/queries.js';
 import {
   selectCollection,
   selectModel,
   selectCollectionXrefResult,
-} from 'selectors';
-import getCollectionLink from 'util/getCollectionLink';
+} from '/src/selectors.js';
+import getCollectionLink from '/src/util/getCollectionLink.js';
 
 const messages = defineMessages({
   diagrams: {

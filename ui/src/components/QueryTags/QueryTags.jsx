@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Button, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import QueryFilterTag from './QueryFilterTag';
-import { cleanDateQParam } from 'components/Facet/util';
+import { cleanDateQParam } from '/src/components/Facet/util';
 
 const HIDDEN_TAGS_CUTOFF = 10;
 

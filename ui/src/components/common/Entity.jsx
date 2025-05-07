@@ -2,14 +2,14 @@ import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import c from 'classnames';
-import { Entity as VLEntity } from 'react-ftm';
+import { Entity as VLEntity } from '/src/react-ftm/index.ts';
 
-import withRouter from 'app/withRouter';
-import EntitySelect from 'components/common/EntitySelect';
-import togglePreview from 'util/togglePreview';
-import { fetchEntity } from 'actions';
-import { selectEntity } from 'selectors';
-import getEntityLink from 'util/getEntityLink';
+import withRouter from '/src/app/withRouter.jsx';
+import EntitySelect from '/src/components/common/EntitySelect';
+import togglePreview from '/src/util/togglePreview.js';
+import { fetchEntity } from '/src/actions/index.js';
+import { selectEntity } from '/src/selectors.js';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './Entity.scss';
 

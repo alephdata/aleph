@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   Count,
   Entity,
@@ -14,26 +14,26 @@ import {
   Schema,
   SectionLoading,
   TextLoading,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 import {
   entityReferenceQuery,
   entitySimilarQuery,
   folderDocumentsQuery,
-} from 'queries';
+} from '/src/queries.js';
 import {
   selectEntitiesResult,
   selectEntityReferences,
   selectEntityTags,
   selectEntityReference,
   selectSimilarResult,
-} from 'selectors';
-import EntityProperties from 'components/Entity/EntityProperties';
-import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
-import EntityTagsMode from 'components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
-import EntityMappingMode from 'components/Entity/EntityMappingMode';
-import DocumentViewMode from 'components/Document/DocumentViewMode';
-import PdfViewerSearch from 'viewers/PdfViewerSearch';
+} from '/src/selectors.js';
+import EntityProperties from '/src/components/Entity/EntityProperties';
+import EntityReferencesMode from '/src/components/Entity/EntityReferencesMode';
+import EntityTagsMode from '/src/components/Entity/EntityTagsMode';
+import EntitySimilarMode from '/src/components/Entity/EntitySimilarMode';
+import EntityMappingMode from '/src/components/Entity/EntityMappingMode';
+import DocumentViewMode from '/src/components/Document/DocumentViewMode';
+import PdfViewerSearch from '/src/viewers/PdfViewerSearch.jsx';
 
 import './EntityViews.scss';
 

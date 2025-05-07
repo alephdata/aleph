@@ -1,10 +1,10 @@
-import { FC, CSSProperties, useState, useEffect } from 'react';
+import { type FC, type CSSProperties, useState, useEffect } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import { differenceInDays } from 'date-fns';
 import { useTimelineKeyboardNavigation } from '../util';
 import type { TimelineRendererProps } from '../types';
-import { TimelineItem } from '../util';
+import type { TimelineItem } from '../util';
 import { getStart, getEnd } from './util';
 import TimelineChartGrid from './TimelineChartGrid';
 import TimelineChartLabels from './TimelineChartLabels';

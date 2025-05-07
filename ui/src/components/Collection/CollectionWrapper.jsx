@@ -3,15 +3,15 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import CollectionManageMenu from 'components/Collection/CollectionManageMenu';
-import CollectionContextLoader from 'components/Collection/CollectionContextLoader';
-import DocumentDropzone from 'components/Document/DocumentDropzone';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import { Breadcrumbs, SearchBox } from 'components/common';
-import { collectionSearchQuery } from 'queries';
-import { selectCollection } from 'selectors';
-import getCollectionLink from 'util/getCollectionLink';
+import withRouter from '/src/app/withRouter.jsx';
+import CollectionManageMenu from '/src/components/Collection/CollectionManageMenu';
+import CollectionContextLoader from '/src/components/Collection/CollectionContextLoader';
+import DocumentDropzone from '/src/components/Document/DocumentDropzone';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import { Breadcrumbs, SearchBox } from '/src/components/common/index.jsx';
+import { collectionSearchQuery } from '/src/queries.js';
+import { selectCollection } from '/src/selectors.js';
+import getCollectionLink from '/src/util/getCollectionLink.js';
 
 const messages = defineMessages({
   dataset: {

@@ -5,15 +5,15 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   createEntitySetMutate,
   createEntitySetNoMutate,
   entitySetAddEntity,
-} from 'actions';
-import EntitySetSelectorSection from 'components/EntitySet/EntitySetSelectorSection';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import getEntitySetLink from 'util/getEntitySetLink';
+} from '/src/actions/index.js';
+import EntitySetSelectorSection from '/src/components/EntitySet/EntitySetSelectorSection';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
+import getEntitySetLink from '/src/util/getEntitySetLink.js';
 
 import './EntitySetSelector.scss';
 

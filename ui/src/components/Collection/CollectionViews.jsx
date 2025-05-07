@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
-import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
-import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionView from 'components/Collection/CollectionView';
-import { collectionSearchQuery } from 'queries';
-import { selectCollection, selectEntitiesResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import CollectionDocumentsMode from '/src/components/Collection/CollectionDocumentsMode';
+import CollectionOverviewMode from '/src/components/Collection/CollectionOverviewMode';
+import CollectionXrefMode from '/src/components/Collection/CollectionXrefMode';
+import FacetedEntitySearch from '/src/components/EntitySearch/FacetedEntitySearch';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionView from '/src/components/Collection/CollectionView';
+import { collectionSearchQuery } from '/src/queries.js';
+import { selectCollection, selectEntitiesResult } from '/src/selectors.js';
 
 import './CollectionViews.scss';
 

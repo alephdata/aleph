@@ -13,7 +13,7 @@ import {
 } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { dispatchSetConfigValue } from 'actions/configActions';
+import { dispatchSetConfigValue } from '/src/actions/configActions.js';
 
 import './DownloadButton.scss';
 

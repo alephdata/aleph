@@ -4,22 +4,21 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import YAML from 'yaml';
+import fileDownload from 'js-file-download';
 
-import { showErrorToast, showInfoToast } from 'app/toast';
+import { showErrorToast, showInfoToast } from '/src/app/toast';
 import {
   createEntityMapping,
   flushEntityMapping,
   deleteEntityMapping,
   updateEntityMapping,
-} from 'actions';
+} from '/src/actions/index.js';
 
-import MappingCreateDialog from 'dialogs/MappingCreateDialog/MappingCreateDialog';
-import MappingFlushDialog from 'dialogs/MappingFlushDialog/MappingFlushDialog';
-import MappingSaveDialog from 'dialogs/MappingSaveDialog/MappingSaveDialog';
-import MappingDeleteDialog from 'dialogs/MappingDeleteDialog/MappingDeleteDialog';
-import { selectSession } from 'selectors';
-
-const fileDownload = require('js-file-download');
+import MappingCreateDialog from '/src/dialogs/MappingCreateDialog/MappingCreateDialog.jsx';
+import MappingFlushDialog from '/src/dialogs/MappingFlushDialog/MappingFlushDialog.jsx';
+import MappingSaveDialog from '/src/dialogs/MappingSaveDialog/MappingSaveDialog.jsx';
+import MappingDeleteDialog from '/src/dialogs/MappingDeleteDialog/MappingDeleteDialog.jsx';
+import { selectSession } from '/src/selectors.js';
 
 const messages = defineMessages({
   create: {

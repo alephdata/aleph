@@ -5,8 +5,8 @@ import { Classes, ProgressBar, Intent, Button } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
 
-import { Numeric } from 'components/common';
-import { triggerCollectionCancel } from 'actions';
+import { Numeric } from '/src/components/common/index.jsx';
+import { triggerCollectionCancel } from '/src/actions/index.js';
 
 import './CollectionStatus.scss';
 

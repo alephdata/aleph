@@ -1,8 +1,8 @@
 import {
-  GraphLayout,
+  type GraphLayout,
   Rectangle,
-} from 'react-ftm/components/NetworkDiagram/layout';
-import { Viewport } from 'react-ftm/components/NetworkDiagram/Viewport';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import type { Viewport } from '/src/react-ftm/components/NetworkDiagram/Viewport.tsx';
 
 export const exportSvg = (
   layout: GraphLayout,

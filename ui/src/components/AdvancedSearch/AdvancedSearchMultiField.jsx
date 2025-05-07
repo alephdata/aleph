@@ -8,8 +8,8 @@ import {
   Classes,
 } from '@blueprintjs/core';
 
-import AdvancedSearchMultiFieldForm from 'components/AdvancedSearch/AdvancedSearchMultiFieldForm';
-import { Count } from 'components/common';
+import AdvancedSearchMultiFieldForm from '/src/components/AdvancedSearch/AdvancedSearchMultiFieldForm';
+import { Count } from '/src/components/common/index.jsx';
 
 import './AdvancedSearchMultiField.scss';
 

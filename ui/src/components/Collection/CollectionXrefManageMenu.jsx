@@ -5,9 +5,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { DialogToggleButton } from 'components/Toolbar';
-import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import { selectSession } from 'selectors';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import CollectionXrefDialog from '/src/dialogs/CollectionXrefDialog/CollectionXrefDialog.jsx';
+import { selectSession } from '/src/selectors.js';
 
 const messages = defineMessages({
   compute: {

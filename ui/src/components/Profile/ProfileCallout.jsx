@@ -3,8 +3,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Callout, Icon } from '@blueprintjs/core';
 
-import { Entity } from 'components/common';
-import getEntityLink from 'util/getEntityLink';
+import { Entity } from '/src/components/common/index.jsx';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './ProfileCallout.scss';
 

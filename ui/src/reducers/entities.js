@@ -13,7 +13,7 @@ import {
   pairwiseJudgement,
   createBookmark,
   deleteBookmark,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   objectLoadStart,
   objectLoadError,
@@ -21,7 +21,7 @@ import {
   objectDelete,
   resultObjects,
   loadComplete,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = {};
 

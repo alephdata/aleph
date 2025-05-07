@@ -5,8 +5,8 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent, Position } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import { selectSession } from 'selectors';
-import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
+import { selectSession } from '/src/selectors.js';
+import EntitySetCreateDialog from '/src/dialogs/EntitySetCreateDialog/EntitySetCreateDialog.jsx';
 
 const messages = defineMessages({
   list_create: {

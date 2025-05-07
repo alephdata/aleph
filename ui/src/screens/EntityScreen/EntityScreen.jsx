@@ -6,32 +6,32 @@ import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup } from '@blueprintjs/core';
 
-import Screen from 'components/Screen/Screen';
-import EntityContextLoader from 'components/Entity/EntityContextLoader';
-import EntityHeading from 'components/Entity/EntityHeading';
-import EntityProperties from 'components/Entity/EntityProperties';
-import EntityViews from 'components/Entity/EntityViews';
-import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import ProfileCallout from 'components/Profile/ProfileCallout';
+import Screen from '/src/components/Screen/Screen';
+import EntityContextLoader from '/src/components/Entity/EntityContextLoader';
+import EntityHeading from '/src/components/Entity/EntityHeading';
+import EntityProperties from '/src/components/Entity/EntityProperties';
+import EntityViews from '/src/components/Entity/EntityViews';
+import EntityDeleteButton from '/src/components/Toolbar/EntityDeleteButton';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import EntitySetSelector from '/src/components/EntitySet/EntitySetSelector';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import ProfileCallout from '/src/components/Profile/ProfileCallout';
 import {
   BookmarkButton,
   Breadcrumbs,
   DualPane,
   Schema,
-} from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar';
-import { DownloadButton } from 'components/Toolbar';
-import { deleteEntity } from 'actions';
-import { selectEntity, selectEntityView } from 'selectors';
-import getProfileLink from 'util/getProfileLink';
-import { setRecentlyViewedItem } from 'app/storage';
-import withRouter from 'app/withRouter';
+} from '/src/components/common/index.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import { DownloadButton } from '/src/components/Toolbar';
+import { deleteEntity } from '/src/actions/index.js';
+import { selectEntity, selectEntityView } from '/src/selectors.js';
+import getProfileLink from '/src/util/getProfileLink.js';
+import { setRecentlyViewedItem } from '/src/app/storage';
+import withRouter from '/src/app/withRouter.jsx';
 
-import 'components/common/ItemOverview.scss';
+import '/src/components/common/ItemOverview.scss';
 
 const messages = defineMessages({
   add_to: {

@@ -2,27 +2,35 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   fetchEntitySet,
   queryEntities,
   entitySetAddEntity,
   updateEntitySet,
   updateEntitySetItemMutate,
-} from 'actions';
-import { selectModel, selectEntitySet, selectEntitiesResult } from 'selectors';
-import { entitySetEntitiesQuery, entitySuggestQuery } from 'queries';
-import Screen from 'components/Screen/Screen';
-import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionView from 'components/Collection/CollectionView';
-import { Breadcrumbs, UpdateStatus, WidthBoundary } from 'components/common';
-import { Timeline } from 'components/Timeline';
-import TimelineActions from 'components/Timeline/TimelineActions';
-import { TimelineContextProvider } from 'components/Timeline/context';
+} from '/src/actions/index.js';
+import {
+  selectModel,
+  selectEntitySet,
+  selectEntitiesResult,
+} from '/src/selectors.js';
+import { entitySetEntitiesQuery, entitySuggestQuery } from '/src/queries.js';
+import Screen from '/src/components/Screen/Screen';
+import EntitySetManageMenu from '/src/components/EntitySet/EntitySetManageMenu';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionView from '/src/components/Collection/CollectionView';
+import {
+  Breadcrumbs,
+  UpdateStatus,
+  WidthBoundary,
+} from '/src/components/common/index.jsx';
+import { Timeline } from '/src/components/Timeline';
+import TimelineActions from '/src/components/Timeline/TimelineActions';
+import { TimelineContextProvider } from '/src/components/Timeline/context';
 
 export class TimelineScreen extends Component {
   constructor(props) {

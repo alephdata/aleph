@@ -6,14 +6,14 @@ import {
   deleteEntityMapping,
   queryMappings,
   updateEntityMapping,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   objectLoadStart,
   objectLoadError,
   objectLoadComplete,
   objectDelete,
   resultObjects,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = {};
 

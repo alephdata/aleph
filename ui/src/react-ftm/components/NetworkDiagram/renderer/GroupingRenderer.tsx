@@ -1,17 +1,21 @@
 import * as React from 'react';
-import { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import {
+  DraggableCore,
+  type DraggableEvent,
+  type DraggableData,
+} from 'react-draggable';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import type {
   GraphElement,
   Grouping,
   Point,
   Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import {
   getRefMatrix,
   applyMatrix,
-} from 'react-ftm/components/NetworkDiagram/renderer/utils';
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
+} from '/src/react-ftm/components/NetworkDiagram/renderer/utils.ts';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
 
 interface IGroupingRendererProps {
   grouping: Grouping;

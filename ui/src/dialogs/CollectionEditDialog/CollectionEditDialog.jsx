@@ -4,11 +4,11 @@ import c from 'classnames';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Role, Country, Language } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import { updateCollection } from 'actions';
-import { selectMetadata, selectAdmin } from 'selectors';
+import { Role, Country, Language } from '/src/components/common/index.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
+import { updateCollection } from '/src/actions/index.js';
+import { selectMetadata, selectAdmin } from '/src/selectors.js';
 
 const messages = defineMessages({
   placeholder_label: {
@@ -157,7 +157,7 @@ export class CollectionEditDialog extends Component {
       >
         <div className={Classes.DIALOG_BODY}>
           <div className={Classes.FORM_GROUP}>
-            <label className={Classes.LABEL}>
+            <label className={Classes.LABEL} htmlFor="label">
               <FormattedMessage
                 id="collection.edit.info.label"
                 defaultMessage="Label"
@@ -176,7 +176,7 @@ export class CollectionEditDialog extends Component {
           </div>
           {isAdmin && (
             <div className={Classes.FORM_GROUP}>
-              <label className={Classes.LABEL}>
+              <label className={Classes.LABEL} htmlFor="category">
                 <FormattedMessage
                   id="collection.edit.info.category"
                   defaultMessage="Category"
@@ -198,7 +198,7 @@ export class CollectionEditDialog extends Component {
             </div>
           )}
           <div className={Classes.FORM_GROUP}>
-            <label className={Classes.LABEL}>
+            <label className={Classes.LABEL} htmlFor="summary">
               <FormattedMessage
                 id="collection.edit.info.summary"
                 defaultMessage="Summary"
@@ -218,7 +218,7 @@ export class CollectionEditDialog extends Component {
           {!isCasefile && (
             <>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="publisher">
                   <FormattedMessage
                     id="collection.edit.info.publisher"
                     defaultMessage="Publisher"
@@ -238,7 +238,7 @@ export class CollectionEditDialog extends Component {
                 </div>
               </div>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="publisher_url">
                   <FormattedMessage
                     id="collection.edit.info.publisher_url"
                     defaultMessage="Publisher URL"
@@ -258,7 +258,7 @@ export class CollectionEditDialog extends Component {
                 </div>
               </div>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="info_url">
                   <FormattedMessage
                     id="collection.edit.info.info_url"
                     defaultMessage="Information URL"
@@ -278,7 +278,7 @@ export class CollectionEditDialog extends Component {
                 </div>
               </div>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="data_url">
                   <FormattedMessage
                     id="collection.edit.info.data_url"
                     defaultMessage="Data source URL"
@@ -298,7 +298,7 @@ export class CollectionEditDialog extends Component {
                 </div>
               </div>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="frequency">
                   <FormattedMessage
                     id="collection.edit.info.frequency"
                     defaultMessage="Update frequency"
@@ -322,7 +322,7 @@ export class CollectionEditDialog extends Component {
           )}
           {isAdmin && (
             <div className={Classes.FORM_GROUP}>
-              <label className={Classes.LABEL}>
+              <label className={Classes.LABEL} htmlFor="creator">
                 <FormattedMessage
                   id="collection.edit.info.creator"
                   defaultMessage="Manager"
@@ -337,13 +337,14 @@ export class CollectionEditDialog extends Component {
             </div>
           )}
           <div className={Classes.FORM_GROUP}>
-            <label className={Classes.LABEL}>
+            <label className={Classes.LABEL} htmlFor="countries">
               <FormattedMessage
                 id="collection.edit.info.countries"
                 defaultMessage="Countries"
               />
             </label>
             <Country.MultiSelect
+              id="countries"
               onSubmit={this.onSelectCountries}
               values={collection.countries || []}
               inputProps={{
@@ -353,13 +354,14 @@ export class CollectionEditDialog extends Component {
             />
           </div>
           <div className={Classes.FORM_GROUP}>
-            <label className={Classes.LABEL}>
+            <label className={Classes.LABEL} htmlFor="languages">
               <FormattedMessage
                 id="collection.edit.info.languages"
                 defaultMessage="Languages"
               />
             </label>
             <Language.MultiSelect
+              id="languages"
               onSubmit={this.onSelectLanguages}
               values={collection.languages || []}
               inputProps={{
@@ -377,7 +379,7 @@ export class CollectionEditDialog extends Component {
           {!isCasefile && (
             <>
               <div className={Classes.FORM_GROUP}>
-                <label className={Classes.LABEL}>
+                <label className={Classes.LABEL} htmlFor="foreign_id">
                   <FormattedMessage
                     id="collection.edit.info.foreign_id"
                     defaultMessage="Foreign ID"
@@ -385,6 +387,7 @@ export class CollectionEditDialog extends Component {
                 </label>
                 <div className={Classes.FORM_CONTENT}>
                   <input
+                    id="foreign_id"
                     className={c(Classes.INPUT, Classes.FILL)}
                     type="text"
                     disabled
