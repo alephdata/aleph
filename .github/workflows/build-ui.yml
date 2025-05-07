@@ -37,6 +37,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - run: docker image ls
+
       - name: Check code formatting
         run: make format-check-ui
 
