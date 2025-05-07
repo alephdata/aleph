@@ -62,9 +62,10 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint --ext js,jsx,ts,tsx src --max-warnings 0",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
-    "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
+    "lint": "biome lint ./src",
+    "lint:fix": "biome lint --write ./src",
+    "format": "biome format --write ./src",
+    "format:check": "biome format ./src",
     "translate": "npm run messages && npm run compile-translations && npm run concat-translations",
     "messages": "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx,ts,tsx}' --ignore 'src/**/*.d.ts'",
     "compile-translations": "formatjs compile-folder i18n/translations/raw i18n/translations/compiled",
@@ -74,6 +75,7 @@
     "transformIgnorePatterns": []
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@formatjs/cli": "^6.2.0",
     "@testing-library/jest-dom": "^6.1.3",
     "@testing-library/react": "^12.1.5",
@@ -89,7 +91,6 @@
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
     "@vitejs/plugin-react": "^4.4.1",
-    "prettier": "^3.0.3",
     "sass": "^1.68.0",
     "vite": "^6.3.4"
   }

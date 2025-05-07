@@ -18,8 +18,8 @@ import { selectEntityDirectionality } from 'selectors';
 
 import './DocumentViewMode.scss';
 
-const PdfViewer = lazy(() =>
-  import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer')
+const PdfViewer = lazy(
+  () => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer')
 );
 
 export class DocumentViewMode extends React.Component {
