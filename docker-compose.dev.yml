@@ -140,16 +140,15 @@ services:
   ui:
     build:
       context: ui
+      target: builder
     image: ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest}
     depends_on:
       - api
-    command: "npm run start"
+    command: "bash -c 'npm install && npm start'"
     ports:
       - "8080:8080"
     volumes:
       - "./ui:/alephui"
-    env_file:
-      - aleph.env
 
   worker:
     build:
