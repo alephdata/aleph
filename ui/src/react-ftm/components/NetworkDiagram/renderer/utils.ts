@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { Point } from 'react-ftm/components/NetworkDiagram/layout';
 
 export function getRefMatrix(

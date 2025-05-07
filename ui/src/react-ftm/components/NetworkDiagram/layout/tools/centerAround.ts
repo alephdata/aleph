@@ -1,7 +1,7 @@
 import {
-  GraphLayout,
+  type GraphLayout,
   Rectangle,
-  Vertex,
+  type Vertex,
 } from 'react-ftm/components/NetworkDiagram/layout';
 import alignCircle from './alignCircle';
 

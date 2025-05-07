@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core';
 import { Point } from 'react-ftm/components/NetworkDiagram/layout';
-import { GraphLogo } from 'react-ftm/components/common';
+import type { GraphLogo } from 'react-ftm/components/common';
 
 export interface IGraphConfig {
   gridUnit?: number;

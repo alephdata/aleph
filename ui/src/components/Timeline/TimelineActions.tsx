@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 

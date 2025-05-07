@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
-import { Value } from '@alephdata/followthemoney';
+import {
+  defineMessages,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
+import type { Value } from '@alephdata/followthemoney';
 import { ControlGroup, MenuItem, Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
-import { ITypeEditorProps } from './common';
+import type { ITypeEditorProps } from './common';
 import { highlightText } from 'react-ftm/utils';
 
 const messages = defineMessages({

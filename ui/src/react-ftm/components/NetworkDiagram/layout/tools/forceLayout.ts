@@ -5,7 +5,7 @@ import {
   forceX,
   forceY,
 } from 'd3-force';
-import { IPositioningProps, getPositionFromSimulation } from './common';
+import { type IPositioningProps, getPositionFromSimulation } from './common';
 import getForceData from './getForceData';
 
 const forceLayout = (props: IPositioningProps): any => {

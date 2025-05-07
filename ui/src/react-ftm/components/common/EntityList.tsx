@@ -1,5 +1,5 @@
 import React from 'react';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { Classes, Menu, Icon } from '@blueprintjs/core';
 import { Schema } from 'react-ftm/types';
 import groupBy from 'lodash/groupBy';

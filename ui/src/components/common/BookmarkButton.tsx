@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonProps } from '@blueprintjs/core';
-import { Entity } from '@alephdata/followthemoney';
+import { Button, type ButtonProps } from '@blueprintjs/core';
+import type { Entity } from '@alephdata/followthemoney';
 
 import { selectExperimentalBookmarksFeatureEnabled } from 'selectors';
 import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';

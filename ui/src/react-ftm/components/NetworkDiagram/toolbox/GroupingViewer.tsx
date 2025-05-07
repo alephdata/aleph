@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import { Icon } from '@blueprintjs/core';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { ColorPicker } from 'react-ftm/editors';
-import { Grouping } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Grouping } from 'react-ftm/components/NetworkDiagram/layout';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { EntityList } from 'react-ftm/components/common/EntityList';
 

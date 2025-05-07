@@ -125,7 +125,7 @@ export class PdfViewer extends Component {
     const scrollBarWidth = 20;
     const PdfViewerElement = window.document.getElementById('PdfViewer');
     const width = PdfViewerElement
-      ? parseInt(
+      ? Number.parseInt(
           PdfViewerElement.getBoundingClientRect().width - scrollBarWidth,
           10
         )
@@ -243,8 +243,8 @@ export class PdfViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const page = parseInt(hashQuery.page, 10) || 1;
-  const rotate = hashQuery.rotate && parseInt(hashQuery.rotate, 10);
+  const page = Number.parseInt(hashQuery.page, 10) || 1;
+  const rotate = hashQuery.rotate && Number.parseInt(hashQuery.rotate, 10);
 
   const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)

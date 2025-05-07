@@ -1,13 +1,13 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Tab, Tabs } from '@blueprintjs/core';
-import { Schema as FTMSchema, Entity } from '@alephdata/followthemoney';
+import type { Schema as FTMSchema, Entity } from '@alephdata/followthemoney';
 
 import { SchemaSelect } from 'react-ftm/editors';
 import { Schema } from 'react-ftm/types';
 import { sortEntities } from 'react-ftm/utils';
-import { SortType } from 'react-ftm/components/common/types/SortType';
-import { IEntityTableCommonProps } from 'react-ftm/components/EntityTable/common';
+import type { SortType } from 'react-ftm/components/common/types/SortType';
+import type { IEntityTableCommonProps } from 'react-ftm/components/EntityTable/common';
 import { TableEditor } from 'react-ftm/components/EntityTable';
 
 const messages = defineMessages({

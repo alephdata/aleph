@@ -10,7 +10,7 @@ class EntityHeading extends React.PureComponent {
   render() {
     const { entity, isProfile = false } = this.props;
     const lastViewedDate = entity.lastViewed
-      ? new Date(parseInt(entity.lastViewed, 10))
+      ? new Date(Number.parseInt(entity.lastViewed, 10))
       : Date.now();
 
     return (

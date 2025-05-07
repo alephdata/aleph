@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Colors } from '@blueprintjs/core';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Point } from 'react-ftm/components/NetworkDiagram/layout';
 import {
   getRefMatrix,
   applyMatrix,

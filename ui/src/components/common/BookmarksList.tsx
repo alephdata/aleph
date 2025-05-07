@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useCallback } from 'react';
+import { type FC, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Callout, Intent, Spinner } from '@blueprintjs/core';

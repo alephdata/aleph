@@ -129,7 +129,9 @@ class CreateInvestigationDialog extends Component {
   render() {
     const { intl, isOpen, toggleDialog } = this.props;
     const { collection, permissions, blocking } = this.state;
-    const exclude = permissions.map((perm) => parseInt(perm.role.id, 10));
+    const exclude = permissions.map((perm) =>
+      Number.parseInt(perm.role.id, 10)
+    );
     const disabled = blocking || !this.checkValid();
 
     return (

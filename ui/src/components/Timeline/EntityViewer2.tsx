@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Entity } from '@alephdata/followthemoney';
+import type { FC } from 'react';
+import type { Entity } from '@alephdata/followthemoney';
 import { Schema } from 'src/react-ftm/types';
 import { DEFAULT_COLOR } from './Timeline';
 import type { Vertex, FetchEntitySuggestions } from './types';

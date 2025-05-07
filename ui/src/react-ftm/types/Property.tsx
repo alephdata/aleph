@@ -3,10 +3,10 @@ import {
   defineMessages,
   FormattedMessage,
   injectIntl,
-  WrappedComponentProps,
+  type WrappedComponentProps,
 } from 'react-intl';
 import { Button, Classes } from '@blueprintjs/core';
-import {
+import type {
   Values,
   Value,
   Property as FTMProperty,

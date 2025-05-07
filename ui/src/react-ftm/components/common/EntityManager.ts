@@ -2,12 +2,12 @@ import {
   defaultModel,
   Entity,
   Model,
-  Namespace,
-  Schema,
-  IEntityDatum,
+  type Namespace,
+  type Schema,
+  type IEntityDatum,
 } from '@alephdata/followthemoney';
 
-import {
+import type {
   EntityChanges,
   EntityChangeUpdate,
 } from 'react-ftm/components/common/types';

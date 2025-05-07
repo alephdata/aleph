@@ -5,16 +5,16 @@ import {
   useState,
   useRef,
   createRef,
-  KeyboardEvent,
-  MutableRefObject,
-  RefObject,
-  RefCallback,
+  type KeyboardEvent,
+  type MutableRefObject,
+  type RefObject,
+  type RefCallback,
 } from 'react';
 import { differenceInDays } from 'date-fns';
 import { throttle } from 'lodash';
-import { Entity, Schema } from '@alephdata/followthemoney';
+import type { Entity, Schema } from '@alephdata/followthemoney';
 import { DEFAULT_COLOR } from './Timeline';
-import { FetchEntitySuggestions, Layout, Vertex } from './types';
+import type { FetchEntitySuggestions, Layout, Vertex } from './types';
 
 const yearRegex = /(\d{4})/.source;
 const monthRegex = /(0?[1-9]|1[0-2])/.source;
@@ -220,9 +220,9 @@ export class ImpreciseDate {
       return;
     }
 
-    this.year = result[1] ? parseInt(result[1], 10) : undefined;
-    this.month = result[2] ? parseInt(result[2], 10) : undefined;
-    this.day = result[3] ? parseInt(result[3], 10) : undefined;
+    this.year = result[1] ? Number.parseInt(result[1], 10) : undefined;
+    this.month = result[2] ? Number.parseInt(result[2], 10) : undefined;
+    this.day = result[3] ? Number.parseInt(result[3], 10) : undefined;
   }
 
   isValid() {

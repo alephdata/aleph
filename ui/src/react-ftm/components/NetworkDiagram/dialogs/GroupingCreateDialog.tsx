@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 import { Classes, ControlGroup, InputGroup } from '@blueprintjs/core';
 import {
   GraphContext,
-  IGraphContext,
+  type IGraphContext,
 } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { Dialog } from 'react-ftm/components/common';
 import { Grouping } from 'react-ftm/components/NetworkDiagram/layout';

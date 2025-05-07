@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
+import {
+  injectIntl,
+  defineMessages,
+  type WrappedComponentProps,
+} from 'react-intl';
 import {
   Alignment,
   Button,
@@ -7,7 +11,7 @@ import {
   ControlGroup,
   InputGroup,
 } from '@blueprintjs/core';
-import {
+import type {
   Entity,
   Model,
   Schema as FTMSchema,

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { WrappedComponentProps } from 'react-intl';
-import { GraphLayout } from './layout';
-import { Viewport } from './Viewport';
-import { EntityManager } from 'react-ftm/components/common';
+import type { WrappedComponentProps } from 'react-intl';
+import type { GraphLayout } from './layout';
+import type { Viewport } from './Viewport';
+import type { EntityManager } from 'react-ftm/components/common';
 
 export type GraphUpdateHandler = (
   layout: GraphLayout,

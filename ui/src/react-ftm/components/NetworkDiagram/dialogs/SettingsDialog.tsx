@@ -1,6 +1,6 @@
 import * as React from 'react';
 import sortBy from 'lodash/sortBy';
-import { PropertyType } from '@alephdata/followthemoney';
+import type { PropertyType } from '@alephdata/followthemoney';
 import { defineMessages } from 'react-intl';
 import {
   Intent,
@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import {
+import type {
   ISettingsData,
   Settings,
 } from 'react-ftm/components/NetworkDiagram/layout';

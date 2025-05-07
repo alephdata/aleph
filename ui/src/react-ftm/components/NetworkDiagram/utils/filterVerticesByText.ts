@@ -1,4 +1,4 @@
-import { Vertex } from 'react-ftm/components/NetworkDiagram/layout/Vertex';
+import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout/Vertex';
 
 export function filterVerticesByText(text: string) {
   const terms = text

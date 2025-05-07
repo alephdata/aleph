@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import {
+  DraggableCore,
+  type DraggableEvent,
+  type DraggableData,
+} from 'react-draggable';
+import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+import type {
   GraphElement,
   Grouping,
   Point,

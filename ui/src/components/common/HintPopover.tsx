@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 import {
   Popover2 as Popover,
   Classes,
-  IPopover2Props,
+  type IPopover2Props,
 } from '@blueprintjs/popover2';
 
 import { selectDismissedHints } from 'selectors';

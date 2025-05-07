@@ -1,7 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Colors } from '@blueprintjs/core';
-import { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable';
+import {
+  DraggableCore,
+  type DraggableEvent,
+  type DraggableData,
+} from 'react-draggable';
 import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
 import { Rectangle } from 'react-ftm/components/NetworkDiagram/layout/Rectangle';
 import {
@@ -238,8 +242,8 @@ export class Canvas extends React.Component<ICanvasProps> {
     const domNode = ReactDOM.findDOMNode(this) as Element;
     let req: any;
 
-    const oldVb = oldViewBox.split(' ').map((n) => parseInt(n, 10));
-    const newVb = viewBox.split(' ').map((n) => parseInt(n, 10));
+    const oldVb = oldViewBox.split(' ').map((n) => Number.parseInt(n, 10));
+    const newVb = viewBox.split(' ').map((n) => Number.parseInt(n, 10));
     let duration: number = userDuration as number;
 
     // if duration not supplied, calculate based on change of size and center

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Colors } from '@blueprintjs/core';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
+import { injectIntl, type WrappedComponentProps } from 'react-intl';
 import {
   BarChart,
   Bar,

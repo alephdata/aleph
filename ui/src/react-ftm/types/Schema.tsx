@@ -1,6 +1,9 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { Schema as FTMSchema, IconRegistry } from '@alephdata/followthemoney';
+import {
+  type Schema as FTMSchema,
+  IconRegistry,
+} from '@alephdata/followthemoney';
 import c from 'classnames';
 import './Schema.scss';
 

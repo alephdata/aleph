@@ -1,4 +1,4 @@
-import { Values } from '@alephdata/followthemoney';
+import type { Values } from '@alephdata/followthemoney';
 
 export interface ITypeEditorProps {
   values: Values;

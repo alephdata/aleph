@@ -12,7 +12,7 @@ import c from 'classnames';
 
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import {
-  IToolbarButtonGroup,
+  type IToolbarButtonGroup,
   ToolbarButtonGroup,
   SearchBox,
 } from 'react-ftm/components/NetworkDiagram/toolbox';

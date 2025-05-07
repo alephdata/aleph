@@ -1,21 +1,21 @@
 import {
-  FC,
-  FormEvent,
+  type FC,
+  type FormEvent,
   useState,
   forwardRef,
-  FormEventHandler,
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  ForwardedRef,
+  type FormEventHandler,
+  type ChangeEventHandler,
+  type KeyboardEventHandler,
+  type ForwardedRef,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Model,
-  Schema,
+  type Model,
+  type Schema,
   Entity,
-  Property,
-  Value,
-  Values,
+  type Property,
+  type Value,
+  type Values,
 } from '@alephdata/followthemoney';
 import type {
   EntityProperties,

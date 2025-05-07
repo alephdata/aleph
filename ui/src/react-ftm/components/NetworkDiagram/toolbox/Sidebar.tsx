@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { Drawer } from '@blueprintjs/core';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { EntityList } from 'react-ftm/components/common';
@@ -9,7 +9,10 @@ import {
   EntityViewer,
   GroupingViewer,
 } from 'react-ftm/components/NetworkDiagram/toolbox';
-import { Grouping, Vertex } from 'react-ftm/components/NetworkDiagram/layout';
+import type {
+  Grouping,
+  Vertex,
+} from 'react-ftm/components/NetworkDiagram/layout';
 
 import './Sidebar.scss';
 

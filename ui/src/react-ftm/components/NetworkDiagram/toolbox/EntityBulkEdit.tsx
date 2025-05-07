@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { Button, Collapse } from '@blueprintjs/core';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { ColorPicker, RadiusPicker } from 'react-ftm/editors';
 // import { EntityList } from 'components/common';
 // import { EntityBulkEdit, EntityViewer, GroupingViewer } from 'NetworkDiagram/toolbox';
-import { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
 
 // import './EntityBulkEdit.scss';
 

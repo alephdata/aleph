@@ -58,7 +58,7 @@ class RoleList extends PureComponent {
     const {
       roles,
       separateItems,
-      truncate = Infinity,
+      truncate = Number.POSITIVE_INFINITY,
       truncateItem,
     } = this.props;
     if (!roles) return null;

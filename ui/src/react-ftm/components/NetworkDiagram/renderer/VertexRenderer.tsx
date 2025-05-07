@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable';
+import {
+  DraggableCore,
+  type DraggableEvent,
+  type DraggableData,
+} from 'react-draggable';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
-import { Vertex } from 'react-ftm/components/NetworkDiagram/layout/Vertex';
+import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout/Vertex';
 import {
   getRefMatrix,
   applyMatrix,

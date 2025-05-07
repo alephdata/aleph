@@ -1,16 +1,20 @@
 import * as React from 'react';
 import c from 'classnames';
-import { Entity, Schema } from '@alephdata/followthemoney';
+import type { Entity, Schema } from '@alephdata/followthemoney';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
 
 import {
   EdgeCreateDialog,
   EntityCreateDialog,
-  EntityManager,
+  type EntityManager,
 } from 'react-ftm/components/common';
-import { GraphConfig } from 'react-ftm/components/NetworkDiagram/GraphConfig';
+import type { GraphConfig } from 'react-ftm/components/NetworkDiagram/GraphConfig';
 import { GraphRenderer } from 'react-ftm/components/NetworkDiagram/renderer';
 import {
   Edge,
@@ -18,9 +22,9 @@ import {
   Rectangle,
   Point,
   Settings,
-  Vertex,
+  type Vertex,
 } from 'react-ftm/components/NetworkDiagram/layout';
-import { Viewport } from 'react-ftm/components/NetworkDiagram/Viewport';
+import type { Viewport } from 'react-ftm/components/NetworkDiagram/Viewport';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import {
   Sidebar,
@@ -33,8 +37,8 @@ import {
   GroupingCreateDialog,
   SettingsDialog,
 } from 'react-ftm/components/NetworkDiagram/dialogs';
-import { EdgeType } from 'react-ftm/types';
-import { EntityChanges } from 'react-ftm/components/common/types';
+import type { EdgeType } from 'react-ftm/types';
+import type { EntityChanges } from 'react-ftm/components/common/types';
 import {
   filterVerticesByText,
   modes,

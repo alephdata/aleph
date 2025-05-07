@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
+import {
+  injectIntl,
+  defineMessages,
+  type WrappedComponentProps,
+} from 'react-intl';
 import { FormGroup, Intent, Button, Classes } from '@blueprintjs/core';
-import { Entity, Schema, Values } from '@alephdata/followthemoney';
+import { Entity, type Schema, type Values } from '@alephdata/followthemoney';
 
 import { EdgeTypeSelect, EntitySelect } from 'react-ftm/editors';
 import { EdgeType } from 'react-ftm/types';
-import { Dialog, EntityManager } from 'react-ftm/components/common';
+import { Dialog, type EntityManager } from 'react-ftm/components/common';
 
 const messages = defineMessages({
   add_link: {

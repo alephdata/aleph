@@ -11,7 +11,7 @@ class ArticleViewer extends PureComponent {
     const { document } = this.props;
     const prop = document.schema.getProperty(name);
     const values = document.getProperty(prop).map((value) => {
-      let result = (
+      const result = (
         <Property.Value key={value.id || value} prop={prop} value={value} />
       );
       return result;

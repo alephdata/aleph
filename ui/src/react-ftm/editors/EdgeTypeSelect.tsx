@@ -11,11 +11,11 @@ import {
 } from '@blueprintjs/core';
 import {
   Select,
-  IItemListRendererProps,
-  IItemRendererProps,
+  type IItemListRendererProps,
+  type IItemRendererProps,
 } from '@blueprintjs/select';
 
-import { EdgeType, Schema } from 'react-ftm/types';
+import { type EdgeType, Schema } from 'react-ftm/types';
 
 const TypedSelect = Select.ofType<EdgeType>();
 

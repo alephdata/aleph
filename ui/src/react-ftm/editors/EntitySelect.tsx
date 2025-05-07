@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
 import {
   defaultModel,
-  Entity as FTMEntity,
-  Schema as FTMSchema,
+  type Entity as FTMEntity,
+  type Schema as FTMSchema,
   Model,
 } from '@alephdata/followthemoney';
 import { Entity, Schema } from 'react-ftm/types';
@@ -19,9 +23,9 @@ import {
   Spinner,
   SpinnerSize,
 } from '@blueprintjs/core';
-import { ItemRenderer, MultiSelect, Select } from '@blueprintjs/select';
+import { type ItemRenderer, MultiSelect, Select } from '@blueprintjs/select';
 import c from 'classnames';
-import { ITypeEditorProps } from './common';
+import type { ITypeEditorProps } from './common';
 
 import './EntitySelect.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
+import { injectIntl, type WrappedComponentProps } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import Numeric from './Numeric';
 import c from 'classnames';

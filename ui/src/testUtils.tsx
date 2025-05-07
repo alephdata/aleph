@@ -1,9 +1,9 @@
 import {
   render as rtlRender,
-  RenderOptions as RtlRenderOptions,
+  type RenderOptions as RtlRenderOptions,
 } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { FunctionComponent, ReactElement } from 'react';
+import type { FunctionComponent, ReactElement } from 'react';
 import translations from 'content/translations.json';
 
 type DefaultLocale = 'en';
@@ -15,7 +15,7 @@ function render(
   { locale = 'en', ...renderOptions }: RenderOptions = {}
 ) {
   const Wrapper: FunctionComponent = ({ children }) => {
-    let messages =
+    const messages =
       locale in translations
         ? translations[locale as Exclude<Locale, DefaultLocale>]
         : undefined;

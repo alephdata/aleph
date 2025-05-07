@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import {
-  Edge,
-  Vertex,
+  type Edge,
+  type Vertex,
   Point,
 } from 'react-ftm/components/NetworkDiagram/layout';
 import { EdgeLabelRenderer } from './EdgeLabelRenderer';

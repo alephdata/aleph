@@ -1,10 +1,10 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { EntityChanges } from 'react-ftm/components/common/types';
+import type { EntityChanges } from 'react-ftm/components/common/types';
 import { EntityTable } from 'react-ftm/components/EntityTable';
 import { Button, Drawer, Position } from '@blueprintjs/core';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 
 import './TableView.scss';
 

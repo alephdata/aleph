@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useRef } from 'react';
+import { type FC, useEffect, useState, useRef } from 'react';
 import c from 'classnames';
 
 import './WidthBoundary.scss';

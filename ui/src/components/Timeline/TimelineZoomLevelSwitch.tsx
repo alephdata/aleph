@@ -1,8 +1,8 @@
-import { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { TimelineChartZoomLevel } from './types';
+import type { TimelineChartZoomLevel } from './types';
 import {
   DAYS_ZOOM_LEVEL_MAX_YEARS,
   MONTHS_ZOOM_LEVEL_MAX_YEARS,

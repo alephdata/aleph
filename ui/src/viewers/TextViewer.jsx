@@ -44,7 +44,7 @@ class TextViewer extends PureComponent {
 
   highlightedText() {
     const { document } = this.props;
-    let text = document.getFirst('bodyText');
+    const text = document.getFirst('bodyText');
 
     if (!document.highlight) {
       return text;

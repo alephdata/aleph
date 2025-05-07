@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Values } from '@alephdata/followthemoney';
+import type { Values } from '@alephdata/followthemoney';
 import {
   Button,
   Classes,
@@ -7,7 +7,7 @@ import {
   TagInput,
   TextArea,
 } from '@blueprintjs/core';
-import { ITypeEditorProps } from './common';
+import type { ITypeEditorProps } from './common';
 
 import './TextEdit.scss';
 

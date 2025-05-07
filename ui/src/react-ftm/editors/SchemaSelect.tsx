@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MenuItem2 } from '@blueprintjs/popover2';
 import { Select2 } from '@blueprintjs/select';
-import { Model, Schema as FTMSchema } from '@alephdata/followthemoney';
+import type { Model, Schema as FTMSchema } from '@alephdata/followthemoney';
 import { Schema } from 'react-ftm/types';
 
 interface ISelectSchemaProps {

@@ -1,6 +1,6 @@
-import { FC, ComponentProps } from 'react';
+import type { FC, ComponentProps } from 'react';
 import { useSelector } from 'react-redux';
-import { AnchorButton, IAnchorButtonProps } from '@blueprintjs/core';
+import { AnchorButton, type IAnchorButtonProps } from '@blueprintjs/core';
 
 import { selectCurrentRole, selectFeedbackUrl } from 'selectors';
 import { HintPopover } from 'components/common';

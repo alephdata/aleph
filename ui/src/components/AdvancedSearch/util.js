@@ -48,7 +48,7 @@ export const parseQueryText = (queryText) => {
 
   [...FIELDS].reverse().forEach(({ key, re, process }) => {
     const matches = qt.match(re) || [];
-    parsedResults[key] = matches.map(process).flat();
+    parsedResults[key] = matches.flatMap(process);
     qt = qt.replace(re, '');
   });
 

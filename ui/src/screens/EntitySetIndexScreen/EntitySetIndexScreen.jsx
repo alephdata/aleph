@@ -112,7 +112,7 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:type': type,
   };
-  let query = Query.fromLocation(
+  const query = Query.fromLocation(
     'entitysets',
     location,
     context,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Divider } from '@blueprintjs/core';
-import {
+import type {
   IEntityDatum,
   Property as FTMProperty,
   Schema as FTMSchema,
@@ -8,11 +8,11 @@ import {
 import { ColorPicker, PropertySelect, RadiusPicker } from 'react-ftm/editors';
 import {
   Entity,
-  FTMEntityExtended as FTMEntity,
+  type FTMEntityExtended as FTMEntity,
   Schema,
 } from 'react-ftm/types';
 import { mapColor } from 'react-ftm/utils';
-import { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
 import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
 import { EditableProperty } from 'react-ftm/components/common';
 import c from 'classnames';

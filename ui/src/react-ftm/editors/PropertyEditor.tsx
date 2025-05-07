@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
-import {
+import { injectIntl, type WrappedComponentProps } from 'react-intl';
+import type {
   Entity,
   Model,
   Property,

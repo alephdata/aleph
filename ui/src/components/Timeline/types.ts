@@ -1,5 +1,5 @@
-import { Schema, Entity, Value } from '@alephdata/followthemoney';
-import { TimelineItem } from './util';
+import type { Schema, Entity, Value } from '@alephdata/followthemoney';
+import type { TimelineItem } from './util';
 
 export type TimelineRenderer = 'list' | 'chart';
 

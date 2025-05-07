@@ -58,7 +58,7 @@ class Query {
     if (!this.has(name)) {
       return missing;
     }
-    return parseInt(this.getString(name), 10);
+    return Number.parseInt(this.getString(name), 10);
   }
 
   getBool(name, missing = false) {

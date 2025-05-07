@@ -1,12 +1,12 @@
 import {
-  Entity,
-  Property,
+  type Entity,
+  type Property,
   PropertyType,
-  Value,
+  type Value,
 } from '@alephdata/followthemoney';
-import { Point, IPointData } from './Point';
-import { GraphLayout } from './GraphLayout';
-import { Edge } from './Edge';
+import { Point, type IPointData } from './Point';
+import type { GraphLayout } from './GraphLayout';
+import type { Edge } from './Edge';
 
 interface IVertexData {
   id: string;

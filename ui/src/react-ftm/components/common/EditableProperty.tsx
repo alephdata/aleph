@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {
+import type {
   IEntityDatum,
   Model,
   Property as FTMProperty,
@@ -8,7 +8,7 @@ import {
 import c from 'classnames';
 
 import { PropertyEditor } from 'react-ftm/editors';
-import { FTMEntityExtended as Entity, Property } from 'react-ftm/types';
+import { type FTMEntityExtended as Entity, Property } from 'react-ftm/types';
 
 import './EditableProperty.scss';
 
