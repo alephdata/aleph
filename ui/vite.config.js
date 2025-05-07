@@ -33,6 +33,18 @@ export default defineConfig(() => {
       alias: {
         // Use Axios ESM build
         axios: '/node_modules/axios/dist/esm/axios.js',
+
+        // Polyfill Node.js crypto module
+        crypto: 'crypto-browserify',
+      },
+    },
+    // The following is required to polyfill the Node.js crypto module for use in
+    // the browser. This is a workaround, the proper long-term solution is to switch
+    // to the WebCrypto API. See: https://github.com/alephdata/aleph/pull/4095
+    define: {
+      global: {},
+      process: {
+        browser: true,
       },
     },
   };
