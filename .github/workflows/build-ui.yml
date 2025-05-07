@@ -38,7 +38,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - run: docker image ls
+      - run: docker compose -f docker-compose.dev.yml run --no-deps --rm ui nginx -v
 
       - name: Check code formatting
         run: make format-check-ui
