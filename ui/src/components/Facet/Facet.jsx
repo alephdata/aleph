@@ -181,15 +181,13 @@ class Facet extends Component {
           <span className="FacetName">{label}</span>
 
           {isFiltered && (
-            <>
-              <span className={c('FilterCount', Classes.TEXT_MUTED)}>
-                <FormattedMessage
-                  id="search.facets.filtersSelected"
-                  defaultMessage="{count} selected"
-                  values={{ count: intl.formatNumber(count) }}
-                />
-              </span>
-            </>
+            <span className={c('FilterCount', Classes.TEXT_MUTED)}>
+              <FormattedMessage
+                id="search.facets.filtersSelected"
+                defaultMessage="{count} selected"
+                values={{ count: intl.formatNumber(count) }}
+              />
+            </span>
           )}
 
           {!isDate && isOpen && (

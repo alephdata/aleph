@@ -14,7 +14,48 @@
     "linter": {
         "enabled": true,
         "rules": {
-            "recommended": true
+            "recommended": true,
+            "a11y": {
+                "useMediaCaption": "off",
+                "noAutofocus": "off",
+                "noLabelWithoutControl": {
+                    "options": {
+                        "inputComponents": [
+                            "HTMLSelect",
+                            "InputGroup",
+                            "TextArea",
+                            "FileInput",
+                            "NumericInput",
+                            "TagInput",
+                            "ClipboardInput"
+                        ]
+                    }
+                },
+                "noNoninteractiveTabindex": "off"
+            },
+            "complexity": {
+                "noExtraBooleanCast": "off",
+                "noForEach": "off",
+                "noStaticOnlyClass": "off",
+                "useOptionalChain": "off",
+                "useLiteralKeys": "off"
+            },
+            "correctness": {
+                "noSwitchDeclarations": "off"
+            },
+            "performance": {
+                "noDelete": "off"
+            },
+            "style": {
+                "noUselessElse": "off",
+                "useTemplate": "off"
+            },
+            "suspicious": {
+                "noArrayIndexKey": "off",
+                "noClassAssign": "off",
+                "noExplicitAny": "off",
+                "noShadowRestrictedNames": "off"
+            }
         }
     },
     "javascript": {

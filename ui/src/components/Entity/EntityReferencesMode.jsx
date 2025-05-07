@@ -196,7 +196,7 @@ class EntityReferencesMode extends React.Component {
           query={query}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={placeholder}
-        ></EntityActionBar>
+        />
         {result.total !== 0 && (
           <>
             <table className="data-table references-data-table">

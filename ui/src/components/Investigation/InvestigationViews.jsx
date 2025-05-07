@@ -87,7 +87,8 @@ class InvestigationViews extends React.Component {
   render() {
     const { activeMode, activeType } = this.props;
 
-    let title, subheading;
+    let title;
+    let subheading;
     if (activeMode === CollectionViewIds.SEARCH) {
       title = null;
     } else if (!!activeType) {
