@@ -60,11 +60,9 @@
     "browserify-sign": "<=4.2.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "vite",
+    "build": "vite build",
     "lint": "eslint --ext js,jsx,ts,tsx src --max-warnings 0",
-    "test": "craco test",
-    "eject": "craco eject",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
     "translate": "npm run messages && npm run compile-translations && npm run concat-translations",
@@ -72,27 +70,10 @@
     "compile-translations": "formatjs compile-folder i18n/translations/raw i18n/translations/compiled",
     "concat-translations": "node i18n/concatTranslations.js"
   },
-  "proxy": "http://api:5000/",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "jest": {
     "transformIgnorePatterns": []
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 5 chrome version",
-      "last 5 firefox version",
-      "last 5 safari version"
-    ]
-  },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
     "@formatjs/cli": "^6.2.0",
     "@testing-library/jest-dom": "^6.1.3",
     "@testing-library/react": "^12.1.5",
@@ -107,8 +88,9 @@
     "@types/numeral": "^2.0.5",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
+    "@vitejs/plugin-react": "^4.4.1",
     "prettier": "^3.0.3",
-    "react-scripts": "^5.0.1",
-    "sass": "^1.68.0"
+    "sass": "^1.68.0",
+    "vite": "^6.3.4"
   }
 }

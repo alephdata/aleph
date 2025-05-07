@@ -9,5 +9,3 @@ COPY package-lock.json /alephui
 
 RUN npm ci
 COPY . .
-
-ENV REACT_APP_API_ENDPOINT /api/2/
