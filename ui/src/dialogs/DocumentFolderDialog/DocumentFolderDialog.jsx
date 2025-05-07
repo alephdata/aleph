@@ -5,10 +5,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { forceMutate, ingestDocument } from 'actions';
-import { showErrorToast } from 'app/toast';
-import FormDialog from 'dialogs/common/FormDialog';
+import withRouter from '/src/app/withRouter.jsx';
+import { forceMutate, ingestDocument } from '/src/actions/index.js';
+import { showErrorToast } from '/src/app/toast';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
 
 const messages = defineMessages({
   title: {

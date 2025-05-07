@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import type { Entity } from '@alephdata/followthemoney';
-import { Schema } from 'src/react-ftm/types';
-import { DEFAULT_COLOR } from './Timeline';
-import type { Vertex, FetchEntitySuggestions } from './types';
-import EntityViewerProperties from './EntityViewerProperties';
-import { ColorPicker } from 'src/react-ftm';
+import { Schema } from '/src/react-ftm/types/index.tsx';
+import { DEFAULT_COLOR } from './Timeline.tsx';
+import type { Vertex, FetchEntitySuggestions } from './types.ts';
+import EntityViewerProperties from './EntityViewerProperties.tsx';
+import { ColorPicker } from '/src/react-ftm/index.ts';
 
 import './EntityViewer2.scss';
 

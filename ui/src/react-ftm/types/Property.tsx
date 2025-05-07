@@ -26,7 +26,7 @@ import {
   Topic,
   URL,
 } from '.';
-import { ensureArray, wordList } from 'react-ftm/utils';
+import { ensureArray, wordList } from '/src/react-ftm/utils';
 
 import './Property.scss';
 

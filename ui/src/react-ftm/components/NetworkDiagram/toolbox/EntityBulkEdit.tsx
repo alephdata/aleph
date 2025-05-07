@@ -2,11 +2,11 @@ import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import type { Entity } from '@alephdata/followthemoney';
 import { Button, Collapse } from '@blueprintjs/core';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { ColorPicker, RadiusPicker } from 'react-ftm/editors';
-// import { EntityList } from 'components/common';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { ColorPicker, RadiusPicker } from '/src/react-ftm/editors/index.tsx';
+// import { EntityList } from '/src/components/common/index.jsx';
 // import { EntityBulkEdit, EntityViewer, GroupingViewer } from 'NetworkDiagram/toolbox';
-import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Vertex } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 // import './EntityBulkEdit.scss';
 

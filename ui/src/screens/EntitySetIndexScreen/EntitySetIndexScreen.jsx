@@ -3,14 +3,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { queryEntitySets } from 'actions';
-import { selectEntitySetsResult } from 'selectors';
-import Query from 'app/Query';
-import Screen from 'components/Screen/Screen';
-import Dashboard from 'components/Dashboard/Dashboard';
-import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryEntitySets } from '/src/actions/index.js';
+import { selectEntitySetsResult } from '/src/selectors.js';
+import Query from '/src/app/Query';
+import Screen from '/src/components/Screen/Screen';
+import Dashboard from '/src/components/Dashboard/Dashboard';
+import EntitySetCreateMenu from '/src/components/EntitySet/EntitySetCreateMenu';
+import EntitySetIndex from '/src/components/EntitySet/EntitySetIndex';
 
 const messages = defineMessages({
   diagram_title: {

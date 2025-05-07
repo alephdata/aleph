@@ -1,7 +1,7 @@
 import React from 'react';
 import { Classes, Spinner } from '@blueprintjs/core';
 
-import Screen from 'components/Screen/Screen';
+import Screen from '/src/components/Screen/Screen';
 
 import './LoadingScreen.scss';
 

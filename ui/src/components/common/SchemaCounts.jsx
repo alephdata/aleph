@@ -5,9 +5,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
-import { Count, Schema, LinkMenuItem } from 'components/common';
-import { selectModel } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { Count, Schema, LinkMenuItem } from '/src/components/common/index.jsx';
+import { selectModel } from '/src/selectors.js';
 
 import './SchemaCounts.scss';
 

@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
 import TimelineZoomLevelSwitch from './TimelineZoomLevelSwitch';
-import { FeedbackButton } from 'components/common';
+import { FeedbackButton } from '/src/components/common/index.jsx';
 import {
   selectIsEmpty,
   selectIsZoomEnabled,

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Classes, Pre } from '@blueprintjs/core';
 
-import { Property, Skeleton } from 'components/common';
-import wordList from 'util/wordList';
+import { Property, Skeleton } from '/src/components/common/index.jsx';
+import wordList from '/src/util/wordList.js';
 
 import './ArticleViewer.scss';
 

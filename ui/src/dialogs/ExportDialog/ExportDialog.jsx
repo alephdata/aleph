@@ -3,8 +3,8 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
+import withRouter from '/src/app/withRouter.jsx';
+import { showErrorToast, showSuccessToast } from '/src/app/toast.js';
 
 const messages = defineMessages({
   button_confirm: {

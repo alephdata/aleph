@@ -8,8 +8,8 @@ import {
   type IPopover2Props,
 } from '@blueprintjs/popover2';
 
-import { selectDismissedHints } from 'selectors';
-import { dismissHint } from 'actions';
+import { selectDismissedHints } from '/src/selectors.js';
+import { dismissHint } from '/src/actions/index.js';
 
 import './HintPopover.scss';
 

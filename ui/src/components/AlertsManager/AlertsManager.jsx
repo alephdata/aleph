@@ -13,18 +13,18 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   ErrorSection,
   Date,
   QueryInfiniteLoad,
   QueryText,
   Skeleton,
-} from 'components/common';
-import { queryAlerts, createAlert, deleteAlert } from 'actions';
-import { selectAlertResult } from 'selectors';
-import { alertsQuery } from 'queries';
-import validAlertQuery from 'util/validAlertQuery';
+} from '/src/components/common/index.jsx';
+import { queryAlerts, createAlert, deleteAlert } from '/src/actions/index.js';
+import { selectAlertResult } from '/src/selectors.js';
+import { alertsQuery } from '/src/queries.js';
+import validAlertQuery from '/src/util/validAlertQuery.js';
 
 import './AlertsManager.scss';
 

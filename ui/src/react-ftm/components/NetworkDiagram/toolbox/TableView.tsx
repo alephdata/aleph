@@ -1,8 +1,8 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import type { EntityChanges } from 'react-ftm/components/common/types';
-import { EntityTable } from 'react-ftm/components/EntityTable';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import type { EntityChanges } from '/src/react-ftm/components/common/types/index.tsx';
+import { EntityTable } from '/src/react-ftm/components/EntityTable/index.ts';
 import { Button, Drawer, Position } from '@blueprintjs/core';
 import type { Entity } from '@alephdata/followthemoney';
 

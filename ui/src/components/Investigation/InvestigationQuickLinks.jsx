@@ -3,18 +3,18 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { EntityCreateDialog } from 'react-ftm';
+import { EntityCreateDialog } from '/src/react-ftm/index.ts';
 
-import withRouter from 'app/withRouter';
-import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import { showSuccessToast, showErrorToast } from 'app/toast';
-import { DialogToggleButton } from 'components/Toolbar';
-import { QuickLinks } from 'components/common';
-import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
-import EntitySetCreateDialog from 'dialogs/EntitySetCreateDialog/EntitySetCreateDialog';
-import CollectionXrefDialog from 'dialogs/CollectionXrefDialog/CollectionXrefDialog';
-import { selectModel } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import entityEditorWrapper from '/src/components/Entity/entityEditorWrapper';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import { showSuccessToast, showErrorToast } from '/src/app/toast';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import { QuickLinks } from '/src/components/common/index.jsx';
+import DocumentUploadDialog from '/src/dialogs/DocumentUploadDialog/DocumentUploadDialog.jsx';
+import EntitySetCreateDialog from '/src/dialogs/EntitySetCreateDialog/EntitySetCreateDialog.jsx';
+import CollectionXrefDialog from '/src/dialogs/CollectionXrefDialog/CollectionXrefDialog.jsx';
+import { selectModel } from '/src/selectors.js';
 
 const messages = defineMessages({
   entity_create_error: {

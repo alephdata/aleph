@@ -1,6 +1,11 @@
 import { createReducer } from 'redux-act';
 
-import { queryRoles, fetchRole, updateRole, generateApiKey } from 'actions';
+import {
+  queryRoles,
+  fetchRole,
+  updateRole,
+  generateApiKey,
+} from '/src/actions/index.js';
 import {
   resultObjects,
   objectLoadStart,

@@ -5,20 +5,20 @@ import { Callout, Intent } from '@blueprintjs/core';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { selectEntitySetItemsResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { selectEntitySetItemsResult } from '/src/selectors.js';
 import {
   JudgementButtons,
   Collection,
   EntityDecisionHotkeys,
   EntityDecisionRow,
-} from 'components/common';
-import EntityCompare from 'components/Entity/EntityCompare';
-import { entitySetItemsQuery } from 'queries';
-import { updateEntitySetItemMutate } from 'actions';
-import { showWarningToast } from 'app/toast';
+} from '/src/components/common/index.jsx';
+import EntityCompare from '/src/components/Entity/EntityCompare';
+import { entitySetItemsQuery } from '/src/queries.js';
+import { updateEntitySetItemMutate } from '/src/actions/index.js';
+import { showWarningToast } from '/src/app/toast';
 
-import Skeleton from 'components/common/Skeleton';
+import Skeleton from '/src/components/common/Skeleton';
 
 class ProfileItemsMode extends Component {
   constructor(props) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import Screen from 'src/components/Screen/Screen';
-import Dashboard from 'src/components/Dashboard/Dashboard';
-import ExportsList from 'src/components/Exports/ExportsList';
+import Screen from '/src/components/Screen/Screen.jsx';
+import Dashboard from '/src/components/Dashboard/Dashboard.jsx';
+import ExportsList from '/src/components/Exports/ExportsList.jsx';
 
 const messages = defineMessages({
   title: {

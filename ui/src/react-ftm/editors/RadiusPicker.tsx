@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Icon, Slider } from '@blueprintjs/core';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
 import type { Schema as FTMSchema } from '@alephdata/followthemoney';
-import { Schema } from 'react-ftm/types';
+import { Schema } from '/src/react-ftm/types/index.tsx';
 
 import './RadiusPicker.scss';
 

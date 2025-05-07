@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import c from 'classnames';
-import Numeric from 'react-ftm/types/Numeric';
+import Numeric from '/src/react-ftm/types/Numeric.tsx';
 
 import './Histogram.scss';
 

@@ -5,25 +5,25 @@ import { connect } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { getGroupField } from 'components/SearchField/util';
-import SearchActionBar from 'components/common/SearchActionBar';
-import Facets from 'components/Facet/Facets';
-import { QueryInfiniteLoad } from 'components/common';
-import CollectionXrefManageMenu from 'components/Collection/CollectionXrefManageMenu';
-import XrefTable from 'components/XrefTable/XrefTable';
-import SortingBar from 'components/SortingBar/SortingBar';
-import { collectionXrefFacetsQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import { getGroupField } from '/src/components/SearchField/util';
+import SearchActionBar from '/src/components/common/SearchActionBar';
+import Facets from '/src/components/Facet/Facets';
+import { QueryInfiniteLoad } from '/src/components/common/index.jsx';
+import CollectionXrefManageMenu from '/src/components/Collection/CollectionXrefManageMenu';
+import XrefTable from '/src/components/XrefTable/XrefTable';
+import SortingBar from '/src/components/SortingBar/SortingBar';
+import { collectionXrefFacetsQuery } from '/src/queries.js';
 import {
   selectCollection,
   selectCollectionXrefResult,
   selectTester,
-} from 'selectors';
+} from '/src/selectors.js';
 import {
   queryCollectionXref,
   queryRoles,
   triggerCollectionXrefDownload,
-} from 'actions';
+} from '/src/actions/index.js';
 
 import './CollectionXrefMode.scss';
 

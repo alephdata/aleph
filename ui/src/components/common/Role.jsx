@@ -6,8 +6,8 @@ import truncateText from 'truncate';
 import { Button, MenuItem, Classes, Alignment, Icon } from '@blueprintjs/core';
 import SelectWrapper from './SelectWrapper';
 
-import wordList from 'util/wordList';
-import { suggestRoles } from 'actions';
+import wordList from '/src/util/wordList.js';
+import { suggestRoles } from '/src/actions/index.js';
 
 import './Role.scss';
 

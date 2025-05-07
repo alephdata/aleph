@@ -6,14 +6,14 @@ import {
   type DraggableEvent,
   type DraggableData,
 } from 'react-draggable';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
-import { Rectangle } from 'react-ftm/components/NetworkDiagram/layout/Rectangle';
+import { Point } from '/src/react-ftm/components/NetworkDiagram/layout/Point.ts';
+import { Rectangle } from '/src/react-ftm/components/NetworkDiagram/layout/Rectangle.ts';
 import {
   getRefMatrix,
   applyMatrix,
-} from 'react-ftm/components/NetworkDiagram/renderer/utils';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
+} from '/src/react-ftm/components/NetworkDiagram/renderer/utils.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
 
 interface ICanvasProps {
   svgRef: React.RefObject<SVGSVGElement>;

@@ -5,8 +5,8 @@ import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { selectSimilarResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { selectSimilarResult } from '/src/selectors.js';
 import {
   QueryInfiniteLoad,
   JudgementButtons,
@@ -14,11 +14,11 @@ import {
   Collection,
   EntityDecisionHotkeys,
   EntityDecisionRow,
-} from 'components/common';
-import EntityCompare from 'components/Entity/EntityCompare';
-import { profileSimilarQuery } from 'queries';
-import { querySimilar, updateEntitySetItemMutate } from 'actions';
-import { showWarningToast } from 'app/toast';
+} from '/src/components/common/index.jsx';
+import EntityCompare from '/src/components/Entity/EntityCompare';
+import { profileSimilarQuery } from '/src/queries.js';
+import { querySimilar, updateEntitySetItemMutate } from '/src/actions/index.js';
+import { showWarningToast } from '/src/app/toast';
 
 class ProfileItemsMode extends Component {
   constructor(props) {

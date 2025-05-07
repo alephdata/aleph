@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Colors } from '@blueprintjs/core';
-import type { Point } from 'react-ftm/components/NetworkDiagram/layout';
+import type { Point } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import {
   getRefMatrix,
   applyMatrix,
-} from 'react-ftm/components/NetworkDiagram/renderer/utils';
+} from '/src/react-ftm/components/NetworkDiagram/renderer/utils.ts';
 
 interface IEdgeDrawerProps {
   svgRef: React.RefObject<SVGSVGElement>;

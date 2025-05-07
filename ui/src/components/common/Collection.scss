@@ -1,5 +1,5 @@
-@import 'app/variables.scss';
-@import 'app/mixins.scss';
+@import '/src/app/variables.scss';
+@import '/src/app/mixins.scss';
 
 .CollectionLabel {
   .#{$bp-ns}-icon,

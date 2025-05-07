@@ -4,8 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { Button, type ButtonProps } from '@blueprintjs/core';
 import type { Entity } from '@alephdata/followthemoney';
 
-import { selectExperimentalBookmarksFeatureEnabled } from 'selectors';
-import { createBookmark, deleteBookmark } from 'actions/bookmarkActions';
+import { selectExperimentalBookmarksFeatureEnabled } from '/src/selectors.js';
+import {
+  createBookmark,
+  deleteBookmark,
+} from '/src/actions/bookmarkActions.js';
 
 type BookmarkButtonProps = ButtonProps & {
   entity: Entity & { bookmarked: boolean };

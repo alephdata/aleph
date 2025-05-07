@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Intent, MenuItem } from '@blueprintjs/core';
 
-import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
+import SortingBarSelect from '/src/components/SortingBar/SortingBarSelect';
 
 import './SortingBar.scss';
 

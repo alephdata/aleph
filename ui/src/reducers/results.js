@@ -5,7 +5,7 @@ import {
   resultLoadError,
   updateResultsKeyed,
   updateResultsFull,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 import {
   queryCollections,
@@ -22,7 +22,7 @@ import {
   queryMappings,
   queryAlerts,
   queryBookmarks,
-} from 'actions';
+} from '/src/actions/index.js';
 
 const initialState = {};
 

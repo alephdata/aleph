@@ -4,18 +4,18 @@ import {
   type DraggableEvent,
   type DraggableData,
 } from 'react-draggable';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
-import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout/Vertex';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { Point } from '/src/react-ftm/components/NetworkDiagram/layout/Point.ts';
+import type { Vertex } from '/src/react-ftm/components/NetworkDiagram/layout/Vertex.ts';
 import {
   getRefMatrix,
   applyMatrix,
-} from 'react-ftm/components/NetworkDiagram/renderer/utils';
+} from '/src/react-ftm/components/NetworkDiagram/renderer/utils.ts';
 import { VertexLabelRenderer } from './VertexLabelRenderer';
 import { IconRenderer } from './IconRenderer';
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
-import { mapColor } from 'react-ftm/utils';
-import { reduceTranslucentColor } from 'util/reduceTranslucentColor';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
+import { mapColor } from '/src/react-ftm/utils/index.ts';
+import { reduceTranslucentColor } from '/src/util/reduceTranslucentColor.ts';
 
 interface IVertexRendererProps {
   vertex: Vertex;

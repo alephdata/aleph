@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { Button, Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 
-import { fetchRole } from 'actions';
+import { fetchRole } from '/src/actions/index.js';
 import {
   selectCurrentRole,
   selectCurrentRoleId,
   selectMetadata,
-} from 'selectors';
-import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
-import { DialogToggleButton } from 'components/Toolbar';
-import { Skeleton, LinkMenuItem } from 'components/common';
+} from '/src/selectors.js';
+import AuthenticationDialog from '/src/dialogs/AuthenticationDialog/AuthenticationDialog.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import { Skeleton, LinkMenuItem } from '/src/components/common/index.jsx';
 
 import './AuthButtons.scss';
 

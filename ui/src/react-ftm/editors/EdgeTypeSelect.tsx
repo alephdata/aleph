@@ -15,7 +15,7 @@ import {
   type IItemRendererProps,
 } from '@blueprintjs/select';
 
-import { type EdgeType, Schema } from 'react-ftm/types';
+import { type EdgeType, Schema } from '/src/react-ftm/types/index.tsx';
 
 const TypedSelect = Select.ofType<EdgeType>();
 

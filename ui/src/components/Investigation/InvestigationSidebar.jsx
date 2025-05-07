@@ -5,11 +5,11 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MenuDivider } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionView from 'components/Collection/CollectionView';
-import { LinkMenuItem, SchemaCounts } from 'components/common';
-import InvestigationHeading from 'components/Investigation/InvestigationHeading';
+import withRouter from '/src/app/withRouter.jsx';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionView from '/src/components/Collection/CollectionView';
+import { LinkMenuItem, SchemaCounts } from '/src/components/common/index.jsx';
+import InvestigationHeading from '/src/components/Investigation/InvestigationHeading';
 
 import './InvestigationSidebar.scss';
 

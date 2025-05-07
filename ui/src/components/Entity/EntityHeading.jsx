@@ -2,9 +2,9 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import { Entity, Schema, RelativeTime } from 'components/common';
+import { Entity, Schema, RelativeTime } from '/src/components/common/index.jsx';
 
-import 'components/common/ItemOverview.scss';
+import '/src/components/common/ItemOverview.scss';
 
 class EntityHeading extends React.PureComponent {
   render() {

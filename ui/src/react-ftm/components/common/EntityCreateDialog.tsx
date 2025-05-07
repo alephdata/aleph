@@ -18,9 +18,9 @@ import type {
   Values,
 } from '@alephdata/followthemoney';
 
-import { EntitySelect, SchemaSelect } from 'react-ftm/editors';
-import { Schema } from 'react-ftm/types';
-import { Dialog } from 'react-ftm/components/common';
+import { EntitySelect, SchemaSelect } from '/src/react-ftm/editors/index.tsx';
+import { Schema } from '/src/react-ftm/types/index.tsx';
+import { Dialog } from '/src/react-ftm/components/common/index.js';
 
 import './EntityCreateDialog.scss';
 

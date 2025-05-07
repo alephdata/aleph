@@ -12,9 +12,9 @@ import {
 } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { CheckboxList, Schema } from 'components/common';
-import DateFacet from 'components/Facet/DateFacet';
+import withRouter from '/src/app/withRouter.jsx';
+import { CheckboxList, Schema } from '/src/components/common/index.jsx';
+import DateFacet from '/src/components/Facet/DateFacet';
 
 import './Facet.scss';
 

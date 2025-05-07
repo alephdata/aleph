@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Alignment, Button, Intent, MenuItem } from '@blueprintjs/core';
 
-import { Count, SelectWrapper } from 'components/common';
+import { Count, SelectWrapper } from '/src/components/common/index.jsx';
 
 class SortingBarSelect extends PureComponent {
   renderOption = (option, { handleClick }) => (

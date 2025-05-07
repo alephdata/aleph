@@ -6,7 +6,7 @@ import type { Point } from './Point';
 import { Rectangle } from './Rectangle';
 import { forceLayout } from '.';
 import { type ISettingsData, Settings } from './Settings';
-import type { GraphConfig } from 'react-ftm/components/NetworkDiagram/GraphConfig';
+import type { GraphConfig } from '/src/react-ftm/components/NetworkDiagram/GraphConfig.ts';
 
 export interface IGraphLayoutData {
   vertices: Array<any>;

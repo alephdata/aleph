@@ -4,41 +4,45 @@ import { connect } from 'react-redux';
 import { Button, Spinner, Classes } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import { fetchMetadata, fetchMessages, dismissMessage } from 'actions';
+import {
+  fetchMetadata,
+  fetchMessages,
+  dismissMessage,
+} from '/src/actions/index.js';
 import {
   selectSession,
   selectMetadata,
   selectMessages,
   selectPinnedMessage,
-} from 'selectors';
-import { routes as legacyRedirects } from 'app/legacyRedirects';
-import Navbar from 'components/Navbar/Navbar';
-import MessageBanner from 'components/MessageBanner/MessageBanner';
+} from '/src/selectors.js';
+import { routes as legacyRedirects } from '/src/app/legacyRedirects.js';
+import Navbar from '/src/components/Navbar/Navbar.jsx';
+import MessageBanner from '/src/components/MessageBanner/MessageBanner.jsx';
 
-import NotFoundScreen from 'screens/NotFoundScreen/NotFoundScreen';
-import OAuthScreen from 'screens/OAuthScreen/OAuthScreen';
-import LogoutScreen from 'screens/LogoutScreen/LogoutScreen';
-import ActivateScreen from 'screens/ActivateScreen/ActivateScreen';
-import HomeScreen from 'screens/HomeScreen/HomeScreen';
-import SearchScreen from 'screens/SearchScreen/SearchScreen';
-import NotificationsScreen from 'screens/NotificationsScreen/NotificationsScreen';
-import PagesScreen from 'screens/PagesScreen/PagesScreen';
-import AlertsScreen from 'screens/AlertsScreen/AlertsScreen';
-import SettingsScreen from 'screens/SettingsScreen/SettingsScreen';
-import SystemStatusScreen from 'screens/SystemStatusScreen/SystemStatusScreen';
-import GroupScreen from 'screens/GroupScreen/GroupScreen';
-import InvestigationIndexScreen from 'screens/InvestigationIndexScreen/InvestigationIndexScreen';
-import DatasetIndexScreen from 'screens/DatasetIndexScreen/DatasetIndexScreen';
-import CollectionScreen from 'screens/CollectionScreen/CollectionScreen';
-import InvestigationScreen from 'screens/InvestigationScreen/InvestigationScreen';
-import EntitySetIndexScreen from 'screens/EntitySetIndexScreen/EntitySetIndexScreen';
-import DiagramScreen from 'screens/DiagramScreen/DiagramScreen';
-import ProfileScreen from 'screens/ProfileScreen/ProfileScreen';
-import ListScreen from 'screens/ListScreen/ListScreen';
-import TimelineScreen from 'screens/TimelineScreen/TimelineScreen';
-import EntitySetScreen from 'screens/EntitySetScreen/EntitySetScreen';
-import EntityScreen from 'screens/EntityScreen/EntityScreen';
-import ExportsScreen from 'src/screens/ExportsScreen/ExportsScreen';
+import NotFoundScreen from '/src/screens/NotFoundScreen/NotFoundScreen.jsx';
+import OAuthScreen from '/src/screens/OAuthScreen/OAuthScreen.jsx';
+import LogoutScreen from '/src/screens/LogoutScreen/LogoutScreen.jsx';
+import ActivateScreen from '/src/screens/ActivateScreen/ActivateScreen.jsx';
+import HomeScreen from '/src/screens/HomeScreen/HomeScreen.jsx';
+import SearchScreen from '/src/screens/SearchScreen/SearchScreen.jsx';
+import NotificationsScreen from '/src/screens/NotificationsScreen/NotificationsScreen.jsx';
+import PagesScreen from '/src/screens/PagesScreen/PagesScreen.jsx';
+import AlertsScreen from '/src/screens/AlertsScreen/AlertsScreen.jsx';
+import SettingsScreen from '/src/screens/SettingsScreen/SettingsScreen.jsx';
+import SystemStatusScreen from '/src/screens/SystemStatusScreen/SystemStatusScreen.jsx';
+import GroupScreen from '/src/screens/GroupScreen/GroupScreen.jsx';
+import InvestigationIndexScreen from '/src/screens/InvestigationIndexScreen/InvestigationIndexScreen.jsx';
+import DatasetIndexScreen from '/src/screens/DatasetIndexScreen/DatasetIndexScreen.jsx';
+import CollectionScreen from '/src/screens/CollectionScreen/CollectionScreen.jsx';
+import InvestigationScreen from '/src/screens/InvestigationScreen/InvestigationScreen.jsx';
+import EntitySetIndexScreen from '/src/screens/EntitySetIndexScreen/EntitySetIndexScreen.jsx';
+import DiagramScreen from '/src/screens/DiagramScreen/DiagramScreen.jsx';
+import ProfileScreen from '/src/screens/ProfileScreen/ProfileScreen.jsx';
+import ListScreen from '/src/screens/ListScreen/ListScreen.jsx';
+import TimelineScreen from '/src/screens/TimelineScreen/TimelineScreen.jsx';
+import EntitySetScreen from '/src/screens/EntitySetScreen/EntitySetScreen.jsx';
+import EntityScreen from '/src/screens/EntityScreen/EntityScreen.jsx';
+import ExportsScreen from '/src/screens/ExportsScreen/ExportsScreen.jsx';
 
 import './Router.scss';
 

@@ -3,14 +3,17 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import Query from 'app/Query';
-import NotificationList from 'components/Notification/NotificationList';
-import Screen from 'components/Screen/Screen';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import Dashboard from 'components/Dashboard/Dashboard';
-import { selectNotificationsResult, selectCurrentRole } from 'selectors';
-import LandingQuickLinks from 'components/common/LandingQuickLinks';
+import withRouter from '/src/app/withRouter.jsx';
+import Query from '/src/app/Query';
+import NotificationList from '/src/components/Notification/NotificationList';
+import Screen from '/src/components/Screen/Screen';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import Dashboard from '/src/components/Dashboard/Dashboard';
+import {
+  selectNotificationsResult,
+  selectCurrentRole,
+} from '/src/selectors.js';
+import LandingQuickLinks from '/src/components/common/LandingQuickLinks';
 
 import './NotificationsScreen.scss';
 

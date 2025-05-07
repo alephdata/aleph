@@ -5,14 +5,14 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import Query from 'app/Query';
-import { PagingButtons } from 'components/Toolbar';
-import { SectionLoading, Skeleton } from 'components/common';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
-import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import PdfViewerPage from 'viewers/PdfViewerPage';
+import withRouter from '/src/app/withRouter.jsx';
+import Query from '/src/app/Query';
+import { PagingButtons } from '/src/components/Toolbar';
+import { SectionLoading, Skeleton } from '/src/components/common/index.jsx';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult } from '/src/selectors.js';
+import normalizeDegreeValue from '/src/util/normalizeDegreeValue.js';
+import PdfViewerPage from '/src/viewers/PdfViewerPage.jsx';
 
 import './PdfViewer.scss';
 import 'react-pdf/dist/esm/Page/TextLayer.css';

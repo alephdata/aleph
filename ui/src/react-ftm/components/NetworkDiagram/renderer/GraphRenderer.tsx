@@ -6,14 +6,14 @@ import type {
   Edge,
   GraphElement,
   Grouping,
-} from 'react-ftm/components/NetworkDiagram/layout';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
 import { Canvas } from './Canvas';
 import { EdgeRenderer } from './EdgeRenderer';
 import { EdgeDrawer } from './EdgeDrawer';
 import { VertexRenderer } from './VertexRenderer';
 import { GroupingRenderer } from './GroupingRenderer';
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
 
 interface IGraphRendererProps {
   svgRef?: React.RefObject<SVGSVGElement>;

@@ -1,4 +1,4 @@
-import Query from 'app/Query';
+import Query from '/src/app/Query.js';
 
 export function groupsQuery(location) {
   return Query.fromLocation('groups', location, {}, 'groups');

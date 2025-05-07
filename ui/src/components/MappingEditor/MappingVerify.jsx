@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Classes, Card, HTMLTable, MenuItem } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { PropertyEditor } from 'react-ftm';
-import { Property } from 'components/common';
+import { PropertyEditor } from '/src/react-ftm/index.ts';
+import { Property } from '/src/components/common/index.jsx';
 import c from 'classnames';
 
-import { selectLocale } from 'selectors';
-import { MappingLabel } from 'components/MappingEditor/MappingLabel';
-import SelectWrapper from 'components/common/SelectWrapper';
+import { selectLocale } from '/src/selectors.js';
+import { MappingLabel } from '/src/components/MappingEditor/MappingLabel';
+import SelectWrapper from '/src/components/common/SelectWrapper';
 
 import './MappingVerify.scss';
 

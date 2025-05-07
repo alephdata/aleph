@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 import truncateText from 'truncate';
-import { getHost } from 'react-ftm/utils';
+import { getHost } from '/src/react-ftm/utils';
 
 import './URL.scss';
 

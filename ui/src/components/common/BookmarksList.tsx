@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Callout, Intent, Spinner } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 import RelativeTime from './RelativeTime';
-import { selectBookmarksResult } from 'selectors';
-import { queryBookmarks } from 'actions';
-import Query from 'app/Query';
-import { QueryInfiniteLoad } from 'components/common';
+import { selectBookmarksResult } from '/src/selectors.js';
+import { queryBookmarks } from '/src/actions/index.js';
+import Query from '/src/app/Query';
+import { QueryInfiniteLoad } from '/src/components/common/index.jsx';
 
 import './BookmarksList.scss';
 

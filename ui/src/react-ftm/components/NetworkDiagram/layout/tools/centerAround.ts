@@ -2,7 +2,7 @@ import {
   type GraphLayout,
   Rectangle,
   type Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import alignCircle from './alignCircle';
 
 const RADIUS_SPACING = 8;

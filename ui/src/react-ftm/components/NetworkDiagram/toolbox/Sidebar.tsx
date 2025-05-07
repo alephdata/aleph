@@ -2,17 +2,17 @@ import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import type { Entity } from '@alephdata/followthemoney';
 import { Drawer } from '@blueprintjs/core';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { EntityList } from 'react-ftm/components/common';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { EntityList } from '/src/react-ftm/components/common/index.ts';
 import {
   EntityBulkEdit,
   EntityViewer,
   GroupingViewer,
-} from 'react-ftm/components/NetworkDiagram/toolbox';
+} from '/src/react-ftm/components/NetworkDiagram/toolbox/index.ts';
 import type {
   Grouping,
   Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 import './Sidebar.scss';
 

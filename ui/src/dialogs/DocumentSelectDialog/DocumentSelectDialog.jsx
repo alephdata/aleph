@@ -4,12 +4,12 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { Entity, Schema } from 'components/common';
-import { entitySuggestQuery } from 'queries';
-import { queryEntities } from 'actions';
-import CollectionView from 'components/Collection/CollectionView';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import withRouter from '/src/app/withRouter.jsx';
+import { Entity, Schema } from '/src/components/common/index.jsx';
+import { entitySuggestQuery } from '/src/queries.js';
+import { queryEntities } from '/src/actions/index.js';
+import CollectionView from '/src/components/Collection/CollectionView';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
 
 import './DocumentSelectDialog.scss';
 

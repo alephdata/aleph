@@ -3,11 +3,11 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { ErrorSection } from 'src/components/common';
-import { selectExports } from 'selectors';
-import { fetchExports } from 'src/actions';
-import Export from 'src/components/Exports/Export';
+import withRouter from '/src/app/withRouter.jsx';
+import { ErrorSection } from '/src/components/common/index.jsx';
+import { selectExports } from '/src/selectors.js';
+import { fetchExports } from '/src/actions/index.js';
+import Export from '/src/components/Exports/Export';
 
 const messages = defineMessages({
   no_exports: {

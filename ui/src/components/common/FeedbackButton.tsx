@@ -2,8 +2,8 @@ import type { FC, ComponentProps } from 'react';
 import { useSelector } from 'react-redux';
 import { AnchorButton, type IAnchorButtonProps } from '@blueprintjs/core';
 
-import { selectCurrentRole, selectFeedbackUrl } from 'selectors';
-import { HintPopover } from 'components/common';
+import { selectCurrentRole, selectFeedbackUrl } from '/src/selectors.js';
+import { HintPopover } from '/src/components/common/index.jsx';
 
 type FeedbackButtonProps = Omit<IAnchorButtonProps, 'type'> & {
   type: string;

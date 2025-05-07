@@ -1,4 +1,4 @@
-import { encode } from 'util/htmlEntities';
+import { encode } from '/src/util/htmlEntities.js';
 
 export default function insertHighlights(text, highlights) {
   // The highlights returned by the API are HTML encoded, but

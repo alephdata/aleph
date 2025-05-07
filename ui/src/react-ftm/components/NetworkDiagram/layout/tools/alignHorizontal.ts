@@ -6,7 +6,10 @@ import {
   forceCollide,
 } from 'd3-force';
 import { scaleLinear } from 'd3-scale';
-import { Point, type Edge } from 'react-ftm/components/NetworkDiagram/layout';
+import {
+  Point,
+  type Edge,
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import { type IPositioningProps, getPositionFromSimulation } from './common';
 import getForceData from './getForceData';
 

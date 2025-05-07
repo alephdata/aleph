@@ -3,25 +3,25 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
-import { fetchEntitySet, queryEntitySetEntities } from 'actions';
-import { selectEntitySet, selectEntitiesResult } from 'selectors';
-import { entitySetEntitiesQuery } from 'queries';
-import Screen from 'components/Screen/Screen';
-import EntitySetManageMenu from 'components/EntitySet/EntitySetManageMenu';
-import DiagramEditor from 'components/Diagram/DiagramEditor';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionView from 'components/Collection/CollectionView';
+import withRouter from '/src/app/withRouter.jsx';
+import { fetchEntitySet, queryEntitySetEntities } from '/src/actions/index.js';
+import { selectEntitySet, selectEntitiesResult } from '/src/selectors.js';
+import { entitySetEntitiesQuery } from '/src/queries.js';
+import Screen from '/src/components/Screen/Screen';
+import EntitySetManageMenu from '/src/components/EntitySet/EntitySetManageMenu';
+import DiagramEditor from '/src/components/Diagram/DiagramEditor';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionView from '/src/components/Collection/CollectionView';
 import {
   Breadcrumbs,
   ErrorBoundary,
   SearchBox,
   UpdateStatus,
-} from 'components/common';
-import { showErrorToast } from 'app/toast';
+} from '/src/components/common/index.jsx';
+import { showErrorToast } from '/src/app/toast';
 
 const fileDownload = require('js-file-download');
 

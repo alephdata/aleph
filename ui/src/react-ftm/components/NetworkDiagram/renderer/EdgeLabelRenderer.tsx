@@ -4,12 +4,12 @@ import {
   type DraggableEvent,
   type DraggableData,
 } from 'react-draggable';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { Point } from '/src/react-ftm/components/NetworkDiagram/layout/Point.ts';
 import {
   getRefMatrix,
   applyMatrix,
-} from 'react-ftm/components/NetworkDiagram/renderer/utils';
+} from '/src/react-ftm/components/NetworkDiagram/renderer/utils.ts';
 
 import './EdgeLabelRenderer.scss';
 

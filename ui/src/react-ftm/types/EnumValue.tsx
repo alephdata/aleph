@@ -1,5 +1,5 @@
 import React from 'react';
-import { wordList } from 'react-ftm/utils';
+import { wordList } from '/src/react-ftm/utils';
 
 interface ILabelProps {
   code: string;

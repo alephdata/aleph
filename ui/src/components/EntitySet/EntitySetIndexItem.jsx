@@ -7,7 +7,7 @@ import {
   EntitySet,
   Skeleton,
   Summary,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
 import './EntitySetIndexItem.scss';
 

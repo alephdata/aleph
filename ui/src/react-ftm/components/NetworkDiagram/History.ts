@@ -1,5 +1,5 @@
 import type { IGraphLayoutData } from './layout';
-import type { EntityChanges } from 'react-ftm/components/common/types';
+import type { EntityChanges } from '/src/react-ftm/components/common/types/index.ts';
 
 interface IHistoryObject {
   layout: IGraphLayoutData;

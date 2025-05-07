@@ -6,11 +6,11 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { createAlert, deleteAlert, queryAlerts } from 'actions';
-import { selectSession, selectAlertResult } from 'selectors';
-import { alertsQuery } from 'queries';
-import validAlertQuery from 'util/validAlertQuery';
+import withRouter from '/src/app/withRouter.jsx';
+import { createAlert, deleteAlert, queryAlerts } from '/src/actions/index.js';
+import { selectSession, selectAlertResult } from '/src/selectors.js';
+import { alertsQuery } from '/src/queries.js';
+import validAlertQuery from '/src/util/validAlertQuery.js';
 
 const messages = defineMessages({
   alert_add: {

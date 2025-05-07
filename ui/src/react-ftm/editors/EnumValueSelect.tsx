@@ -8,7 +8,7 @@ import type { Value } from '@alephdata/followthemoney';
 import { ControlGroup, MenuItem, Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import type { ITypeEditorProps } from './common';
-import { highlightText } from 'react-ftm/utils';
+import { highlightText } from '/src/react-ftm/utils/index.ts';
 
 const messages = defineMessages({
   no_results: {

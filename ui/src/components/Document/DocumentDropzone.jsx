@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
-import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
+import DocumentUploadDialog from '/src/dialogs/DocumentUploadDialog/DocumentUploadDialog.jsx';
 import c from 'classnames';
 
 import './DocumentDropzone.scss';

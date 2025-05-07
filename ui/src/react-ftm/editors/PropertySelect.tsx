@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/select';
 import { MenuItem, Button, Position, Alignment } from '@blueprintjs/core';
 import type { Property } from '@alephdata/followthemoney';
-import { highlightText, matchText } from 'react-ftm/utils';
+import { highlightText, matchText } from '/src/react-ftm/utils/index.ts';
 
 const messages = defineMessages({
   add: {

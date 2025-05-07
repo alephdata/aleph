@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
-import { collectionMappingsQuery } from 'queries';
-import getEntityLink from 'util/getEntityLink';
-import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
-import { DialogToggleButton } from 'components/Toolbar';
-import MappingIndex from 'components/MappingIndex/MappingIndex';
-import { selectCollection } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { collectionMappingsQuery } from '/src/queries.js';
+import getEntityLink from '/src/util/getEntityLink.js';
+import DocumentSelectDialog from '/src/dialogs/DocumentSelectDialog/DocumentSelectDialog.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import MappingIndex from '/src/components/MappingIndex/MappingIndex';
+import { selectCollection } from '/src/selectors.js';
 
 import './CollectionMappingsMode.scss';
 

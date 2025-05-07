@@ -17,8 +17,8 @@ import {
   TruncatedFormat,
 } from '@blueprintjs/table';
 import c from 'classnames';
-import { MappingLabel } from 'components/MappingEditor/MappingLabel';
-import SelectWrapper from 'components/common/SelectWrapper';
+import { MappingLabel } from '/src/components/MappingEditor/MappingLabel';
+import SelectWrapper from '/src/components/common/SelectWrapper';
 
 import './MappingPropertyAssign.scss';
 

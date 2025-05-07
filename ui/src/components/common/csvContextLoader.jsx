@@ -1,5 +1,5 @@
 import React from 'react';
-import fetchCsvData from 'util/fetchCsvData';
+import fetchCsvData from '/src/util/fetchCsvData.js';
 
 const csvContextLoader = (Viewer) =>
   class extends React.Component {

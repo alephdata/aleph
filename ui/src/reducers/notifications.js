@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryNotifications } from 'actions';
+import { queryNotifications } from '/src/actions/index.js';
 import { resultObjects } from './util';
 
 export default createReducer(

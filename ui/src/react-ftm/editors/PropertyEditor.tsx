@@ -9,7 +9,7 @@ import type {
   Values,
 } from '@alephdata/followthemoney';
 import { CountrySelect, TopicSelect, EntitySelect, TextEdit } from './';
-import { validate } from 'react-ftm/utils';
+import { validate } from '/src/react-ftm/utils/index.ts';
 
 const TAB_KEY = 9;
 

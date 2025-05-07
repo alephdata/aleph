@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Entity } from '@alephdata/followthemoney';
 import { Classes, Menu, Icon } from '@blueprintjs/core';
-import { Schema } from 'react-ftm/types';
+import { Schema } from '/src/react-ftm/types/index.tsx';
 import groupBy from 'lodash/groupBy';
 import c from 'classnames';
 import './EntityList.scss';

@@ -7,9 +7,12 @@ import {
 import { FormGroup, Intent, Button, Classes } from '@blueprintjs/core';
 import { Entity, type Schema, type Values } from '@alephdata/followthemoney';
 
-import { EdgeTypeSelect, EntitySelect } from 'react-ftm/editors';
-import { EdgeType } from 'react-ftm/types';
-import { Dialog, type EntityManager } from 'react-ftm/components/common';
+import { EdgeTypeSelect, EntitySelect } from '/src/react-ftm/editors/index.tsx';
+import { EdgeType } from '/src/react-ftm/types/index.tsx';
+import {
+  Dialog,
+  type EntityManager,
+} from '/src/react-ftm/components/common/index.ts';
 
 const messages = defineMessages({
   add_link: {

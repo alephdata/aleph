@@ -7,8 +7,11 @@ import type {
 } from '@alephdata/followthemoney';
 import c from 'classnames';
 
-import { PropertyEditor } from 'react-ftm/editors';
-import { type FTMEntityExtended as Entity, Property } from 'react-ftm/types';
+import { PropertyEditor } from '/src/react-ftm/editors/index.tsx';
+import {
+  type FTMEntityExtended as Entity,
+  Property,
+} from '/src/react-ftm/types/index.tsx';
 
 import './EditableProperty.scss';
 

@@ -10,8 +10,8 @@ import {
   type Schema as FTMSchema,
   Model,
 } from '@alephdata/followthemoney';
-import { Entity, Schema } from 'react-ftm/types';
-import { EntityCreateDialog } from 'react-ftm/components/common';
+import { Entity, Schema } from '/src/react-ftm/types/index.tsx';
+import { EntityCreateDialog } from '/src/react-ftm/components/common/index.ts';
 import {
   Alignment,
   Button,

@@ -4,9 +4,9 @@ import { IntlProvider } from 'react-intl';
 import { shouldPolyfill } from '@formatjs/intl-relativetimeformat/should-polyfill';
 import { Classes } from '@blueprintjs/core';
 
-import { selectLocale } from 'selectors';
-import { SectionLoading } from 'components/common';
-import translations from 'content/translations.json';
+import { selectLocale } from '/src/selectors';
+import { SectionLoading } from '/src/components/common/index.jsx';
+import translations from '/src/content/translations.json';
 
 class Translator extends React.Component {
   constructor(props) {

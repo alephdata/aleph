@@ -7,10 +7,10 @@ import {
   GraphConfig,
   GraphLayout,
   Viewport,
-} from 'react-ftm';
-import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { updateEntitySet } from 'actions';
-import { UpdateStatus } from 'components/common';
+} from '/src/react-ftm/index.ts';
+import entityEditorWrapper from '/src/components/Entity/entityEditorWrapper';
+import { updateEntitySet } from '/src/actions/index.js';
+import { UpdateStatus } from '/src/components/common/index.jsx';
 
 import './DiagramEditor.scss';
 

@@ -3,7 +3,7 @@ import {
   type Grouping,
   Point,
   type Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 export interface IPositioningProps {
   vertices: Array<Vertex>;

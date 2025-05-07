@@ -4,8 +4,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { deleteCollection } from 'actions';
+import withRouter from '/src/app/withRouter.jsx';
+import { deleteCollection } from '/src/actions/index.js';
 
 const messages = defineMessages({
   button_confirm: {

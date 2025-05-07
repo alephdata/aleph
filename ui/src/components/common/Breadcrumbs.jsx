@@ -8,7 +8,7 @@ import {
   EntitySet,
   Skeleton,
   Restricted,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
 import './Breadcrumbs.scss';
 

@@ -5,20 +5,24 @@ import _ from 'lodash';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { EdgeCreateDialog, TableEditor } from 'react-ftm';
+import { EdgeCreateDialog, TableEditor } from '/src/react-ftm/index.ts';
 
-import withRouter from 'app/withRouter';
-import entityEditorWrapper from 'components/Entity/entityEditorWrapper';
-import { Count, ErrorSection, QueryInfiniteLoad } from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar';
-import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
-import DocumentSelectDialog from 'dialogs/DocumentSelectDialog/DocumentSelectDialog';
-import EntityActionBar from 'components/Entity/EntityActionBar';
-import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
-import { showErrorToast, showSuccessToast } from 'app/toast';
-import getEntityLink from 'util/getEntityLink';
+import withRouter from '/src/app/withRouter.jsx';
+import entityEditorWrapper from '/src/components/Entity/entityEditorWrapper';
+import {
+  Count,
+  ErrorSection,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import EntitySetSelector from '/src/components/EntitySet/EntitySetSelector';
+import DocumentSelectDialog from '/src/dialogs/DocumentSelectDialog/DocumentSelectDialog.jsx';
+import EntityActionBar from '/src/components/Entity/EntityActionBar';
+import EntityDeleteButton from '/src/components/Toolbar/EntityDeleteButton';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult } from '/src/selectors.js';
+import { showErrorToast, showSuccessToast } from '/src/app/toast';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './EntityTable.scss';
 

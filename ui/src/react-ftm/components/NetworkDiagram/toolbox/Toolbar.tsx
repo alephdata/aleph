@@ -10,21 +10,21 @@ import {
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 import c from 'classnames';
 
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
 import {
   type IToolbarButtonGroup,
   ToolbarButtonGroup,
   SearchBox,
-} from 'react-ftm/components/NetworkDiagram/toolbox';
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
+} from '/src/react-ftm/components/NetworkDiagram/toolbox/index.ts';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
 import {
   Point,
   centerAround,
   positionSelection,
   type PositionType,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
-import { History } from 'react-ftm/components/NetworkDiagram/History';
+import { History } from '/src/react-ftm/components/NetworkDiagram/History.ts';
 
 import './Toolbar.scss';
 

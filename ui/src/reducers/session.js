@@ -1,8 +1,8 @@
 import { createReducer } from 'redux-act';
 import { v4 as uuidv4 } from 'uuid';
 
-import { fetchMetadata, loginWithToken, logout } from 'actions';
-import timestamp from 'util/timestamp';
+import { fetchMetadata, loginWithToken, logout } from '/src/actions/index.js';
+import timestamp from '/src/util/timestamp.js';
 
 const initialState = { loggedIn: false };
 

@@ -6,14 +6,19 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import SearchField from 'components/SearchField/SearchField';
-import { getGroupField } from 'components/SearchField/util';
-import { Country, Numeric, Schema, Statistics } from 'components/common';
-import { selectCollection, selectModel } from 'selectors';
-import { collectionSearchQuery } from 'queries';
-import getCollectionLink from 'util/getCollectionLink';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import withRouter from '/src/app/withRouter.jsx';
+import SearchField from '/src/components/SearchField/SearchField';
+import { getGroupField } from '/src/components/SearchField/util';
+import {
+  Country,
+  Numeric,
+  Schema,
+  Statistics,
+} from '/src/components/common/index.jsx';
+import { selectCollection, selectModel } from '/src/selectors.js';
+import { collectionSearchQuery } from '/src/queries.js';
+import getCollectionLink from '/src/util/getCollectionLink.js';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
 
 import './CollectionStatistics.scss';
 

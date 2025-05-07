@@ -5,16 +5,20 @@ import type {
   Property as FTMProperty,
   Schema as FTMSchema,
 } from '@alephdata/followthemoney';
-import { ColorPicker, PropertySelect, RadiusPicker } from 'react-ftm/editors';
+import {
+  ColorPicker,
+  PropertySelect,
+  RadiusPicker,
+} from '/src/react-ftm/editors/index.tsx';
 import {
   Entity,
   type FTMEntityExtended as FTMEntity,
   Schema,
-} from 'react-ftm/types';
-import { mapColor } from 'react-ftm/utils';
-import type { Vertex } from 'react-ftm/components/NetworkDiagram/layout';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { EditableProperty } from 'react-ftm/components/common';
+} from '/src/react-ftm/types/index.tsx';
+import { mapColor } from '/src/react-ftm/utils/index.ts';
+import type { Vertex } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { EditableProperty } from '/src/react-ftm/components/common/index.ts';
 import c from 'classnames';
 
 import './EntityViewer.scss';

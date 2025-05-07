@@ -6,7 +6,7 @@ import c from 'classnames';
 import type { Entity } from '@alephdata/followthemoney';
 import { useTimelineItemKeyboardNavigation } from '../util';
 import TimelineItemCaption from '../TimelineItemCaption';
-import { reduceTranslucentColor } from 'util/reduceTranslucentColor';
+import { reduceTranslucentColor } from '/src/util/reduceTranslucentColor.js';
 
 import './TimelineListItem.scss';
 

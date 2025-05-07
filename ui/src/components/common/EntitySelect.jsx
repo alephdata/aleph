@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { EntitySelect as VLEntitySelect } from 'react-ftm';
+import { EntitySelect as VLEntitySelect } from '/src/react-ftm/index.ts';
 
-import { selectEntitiesResult } from 'selectors';
+import { selectEntitiesResult } from '/src/selectors.js';
 
 class EntitySelect extends Component {
   render() {

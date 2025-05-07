@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
 import {
   type Edge,
   type Vertex,
   Point,
-} from 'react-ftm/components/NetworkDiagram/layout';
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import { EdgeLabelRenderer } from './EdgeLabelRenderer';
 import { Bezier } from 'bezier-js';
 

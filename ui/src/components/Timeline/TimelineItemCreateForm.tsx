@@ -27,7 +27,7 @@ import {
   reformatDateString,
   DATETIME_REGEX,
 } from './util';
-import { SchemaSelect, EntitySelect } from 'react-ftm';
+import { SchemaSelect, EntitySelect } from '/src/react-ftm/index.ts';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
 import './TimelineItemCreateForm.scss';

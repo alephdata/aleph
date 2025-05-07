@@ -4,12 +4,15 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { createCollection, updateCollectionPermissions } from 'actions';
-import { showWarningToast } from 'app/toast';
-import { Language } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
-import getCollectionLink from 'util/getCollectionLink';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  createCollection,
+  updateCollectionPermissions,
+} from '/src/actions/index.js';
+import { showWarningToast } from '/src/app/toast';
+import { Language } from '/src/components/common/index.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
+import getCollectionLink from '/src/util/getCollectionLink.js';
 
 const messages = defineMessages({
   label_placeholder: {

@@ -4,11 +4,11 @@ import c from 'classnames';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Role, Country, Language } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import { updateCollection } from 'actions';
-import { selectMetadata, selectAdmin } from 'selectors';
+import { Role, Country, Language } from '/src/components/common/index.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
+import { updateCollection } from '/src/actions/index.js';
+import { selectMetadata, selectAdmin } from '/src/selectors.js';
 
 const messages = defineMessages({
   placeholder_label: {
