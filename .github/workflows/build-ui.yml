@@ -33,6 +33,7 @@ jobs:
           context: ./ui
           target: builder
           push: false
+          load: true
           tags: ghcr.io/alephdata/aleph-ui:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
