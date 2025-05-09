@@ -125,3 +125,7 @@ e2e-local:
 	pytest -s -v --screenshot only-on-failure e2e/
 
 .PHONY: build services e2e
+
+documentation:
+	mkdocs build
+	aws --endpoint-url https://s3.investigativedata.org s3 sync ./site s3://openaleph.org/docs
