@@ -1,87 +1,141 @@
-# How to Contribute
+# How to Contribute to OpenAleph
 
-Welcome friend.
+Welcome to the OpenAleph contributing guide, and thank you for your interest — we really appreciate it! This guide will help you navigate toward your first contribution.
 
-If you are reading this document then we're assuming you are looking for ways that you can help contribute to the devlopment of Aleph. Thank you, we really appreciate it! This document has been created to serve as a guide to help you navigate your way to your first contribution. Please read on to learn more.
+OpenAleph is in active development and committed to being open, accessible, and transparent. We warmly welcome contributions from everyone, no matter if you are a seasoned developer or a beginner, and we’ll do our best to support you along the way.
 
-Aleph is an open source project, and is under active development. We are always striving to make this project as easy, open, and transparent as possible for external contributors but we've got a long way to go. This document seeks to outline the best way to get started with contributing to Aleph, and will hopefully answer some of the questions that you may have.
+---
+
+## Table of Contents
+
+- [How to Contribute to OpenAleph](#how-to-contribute-to-openaleph)
+- [Code of Conduct](#code-of-conduct)
+- [How to Get Support](#how-to-get-support)
+- [Working on Issues](#working-on-issues)
+  - [Find the Right Task](#find-the-right-task)
+  - [Forking and Branching](#forking-and-branching)
+  - [Pull Requests](#pull-requests)
+- [Development Practices](#development-practices)
+  - [Versioning](#versioning)
+  - [Branches](#branches)
+  - [Code Formatting and Linting](#code-formatting-and-linting)
+- [Bugs, Features, and Raising Issues](#bugs-features-and-raising-issues)
+  - [Known Issues](#known-issues)
+  - [Stale Issues](#stale-issues)
+  - [Reporting New Issues](#reporting-new-issues)
+  - [Security Issues](#security-issues)
+  - [Feature Requests](#feature-requests)
+
+---
 
 ## Code of Conduct
 
-The Aleph team have adopted the [contributor covenant](https://www.contributor-covenant.org/) as the basis for its code of conduct and we expect all contributors to adhere to it. Please take some time to read the [code of conduct](https://github.com/alephdata/aleph/blob/main/CODE_OF_CONDUCT.md) so that you can understand what is expected of you and what will happen if you do something which is not tolerated.
+The OpenAleph team has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as the basis for our Code of Conduct. We expect all contributors to review and adhere to these guidelines. Please take a moment to read the [Code of Conduct](CODE_OF_CONDUCT.md) so you know what is expected—and what steps are taken if any behavior falls outside these norms.
 
-## How to get support
+---
 
-If you're trying to install Aleph and need help, or if you are running Aleph and are experiencing problems then please:
+## How to Get Support
 
-1. [Read the Aleph Support Policy](https://github.com/alephdata/aleph/blob/main/SUPPORT.md) and understand under what
-   rules we provide support to others. If you feel you fall within that
-   group, please [get in touch](https://docs.aleph.occrp.org/get-in-touch).
+If you’re experiencing issues installing or running OpenAleph, please follow these steps:
 
-2. Make sure you've [read the documentation](https://docs.aleph.occrp.org),
-   especially the technical troubleshooting sections.
+1. **Review Documentation:**
+   Make sure to check out our [documentation](https://openaleph.org/docs) and especially the technical troubleshooting sections to clear up common issues.
 
-3. Only once you're **certain that the problem you are seeing is a bug**
-   (and not a local configuration issue), file a report on GitHub for it.
+2. **Confirm a Bug Exists:**
+   Please only file a report on GitHub after you’ve verified that the problem isn’t due to local configuration and truly appears to be a bug.
 
-## Working on issues
+3. **Join Our Community:**
+   Connect with other users, developers, and enthusiasts on our community platform [darc.social](https://darc.social) for real-time support, discussion, and sharing of ideas.
 
-### Find the right task
+---
 
-A great place to start when looking for something to work on is our [project board](https://github.com/orgs/alephdata/projects/10). For experienced Aleph developers feel free to check our the [workboard](https://github.com/orgs/alephdata/projects/10/views/1). If this is your first time working on Aleph then it's probably a good idea to pick [something easy to work on](https://github.com/orgs/alephdata/projects/10/views/10). You can also find these issues on our [contribute page](https://github.com/alephdata/aleph/contribute). Regardless, once you've selected an issue please take a moment to assign it to yourself, this will stop anyone else from working on your issue.
+## Working on Issues
 
-If, after reviewing the list (or selecting an issue to work on) you'd like to reach out and talk to us then [get in touch](https://docs.aleph.occrp.org/get-in-touch).
+### Find the Right Task
+
+A good way of starting is by looking at the [open project issues](https://github.com/dataresearchcenter/openaleph/issues). Once you’ve chosen an issue:
+
+- **Assign it to yourself:** This prevents duplicate efforts and signals to others that the issue is actively being handled.
+- **Reach Out if Needed:** If you need clarification or want to discuss the issue further, please [get in touch](https://darc.social).
 
 ### Forking and Branching
 
-All new development work needs to happen on a branch. If this is your first time, you'll not have the ability to create branches directly from Aleph so will need to fork the repo. Once you've done this create an issue branch and commit all you changes to this. Make sure you set up [commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) beforehand.
+- **Fork the Repository:** If you’re new to the project, you might not have direct branch creation privileges. Fork the repo to your account.
+- **Create a Dedicated Branch:** Once you have your fork, create an issue-specific branch to hold your work.
+- **Commit Signing:** We encourage you to set up [commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) to verify the authenticity of your changes.
 
 ### Pull Requests
 
-Like most teams we use pull requests to review code before accepting it into our codebase. Once you finished working on your issue you can create a pull request from your branch. We merge all work from issue branches into our 'develop' branch. This is then used for our staging server where we perform manual and automated smoke testing before finally committing changes to the 'main' branch in order to release a new version of Aleph.
+Pull requests (PRs) are how we review and merge code:
 
-## Development practices
+- **Submit Your PR from Your Branch:** Once your work on an issue or feature is complete, create a pull request targeting our `develop` branch.
+- **Review Process:** We will review your code changes and run the necessary tests to ensure that your code works well.
+- **Merge Scheduling:** After passing all tests and code reviews, your changes will eventually be merged into the `main` branch as part of our release process.
+
+---
+
+## Development Practices
 
 ### Versioning
 
-The Aleph team try to follow the concepts of semantic versioning. This means that we'll release patch versions for bugfixes, minor versions for new features and non breaking changes to existing functionality and major versions for large features and breaking changes.
+We align with the principles of semantic versioning:
 
-All significant changes are recorded in our [changelog file](https://github.com/alephdata/docs/blob/master/developers/changelog.md)
+- **Patch Versions:** For bug fixes.
+- **Minor Versions:** For new features and backward-compatible enhancements.
+- **Major Versions:** For large features or breaking changes.
+
+All major changes are documented in our [changelog file](./CHANGELOG.md).
 
 ### Branches
 
-Aleph uses two main branches. The **develop** branch is for any new work that needs to be merged into Aleph. If you have bugfixes, features, or any other changes you should open a pull request to the **develop** branch. As part of our release process we will merge all changes made to develop into the main branch just before a new release of the product. The main branch is designated as stable and should not be committed to directly.
+OpenAleph uses two main branches:
+
+- **`develop`:** This is the branch for all new work—features, bug fixes, and more.
+- **`main`:** Our stable branch. Only thoroughly tested work from `develop` is merged here during releases.
+- There may be other branches, for example for issues specific to a certain deployment.
 
 ### Code Formatting and Linting
 
-We use automatic code formatters and linters to keep our code consistent and to spot bugs and style issues early in the process. For Python code, we use  [black](https://black.readthedocs.io/en/stable/) and [ruff](https://beta.ruff.rs/). Our JavaScript code base uses [Prettier](https://prettier.io) and [ESLint](https://eslint.org/).
+To maintain a uniform codebase:
 
-When you open a pull request, your changes are automatically checked for consistency with our code formatting and linting rules. You can also run the checks in your local development environment. If you aren’t familiar with these tools yet, don’t worry. You can open a pull request even if your changes don’t pass these checks.
+- **Python:** We use [Black](https://black.readthedocs.io/en/stable/) and [Ruff](https://beta.ruff.rs/).
+- **JavaScript:** We rely on [Prettier](https://prettier.io) and [ESLint](https://eslint.org/).
 
-### Bugs, Features, and Raising Issues
+Your pull requests will automatically be checked for code formatting and linting. You’re encouraged to run these checks locally before submitting your PR, but don’t worry if your initial changes need some tweaks.
 
-Not everyone that is involved in the community is a hardened developer. If you want to contribute by providing feedback on Aleph, whether highlighting bugs or other issues, raising questions, or providing insights on potential new features then we'd really appreciate your help.
+---
 
-We use github issues for all our public facing work. We try to keep a close eye on this, to respond to questions, and to make it clear when we pick up and start working on the issues that we raise.
+## Bugs, Features, and Raising Issues
 
-#### Known issues
+We value contributions beyond code changes too. Here are a few guidelines:
 
-Before you raise a new issue, please take a few minutes to review the existing issues and to check that someone else hasn't already created something. If they have, please feel free to comment on that issue, add your own thoughts and experiences, and highlight the importance of the issue for us.
+### Known Issues
 
-#### Stale issues
+- **Review Before Reporting:**
+  Please check existing issues to ensure that the problem hasn’t been reported already. If it has, add your comments, thoughts, or upvotes to support it.
 
-We're a small team, and as such we only have a limited amount of time to deal with and address issues. The unfortunate fact of the matter is that we probably aren't going to implement every feature and fix every bug. With this in mind we'll periodically review our open issues and close out any that we believe we aren't going to be able to get to. If you feel strongly that we've made a mistake in closing out one of these issue feel free re-open it along with a comment explaining why you feel the issue should be addressed.
+### Stale Issues
 
-#### Reporting new issues
+- **Periodic Review:**
+  Given our limited resources, we sometimes close issues that aren’t actively pursued. If you believe a closed issue still merits discussion, don’t hesitate to re-open it with an explanation.
 
-If you've looked around but are unable to find an issue that fits the experience that you are having please raise an issue for us. When creating a issue, especially a bug report, take the time to provide as much detail as possible. Ideally if you can provide a list of steps that will help us to reproduce the issue you are seeing.
+### Reporting New Issues
 
-When creating a bug report please add the 'bug' label so that we know to treat it as such.
+- **Detailed Bug Reports:**
+  When reporting bugs, include a list of clear, reproducible steps. Add the 'bug' label so that we can prioritize appropriately.
 
-#### Security issues
+### Security Issues
 
-If you believe that the issue you have found has security implications then please add a security label so that we can properly review the issue and deal with it accordingly. For more information on security issues [check our security docs](https://github.com/alephdata/aleph/blob/main/SECURITY.md)
+- **Sensitive Information:**
+  If you discover a security vulnerability, include a security label. Refer to our [Security Documentation](SECURITY.md) for further guidance.
 
-#### Feature requests
+### Feature Requests
 
-If you have an idea for a feature, or change in functionality that you'd like to see in Aleph then please create an issue with the 'feature-request' label along with a description and why you think it would be valuable to Aleph
+- **New Ideas Are Welcome:**
+  Got an idea to enhance OpenAleph? Open an issue with the 'feature-request' label, describing in detail how the feature would benefit the project.
+
+---
+
+Thank you for considering a contribution to OpenAleph! Whether you’re fixing a bug, proposing a new feature, or simply offering feedback, your involvement makes a real difference. We’re excited to work together to improve the project for everyone.
+
+Happy coding!

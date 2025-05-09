@@ -79,6 +79,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# mkdocs
+site
+
 # PyBuilder
 target/
 
@@ -108,3 +111,6 @@ ENV/
 !/docs/**/*
 
 test-results/
+
+
+.DS_Store

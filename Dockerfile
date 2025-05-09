@@ -5,9 +5,11 @@ LABEL org.opencontainers.image.source = "https://github.com/dataresearchcenter/o
 # build-essential
 RUN apt-get -qq -y update \
     && apt-get -qq --no-install-recommends -y install locales \
+    build-essential \
     ca-certificates postgresql-client libpq-dev curl jq unzip git \
-    python3-pip python3-icu python3-psycopg2 \
+    python3-pip python3-psycopg2 \
     python3-lxml python3-cryptography \
+    pkg-config libicu-dev \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
@@ -27,9 +29,11 @@ RUN python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequenc
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six lxml lxml_html_clean
+RUN pip3 install --no-cache-dir -q -U git+https://github.com/dataresearchcenter/servicelayer.git
+RUN pip3 install --no-binary=:pyicu: pyicu
 
 COPY requirements.txt /tmp/
-RUN pip3 install --no-cache-dir -q -r /tmp/requirements.txt
+RUN pip3 install --no-deps --no-cache-dir -q -r /tmp/requirements.txt
 
 # Install aleph
 COPY . /aleph

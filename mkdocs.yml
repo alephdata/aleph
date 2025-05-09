@@ -1,0 +1,73 @@
+site_name: OpenAleph
+site_url: https://docs.openaleph.org
+repo_url: https://github.com/openaleph/aleph
+nav:
+  - index.md
+theme:
+  name: material
+  logo: https://openaleph.org/assets/Logo/RGB/Open-Aleph-Logo-RGB-Square-Neg.svg
+  favicon: https://dataresearchcenter.org/favicon.ico
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    # - navigation.footer
+    - toc.follow
+    - content.code.copy
+  custom_dir: docs/overrides
+extra_css:
+  - stylesheets/extra.css
+extra:
+  social:
+    - icon: material/mail
+      link: mailto:hi@dataresearchcenter.org
+    - icon: material/web
+      link: https://openaleph.org
+    - icon: material/github
+      link: https://github.com/openaleph/aleph
+    - icon: material/linkedin
+      link: https://www.linkedin.com/company/dataresearchcenter/
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - admonition
+  - pymdownx.tasklist:
+      custom_checkbox: true
+plugins:
+  - search
+  # - mkdocstrings:
+  #     default_handler: python
+  #     handlers:
+  #       python:
+  #         options:
+  #           docstring_style: google
+  #           show_root_heading: false
+  #           show_object_full_path: false
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - Getting Started:
+          - In This Section: user-guide/101/index.md
+          - Key Terms: user-guide/101/key-terms.md
+          - Navigate the Homepage: user-guide/101/homepage.md
+          - Basic Search: user-guide/101/basic-search.md
+      - Searching and Filtering:
+          - In This Section: user-guide/102/index.md
+          - Advanced Search: user-guide/102/advanced-search.md
+          - Dataset Overview: user-guide/102/dataset-overview.md
+          - Navigating Within Datasets: user-guide/102/dataset-search.md
+      - Investigations and Collaboration:
+          - In This Section: user-guide/103/index.md
+          - Creating Investigations: user-guide/103/investigations.md
+          - Map Data: user-guide/103/map-data.md
+          - Network Diagrams: user-guide/103/network-diagrams.md
+          - Manage Access: user-guide/103/manage-access.md
+          - Cross-Referencing: user-guide/103/cross-reference.md
+  - Power User Blogpost Series: https://openaleph.org/blog/
