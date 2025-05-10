@@ -78,12 +78,15 @@ export function ImageAttribution(props: { attribution: IImageAttribution }) {
 }
 
 export default function EntityImage(props: IComponent) {
-  // currently, only qid is supported
+  const [image, setImage] = useState<IImageMeta | null>(null);
   const id = props.entity.getFirst('wikidataId');
-  const [image, setImage] = useState<IImageMeta>();
 
   useEffect(() => {
-    id && getImage(props.api, id.toString()).then(setImage);
+    // currently, only qid is supported
+    id &&
+      getImage(props.api, id.toString())
+        .then(setImage)
+        .catch(() => setImage(null));
   }, [id, props.api]);
 
   return image ? (
