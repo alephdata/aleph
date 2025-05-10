@@ -12,6 +12,7 @@ import EntityHeading from 'components/Entity/EntityHeading';
 import EntityProperties from 'components/Entity/EntityProperties';
 import EntityViews from 'components/Entity/EntityViews';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
+import EntityMap from 'components/Entity/EntityMap';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
@@ -146,6 +147,10 @@ class EntityScreen extends Component {
       </Breadcrumbs>
     );
 
+    const addressEntity = entity.schema.isA('Address')
+      ? entity
+      : entity.getFirst('addressEntity');
+
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
@@ -162,6 +167,11 @@ class EntityScreen extends Component {
                 {entity.profileId && (
                   <div className="ItemOverview__callout">
                     <ProfileCallout entity={entity} />
+                  </div>
+                )}
+                {addressEntity && (
+                  <div className="ItemOverview__geomap">
+                    <EntityMap entity={addressEntity} marker />
                   </div>
                 )}
                 <div className="ItemOverview__content">
