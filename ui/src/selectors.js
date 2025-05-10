@@ -501,3 +501,11 @@ export function selectLocalBookmarks(state) {
 export function selectConfigValue(state, name) {
   return state?.config?.[name];
 }
+
+export function selectServiceUrls(state) {
+  return selectMetadata(state)?.service_urls;
+}
+
+export function selectServiceUrl(state, key) {
+  return selectServiceUrls(state)?.[key];
+}
