@@ -1,6 +1,7 @@
 import logging
 from banal import ensure_list
 from flask_babel import gettext
+from followthemoney import model
 from werkzeug.exceptions import BadRequest
 
 from aleph.index.indexes import entities_read_index
@@ -106,6 +107,49 @@ class MatchQuery(EntitiesQuery):
             exclude = {"ids": {"values": self.exclude}}
             query["bool"]["must_not"].append(exclude)
         return query
+
+
+class GeoDistanceQuery(EntitiesQuery):
+    """Given an Address entity, find the nearby Address entities via the
+    geo_point field"""
+
+    def __init__(self, parser, entity=None, exclude=None, collection_ids=None):
+        self.entity = entity
+        self.exclude = ensure_list(exclude)
+        self.collection_ids = collection_ids
+        super(EntitiesQuery, self).__init__(parser)
+
+    def get_index(self):
+        # This query can only work on Address entities and its index with the
+        # geo_point field
+        return entities_read_index(schema=model.get("Address"))
+
+    def get_query(self):
+        query = super(GeoDistanceQuery, self).get_query()
+        # Don't include lookup entity in result
+        # if self.entity:
+        #     query["bool"]["must_not"].extend({"ids": {"values": [self.entity.id]}})
+        if len(self.exclude):
+            exclude = {"ids": {"values": self.exclude}}
+            query["bool"]["must_not"].append(exclude)
+        return query
+
+    def get_sort(self):
+        """Always sort by calculated distance"""
+        return [
+            {
+                "_geo_distance": {
+                    "geo_point": {
+                        "lat": self.entity.first("latitude"),
+                        "lon": self.entity.first("longitude"),
+                    },
+                    "order": "asc",
+                    "unit": "km",
+                    "mode": "min",
+                    "distance_type": "plane",  # faster
+                }
+            }
+        ]
 
 
 class XrefQuery(Query):
