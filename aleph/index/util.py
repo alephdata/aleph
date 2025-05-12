@@ -32,6 +32,7 @@ LATIN_TEXT = {
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 NUMERIC = {"type": "double"}
+GEOPOINT = {"type": "geo_point"}
 
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
@@ -91,6 +92,8 @@ def unpack_result(res):
         data["highlight"] = []
         for key, value in res.get("highlight", {}).items():
             data["highlight"].extend(value)
+
+    data["_sort"] = ensure_list(res.get("sort"))
     return data
 
 
