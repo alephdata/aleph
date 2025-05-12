@@ -8,6 +8,7 @@ import {
   fetchEntityTags,
   queryEntities,
   querySimilar,
+  queryNearby,
   queryEntityExpand,
 } from 'actions';
 import {
@@ -15,10 +16,12 @@ import {
   selectEntityTags,
   selectEntitiesResult,
   selectSimilarResult,
+  selectNearbyResult,
   selectEntityExpandResult,
 } from 'selectors';
 import {
   entitySimilarQuery,
+  entityNearbyQuery,
   folderDocumentsQuery,
   entityReferencesQuery,
 } from 'queries';
@@ -53,6 +56,12 @@ class EntityContextLoader extends PureComponent {
       this.props.querySimilar({ query: similarQuery });
     }
 
+    const { nearbyQuery, nearbyResult } = this.props;
+    const showNearby = entity?.schema?.isA('Address') && !isPreview;
+    if (showNearby && nearbyResult.shouldLoad) {
+      this.props.queryNearby({ query: nearbyQuery });
+    }
+
     const { childrenResult, childrenQuery } = this.props;
     if (entity?.schema?.isA('Folder') && childrenResult.shouldLoad) {
       this.props.queryEntities({ query: childrenQuery });
@@ -67,6 +76,7 @@ class EntityContextLoader extends PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
   const similarQuery = entitySimilarQuery(location, entityId);
+  const nearbyQuery = entityNearbyQuery(location, entityId);
   const childrenQuery = folderDocumentsQuery(location, entityId, undefined);
   const expandQuery = entityReferencesQuery(entityId);
   return {
@@ -74,6 +84,8 @@ const mapStateToProps = (state, ownProps) => {
     tagsResult: selectEntityTags(state, entityId),
     similarQuery,
     similarResult: selectSimilarResult(state, similarQuery),
+    nearbyQuery,
+    nearbyResult: selectNearbyResult(state, nearbyQuery),
     expandQuery,
     expandResult: selectEntityExpandResult(state, expandQuery),
     childrenQuery,
@@ -84,6 +96,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   queryEntities,
   querySimilar,
+  queryNearby,
   queryEntityExpand,
   fetchEntity,
   fetchEntityTags,

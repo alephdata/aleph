@@ -227,7 +227,6 @@ export function selectEntity(state, entityId) {
     }
     entity.selectorCache = model.getEntity(entity);
   }
-
   const result = entity.selectorCache;
   result.safeHtml = entity.safeHtml;
   result.collection = entity.collection;
@@ -453,6 +452,14 @@ export function selectSimilarResult(state, query) {
   const result = selectResult(state, query, undefined);
   result.results.forEach((obj) => {
     obj.entity = selectEntity(state, obj.entityId);
+  });
+  return result;
+}
+
+export function selectNearbyResult(state, query) {
+  const result = selectResult(state, query, undefined);
+  result.results.forEach((obj) => {
+    obj.entity = selectEntity(state, obj.id);
   });
   return result;
 }
