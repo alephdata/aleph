@@ -55,7 +55,7 @@ services:
   app:
     build:
       context: .
-    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     hostname: aleph
     command: /bin/bash
     links:
@@ -83,7 +83,7 @@ services:
   api:
     build:
       context: .
-    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
@@ -117,7 +117,7 @@ services:
   ui:
     build:
       context: ui
-    image: ghcr.io/dataresearchcenter/aleph-ui:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/aleph-ui:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     links:
       - api
     command: npm run start
