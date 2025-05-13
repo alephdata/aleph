@@ -38,9 +38,9 @@ class Settings:
         self.APP_TITLE = env.get("ALEPH_APP_TITLE", lazy_gettext("Aleph"))
         self.APP_NAME = env.get("ALEPH_APP_NAME", "aleph")
         self.APP_UI_URL = env.get("ALEPH_UI_URL", "http://localhost:8080/")
-        self.APP_LOGO = env.get("ALEPH_LOGO", "/static/logo.png")
+        self.APP_LOGO = env.get("ALEPH_LOGO", "/static/logo.svg")
         self.APP_LOGO_AR = env.get("ALEPH_LOGO_AR", self.APP_LOGO)
-        self.APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.png")
+        self.APP_FAVICON = env.get("ALEPH_FAVICON", "/static/favicon.ico")
 
         # Show a system-wide banner in the user interface.
         self.APP_BANNER = env.get("ALEPH_APP_BANNER")

@@ -11,7 +11,7 @@ ui/node_modules
 ui/build
 ui/i18n/messages.json
 ui/i18n/messages.pot
-ui/**/*.css
+
 
 services/elasticsearch/secrets
 

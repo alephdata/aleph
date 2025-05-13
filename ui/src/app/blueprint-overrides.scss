@@ -245,6 +245,8 @@ table {
 
 // Add RTL support for dialogs
 .#{$bp-ns}-dialog {
+    background: $white;
+
   .#{$bp-ns}-dialog-header {
     // See https://github.com/palantir/blueprint/blob/develop/packages/core/src/components/dialog/_dialog.scss
     @include rtlSupportInvertedProp(
