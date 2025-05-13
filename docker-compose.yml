@@ -36,7 +36,7 @@ services:
       - aleph.env
 
   worker:
-    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     command: aleph worker
     restart: on-failure
     depends_on:
@@ -52,7 +52,7 @@ services:
       - aleph.env
 
   shell:
-    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     command: /bin/bash
     depends_on:
       - postgres
@@ -70,7 +70,7 @@ services:
       - aleph.env
 
   api:
-    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/openaleph:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     expose:
       - 8000
     depends_on:
@@ -87,7 +87,7 @@ services:
       - aleph.env
 
   ui:
-    image: ghcr.io/dataresearchcenter/aleph-ui:${ALEPH_TAG:-ALEPH_TAG:-3.18.0}
+    image: ghcr.io/dataresearchcenter/aleph-ui:${ALEPH_TAG:-ALEPH_TAG:-3.18.1}
     depends_on:
       - api
     ports:
