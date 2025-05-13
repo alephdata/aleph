@@ -3,7 +3,7 @@
 .SchemaCounts {
   border-radius: $pt-border-radius;
   border: 1px solid $aleph-border-color;
-  background: white;
+  background: $white;
 
   &.#{$bp-ns}-menu {
     padding: 0;

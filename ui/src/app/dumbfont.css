@@ -1,0 +1,8 @@
+:root {
+    --font-family-sans: 'TestFont';
+}
+
+@font-face {
+    font-family: 'TestFont';
+    src: url('https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2') format('woff2');
+}

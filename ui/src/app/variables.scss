@@ -1,3 +1,73 @@
+// @import 'https://cdn.investigativedata.org/style/fonts.min.css';
+@import 'app/fonts.min.css';
+// @import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
+// @import 'https://rsms.me/inter/inter.css';
+
+$pt-font-family: var(--font-family-sans);
+
+// darc-black and darc-white
+$black: #1a1a1a;
+$white: #fff8f1;
+
+// darc greens
+$darc-green-light: #F1FFF8;
+$darc-green2: #DAFFEC;
+$darc-green3: #BEFFDF;
+$darc-green4: #9DFFD0;
+$darc-green5: #83FFC3;
+$darc-green6: #69FEB5;
+$darc-green7: #63EEAA;
+$darc-green8: #58D99A;
+$darc-green9: #51C68C;
+$darc-green-dark: #43A473;
+
+// darc oranges
+$darc-orange-light: #FAEAE8;
+$darc-orange1: #FECEC0;
+$darc-orange2: #FEAE98;
+$darc-orange3: #FE8F6F;
+$darc-orange4: #FE764F;
+$darc-orange5: #FF5F33;
+$darc-orange6: #F4592F;
+$darc-orange7: #E6522A;
+$darc-orange8: #D74C26;
+$darc-orange-dark: #BD401F;
+
+// darc purples
+$darc-purple-light: #EDE7F6;
+$darc-purple1: #D1C4E9;
+$darc-purple2: #B39DDB;
+$darc-purple3: #9575CD;
+$darc-purple4: #7E57C2;
+$darc-purple5: #673AB7;
+$darc-purple6: #5E35B1;
+$darc-purple7: #512DA8;
+$darc-purple8: #4527A0;
+$darc-purple-dark: #311B92;
+
+// darc yellows
+$darc-yellow-light: #FFFEE8;
+$darc-yellow1: #FFFAC5;
+$darc-yellow2: #FFF69E;
+$darc-yellow3: #FEF177;
+$darc-yellow4: #FCEC57;
+$darc-yellow5: #F9E737;
+$darc-yellow6: #FFDD3B;
+$darc-yellow7: #FFC533;
+$darc-yellow8: #FDAD2B;
+$darc-yellow-dark: #F9841C;
+
+$pt-text-color: $black;
+$pt-intent-primary: #ff5f33;
+$pt-app-background-color: $white;
+
+$pt-border-radius: 0;
+$pt-border-shadow-opacity: 0;
+$pt-drop-shadow-opacity: 0;
+$pt-dark-border-shadow-opacity: 0;
+$pt-dark-drop-shadow-opacity: 0;
+$pt-input-box-shadow: 0;
+
 @import '~@blueprintjs/core/lib/scss/variables';
 @import '~@blueprintjs/icons/lib/scss/variables';
 
@@ -16,17 +86,18 @@ $aleph-screen-lg-max-width: 1200px;
 $aleph-navbar-mobile-max-width: $aleph-screen-sm-max-width + $aleph-grid-size *
   12;
 
+// https://blueprintjs.com/docs/#core/colors
 $aleph-breadcrumbs-background: $light-gray4;
-$aleph-page-background: white;
+$aleph-page-background: $white;
 $aleph-link-color: $pt-link-color;
 // $aleph-sidebar-background: $dark-gray5;
 $aleph-sidebar-background: $pt-link-color;
-$aleph-sidebar-foreground: white;
+$aleph-sidebar-foreground: $white;
 $aleph-facet-background: $light-gray4;
 $aleph-query-tag-height: 36px;
-$aleph-table-heading-background: white;
+$aleph-table-heading-background: $white;
 $aleph-table-border-color: $light-gray2;
-$aleph-content-background: white;
+$aleph-content-background: $white;
 $aleph-border-color: $light-gray2;
 
 $aleph-greyed-text: $pt-text-color-muted;
@@ -56,3 +127,8 @@ $warning-text-color: #8a6d3b;
 $button-color-hover: #137cbd;
 $views-menu-background-color: rgba(92, 112, 128, 0.5);
 $aleph-error-highlight-color: rgb(212, 19, 13);
+
+// adjust INTER font
+* {
+  letter-spacing: -0.02rem;
+}

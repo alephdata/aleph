@@ -104,7 +104,7 @@
     }
 
     &__button.#{$bp-ns}-button.#{$bp-ns}-outlined {
-      background: white;
+      background: $white;
       border-radius: 15px;
       position: relative;
       top: 50%;
