@@ -16,6 +16,10 @@ If you are an **experienced OpenAleph user** and you want to use it for advanced
 
 [How to get the most out of OpenAleph as a power user (Blogpost series)](https://openaleph.org/blog/)
 
+In addition to that, we have a section on how to interact with OpenAleph from the command line or inside a Python script.
+
+[Learn everything about the `openaleph` Python library here.](user-guide/104/index.md)
+
 ## Deploy & Contribute
 
 ### Deploying OpenAleph
