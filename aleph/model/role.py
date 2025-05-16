@@ -52,7 +52,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
     type = db.Column(db.Enum(*TYPES, name="role_type"), nullable=False)
-    api_key = db.Column(db.Unicode, nullable=True)
     api_key_digest = db.Column(db.Unicode, nullable=True)
     api_key_expires_at = db.Column(db.DateTime, nullable=True)
     api_key_expiration_notification_sent = db.Column(db.Integer, nullable=True)
