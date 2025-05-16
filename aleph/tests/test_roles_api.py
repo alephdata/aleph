@@ -267,7 +267,7 @@ class RolesApiTestCase(TestCase):
 
     def test_generate_api_key(self):
         role, headers = self.login()
-        assert role.api_key is None
+        assert role.api_key_digest is None
 
         # Generate initial API key for new user
         url = f"/api/2/roles/{role.id}/generate_api_key"
@@ -313,4 +313,4 @@ class RolesApiTestCase(TestCase):
 
         role = Role.by_email(email)
         assert role is not None
-        assert role.api_key is None
+        assert role.api_key_digest is None

@@ -14,7 +14,6 @@ class ViewContextTest(TestCase):
             foreign_id="other",
             email="jane.doe@example.org",
         )
-        assert self.other_role.api_key is None
 
         db.session.add(self.role)
         db.session.add(self.other_role)
