@@ -1,8 +1,8 @@
 # Advanced Search
 
-OpenAleph's advanced search capabilities allow you to perform more precise and complex queries. This guide covers various advanced search techniques, including exact phrase searches, spelling variations, proximity searches, logical operators, and property-based filtering.
+OpenAleph’s advanced search capabilities let you perform more precise and complex queries. This guide covers various advanced search techniques, including exact phrase searches, spelling variations, proximity searches, logical operators, and property-based filtering.
 
-Most of the options below can accessed and configured through the advanced search menu, which is accessible through the grey slider icon next to the main search bar. Property searches cannot be configured through the user interface currently.
+Most of the options below can be accessed and configured through the advanced search menu, available via the grey slider icon next to the main search bar. Note that property searches cannot currently be configured through the user interface.
 
 ![Screenshot of the OpenAleph advanced search](../../assets/images/advanced_search.png)
 
@@ -28,7 +28,7 @@ This returns results that include "Putin" and terms with up to two character dif
 
 ## Proximity Search
 
-To find terms within a certain number of words from each other, use the tilde `~` operator with a number:
+To find terms that appear within a certain number of words from each other, use the tilde `~` operator followed by a number:
 
 ```
 "Trump Putin"~10
@@ -133,7 +133,7 @@ To filter entities by schema:
 
 ### Dataset Filtering
 
-To filter results from a specific dataset or investigation, use the `collection_id`:
+To filter results from a specific dataset or investigation, use the `collection_id` filter:
 
 ```
 collection_id:123
@@ -143,4 +143,4 @@ Replace `123` with the actual dataset or investigation ID. You can find it in th
 
 ---
 
-By mastering these advanced search techniques, you can efficiently navigate and extract relevant information from OpenAleph's extensive datasets.
+By mastering these advanced search techniques, you’ll be able to navigate OpenAleph’s extensive datasets more efficiently and extract the information you need.
