@@ -7,10 +7,10 @@ If you're new to OpenAleph, this is the best place to start. You'll learn how to
 ## In this section
 
 - [Key Terms](key-terms.md)
-  Understand the core concepts and entities used in OpenAleph, including collections, datasets, and entities.
+  Understand the core concepts used in OpenAleph, including collections, datasets, and entities.
 
 - [Navigate the Homepage](homepage.md)
-  Learn what you're looking at when you first log in—how to move around, where to find your data, and how to access features.
+  Learn what you're looking at when you first log in, how to move around, where to find your data, and how to access features.
 
 - [Search](basic-search.md)
   Run your first search and get familiar with how results are displayed and filtered.
