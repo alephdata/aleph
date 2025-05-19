@@ -4,7 +4,9 @@ OpenAleph’s advanced search capabilities let you perform more precise and comp
 
 Most of the options below can be accessed and configured through the advanced search menu, available via the grey slider icon next to the main search bar. Note that property searches cannot currently be configured through the user interface.
 
-![Screenshot of the OpenAleph advanced search](../../assets/images/advanced_search.png)
+<div align="center">
+  <img src="../../assets/images/advanced_search.png" alt="Screenshot of the OpenAleph advanced search" width="600"/>
+</div>
 
 ## Exact Phrase Search
 
