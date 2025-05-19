@@ -23,7 +23,7 @@ To share a workspace with others:
 
 5. Assign a role:
 	- **View**: Can see content, but cannot make changes.
-	- **Edit**: Can upload documents, edit metadata, and contribute to the investigatio and add other users.
+	- **Edit**: Can upload documents, edit metadata, contribute to the investigation and add other users.
 
 6. Click **Save changes**.
 
