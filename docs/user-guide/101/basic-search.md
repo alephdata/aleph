@@ -13,7 +13,14 @@ At the top of every page is the global search bar. To perform a basic search, ty
 
 This will show you matching entities, such as Documents, Persons, Companies, or other relevant types.
 
-## 2. Understanding the Results
+## 2. Setting Alerts
+Click the `alerts icon` to the right of the search bar to receive email notifications whenever new data added mentions this search.
+
+<div align="center">
+  <img src="../../assets/images/alerts.png" alt="The OpenAleph search bar with alerts" width="600"/>
+</div>
+
+## 3. Understanding the Results
 
 The search results page is split into several sections:
 
@@ -33,7 +40,7 @@ On the left, you’ll find filters you can apply to narrow your results by datas
 
 In the main area, results are grouped by relevance. Each item shows a title, snippet of matched content, and metadata.
 
-## 3. Previewing a Result
+## 4. Previewing a Result
 
 <div align="center">
   <img src="../../assets/images/result_preview.png" alt="The OpenAleph search result preview" width="800"/>
@@ -49,4 +56,4 @@ You can expand the entity by clicking the `Expand` button on top of the preview 
 
 ---
 
-Once you're comfortable with basic searches, you'll want to learn how to refine results with filters and create alerts. Head to the [advanced searches and dataset navigation section](../102/index.md) to keep going.
+Once you’re comfortable with basic searches, the next step is to refine your results using filters and explore more advanced search techniques. Head to the [advanced searches and dataset navigation section](../102/index.md) to continue.
