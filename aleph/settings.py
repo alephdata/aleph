@@ -193,6 +193,8 @@ class Settings:
         )
         self.ELASTICSEARCH_TLS_CLIENT_CERT = env.get("ELASTICSEARCH_TLS_CLIENT_CERT")
         self.ELASTICSEARCH_TLS_CLIENT_KEY = env.get("ELASTICSEARCH_TLS_CLIENT_KEY")
+        self.ELASTICSEARCH_API_ID = env.get("ELASTICSEARCH_API_ID", None)
+        self.ELASTICSEARCH_API_KEY = env.get("ELASTICSEARCH_API_KEY", None)
         self.ELASTICSEARCH_TIMEOUT = env.to_int("ELASTICSEARCH_TIMEOUT", 60)
         self.XREF_SCROLL = env.get("ALEPH_XREF_SCROLL", "5m")
         self.XREF_SCROLL_SIZE = env.get("ALEPH_XREF_SCROLL_SIZE", "1000")
