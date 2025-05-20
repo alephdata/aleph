@@ -11,6 +11,7 @@ import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityProperties from 'components/Entity/EntityProperties';
 import EntityViews from 'components/Entity/EntityViews';
+import EntityImage from 'components/Entity/EntityImage';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
@@ -26,7 +27,7 @@ import {
 import { DialogToggleButton } from 'components/Toolbar';
 import { DownloadButton } from 'components/Toolbar';
 import { deleteEntity } from 'actions';
-import { selectEntity, selectEntityView } from 'selectors';
+import { selectEntity, selectEntityView, selectServiceUrl } from 'selectors';
 import getProfileLink from 'util/getProfileLink';
 import { setRecentlyViewedItem } from 'app/storage';
 import withRouter from 'app/withRouter';
@@ -84,7 +85,7 @@ class EntityScreen extends Component {
   }
 
   render() {
-    const { entity, entityId, intl, parsedHash } = this.props;
+    const { entity, entityId, intl, parsedHash, ftmAssetsApi } = this.props;
     if (entity.profileId && parsedHash.profile === undefined) {
       parsedHash.via = entity.id;
       return (
@@ -164,6 +165,11 @@ class EntityScreen extends Component {
                     <ProfileCallout entity={entity} />
                   </div>
                 )}
+                {ftmAssetsApi && (
+                  <div className="ItemOverview__image">
+                    <EntityImage api={ftmAssetsApi} entity={entity} />
+                  </div>
+                )}
                 <div className="ItemOverview__content">
                   <EntityProperties entity={entity} isPreview={false} />
                 </div>
@@ -189,7 +195,8 @@ const mapStateToProps = (state, ownProps) => {
   const entity = selectEntity(state, entityId);
   const parsedHash = queryString.parse(location.hash);
   parsedHash.mode = selectEntityView(state, entityId, parsedHash.mode, false);
-  return { entity, entityId, parsedHash };
+  const ftmAssetsApi = selectServiceUrl(state, 'ftm_assets');
+  return { entity, entityId, parsedHash, ftmAssetsApi };
 };
 
 export default compose(

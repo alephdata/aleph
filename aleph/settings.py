@@ -229,6 +229,10 @@ class Settings:
         self.PROMETHEUS_PORT = env.to_int("PROMETHEUS_PORT", 9100)
 
         ###############################################################################
+        # External services
+        self.FTM_ASSETS_URL = env.get("FTM_ASSETS_URL")
+
+        ###############################################################################
         # Additional configuration
         string_prefix = env.get("ALEPH_STRING_CONFIG_PREFIX")
         json_prefix = env.get("ALEPH_JSON_CONFIG_PREFIX")
