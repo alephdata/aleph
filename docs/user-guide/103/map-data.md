@@ -2,6 +2,13 @@
 
 Mapping is the process of transforming rows of tabular data, such as CSV or Excel files, into structured entities within OpenAleph. This allows you to work with the data using the full power of OpenAleph’s search, visualization, and linking tools.
 
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe src="https://www.youtube-nocookie.com/embed/d_vXhDr40PQ?si=fE13GZuneovKeTOb" frameborder="0" allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+
 ## What is Data Mapping?
 
 When you upload a spreadsheet or other structured file into a workspace, OpenAleph can interpret each row as an entity. You define how the columns in your file correspond to entity properties like name, address, jurisdiction, or identifier.

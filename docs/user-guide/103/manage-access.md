@@ -2,6 +2,14 @@
 
 Investigation workspaces in OpenAleph are private by default, but you can choose to share them with trusted collaborators. Managing access allows you to control who can view or contribute to a workspace without compromising sensitive information.
 
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe src="https://www.youtube-nocookie.com/embed/T6V3jHxD6Ig?si=QnZ4HTv-rMspGgv9" frameborder="0" allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+
+
 ## Default Privacy
 
 When you create a new workspace, it is only visible to you. No one else can see or interact with its contents unless you explicitly invite them.
