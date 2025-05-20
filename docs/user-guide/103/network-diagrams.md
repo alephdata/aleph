@@ -11,6 +11,12 @@ They are generated directly from structured data within an investigation workspa
   <img src="../../assets/images/dia.png" alt="Screenshot of a network diagram" width="600"/>
 </div>
 
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe src="https://www.youtube-nocookie.com/embed/95fkoGkTO-E?si=00cPWeAcIBrYogVI" frameborder="0" allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  </div>
+</div>
 
 
 ## Creating a Diagram
