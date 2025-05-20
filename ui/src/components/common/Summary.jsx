@@ -6,20 +6,21 @@ import c from 'classnames';
 import './Summary.scss';
 
 // formats markdown elements to plain text
-const simpleRenderer = ({ children }) => (
-  <>
-    <span>{children}</span>
-    <span> </span>
-  </>
-);
+const simpleRenderer = ({ children }) => children;
+const allowedElements = ['p', 'a', 'ul', 'ol', 'li', 'strong', 'em'];
 
 const Summary = ({ className, text, truncate }) => {
   const content = (
     <ReactMarkdown
       skipHtml
       linkTarget="_blank"
-      renderers={
-        truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}
+      allowedElements={allowedElements}
+      components={
+        truncate
+          ? Object.fromEntries(
+              allowedElements.map((element) => [element, simpleRenderer])
+            )
+          : {}
       }
     >
       {text}
