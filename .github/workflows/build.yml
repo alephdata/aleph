@@ -33,7 +33,7 @@ jobs:
           make ALEPH_TAG=${GITHUB_SHA} services
 
       - name: Build docker image
-        run: docker build -t ghcr.io/dataresearchcenter/openaleph:${GITHUB_SHA} .
+        run: docker build -t ghcr.io/openaleph/openaleph:${GITHUB_SHA} .
 
       - name: Install development dependencies
         run: make dev
@@ -53,7 +53,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/dataresearchcenter/openaleph
+          images: ghcr.io/openaleph/openaleph
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
