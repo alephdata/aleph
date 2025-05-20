@@ -35,5 +35,5 @@ OpenAleph is an open source project, and we'd love to collaborate with you. **If
 The Data and Research Center maintains a [community platform ](https://darc.social) to discuss all things OpenAleph and beyond. We're actively building a community focused on open software, open source research, and open data. Please join us!
 
 ---
-OpenAleph is a [DARC](https://dataresearchcenter.org) project and is released under the [MIT license](https://github.com/investigativedata/openaleph#MIT-1-ov-file).
 
+OpenAleph is a [DARC](https://dataresearchcenter.org) project and is released under the [MIT license](https://github.com/investigativedata/openaleph#MIT-1-ov-file).

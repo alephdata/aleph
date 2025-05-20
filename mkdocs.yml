@@ -1,10 +1,10 @@
 site_name: OpenAleph
 site_url: https://openaleph.org/docs
-repo_url: https://github.com/dataresearchcenter/openaleph
+repo_url: https://github.com/openaleph/openaleph
 theme:
   name: material
   logo: https://openaleph.org/assets/Logo/RGB/Open-Aleph-Logo-RGB-Square-Neg.svg
-  favicon: https://dataresearchcenter.org/favicon.ico
+  favicon: https://openaleph.org/favicon.ico
   features:
     - navigation.instant
     - navigation.tracking
@@ -22,7 +22,7 @@ extra:
     - icon: material/web
       link: https://openaleph.org
     - icon: material/github
-      link: https://github.com/dataresearchcenter/openaleph
+      link: https://github.com/openaleph/openaleph
     - icon: material/linkedin
       link: https://www.linkedin.com/company/dataresearchcenter/
 markdown_extensions:
