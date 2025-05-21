@@ -66,6 +66,7 @@ dependencies = [
     "mkdocs-material (==9.6.11)",
     # TODO - remove sentry eventually
     "sentry-sdk[flask] (==2.19.2)",
+    "lxml[html-clean] (>=5.4.0,<6.0.0)",
 ]
 
 [project.scripts]

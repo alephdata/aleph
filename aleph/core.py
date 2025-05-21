@@ -59,6 +59,7 @@ def create_app(config=None):
         config = {}
 
     configure_logging(level=logging.DEBUG)
+    logging.getLogger("watchdog").setLevel(logging.INFO)
 
     if SETTINGS.SENTRY_DSN:
         sentry_sdk.init(
