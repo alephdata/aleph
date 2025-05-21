@@ -119,23 +119,31 @@ class GeoDistanceQuery(EntitiesQuery):
         self.collection_ids = collection_ids
         super(EntitiesQuery, self).__init__(parser)
 
+    def is_valid(self) -> bool:
+        return (
+            self.entity is not None
+            and self.entity.first("latitude") is not None
+            and self.entity.first("longitude") is not None
+        )
+
     def get_index(self):
-        # This query can only work on Address entities and its index with the
+        # This query can only work on Address and RealEstate entities and its index with the
         # geo_point field
-        return entities_read_index(schema=model.get("Address"))
+        return f'{entities_read_index(schema=model.get("Address"))},{entities_read_index(schema=model.get("RealEstate"))}'
 
     def get_query(self):
+        if not self.is_valid():
+            return {"match_none": {}}
         query = super(GeoDistanceQuery, self).get_query()
-        # Don't include lookup entity in result
-        # if self.entity:
-        #     query["bool"]["must_not"].extend({"ids": {"values": [self.entity.id]}})
-        if len(self.exclude):
-            exclude = {"ids": {"values": self.exclude}}
-            query["bool"]["must_not"].append(exclude)
+        exclude = {"ids": {"values": self.exclude + [self.entity.id]}}
+        query["bool"]["must_not"].append(exclude)
+        query["bool"]["must"].append({"exists": {"field": "geo_point"}})
         return query
 
     def get_sort(self):
         """Always sort by calculated distance"""
+        if not self.is_valid():
+            return []
         return [
             {
                 "_geo_distance": {
