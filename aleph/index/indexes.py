@@ -126,8 +126,8 @@ def configure_schema(schema, version):
         },
     }
 
-    # Add geopoint field for Address schema
-    if schema.is_a("Address"):
+    # Add geopoint field for Address or RealEstate schema
+    if schema.is_a("Address") or schema.is_a("RealEstate"):
         mapping["properties"]["geo_point"] = GEOPOINT
 
     index = schema_index(model.get(schema), version)
