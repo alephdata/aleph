@@ -9,11 +9,13 @@ BLACK_OPTS=--extend-exclude aleph/migrate
 export ALEPH_DEBUG := true
 export ALEPH_SECRET_KEY := development
 export ALEPH_SINGLE_USER := true
+export ALEPH_UI_URL := http://localhost:3000
 export ARCHIVE_TYPE := file
 export ARCHIVE_PATH := data
 export ALEPH_ELASTICSEARCH_URI := http://localhost:9200
 export ALEPH_DATABASE_URI := postgresql://aleph:aleph@localhost:5432/aleph
-export REDIS_URI := http://localhost:6379
+export FTM_STORE_URI := postgresql://aleph:aleph@localhost:5432/aleph
+export REDIS_URL := redis://localhost:6379
 
 all: build upgrade web
 
