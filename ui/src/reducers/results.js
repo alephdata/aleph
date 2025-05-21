@@ -14,6 +14,7 @@ import {
   queryRoles,
   queryEntities,
   querySimilar,
+  queryNearby,
   queryEntityExpand,
   queryProfileExpand,
   queryNotifications,
@@ -43,6 +44,11 @@ export default createReducer(
     [querySimilar.ERROR]: (state, { error, args: { query } }) =>
       resultLoadError(state, query, error),
     [querySimilar.COMPLETE]: updateResultsFull,
+
+    [queryNearby.START]: (state, { query }) => resultLoadStart(state, query),
+    [queryNearby.ERROR]: (state, { error, args: { query } }) =>
+      resultLoadError(state, query, error),
+    [queryNearby.COMPLETE]: updateResultsFull,
 
     [queryEntityExpand.START]: (state, { query }) =>
       resultLoadStart(state, query),

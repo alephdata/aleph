@@ -13,6 +13,7 @@ import EntityProperties from 'components/Entity/EntityProperties';
 import EntityViews from 'components/Entity/EntityViews';
 import EntityImage from 'components/Entity/EntityImage';
 import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
+import EntityMap from 'components/Entity/EntityMap';
 import LoadingScreen from 'components/Screen/LoadingScreen';
 import ErrorScreen from 'components/Screen/ErrorScreen';
 import EntitySetSelector from 'components/EntitySet/EntitySetSelector';
@@ -147,6 +148,10 @@ class EntityScreen extends Component {
       </Breadcrumbs>
     );
 
+    const addressEntity = entity.schema.isAny(['Address', 'RealEstate'])
+      ? entity
+      : entity.getFirst('addressEntity');
+
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.getCaption()}>
@@ -168,6 +173,11 @@ class EntityScreen extends Component {
                 {ftmAssetsApi && (
                   <div className="ItemOverview__image">
                     <EntityImage api={ftmAssetsApi} entity={entity} />
+                  </div>
+                )}
+                {addressEntity && (
+                  <div className="ItemOverview__geomap">
+                    <EntityMap entity={addressEntity} marker />
                   </div>
                 )}
                 <div className="ItemOverview__content">

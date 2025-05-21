@@ -6,7 +6,7 @@ from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
 from aleph.settings import SETTINGS
-from aleph.index.util import index_name
+from aleph.index.util import GEOPOINT, index_name
 from aleph.index.util import index_settings, configure_index, get_shard_weight
 from aleph.index.util import NUMERIC_TYPES, PARTIAL_DATE, KEYWORD
 from aleph.index.util import LATIN_TEXT, NUMERIC
@@ -125,6 +125,11 @@ def configure_schema(schema, version):
             "updated_at": {"type": "date"},
         },
     }
+
+    # Add geopoint field for Address or RealEstate schema
+    if schema.is_a("Address") or schema.is_a("RealEstate"):
+        mapping["properties"]["geo_point"] = GEOPOINT
+
     index = schema_index(model.get(schema), version)
     settings = index_settings(shards=get_shard_weight(schema))
     return configure_index(index, mapping, settings)

@@ -1,8 +1,10 @@
 import logging
+import itertools
 import fingerprints
 from pprint import pprint, pformat  # noqa
 from banal import ensure_list, first
 from followthemoney import model
+from followthemoney.proxy import EntityProxy
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
@@ -177,6 +179,16 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
+def get_geopoints(proxy: EntityProxy) -> list[dict[str, str]]:
+    points = []
+    if proxy.schema.is_a("Address"):
+        lons = proxy.get("longitude")
+        lats = proxy.get("latitude")
+        for lon, lat in itertools.product(lons, lats):
+            points.append({"lon": lon, "lat": lat})
+    return points
+
+
 def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     # Abstract entities can appear when profile fragments for a missing entity
@@ -214,6 +226,10 @@ def format_proxy(proxy, collection):
     # also cast group field for dates
     numeric["dates"] = _numeric_values(registry.date, data.get("dates"))
     data["numeric"] = numeric
+
+    # geo data if entity is an Address
+    if proxy.schema.is_a("Address"):
+        data["geo_point"] = get_geopoints(proxy)
 
     # Context data - from aleph system, not followthemoney.
     data["collection_id"] = collection.id

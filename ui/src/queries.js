@@ -149,6 +149,14 @@ export function entitySimilarQuery(location, entityId) {
   );
 }
 
+export function entityNearbyQuery(location, entityId) {
+  const path = entityId ? `entities/${entityId}/nearby` : undefined;
+  return Query.fromLocation(path, location, {}, 'nearby').defaultFacet(
+    'collection_id',
+    true
+  );
+}
+
 export function profileSimilarQuery(location, profileId) {
   const path = profileId ? `profiles/${profileId}/similar` : undefined;
   return Query.fromLocation(path, location, {}, 'similar').defaultFacet(

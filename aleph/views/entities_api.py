@@ -7,7 +7,12 @@ from followthemoney.compare import compare
 from pantomime.types import ZIP
 
 from aleph.core import db, url_for
-from aleph.search import EntitiesQuery, MatchQuery, DatabaseQueryResult
+from aleph.search import (
+    EntitiesQuery,
+    GeoDistanceQuery,
+    MatchQuery,
+    DatabaseQueryResult,
+)
 from aleph.search.parser import SearchQueryParser, QueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import validate_entity, check_write_entity
@@ -208,7 +213,7 @@ def match():
                 $ref: '#/components/schemas/EntitiesResponse'
       requestBody:
         content:
-          application/json:
+          application/json
             schema:
               $ref: '#/components/schemas/EntityUpdate'
       tags:
@@ -322,6 +327,40 @@ def view(entity_id):
         entity["bookmarked"] = True if bookmark else False
 
     return EntitySerializer.jsonify(entity)
+
+
+@blueprint.route("/api/2/entities/<entity_id>/nearby", methods=["GET"])
+def nearby(entity_id):
+    """
+    ---
+    get:
+      summary: Query for nearby entities
+      description: >-
+        Query for nearby entities by geo distance to a given entity inside a
+        given list of collections.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns a list of scored and judged entities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarResponse'
+      tags:
+      - Entity
+    """
+    # enable_cache()
+    entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get("collection_id"))
+    proxy = model.get_proxy(entity)
+    parser = SearchQueryParser(request.values, request.authz)
+    result = GeoDistanceQuery.handle(request, entity=proxy, parser=parser)
+    return EntitySerializer.jsonify_result(result)
 
 
 @blueprint.route("/api/2/entities/<entity_id>/similar", methods=["GET"])

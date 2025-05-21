@@ -16,6 +16,7 @@ import {
   TextLoading,
 } from 'components/common';
 import {
+  entityNearbyQuery,
   entityReferenceQuery,
   entitySimilarQuery,
   folderDocumentsQuery,
@@ -26,12 +27,14 @@ import {
   selectEntityTags,
   selectEntityReference,
   selectSimilarResult,
+  selectNearbyResult,
 } from 'selectors';
 import EntityProperties from 'components/Entity/EntityProperties';
 import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
 import EntityMappingMode from 'components/Entity/EntityMappingMode';
+import EntityNearbyMode from 'components/Entity/EntityNearbyMode';
 import DocumentViewMode from 'components/Document/DocumentViewMode';
 
 import './EntityViews.scss';
@@ -65,9 +68,11 @@ class EntityViews extends React.Component {
       references,
       tags,
       similar,
+      nearby,
       children,
       reference,
       referenceQuery,
+      nearbyQuery,
     } = this.props;
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
@@ -232,6 +237,29 @@ class EntityViews extends React.Component {
                 panel={<EntityTagsMode entity={entity} />}
               />
             )}
+          {entity?.schema?.isA('Address') && !isPreview && (
+            <Tab
+              id="nearby"
+              disabled={nearby.total === 0}
+              title={
+                <TextLoading loading={nearby.total === undefined}>
+                  <Schema.Icon schema={entity.schema} className="left-icon" />
+                  <FormattedMessage
+                    id="entity.info.nearby"
+                    defaultMessage="Nearby"
+                  />
+                  <ResultCount result={nearby} />
+                </TextLoading>
+              }
+              panel={
+                <EntityNearbyMode
+                  entity={entity}
+                  mode={activeMode}
+                  query={nearbyQuery}
+                />
+              }
+            />
+          )}
           {entity?.schema?.matchable && !isPreview && (
             <Tab
               id="similar"
@@ -283,6 +311,8 @@ const mapStateToProps = (state, ownProps) => {
       state,
       entitySimilarQuery(location, entity.id)
     ),
+    nearby: selectNearbyResult(state, entityNearbyQuery(location, entity.id)),
+    nearbyQuery: entityNearbyQuery(location, entity.id),
     children: selectEntitiesResult(state, childrenQuery),
   };
 };
