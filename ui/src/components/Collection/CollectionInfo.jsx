@@ -140,6 +140,19 @@ class CollectionInfo extends PureComponent {
             <Date value={collection.updated_at} />
           </div>
         </div>
+        {!!collection.contains_ai && (
+          <div className="CollectionInfo__item">
+            <div className="key text-muted">
+              <FormattedMessage
+                id="collection.contains_ai"
+                defaultMessage="This collection contains content generated with ✨AI✨"
+              />
+            </div>
+            {collection.contains_ai_comment && (
+              <div className="value">{collection.contains_ai_comment}</div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

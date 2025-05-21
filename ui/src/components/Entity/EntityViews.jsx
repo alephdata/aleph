@@ -77,7 +77,9 @@ class EntityViews extends React.Component {
     if (references.total === undefined || references.isPending) {
       return <SectionLoading />;
     }
-    const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
+    const hasTextOnlyMode = entity.schema.isAny(['Pages', 'Image']);
+    const hasTextMode =
+      hasTextOnlyMode || entity.schema.isAny(['Video', 'Audio']);
     const hasBrowseMode = entity.schema.isA('Folder');
     const hasViewer = entity.schema.isAny([
       'Pages',
@@ -87,7 +89,8 @@ class EntityViews extends React.Component {
       'Table',
       'PlainText',
     ]);
-    const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
+    const hasDocumentViewMode =
+      hasViewer || (!hasBrowseMode && !hasTextOnlyMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const processingError = entity.getProperty('processingError');
     const entityParent = entity.getFirst('parent');
@@ -163,7 +166,11 @@ class EntityViews extends React.Component {
                 </>
               }
               panel={
-                <DocumentViewMode document={entity} activeMode={activeMode} />
+                <DocumentViewMode
+                  document={entity}
+                  activeMode={activeMode}
+                  textMode
+                />
               }
             />
           )}
