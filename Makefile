@@ -63,6 +63,9 @@ upgrade: build
 upgrade-local: services
 	aleph upgrade
 
+update-local: services
+	aleph update
+
 api: services
 	$(COMPOSE) up --abort-on-container-exit api
 
@@ -153,3 +156,6 @@ e2e-local:
 documentation:
 	mkdocs build
 	aws --endpoint-url https://s3.investigativedata.org s3 sync ./site s3://openaleph.org/docs
+
+migrations:
+	FLASK_APP=aleph.wsgi flask db migrate
