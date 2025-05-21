@@ -148,7 +148,7 @@ class EntityScreen extends Component {
       </Breadcrumbs>
     );
 
-    const addressEntity = entity.schema.isA('Address')
+    const addressEntity = entity.schema.isAny(['Address', 'RealEstate'])
       ? entity
       : entity.getFirst('addressEntity');
 

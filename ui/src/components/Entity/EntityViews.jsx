@@ -34,10 +34,10 @@ import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'components/Entity/EntitySimilarMode';
 import EntityMappingMode from 'components/Entity/EntityMappingMode';
+import EntityNearbyMode from 'components/Entity/EntityNearbyMode';
 import DocumentViewMode from 'components/Document/DocumentViewMode';
 
 import './EntityViews.scss';
-import EntityNearbyMode from './EntityNearbyMode';
 
 class EntityViews extends React.Component {
   constructor(props) {

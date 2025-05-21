@@ -107,7 +107,9 @@ class EntityNearbyMode extends React.Component {
 
     const mainRow = (
       <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
-        <td className="distance">{parseFloat(entity._sort).toFixed(2)} km</td>
+        <td className="distance" style={{ width: 'auto', minWidth: '50px' }}>
+          {parseFloat(entity._sort[0]).toFixed(2)} km
+        </td>
         <td className="expand">
           <Button
             onClick={() => this.onExpand(entity)}
