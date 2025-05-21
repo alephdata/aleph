@@ -3,7 +3,7 @@
 .EntitySelect {
   .#{$bp-ns}-popover2-content,
   .#{$bp-ns}-menu {
-    background: white !important;
+    background: $white !important;
     color: $black-70 !important;
     fill: $black-70 !important;
   }

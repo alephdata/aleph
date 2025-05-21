@@ -1,10 +1,10 @@
 site_name: OpenAleph
 site_url: https://openaleph.org/docs
-repo_url: https://github.com/dataresearchcenter/openaleph
+repo_url: https://github.com/openaleph/openaleph
 theme:
   name: material
   logo: https://openaleph.org/assets/Logo/RGB/Open-Aleph-Logo-RGB-Square-Neg.svg
-  favicon: https://dataresearchcenter.org/favicon.ico
+  favicon: https://openaleph.org/favicon.ico
   features:
     - navigation.instant
     - navigation.tracking
@@ -22,7 +22,7 @@ extra:
     - icon: material/web
       link: https://openaleph.org
     - icon: material/github
-      link: https://github.com/dataresearchcenter/openaleph
+      link: https://github.com/openaleph/openaleph
     - icon: material/linkedin
       link: https://www.linkedin.com/company/dataresearchcenter/
 markdown_extensions:
@@ -68,4 +68,9 @@ nav:
           - Network Diagrams: user-guide/103/network-diagrams.md
           - Manage Access: user-guide/103/manage-access.md
           - Cross-Referencing: user-guide/103/cross-reference.md
+      - The CLI and Python library:
+          - In This Section: user-guide/104/index.md
+          - Installation: user-guide/104/install.md
+          - The Command Line Interface: user-guide/104/cli.md
+          - Using the library in Python scripts: user-guide/104/python.md
   - Power User Blogpost Series: https://openaleph.org/blog/

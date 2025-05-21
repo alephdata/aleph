@@ -13,7 +13,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: ghcr.io/dataresearchcenter/aleph-elasticsearch:latest
+    image: ghcr.io/openaleph/aleph-elasticsearch:latest
     restart: on-failure
     environment:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
@@ -26,13 +26,15 @@ services:
   redis:
     image: redis:alpine
     command: ["redis-server", "--save", "3600", "10"]
+    ports:
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis-data:/data
 
   ingest-file:
     build:
       context: ../ingest-file
-    image: ghcr.io/dataresearchcenter/ingest-file:latest
+    image: ghcr.io/openaleph/ingest-file:latest
     hostname: ingest
     tmpfs: /tmp
     volumes:
@@ -62,7 +64,7 @@ services:
   app:
     build:
       context: .
-    # image: ghcr.io/dataresearchcenter/openaleph:latest
+    # image: ghcr.io/openaleph/openaleph:latest
     hostname: aleph
     command: /bin/bash
     depends_on:
@@ -90,7 +92,7 @@ services:
   api:
     build:
       context: .
-    # image: ghcr.io/dataresearchcenter/openaleph:latest
+    # image: ghcr.io/openaleph/openaleph:latest
     command: python3 -m debugpy --listen 0.0.0.0:5678 -m flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
@@ -117,7 +119,7 @@ services:
   ui:
     build:
       context: ui
-    # image: ghcr.io/dataresearchcenter/aleph-ui:latest
+    # image: ghcr.io/openaleph/aleph-ui:latest
     depends_on:
       - api
     command: "bash -c 'rsync --archive --inplace --no-compress --whole-file /node_modules /alephui && npm run start'"
@@ -136,7 +138,7 @@ services:
       - aleph.env
 
   worker:
-    image: ghcr.io/dataresearchcenter/openaleph:latest
+    image: ghcr.io/openaleph/openaleph:latest
     command: aleph worker
     restart: on-failure
     depends_on:

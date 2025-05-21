@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 ENV DEBIAN_FRONTEND noninteractive
-LABEL org.opencontainers.image.source = "https://github.com/dataresearchcenter/openaleph"
+LABEL org.opencontainers.image.source = "https://github.com/openaleph/openaleph"
 
 # build-essential
 RUN apt-get -qq -y update \
@@ -29,7 +29,7 @@ RUN python3 -m zipfile --extract /opt/ftm-compare/word-frequencies/word-frequenc
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six lxml lxml_html_clean
-RUN pip3 install --no-cache-dir -q -U git+https://github.com/dataresearchcenter/servicelayer.git
+RUN pip3 install --no-cache-dir -q -U git+https://github.com/openaleph/servicelayer.git
 RUN pip3 install --no-binary=:pyicu: pyicu
 
 COPY requirements.txt /tmp/

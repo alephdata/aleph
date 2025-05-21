@@ -53,7 +53,7 @@ If you’re experiencing issues installing or running OpenAleph, please follow t
 
 ### Find the Right Task
 
-A good way of starting is by looking at the [open project issues](https://github.com/dataresearchcenter/openaleph/issues). Once you’ve chosen an issue:
+A good way of starting is by looking at the [open project issues](https://github.com/openaleph/openaleph/issues). Once you’ve chosen an issue:
 
 - **Assign it to yourself:** This prevents duplicate efforts and signals to others that the issue is actively being handled.
 - **Reach Out if Needed:** If you need clarification or want to discuss the issue further, please [get in touch](https://darc.social).

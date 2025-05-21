@@ -10,6 +10,22 @@
       background-color: $aleph-breadcrumbs-background;
       padding: $aleph-grid-size * 3 $aleph-grid-size * 2;
       border: none;
+      display: flex;
+      align-items: center;
+
+      .ftm-assets__Image-wrapper {
+        padding-right: $aleph-grid-size * 2;
+
+        img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+      .ftm-assets__ImageAttribution {
+        display: none;
+      }
     }
 
     .profile & {
@@ -48,6 +64,16 @@
     }
     .profile & {
       padding-bottom: $aleph-grid-size;
+    }
+  }
+
+  &__image {
+    padding-bottom: $aleph-grid-size * 2;
+
+    .ftm-assets__Image-wrapper {
+      img {
+        max-width: 100%;
+      }
     }
   }
 

@@ -4,11 +4,19 @@ Network diagrams in OpenAleph let you visually explore relationships between ent
 
 ## What Are Network Diagrams?
 
-Network diagrams are interactive graphs that show entities (such as people, companies, or assets) as nodes, and their relationships (like ownership or affiliation) as edges between them.
+Network diagrams are interactive graphs that show entities (like people, companies, or assets) as nodes, and their relationships (like ownership or affiliation) as edges between them.
 
 They are generated directly from structured data within an investigation workspace.
-![Screenshot of a network diagram](../../assets/images/dia.png)
+<div align="center">
+  <img src="../../assets/images/dia.png" alt="Screenshot of a network diagram" width="600"/>
+</div>
 
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe src="https://www.youtube-nocookie.com/embed/95fkoGkTO-E?si=00cPWeAcIBrYogVI" frameborder="0" allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  </div>
+</div>
 
 
 ## Creating a Diagram
@@ -16,13 +24,25 @@ They are generated directly from structured data within an investigation workspa
 1. Go to your **Investigation**.
 2. Select **Network Diagrams** from the sidebar.
 3. Click **New Diagram**.
-![Screenshot of the new network diagram dialog](../../assets/images/new_dia.png)
+<div align="center">
+  <img src="../../assets/images/new_dia.png" alt="Screenshot of the new network diagram dialog" width="400"/>
+</div>
+
+
 4. Add entities from your investigation
-![Screenshot of the add entity to network diagram dialog](../../assets/images/add_to_dia.png)
-5. Expand each entities with a double click, then select `Discover asset and shares`
-![Screenshot of the expand entity to network diagram dialog](../../assets/images/expand_dia.png)
+<div align="center">
+  <img src="../../assets/images/add_to_dia.png" alt="Screenshot of the add entity to network diagram dialog" width="400"/>
+</div>
+
+
+5. Expand each entity with a double click, then select `Discover asset and shares`
+<div align="center">
+  <img src="../../assets/images/expand_dia.png" alt="Screenshot of the expand entity to network diagram dialog" width="400"/>
+</div>
+
+
 6. Repeat step 6 with the newly discovered entities, if you want.
-7. Additionally, you can create new entities in the diagram directly. They will be available in your investigation afterwards.
+7. You can also create new entities directly in the diagram. These will be available in your investigation afterwards.
 
 
 ## Using the Diagram
@@ -43,7 +63,7 @@ Once generated, you can:
 
 ## Notes and Limitations
 
-- Diagrams are based on the data you’ve uploaded or linked, so if relationships are missing, they won’t appear.
+- Diagrams are based on the data you have uploaded or linked, so if relationships are missing, they will not appear.
 - Large datasets may result in very complex diagrams; filtering before generation can improve clarity.
 
 ---

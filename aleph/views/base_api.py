@@ -75,6 +75,7 @@ def _metadata_locale(locale):
             "documents": SETTINGS.FEEDBACK_URL_DOCUMENTS,
             "timelines": SETTINGS.FEEDBACK_URL_TIMELINES,
         },
+        "service_urls": {"ftm_assets": SETTINGS.FTM_ASSETS_URL},
     }
 
 

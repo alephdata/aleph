@@ -12,11 +12,16 @@ An investigations is a user-created project area where you can:
 - Visualize relationships between entities
 - Share and collaborate with team members
 
-Each workspace is isolated from public collections and is visible only to the users you invite.
+Each workspace is isolated from public collections and visible only to the users you invite.
 
 ## Creating a New Investigation
 
-![Screenshot of the OpenAleph new investigation menu](../../assets/images/new_investigation.png)
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe src="https://www.youtube-nocookie.com/embed/LPAc1Nf7yqo?si=xvD6pg-taLsliDc4" frameborder="0" allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  </div>
+</div>
 
 To create an investigation:
 
@@ -27,11 +32,13 @@ To create an investigation:
 5. Select the primary languages of your documents
 6. Click **Create**.
 
- **Selecting the correct languages will impact the quality of the so-called OCR process, or optical character recognition.** This process is used by OpenAleph in the backend to make images or PDF searchable by extracting the text. Please make sure you select the right language here if possible, you can also change this option later in the investigation settings.
+ **Selecting the correct languages affects the quality of the OCR process (optical character recognition) process.** OpenAleph uses OCR in the background to extract text from images and PDFs, making them searchable. Whenever possible, choose the appropriate language to improve accuracy. You can always adjust this setting later in the investigation settings.
 
 ## Uploading Content
 
-![Screenshot of the OpenAleph content upload menu](../../assets/images/upload_files.png)
+<div align="center">
+  <img src="../../assets/images/upload_files.png" alt="Screenshot of the OpenAleph content upload menu" width="400"/>
+</div>
 
 Once your workspace is created, you can upload:
 

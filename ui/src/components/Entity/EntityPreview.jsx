@@ -9,9 +9,15 @@ import EntityContextLoader from 'components/Entity/EntityContextLoader';
 import EntityHeading from 'components/Entity/EntityHeading';
 import EntityToolbar from 'components/Entity/EntityToolbar';
 import EntityViews from 'components/Entity/EntityViews';
+import EntityImage from 'components/Entity/EntityImage';
 import ProfileCallout from 'components/Profile/ProfileCallout';
 import { SectionLoading, ErrorSection } from 'components/common';
-import { selectEntity, selectEntityView, selectLocale } from 'selectors';
+import {
+  selectEntity,
+  selectEntityView,
+  selectLocale,
+  selectServiceUrl,
+} from 'selectors';
 import queryString from 'query-string';
 import togglePreview from 'util/togglePreview';
 import { setRecentlyViewedItem } from 'app/storage';
@@ -46,7 +52,7 @@ export class EntityPreview extends React.Component {
   }
 
   renderContext() {
-    const { entity, activeMode, profile } = this.props;
+    const { entity, activeMode, profile, ftmAssetsApi } = this.props;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />;
     }
@@ -56,7 +62,10 @@ export class EntityPreview extends React.Component {
     return (
       <div className="ItemOverview preview">
         <div className="ItemOverview__heading">
-          <EntityHeading entity={entity} isPreview />
+          <EntityImage api={ftmAssetsApi} entity={entity} thumbnail />
+          <span>
+            <EntityHeading entity={entity} isPreview />
+          </span>
         </div>
         {entity.profileId && profile && (
           <div className="ItemOverview__callout">
@@ -110,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
     entity: selectEntity(state, entityId),
     activeMode: selectEntityView(state, entityId, activeMode, true),
     locale: selectLocale(state),
+    ftmAssetsApi: selectServiceUrl(state, 'ftm_assets'),
   };
 };
 

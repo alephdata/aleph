@@ -14,7 +14,9 @@ It's common for datasets to contain both structured and unstructed data.
 
 ## Viewing a Dataset
 
-![Screenshot of the OpenAleph dataset overview](../../assets/images/dataset_overview.png)
+<div align="center">
+  <img src="../../assets/images/dataset_overview.png" alt="Screenshot of the OpenAleph dataset overview" width="1000"/>
+</div>
 
 To view a dataset:
 
@@ -22,7 +24,7 @@ To view a dataset:
 2. Select a dataset from the list or use the search bar to find one.
 3. Click the dataset name to open its detail view.
 
-In the dataset view, you’ll get a good impression of what you're looking at: Number and type of documents contained, a timeline, countries and found in the dataset. OpenAleph will extract further information, if the dataset contains it, like IBAN bank account numbers, email addresses, phone numbers, etc.
+In the dataset view, you’ll get a good overview of its contents: number and type of documents, a timeline, and the countries mentioned in the data. If available, OpenAleph will also extract additional information such as IBANs, email addresses, phone numbers, and more.
 
 ---
 
