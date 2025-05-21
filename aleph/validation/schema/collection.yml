@@ -49,6 +49,10 @@ Collection:
       type: boolean
     writeable:
       type: boolean
+    contains_ai:
+      type: boolean
+    contains_ai_comment:
+      type: string
 
 CollectionCreate:
   type: object
@@ -97,6 +101,10 @@ CollectionCreate:
       type: boolean
     xref:
       type: boolean
+    contains_ai:
+      type: boolean
+    contains_ai_comment:
+      type: string
   required: ["label"]
 
 CollectionUpdate:

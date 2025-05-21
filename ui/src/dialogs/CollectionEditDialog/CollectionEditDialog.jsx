@@ -47,6 +47,15 @@ const messages = defineMessages({
     id: 'collection.edit.info.restricted',
     defaultMessage: 'This dataset is restricted and viewers should be warned.',
   },
+  check_contains_ai: {
+    id: 'collection.edit.info.contains_ai',
+    defaultMessage: 'This dataset contains AI generated content.',
+  },
+  placeholder_contains_ai_comment: {
+    id: 'collection.edit.info.placeholder_contains_ai_comment',
+    defaultMessage:
+      'A brief description for which content was generate with AI and how.',
+  },
   title: {
     id: 'collection.edit.title',
     defaultMessage: 'Settings',
@@ -87,6 +96,7 @@ export class CollectionEditDialog extends Component {
     this.onSelectLanguages = this.onSelectLanguages.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.onToggleContainsAi = this.onToggleContainsAi.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -105,6 +115,12 @@ export class CollectionEditDialog extends Component {
   onToggleRestricted() {
     const { collection } = this.state;
     collection.restricted = !collection.restricted;
+    this.setState({ collection, changed: true });
+  }
+
+  onToggleContainsAi() {
+    const { collection } = this.state;
+    collection.contains_ai = !collection.contains_ai;
     this.setState({ collection, changed: true });
   }
 
@@ -398,6 +414,35 @@ export class CollectionEditDialog extends Component {
                     checked={collection.restricted}
                     label={intl.formatMessage(messages.check_restricted)}
                     onChange={this.onToggleRestricted}
+                  />
+                </div>
+              </div>
+              <div className={Classes.FORM_GROUP}>
+                <div className={Classes.FILL}>
+                  <Checkbox
+                    checked={collection.contains_ai}
+                    label={intl.formatMessage(messages.check_contains_ai)}
+                    onChange={this.onToggleContainsAi}
+                  />
+                </div>
+              </div>
+              <div className={Classes.FORM_GROUP}>
+                <label className={Classes.LABEL}>
+                  <FormattedMessage
+                    id="collection.edit.info.contains_ai_comment"
+                    defaultMessage="Description of AI generated content"
+                  />
+                </label>
+                <div className={Classes.FORM_CONTENT}>
+                  <textarea
+                    id="contains_ai_comment"
+                    className={c(Classes.INPUT, Classes.FILL)}
+                    placeholder={intl.formatMessage(
+                      messages.placeholder_contains_ai_comment
+                    )}
+                    rows={5}
+                    onChange={this.onFieldChange}
+                    value={collection.contains_ai_comment || ''}
                   />
                 </div>
               </div>

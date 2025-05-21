@@ -116,6 +116,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.xref = data.get("xref", self.xref)
         self.updated_at = datetime.utcnow()
 
+        # contains ai generated content
+        self.contains_ai = data.get("contains_ai")
+        self.contains_ai_comment = data.get("contains_ai_comment")
+
         # Some fields are editable only by admins in order to have
         # a strict separation between source evidence and case
         # material.
@@ -195,6 +199,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
                 "secret": self.secret,
                 "xref": self.xref,
                 "restricted": self.restricted,
+                "contains_ai": self.contains_ai,
+                "contains_ai_comment": self.contains_ai_comment,
             }
         )
         return data
