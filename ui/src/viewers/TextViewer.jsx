@@ -4,6 +4,7 @@ import { Pre } from '@blueprintjs/core';
 import { Skeleton } from 'components/common';
 import insertHighlights from 'util/insertHighlights';
 import convertHighlightsToReactElements from 'util/convertHighlightsToReactElements';
+import insertLineBreaksToExtraction from 'util/insertLineBreaksToExtraction';
 
 import './TextViewer.scss';
 
@@ -45,6 +46,10 @@ class TextViewer extends PureComponent {
   highlightedText() {
     const { document } = this.props;
     let text = document.getFirst('bodyText');
+
+    if (document.schema.isAny(['Audio', 'Video'])) {
+      text = insertLineBreaksToExtraction(text);
+    }
 
     if (!document.highlight) {
       return text;

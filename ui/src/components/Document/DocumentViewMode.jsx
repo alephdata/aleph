@@ -24,7 +24,7 @@ const PdfViewer = lazy(() =>
 
 export class DocumentViewMode extends React.Component {
   renderContent() {
-    const { document, activeMode, dir } = this.props;
+    const { document, activeMode, dir, textMode } = this.props;
     const processingError = document.getProperty('processingError');
 
     if (processingError && processingError.length) {
@@ -48,11 +48,19 @@ export class DocumentViewMode extends React.Component {
       );
     }
     if (document.schema.isA('Audio')) {
-      return <AudioViewer document={document} dir={dir} />;
+      return textMode ? (
+        <TextViewer document={document} />
+      ) : (
+        <AudioViewer document={document} dir={dir} />
+      );
     }
 
     if (document.schema.isA('Video')) {
-      return <VideoViewer document={document} dir={dir} />;
+      return textMode ? (
+        <TextViewer document={document} />
+      ) : (
+        <VideoViewer document={document} dir={dir} />
+      );
     }
 
     if (document.schema.isA('Table')) {
