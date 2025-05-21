@@ -5,6 +5,16 @@ UIDOCKER=$(COMPOSE) run --no-deps --rm ui
 ALEPH_TAG=latest
 BLACK_OPTS=--extend-exclude aleph/migrate
 
+# env for non-docker local dev
+export ALEPH_DEBUG := true
+export ALEPH_SECRET_KEY := development
+export ALEPH_SINGLE_USER := true
+export ARCHIVE_TYPE := file
+export ARCHIVE_PATH := data
+export ALEPH_ELASTICSEARCH_URI := http://localhost:9200
+export ALEPH_DATABASE_URI := postgresql://aleph:aleph@localhost:5432/aleph
+export REDIS_URI := http://localhost:6379
+
 all: build upgrade web
 
 services:
@@ -48,14 +58,26 @@ upgrade: build
 	@$(COMPOSE) exec elasticsearch timeout 30 bash -c "printf 'Waiting for elasticsearch'; until curl --silent --output /dev/null localhost:9200/_cat/health?h=st; do printf '.'; sleep 1; done; printf '\n'"
 	$(APPDOCKER) aleph upgrade
 
+upgrade-local: services
+	aleph upgrade
+
 api: services
 	$(COMPOSE) up --abort-on-container-exit api
+
+api-local: services
+	FLASK_APP=aleph.wsgi flask run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
 
 web: services
 	$(COMPOSE) up api ui
 
+web-local:
+	cd ui ; ALEPH_UI_API_URL=http://localhost:5000 npm run start
+
 worker: services
 	$(COMPOSE) run -p 127.0.0.1:5679:5679 --rm app python3 -m debugpy --listen 0.0.0.0:5679 -c "from aleph.manage import cli; cli()" worker
+
+worker-local: services
+	aleph worker
 
 tail:
 	$(COMPOSE) logs -f
