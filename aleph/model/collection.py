@@ -69,6 +69,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     info_url = db.Column(db.Unicode, nullable=True)
     data_url = db.Column(db.Unicode, nullable=True)
 
+    # contains ai generated content
+    contains_ai = db.Column(db.Boolean, default=False)
+    contains_ai_comment = db.Column(db.Unicode, nullable=True)
+
     # Collection inherits the `updated_at` column from `DatedModel`.
     # These two fields are used to express different semantics: while
     # `updated_at` is used to describe the last change of the metadata,
