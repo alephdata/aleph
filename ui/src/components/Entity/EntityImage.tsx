@@ -42,7 +42,7 @@ const extractAlt = (image: IImageMeta, lang: string = DEFAULT_LANG): string => {
 
 const makeMetaUrl = (api: string, id: string): string => `${api}/img/${id}`;
 
-async function fetchImageMega(
+async function fetchImageMeta(
   url: string,
   opts: RequestInit = {}
 ): Promise<any> {
@@ -59,7 +59,7 @@ const getImage = async (
   id: string,
   opts: RequestInit = {}
 ): Promise<IImageMeta> =>
-  fetchImageMega(makeMetaUrl(api, id), opts) as Promise<IImageMeta>;
+  fetchImageMeta(makeMetaUrl(api, id), opts) as Promise<IImageMeta>;
 
 export function ImageAttribution(props: { attribution: IImageAttribution }) {
   const { license, license_url, author } = props.attribution;
