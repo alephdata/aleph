@@ -45,11 +45,24 @@ $vertical-spacing: $aleph-grid-size * 5;
       margin: auto;
       padding: $aleph-grid-size * 8 $aleph-grid-size * 3;
       vertical-align: middle;
+
+      p {
+        line-height: 1.5;
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: $aleph-grid-size;
+      }
+
     }
 
     &:nth-child(even) {
       background-color: $black;
       color: $white;
+
+      a {
+        color: $white;
+        text-decoration: underline;
+      }
 
       .HomeScreen__title {
         color: $white;
