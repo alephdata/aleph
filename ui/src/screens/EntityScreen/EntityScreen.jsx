@@ -172,7 +172,7 @@ class EntityScreen extends Component {
                 )}
                 {ftmAssetsApi && (
                   <div className="ItemOverview__image">
-                    <EntityImage api={ftmAssetsApi} entity={entity} />
+                    <EntityImage api={ftmAssetsApi} entity={entity} thumbnail />
                   </div>
                 )}
                 {addressEntity && (
