@@ -1,9 +1,17 @@
 ---
-title: About Aleph
+title: About OpenAleph
 short: About
 menu: true
 ---
 
-Aleph is a powerful tool for people who follow the money. It helps investigators to securely access and search large amounts of data - no matter whether they are a government database or a leaked email archive.
+## OpenAleph
 
-Please refer to the [documentation](https://docs.aleph.occrp.org/) for more details.
+[**OpenAleph**](https://openaleph.org) is the open source platform that securely stores large amounts of structured and unstructured data and makes it searchable for easy collaboration.
+
+Read about the project's origins [here](https://darc.li/oa-intro).
+
+OpenAleph is a [DARC](https://dataresearchcenter.org) project and is open source, released under the [MIT license](https://github.com/investigativedata/aleph#MIT-1-ov-file).
+
+[Register](./register) for a research account to get access to more documents and structured data.
+
+Please refer to the [documentation](https://docs.openaleph.org/) for more details.
