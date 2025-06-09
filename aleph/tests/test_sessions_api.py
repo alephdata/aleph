@@ -360,14 +360,15 @@ class SessionsApiOAuthTestCase(TestCase):
 @contextmanager
 def mock_oauth_token_exchange(name: str, email: str, groups: List[str] = []):
     patch_send = mock.patch("requests.sessions.Session.send")
-    patch_parse = mock.patch(
-        "authlib.integrations.flask_client.remote_app.FlaskRemoteApp.parse_id_token"
+    patch_parse = mock.patch.object(
+        oauth.provider, "parse_id_token"
     )
 
     with patch_send as send_mock, patch_parse as parse_mock:
         send_mock.return_value = mock.Mock(
             spec=Response,
             json=lambda: {"id_token": "fake_token"},
+            status_code=200,  # Add the status_code attribute
         )
 
         # https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
