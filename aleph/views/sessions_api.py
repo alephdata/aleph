@@ -107,29 +107,27 @@ def oauth_init():
     """
     require(SETTINGS.OAUTH)
     url = url_for(".oauth_callback")
-    state = oauth.provider.create_authorization_url(url)
-    state["next_url"] = request.args.get("next", request.referrer)
-    state["redirect_uri"] = url
-    cache.set_complex(_oauth_session(state.get("state")), state, expires=3600)
-    return redirect(state["url"])
+    redirect_uri = url
+
+    # Save the next URL in the session to retrieve after callback
+    next_url = request.args.get("next", request.referrer)
+    session["next_url"] = next_url
+
+    # Let Authlib handle the redirect with state management
+    return oauth.provider.authorize_redirect(redirect_uri)
 
 
 @blueprint.route("/api/2/sessions/callback")
 def oauth_callback():
     require(SETTINGS.OAUTH)
     err = Unauthorized(gettext("Authentication has failed."))
-    state = cache.get_complex(_oauth_session(request.args.get("state")))
-    if state is None:
-        AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
-        raise err
 
     try:
-        oauth.provider.framework.set_session_data(request, "state", state.get("state"))
-        uri = state.get("redirect_uri")
-        oauth_token = oauth.provider.authorize_access_token(redirect_uri=uri)
-    except AuthlibBaseError as err:
+        # Let Authlib handle the token exchange
+        oauth_token = oauth.provider.authorize_access_token()
+    except AuthlibBaseError as e:
         AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
-        log.warning("Failed OAuth: %r", err)
+        log.warning("Failed OAuth: %r", e)
         raise err
     if oauth_token is None or isinstance(oauth_token, AuthlibBaseError):
         AUTH_ATTEMPTS.labels(method="oauth", result="failed").inc()
@@ -158,7 +156,8 @@ def oauth_callback():
     if id_token is not None:
         cache.set(_token_session(token), id_token, expires=SETTINGS.SESSION_EXPIRE)
 
-    next_path = get_url_path(state.get("next_url"))
+    # Get the next URL from the session
+    next_path = get_url_path(session.get("next_url"))
     next_url = ui_url("oauth", next=next_path)
     next_url = f"{next_url}#token={token}"
     session.clear()
