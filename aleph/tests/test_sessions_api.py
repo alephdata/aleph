@@ -361,7 +361,7 @@ class SessionsApiOAuthTestCase(TestCase):
 def mock_oauth_token_exchange(name: str, email: str, groups: List[str] = []):
     patch_send = mock.patch("requests.sessions.Session.send")
     patch_parse = mock.patch(
-        "authlib.integrations.flask_client.remote_app.RemoteApp.parse_id_token"
+        "authlib.integrations.flask_client.remote_app.FlaskRemoteApp.parse_id_token"
     )
 
     with patch_send as send_mock, patch_parse as parse_mock:
