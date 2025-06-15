@@ -29,14 +29,18 @@ class Transliterate extends React.PureComponent<ITransliterateProps> {
     document.removeEventListener('copy', this.copyText);
   };
 
-  copyText = (e: any) => {
-    e.clipboardData.setData('text/plain', this.getTranslitValue());
+  copyText = (e: ClipboardEvent) => {
+    e.clipboardData?.setData('text/plain', this.getTranslitValue());
     e.preventDefault();
   };
 
   getTranslitValue() {
     const { lookup, value } = this.props;
     return lookup[value];
+  }
+
+  componentWillUnmount(): void {
+    document.removeEventListener('copy', this.copyText);
   }
 
   render() {
