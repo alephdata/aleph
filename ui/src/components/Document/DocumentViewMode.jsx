@@ -12,6 +12,7 @@ import FolderViewer from 'viewers/FolderViewer';
 import EmailViewer from 'viewers/EmailViewer';
 import VideoViewer from 'viewers/VideoViewer';
 import ArticleViewer from 'viewers/ArticleViewer';
+import JsonViewer from 'viewers/JsonViewer';
 import withRouter from 'app/withRouter';
 import { SectionLoading } from 'components/common';
 import { selectEntityDirectionality } from 'selectors';
@@ -77,6 +78,10 @@ export class DocumentViewMode extends React.Component {
     if (document.schema.isA('Article')) {
       return <ArticleViewer document={document} dir={dir} />;
     }
+    // Check for application/json MIME type
+    if (document.getProperty('mimeType')?.[0] === 'application/json') {
+      return <JsonViewer document={document} query={this.props.location?.search} dir={dir} />;
+    }      
     return <DefaultViewer document={document} dir={dir} />;
   }
 
