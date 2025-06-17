@@ -1,0 +1,80 @@
+.json-viewer-error {
+  color: red;
+  padding: 10px;
+  border: 1px solid red;
+}
+
+.json-viewer-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; // Ensure spinner is visible
+  padding: 10px;
+}
+
+.json-viewer {
+  font-family: monospace;
+  padding: 10px;
+  overflow-x: auto; // Handle very long lines if any
+
+  pre {
+    white-space: pre; // Use pre for basic formatting, but custom components will handle wrap/indent
+    margin: 0; // Remove default pre margin
+  }
+
+  .json-string {
+    color: green;
+  }
+
+  .json-number {
+    color: darkorange;
+  }
+
+  .json-boolean {
+    color: blue;
+  }
+
+  .json-null {
+    color: magenta;
+  }
+
+  .json-key {
+    color: #333; // Dark grey for keys
+    margin-right: 0.5em;
+  }
+
+  .json-bracket,
+  .json-brace {
+    cursor: pointer;
+    user-select: none; // Prevent text selection on brackets/braces
+    .bp4-icon { // Blueprint icon styling
+      vertical-align: middle;
+      margin-left: 4px;
+      color: #5c7080; // Blueprint icon color
+    }
+  }
+  
+  .json-comma {
+    margin-right: 0.5em;
+  }
+
+  // Indentation based on level
+  // Create padding classes for levels 0 through (say) 10
+  @for $i from 0 through 10 {
+    .json-level-#{$i} {
+      padding-left: calc(#{$i} * 20px); // 20px indent per level
+    }
+  }
+  
+  .json-array-item, .json-key-value-pair {
+    display: block; // Each item/pair on a new line
+    position: relative; // For absolute positioning of commas if needed, though not used here
+  }
+
+  mark {
+    background-color: yellow;
+    color: black;
+    padding: 0.1em;
+    border-radius: 3px;
+  }
+}
