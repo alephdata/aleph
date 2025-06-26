@@ -13,9 +13,9 @@ import {
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { MultiSelect } from '@blueprintjs/select';
 import c from 'classnames';
-import SelectWrapper from 'components/common/SelectWrapper';
-import { Schema } from 'components/common';
-import { MappingLabel } from 'components/MappingEditor/MappingLabel';
+import SelectWrapper from '/src/components/common/SelectWrapper';
+import { Schema } from '/src/components/common/index.jsx';
+import { MappingLabel } from '/src/components/MappingEditor/MappingLabel';
 
 import './MappingKeyAssign.scss';
 

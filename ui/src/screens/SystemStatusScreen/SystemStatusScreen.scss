@@ -1,6 +1,6 @@
-@import 'app/tables.scss';
-@import 'app/mixins.scss';
-@import 'app/variables.scss';
+@import '/src/app/tables.scss';
+@import '/src/app/mixins.scss';
+@import '/src/app/variables.scss';
 
 .StatusTable {
   @extend .#{$bp-ns}-html-table;

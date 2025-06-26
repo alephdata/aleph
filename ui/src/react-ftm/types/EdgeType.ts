@@ -1,4 +1,9 @@
-import { Entity, Model, Schema, Property } from '@alephdata/followthemoney';
+import type {
+  Entity,
+  Model,
+  Schema,
+  Property,
+} from '@alephdata/followthemoney';
 
 class EdgeType {
   public schema?: Schema;

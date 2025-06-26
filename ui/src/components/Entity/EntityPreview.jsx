@@ -2,21 +2,25 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Drawer, Position } from '@blueprintjs/core';
-import { isLangRtl } from 'react-ftm';
+import { isLangRtl } from '/src/react-ftm/index.ts';
 
-import withRouter from 'app/withRouter';
-import EntityContextLoader from 'components/Entity/EntityContextLoader';
-import EntityHeading from 'components/Entity/EntityHeading';
-import EntityToolbar from 'components/Entity/EntityToolbar';
-import EntityViews from 'components/Entity/EntityViews';
-import ProfileCallout from 'components/Profile/ProfileCallout';
-import { SectionLoading, ErrorSection } from 'components/common';
-import { selectEntity, selectEntityView, selectLocale } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import EntityContextLoader from '/src/components/Entity/EntityContextLoader';
+import EntityHeading from '/src/components/Entity/EntityHeading';
+import EntityToolbar from '/src/components/Entity/EntityToolbar';
+import EntityViews from '/src/components/Entity/EntityViews';
+import ProfileCallout from '/src/components/Profile/ProfileCallout';
+import { SectionLoading, ErrorSection } from '/src/components/common/index.jsx';
+import {
+  selectEntity,
+  selectEntityView,
+  selectLocale,
+} from '/src/selectors.js';
 import queryString from 'query-string';
-import togglePreview from 'util/togglePreview';
-import { setRecentlyViewedItem } from 'app/storage';
+import togglePreview from '/src/util/togglePreview.js';
+import { setRecentlyViewedItem } from '/src/app/storage';
 
-import 'components/common/ItemOverview.scss';
+import '/src/components/common/ItemOverview.scss';
 import './EntityPreview.scss';
 
 export class EntityPreview extends React.Component {

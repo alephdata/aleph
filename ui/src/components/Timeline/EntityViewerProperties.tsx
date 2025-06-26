@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
-import { Schema, Entity, Property } from '@alephdata/followthemoney';
-import { EditableProperty } from 'react-ftm';
-import { PropertySelect } from 'react-ftm/editors';
-import { FetchEntitySuggestions } from './types';
+import { type FC, useState } from 'react';
+import type { Schema, Entity, Property } from '@alephdata/followthemoney';
+import { EditableProperty } from '/src/react-ftm/index.ts';
+import { PropertySelect } from '/src/react-ftm/editors/index.tsx';
+import type { FetchEntitySuggestions } from './types';
 
 type Props = {
   entity: Entity;

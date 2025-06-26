@@ -1,8 +1,8 @@
 @use 'sass:math';
 
-@import '~@blueprintjs/core/src/blueprint.scss';
-@import './variables.scss';
-@import 'app/mixins.scss';
+@import '/node_modules/@blueprintjs/core/src/blueprint.scss';
+@import '/src/app/variables.scss';
+@import '/src/app/mixins.scss';
 
 // Column & row customisation for any tables.
 table {

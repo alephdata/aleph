@@ -4,14 +4,18 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
-import { queryCollections } from 'actions';
-import { selectCollectionsResult, selectCurrentRole } from 'selectors';
-import { ErrorSection, SearchBox, QueryInfiniteLoad } from 'components/common';
-import QueryTags from 'components/QueryTags/QueryTags';
-import SearchActionBar from 'components/common/SearchActionBar';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryCollections } from '/src/actions/index.js';
+import { selectCollectionsResult, selectCurrentRole } from '/src/selectors.js';
+import {
+  ErrorSection,
+  SearchBox,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import QueryTags from '/src/components/QueryTags/QueryTags';
+import SearchActionBar from '/src/components/common/SearchActionBar';
 import CollectionIndexItem from './CollectionIndexItem';
-import SortingBar from 'components/SortingBar/SortingBar';
+import SortingBar from '/src/components/SortingBar/SortingBar';
 
 import './CollectionIndex.scss';
 

@@ -4,9 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import { ButtonGroup, Classes, Icon } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { BookmarkButton } from 'components/common';
-import { DownloadButton } from 'components/Toolbar';
-import getEntityLink from 'util/getEntityLink';
+import { BookmarkButton } from '/src/components/common/index.jsx';
+import { DownloadButton } from '/src/components/Toolbar';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './EntityToolbar.scss';
 

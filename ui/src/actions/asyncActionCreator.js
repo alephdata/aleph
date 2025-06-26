@@ -8,12 +8,17 @@ let counter = 1;
 export default function asyncActionCreator(
   actionCreator,
   {
-    name = actionCreator.name || `asyncAction_${(counter += 1)}`,
+    name = actionCreator.name,
     START = `${name}_START`,
     ERROR = `${name}_ERROR`,
     COMPLETE = `${name}_COMPLETE`,
   } = {}
 ) {
+  if (!name) {
+    counter += 1;
+    name = `asyncAction_${counter}`;
+  }
+
   const newActionCreator = (payload, ...otherArgs) =>
     async function actionDispatch(dispatch) {
       const action = actionCreator(payload, ...otherArgs);

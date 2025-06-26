@@ -1,8 +1,12 @@
-import { Vertex } from './Vertex';
-import { Entity, PropertyType, Property } from '@alephdata/followthemoney';
-import { GraphLayout } from './GraphLayout';
+import type { Vertex } from './Vertex';
+import {
+  type Entity,
+  PropertyType,
+  type Property,
+} from '@alephdata/followthemoney';
+import type { GraphLayout } from './GraphLayout';
 import { Rectangle } from './Rectangle';
-import { Point, IPointData } from './Point';
+import { Point, type IPointData } from './Point';
 
 interface IEdgeData {
   id: string;

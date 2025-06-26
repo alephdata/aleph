@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Skeleton, Summary } from 'components/common';
-import CollectionInfo from 'components/Collection/CollectionInfo';
-import CollectionStatus from 'components/Collection/CollectionStatus';
-import CollectionReference from 'components/Collection/CollectionReference';
+import { Skeleton, Summary } from '/src/components/common/index.jsx';
+import CollectionInfo from '/src/components/Collection/CollectionInfo';
+import CollectionStatus from '/src/components/Collection/CollectionStatus';
+import CollectionReference from '/src/components/Collection/CollectionReference';
 
 import './CollectionMetadataPanel.scss';
 

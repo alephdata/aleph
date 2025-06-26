@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
-import { ItemPredicate, ItemRenderer, Select } from '@blueprintjs/select';
+import {
+  defineMessages,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
+import {
+  type ItemPredicate,
+  type ItemRenderer,
+  Select,
+} from '@blueprintjs/select';
 import { MenuItem, Button, Position, Alignment } from '@blueprintjs/core';
-import { Property } from '@alephdata/followthemoney';
-import { highlightText, matchText } from 'react-ftm/utils';
+import type { Property } from '@alephdata/followthemoney';
+import { highlightText, matchText } from '/src/react-ftm/utils/index.ts';
 
 const messages = defineMessages({
   add: {

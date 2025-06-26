@@ -1,5 +1,5 @@
 import React from 'react';
-import fetchCsvData from 'util/fetchCsvData';
+import fetchCsvData from '/src/util/fetchCsvData.js';
 
 const csvContextLoader = (Viewer) =>
   class extends React.Component {
@@ -69,7 +69,7 @@ const csvContextLoader = (Viewer) =>
       const { rows } = this.state;
 
       const rowCountRaw = document.getFirst('rowCount');
-      return rowCountRaw ? parseInt(rowCountRaw, 10) : rows.length;
+      return rowCountRaw ? Number.parseInt(rowCountRaw, 10) : rows.length;
     }
 
     render() {

@@ -8,9 +8,9 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateRole } from 'actions';
-import { selectCurrentRole } from 'selectors';
-import { showSuccessToast } from 'app/toast';
+import { updateRole } from '/src/actions/index.js';
+import { selectCurrentRole } from '/src/selectors.js';
+import { showSuccessToast } from '/src/app/toast';
 
 export default function ProfileSettings() {
   const dispatch = useDispatch();

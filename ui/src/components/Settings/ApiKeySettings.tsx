@@ -1,11 +1,11 @@
 import { useReducer } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent, Dialog, DialogBody, Card } from '@blueprintjs/core';
-import { ClipboardInput } from 'components/common';
-import { selectCurrentRole } from 'selectors';
-import { generateApiKey as generateApiKeyAction } from 'actions';
+import { ClipboardInput } from '/src/components/common/index.jsx';
+import { selectCurrentRole } from '/src/selectors.js';
+import { generateApiKey as generateApiKeyAction } from '/src/actions/index.js';
 import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl';
-import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
+import convertUTCDateToLocalDate from '/src/util/convertUTCDateToLocalDate.js';
 
 const GENERATE_MESSAGE = (
   <FormattedMessage

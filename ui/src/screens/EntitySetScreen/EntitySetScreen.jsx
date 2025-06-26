@@ -3,11 +3,11 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter';
-import { fetchEntitySet } from 'actions';
-import { selectEntitySet } from 'selectors';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
+import withRouter from '/src/app/withRouter.jsx';
+import { fetchEntitySet } from '/src/actions/index.js';
+import { selectEntitySet } from '/src/selectors.js';
+import LoadingScreen from '/src/components/Screen/LoadingScreen.jsx';
+import ErrorScreen from '/src/components/Screen/ErrorScreen.jsx';
 
 export class EntitySetScreen extends Component {
   componentDidMount() {

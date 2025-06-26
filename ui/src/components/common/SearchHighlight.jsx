@@ -1,4 +1,4 @@
-import convertHighlightsToReactElements from 'util/convertHighlightsToReactElements';
+import convertHighlightsToReactElements from '/src/util/convertHighlightsToReactElements.js';
 import './SearchHighlight.scss';
 
 export default function SearchHighlight({ highlight }) {

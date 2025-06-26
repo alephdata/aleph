@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { queryEntitySets } from 'actions';
-import { collectionEntitySetsQuery } from 'queries';
-import { selectCollection, selectEntitySetsResult } from 'selectors';
-import { ErrorSection } from 'components/common';
-import EntitySetCreateMenu from 'components/EntitySet/EntitySetCreateMenu';
-import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryEntitySets } from '/src/actions/index.js';
+import { collectionEntitySetsQuery } from '/src/queries.js';
+import { selectCollection, selectEntitySetsResult } from '/src/selectors.js';
+import { ErrorSection } from '/src/components/common/index.jsx';
+import EntitySetCreateMenu from '/src/components/EntitySet/EntitySetCreateMenu';
+import EntitySetIndex from '/src/components/EntitySet/EntitySetIndex';
 
 export class CollectionEntitySetsIndexMode extends Component {
   render() {

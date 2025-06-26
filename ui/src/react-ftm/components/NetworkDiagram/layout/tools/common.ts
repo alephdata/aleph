@@ -1,9 +1,9 @@
 import {
-  Edge,
-  Grouping,
+  type Edge,
+  type Grouping,
   Point,
-  Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
+  type Vertex,
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 export interface IPositioningProps {
   vertices: Array<Vertex>;

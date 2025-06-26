@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import { logout } from 'actions/sessionActions';
-import { selectSession } from 'selectors';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import { logout } from '/src/actions/sessionActions.js';
+import { selectSession } from '/src/selectors.js';
 
 class LogoutScreen extends Component {
   componentDidMount() {

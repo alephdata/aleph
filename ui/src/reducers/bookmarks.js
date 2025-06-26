@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { queryBookmarks } from 'actions';
+import { queryBookmarks } from '/src/actions/index.js';
 import { resultObjects } from './util';
 
 const initialState = {};

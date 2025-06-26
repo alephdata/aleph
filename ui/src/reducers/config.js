@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { setConfigValue, dismissHint, setLocale } from 'actions';
+import { setConfigValue, dismissHint, setLocale } from '/src/actions/index.js';
 
 const initialState = {};
 

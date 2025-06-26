@@ -4,15 +4,15 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter';
-import Screen from 'components/Screen/Screen';
-import { DualPane } from 'components/common';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import InvestigationViews from 'components/Investigation/InvestigationViews';
-import InvestigationSidebar from 'src/components/Investigation/InvestigationSidebar';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import { selectCollection } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import Screen from '/src/components/Screen/Screen';
+import { DualPane } from '/src/components/common/index.jsx';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import InvestigationViews from '/src/components/Investigation/InvestigationViews';
+import InvestigationSidebar from '/src/components/Investigation/InvestigationSidebar';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import { selectCollection } from '/src/selectors.js';
 
 import './InvestigationScreen.scss';
 

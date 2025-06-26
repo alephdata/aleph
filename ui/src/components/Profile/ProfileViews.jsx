@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   Count,
   Property,
@@ -13,21 +13,21 @@ import {
   Schema,
   SectionLoading,
   TextLoading,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 import {
   profileSimilarQuery,
   profileReferenceQuery,
   entitySetItemsQuery,
-} from 'queries';
+} from '/src/queries.js';
 import {
   selectProfileReferences,
   selectProfileReference,
   selectProfileTags,
   selectEntitySetItemsResult,
   selectSimilarResult,
-} from 'selectors';
-import EntityReferencesMode from 'components/Entity/EntityReferencesMode';
-import ProfileSimilarMode from 'components/Profile/ProfileSimilarMode';
+} from '/src/selectors.js';
+import EntityReferencesMode from '/src/components/Entity/EntityReferencesMode';
+import ProfileSimilarMode from '/src/components/Profile/ProfileSimilarMode';
 import ProfileItemsMode from './ProfileItemsMode';
 
 class ProfileViews extends React.Component {

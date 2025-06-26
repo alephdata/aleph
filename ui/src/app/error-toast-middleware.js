@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 
-import * as actions from 'actions';
-import { showWarningToast } from './toast';
+import * as actions from '/src/actions/index.js';
+import { showWarningToast } from '/src/app/toast.js';
 
 const errorActionTypes = [
   actions.fetchMetadata.ERROR,

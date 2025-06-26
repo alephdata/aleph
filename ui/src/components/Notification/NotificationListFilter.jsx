@@ -4,8 +4,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import SortingBar from 'components/SortingBar/SortingBar';
-import SortingBarSelect from 'components/SortingBar/SortingBarSelect';
+import SortingBar from '/src/components/SortingBar/SortingBar';
+import SortingBarSelect from '/src/components/SortingBar/SortingBarSelect';
 
 const messages = defineMessages({
   filter_all: {

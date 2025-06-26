@@ -1,5 +1,5 @@
 import React from 'react';
-import { Numeric, Skeleton } from 'components/common';
+import { Numeric, Skeleton } from '/src/components/common/index.jsx';
 
 import './AnimatedCount.scss';
 

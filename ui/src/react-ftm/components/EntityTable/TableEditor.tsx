@@ -9,17 +9,23 @@ import { Button, Checkbox, Classes, Icon, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import {
   Entity as FTMEntity,
-  EntityProperties,
-  Property as FTMProperty,
-  Schema as FTMSchema,
-  Value,
+  type EntityProperties,
+  type Property as FTMProperty,
+  type Schema as FTMSchema,
+  type Value,
 } from '@alephdata/followthemoney';
-import { PropertyEditor, PropertySelect } from 'react-ftm/editors';
-import { Entity, Schema, Property } from 'react-ftm/types';
-import { EntityChanges, SortType } from 'react-ftm/components/common/types';
-import { IEntityTableCommonProps } from 'react-ftm/components/EntityTable/common';
-import { showErrorToast, validate } from 'react-ftm/utils';
-import { isScrolledIntoView } from 'react-ftm/components/EntityTable/utils';
+import {
+  PropertyEditor,
+  PropertySelect,
+} from '/src/react-ftm/editors/index.tsx';
+import { Entity, Schema, Property } from '/src/react-ftm/types/index.tsx';
+import type {
+  EntityChanges,
+  SortType,
+} from '/src/react-ftm/components/common/types/index.ts';
+import type { IEntityTableCommonProps } from '/src/react-ftm/components/EntityTable/common.ts';
+import { showErrorToast, validate } from '/src/react-ftm/utils/index.ts';
+import { isScrolledIntoView } from '/src/react-ftm/components/EntityTable/utils.ts';
 
 import './TableEditor.scss';
 

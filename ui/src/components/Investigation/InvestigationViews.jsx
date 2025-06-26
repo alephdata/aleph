@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
-import CollectionDocumentsMode from 'components/Collection/CollectionDocumentsMode';
-import CollectionOverviewMode from 'components/Collection/CollectionOverviewMode';
-import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
-import CollectionMappingsMode from 'components/Collection/CollectionMappingsMode';
-import CollectionEntitiesMode from 'components/Collection/CollectionEntitiesMode';
-import CollectionXrefMode from 'components/Collection/CollectionXrefMode';
-import CollectionEntitySetsIndexMode from 'components/Collection/CollectionEntitySetsIndexMode';
-import CollectionView from 'components/Collection/CollectionView';
-import CollectionViewIds from 'components/Collection/collectionViewIds';
-import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import { ErrorSection, Schema } from 'components/common';
-import { collectionSearchQuery } from 'queries';
-import { selectEntitiesResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import CollectionDocumentsMode from '/src/components/Collection/CollectionDocumentsMode';
+import CollectionOverviewMode from '/src/components/Collection/CollectionOverviewMode';
+import CollectionStatisticsGroup from '/src/components/Collection/CollectionStatisticsGroup';
+import CollectionMappingsMode from '/src/components/Collection/CollectionMappingsMode';
+import CollectionEntitiesMode from '/src/components/Collection/CollectionEntitiesMode';
+import CollectionXrefMode from '/src/components/Collection/CollectionXrefMode';
+import CollectionEntitySetsIndexMode from '/src/components/Collection/CollectionEntitySetsIndexMode';
+import CollectionView from '/src/components/Collection/CollectionView';
+import CollectionViewIds from '/src/components/Collection/collectionViewIds';
+import FacetedEntitySearch from '/src/components/EntitySearch/FacetedEntitySearch';
+import { ErrorSection, Schema } from '/src/components/common/index.jsx';
+import { collectionSearchQuery } from '/src/queries.js';
+import { selectEntitiesResult } from '/src/selectors.js';
 
 import './InvestigationViews.scss';
 
@@ -87,7 +87,8 @@ class InvestigationViews extends React.Component {
   render() {
     const { activeMode, activeType } = this.props;
 
-    let title, subheading;
+    let title;
+    let subheading;
     if (activeMode === CollectionViewIds.SEARCH) {
       title = null;
     } else if (!!activeType) {

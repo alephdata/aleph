@@ -3,9 +3,9 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent, Checkbox } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { triggerCollectionReingest } from 'actions';
-import { showSuccessToast } from 'app/toast';
-import { Collection } from 'components/common';
+import { triggerCollectionReingest } from '/src/actions/index.js';
+import { showSuccessToast } from '/src/app/toast';
+import { Collection } from '/src/components/common/index.jsx';
 
 const messages = defineMessages({
   processing: {

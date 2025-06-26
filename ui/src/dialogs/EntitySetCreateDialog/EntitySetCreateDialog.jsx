@@ -4,14 +4,18 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import Query from 'app/Query';
-import { Collection, EntitySet, FileImport } from 'components/common';
-import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';
-import FormDialog from 'dialogs/common/FormDialog';
-import { createEntitySetMutate as createEntitySet } from 'actions';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import getEntitySetLink from 'util/getEntitySetLink';
+import withRouter from '/src/app/withRouter.jsx';
+import Query from '/src/app/Query';
+import {
+  Collection,
+  EntitySet,
+  FileImport,
+} from '/src/components/common/index.jsx';
+import CreateInvestigationDialog from '/src/dialogs/CreateInvestigationDialog/CreateInvestigationDialog.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
+import { createEntitySetMutate as createEntitySet } from '/src/actions/index.js';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
+import getEntitySetLink from '/src/util/getEntitySetLink.js';
 
 const messages = defineMessages({
   save: {

@@ -9,7 +9,7 @@ import {
   Skeleton,
   ExportLink,
   RelativeTime,
-} from 'src/components/common';
+} from '/src/components/common/index.jsx';
 
 import './Notification.scss';
 

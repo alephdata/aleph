@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Entity, Property } from 'components/common';
+import { Entity, Property } from '/src/components/common/index.jsx';
 
 import './EntityCompare.scss';
-import Skeleton from 'components/common/Skeleton';
+import Skeleton from '/src/components/common/Skeleton';
 
 class EntityCompare extends PureComponent {
   getCommonProperties(entity, other, showEmpty) {

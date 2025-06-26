@@ -11,10 +11,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import YAML from 'yaml';
 
-import withRouter from 'app/withRouter';
-import MappingQueryLabel from 'dialogs/MappingImportDialog/MappingQueryLabel';
-import { FileImport } from 'components/common';
-import { showSuccessToast } from 'app/toast';
+import withRouter from '/src/app/withRouter.jsx';
+import MappingQueryLabel from '/src/dialogs/MappingImportDialog/MappingQueryLabel.jsx';
+import { FileImport } from '/src/components/common/index.jsx';
+import { showSuccessToast } from '/src/app/toast';
 
 import './MappingImportDialog.scss';
 

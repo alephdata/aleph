@@ -1,7 +1,10 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Language as VLLanguage, LanguageSelect } from 'react-ftm';
-import { selectLocale, selectModel } from 'selectors';
+import {
+  Language as VLLanguage,
+  LanguageSelect,
+} from '/src/react-ftm/index.ts';
+import { selectLocale, selectModel } from '/src/selectors.js';
 
 const mapStateToProps = (state) => {
   const model = selectModel(state);

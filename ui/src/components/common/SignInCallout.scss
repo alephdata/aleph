@@ -1,5 +1,5 @@
-@import 'app/variables.scss';
-@import 'app/mixins.scss';
+@import '/src/app/variables.scss';
+@import '/src/app/mixins.scss';
 
 .SignInCallout.#{$bp-ns}-callout {
   margin-bottom: $aleph-grid-size * 2;

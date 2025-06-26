@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import getCategoryLink from 'util/getCategoryLink';
-import { selectMetadata } from 'selectors';
+import getCategoryLink from '/src/util/getCategoryLink.js';
+import { selectMetadata } from '/src/selectors.js';
 
 import './Category.scss';
 

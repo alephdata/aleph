@@ -4,8 +4,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import CreateInvestigationDialog from 'dialogs/CreateInvestigationDialog/CreateInvestigationDialog';
-import { selectSession } from 'selectors';
+import CreateInvestigationDialog from '/src/dialogs/CreateInvestigationDialog/CreateInvestigationDialog.jsx';
+import { selectSession } from '/src/selectors.js';
 
 const messages = defineMessages({
   login: {

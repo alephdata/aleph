@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
-import {
+import { injectIntl, type WrappedComponentProps } from 'react-intl';
+import type {
   Entity,
   Model,
   Property,
@@ -9,7 +9,7 @@ import {
   Values,
 } from '@alephdata/followthemoney';
 import { CountrySelect, TopicSelect, EntitySelect, TextEdit } from './';
-import { validate } from 'react-ftm/utils';
+import { validate } from '/src/react-ftm/utils/index.ts';
 
 const TAB_KEY = 9;
 

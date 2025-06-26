@@ -1,5 +1,5 @@
 import { render, screen } from 'testUtils';
-import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
+import { type Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import EntityViewer2 from './EntityViewer2';
 
 const defaultProps = {
