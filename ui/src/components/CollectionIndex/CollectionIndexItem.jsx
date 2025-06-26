@@ -81,6 +81,16 @@ class CollectionIndexItem extends PureComponent {
           <span className="index-item__details__item">
             <Icon icon="time" />
             <FormattedMessage
+              id="collection.created_at"
+              defaultMessage="Created {date}"
+              values={{
+                date: <Date value={collection.created_at} />,
+              }}
+            />
+          </span>
+          <span className="index-item__details__item">
+            <Icon icon="time" />
+            <FormattedMessage
               id="collection.last_updated"
               defaultMessage="Last updated {date}"
               values={{
