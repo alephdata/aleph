@@ -22,7 +22,7 @@ authlib==0.15.5
 
 elasticsearch==7.17.0
 marshmallow==3.21.1
-gunicorn[eventlet]==22.0.0
+gunicorn[eventlet]==23.0.0
 jsonschema==4.22.0
 apispec==6.3.1
 apispec-webframeworks==0.5.2
