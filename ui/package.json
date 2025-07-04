@@ -29,7 +29,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.30.1",
     "numeral": "^2.0.6",
-    "papaparse": "^5.5.2",
+    "papaparse": "^5.5.3",
     "query-string": "^9.1.1",
     "react": "^17.0.2",
     "react-colorful": "^5.5.1",
