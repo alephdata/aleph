@@ -24,9 +24,7 @@ This is especially useful for:
 
 1. Upload a CSV or Excel file to your investigation workspace.
 2. After upload, click the **Generate Entities** option.
-<div align="center">
-  <img src="../../assets/images/csv_view.png" alt="Screenshot of the OpenAleph table view" width="600"/>
-</div>
+![Screenshot of the OpenAleph table view](../../assets/images/csv_view.png){style="width:600px; margin:auto; display:block"}
 
 3. In section 1, choose the target schema (e.g. `LegalEntity`, `Person`, `Asset`). You can find a full list of supported schemata in the FtM data model [here](https://followthemoney.tech/explorer/#schemata). You may create more than one entity type from a single file. Keep in mind that in OpenAleph, connections are also treated as entities, so be sure to create those here as well.
 4. In section 2, use the interface to assign each column in your file to a schema property.
@@ -34,9 +32,7 @@ This is especially useful for:
 6. OpenAleph will then create new entities from the mapped rows.
 
 This is what a simple mapping looks like that turns a table with bank accounts, some properties and ownership information into entities.
-<div align="center">
-  <img src="../../assets/images/mapping.png" alt="Screenshot of the OpenAleph mapping view" width="1000"/>
-</div>
+![Screenshot of the OpenAleph mapping view](../../assets/images/mapping.png){style="width:1000px; margin:auto; display:block"}
 
 
 ## Tips for Effective Mapping

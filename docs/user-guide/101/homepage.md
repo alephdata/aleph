@@ -4,9 +4,7 @@ Upon logging into OpenAleph, you're presented with the homepage, a central hub f
 
 ## Top Menu
 
-<div align="center">
-  <img src="../../assets/images/top-bar.png" alt="Screenshot of the OpenAleph top menu" width="1000"/>
-</div>
+![Screenshot of the OpenAleph top menu](../../assets/images/top-bar.png){style="width:1000px; margin:auto; display:block"}
 
 The top menu offers quick access to key features:
 
@@ -22,9 +20,7 @@ The top menu offers quick access to key features:
 
 ## Side Menu
 
-<div align="center">
-  <img src="../../assets/images/side-bar.png" alt="Screenshot of the OpenAleph side menu" width="300"/>
-</div>
+![Screenshot of the OpenAleph side menu](../../assets/images/side-bar.png){style="width:300px; margin:auto; display:block"}
 
 The side menu provides additional navigation options:
 

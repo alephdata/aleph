@@ -14,9 +14,7 @@ It's common for datasets to contain both structured and unstructed data.
 
 ## Viewing a Dataset
 
-<div align="center">
-  <img src="../../assets/images/dataset_overview.png" alt="Screenshot of the OpenAleph dataset overview" width="1000"/>
-</div>
+![Screenshot of the OpenAleph dataset overview](../../assets/images/dataset_overview.png){style="width:1000px; margin:auto; display:block"}
 
 To view a dataset:
 

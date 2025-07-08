@@ -20,14 +20,10 @@ To share a workspace with others:
 
 1. Open the workspace.
 2. Click the **Gear icon** in the top right corner and select **Share** from the dropdown menu.
-<div align="center">
-  <img src="../../assets/images/investigation_settings.png" alt="Screenshot of the investigation settings menu" width="400"/>
-</div>
+![Screenshot of the investigation settings menu](../../assets/images/investigation_settings.png){style="width:400px; margin:auto; display:block"}
 
 4. Enter the email address or username of the person you want to invite.
-<div align="center">
-  <img src="../../assets/images/share_access.png" alt="Screenshot of the investigation sharing menu" width="400"/>
-</div>
+![Screenshot of the investigation sharing menu](../../assets/images/share_access.png){style="width:400px; margin:auto; display:block"}
 
 5. Assign a role:
 	- **View**: Can see content, but cannot make changes.
