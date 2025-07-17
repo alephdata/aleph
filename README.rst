@@ -16,7 +16,7 @@ For further details on the software, how to use it, install it or manage data
 imports, please check the documentation at: 
 
 * https://docs.aleph.occrp.org
-* Installation: https://docs.aleph.occrp.org/developers/installation
+* Installation: https://docs.aleph.occrp.org/developers/getting-started/production-deployment
 
 
 Support
