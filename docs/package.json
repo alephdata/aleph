@@ -17,7 +17,7 @@
     "@alephdata/followthemoney": "^3.4.0",
     "@rollup/plugin-yaml": "^4.1.1",
     "@untitaker/hyperlink": "^0.1.26",
-    "astro": "^5.5.6",
+    "astro": "^5.12.8",
     "astro-theme-docs": "github:alephdata/astro-theme-docs"
   },
   "devDependencies": {
