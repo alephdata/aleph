@@ -36,7 +36,7 @@
     "react-countup": "^6.5.3",
     "react-datasheet": "1.4.12",
     "react-dom": "^17.0.2",
-    "react-draggable": "^4.4.6",
+    "react-draggable": "^4.5.0",
     "react-dropzone": "^14.3.8",
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^6.4.7",
