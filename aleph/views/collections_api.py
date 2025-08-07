@@ -66,7 +66,7 @@ def create():
               schema:
                 $ref: '#/components/schemas/Collection'
     """
-    require(request.authz.logged_in)
+    require(request.authz.session_write)
     data = parse_request("CollectionCreate")
     sync = get_flag("sync", True)
     try:
