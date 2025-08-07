@@ -12,6 +12,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role, create_user, get_deep_role
 from aleph.logic.api_keys import generate_user_api_key
+from aleph.settings import SETTINGS
 from aleph.util import is_auto_admin
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
@@ -194,6 +195,12 @@ def view(id):
     data = role.to_dict()
     if request.authz.can_write_role(role.id):
         data.update(get_deep_role(role))
+    if SETTINGS.MAINTENANCE:
+        # Prevent continuous fetching of profile information in maintenance mode.
+        # This is a workaround for the improper permission system (see "write" access).
+        # This results in the email address not being shown on the profile page in
+        # maintenance mode, but there is no other way to prevent constant re-fetching.
+        data.update({"shallow": False})
     return RoleSerializer.jsonify(data)
 
 
