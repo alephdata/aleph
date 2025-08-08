@@ -3,9 +3,9 @@ import thunk from 'redux-thunk';
 // import logger from 'redux-logger';
 import { throttle } from 'lodash';
 
-import rootReducer from 'reducers';
-import { loadState, saveState } from './storage';
-import errorToastMiddleware from './error-toast-middleware';
+import rootReducer from '/src/reducers/index.js';
+import { loadState, saveState } from '/src/app/storage.js';
+import errorToastMiddleware from '/src/app/error-toast-middleware.js';
 
 const persistedState = loadState();
 const store = createStore(

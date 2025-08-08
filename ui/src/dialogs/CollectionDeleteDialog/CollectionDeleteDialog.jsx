@@ -3,10 +3,10 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { showSuccessToast } from 'app/toast';
-import withRouter from 'app/withRouter';
-import { deleteCollection } from 'actions';
-import { DeleteDialog } from 'components/common';
+import { showSuccessToast } from '/src/app/toast';
+import withRouter from '/src/app/withRouter.jsx';
+import { deleteCollection } from '/src/actions/index.js';
+import { DeleteDialog } from '/src/components/common/index.jsx';
 
 const messages = defineMessages({
   success: {

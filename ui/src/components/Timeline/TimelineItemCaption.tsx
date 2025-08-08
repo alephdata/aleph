@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Entity } from '@alephdata/followthemoney';
+import type { FC } from 'react';
+import type { Entity } from '@alephdata/followthemoney';
 
 type TimelineItemCaptionProps = {
   entity: Entity;

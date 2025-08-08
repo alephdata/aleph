@@ -1,6 +1,11 @@
 import { createReducer } from 'redux-act';
-import { fetchMessages, dismissMessage } from 'actions';
-import { loadState, loadStart, loadError, loadComplete } from 'reducers/util';
+import { fetchMessages, dismissMessage } from '/src/actions/index.js';
+import {
+  loadState,
+  loadStart,
+  loadError,
+  loadComplete,
+} from '/src/reducers/util.js';
 
 // The IDs of dismissed messages are persisted in local storage. Storing only
 // the ID of the most recently dismissed message is not enough, as there could

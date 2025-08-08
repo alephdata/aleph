@@ -1,12 +1,12 @@
 import { createReducer } from 'redux-act';
 
-import { fetchExports } from 'src/actions';
+import { fetchExports } from '/src/actions/index.js';
 import {
   loadState,
   loadStart,
   loadError,
   loadComplete,
-} from 'src/reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = loadState();
 

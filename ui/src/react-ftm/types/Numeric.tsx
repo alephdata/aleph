@@ -1,7 +1,11 @@
 import React from 'react';
 import numeral from 'numeral';
 import CountUp from 'react-countup';
-import { FormattedNumber, injectIntl, WrappedComponentProps } from 'react-intl';
+import {
+  FormattedNumber,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
 
 import './Numeric.scss';
 

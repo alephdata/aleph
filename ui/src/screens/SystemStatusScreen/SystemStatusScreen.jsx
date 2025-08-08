@@ -13,14 +13,22 @@ import { connect } from 'react-redux';
 import { Button, ProgressBar, Intent } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import withRouter from 'app/withRouter';
-import { Collection, ErrorSection, Numeric, Skeleton } from 'components/common';
-import Screen from 'components/Screen/Screen';
-import Dashboard from 'components/Dashboard/Dashboard';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import { triggerCollectionCancel, fetchSystemStatus } from 'actions';
-import { selectSystemStatus } from 'selectors';
-import convertUTCDateToLocalDate from 'util/convertUTCDateToLocalDate';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  Collection,
+  ErrorSection,
+  Numeric,
+  Skeleton,
+} from '/src/components/common/index.jsx';
+import Screen from '/src/components/Screen/Screen';
+import Dashboard from '/src/components/Dashboard/Dashboard';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import {
+  triggerCollectionCancel,
+  fetchSystemStatus,
+} from '/src/actions/index.js';
+import { selectSystemStatus } from '/src/selectors.js';
+import convertUTCDateToLocalDate from '/src/util/convertUTCDateToLocalDate.js';
 
 import './SystemStatusScreen.scss';
 

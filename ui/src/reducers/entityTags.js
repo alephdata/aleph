@@ -1,11 +1,11 @@
 import { createReducer } from 'redux-act';
 
-import { fetchEntityTags, fetchProfileTags } from 'actions';
+import { fetchEntityTags, fetchProfileTags } from '/src/actions/index.js';
 import {
   objectLoadStart,
   objectLoadError,
   objectLoadComplete,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = {};
 

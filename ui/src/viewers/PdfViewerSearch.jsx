@@ -8,13 +8,13 @@ import {
   SearchHighlight,
   QueryInfiniteLoad,
   ResultText,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
-import Query from 'app/Query';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
-import withRouter from 'app/withRouter';
+import Query from '/src/app/Query';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult } from '/src/selectors.js';
+import withRouter from '/src/app/withRouter.jsx';
 
 import './PdfViewerSearch.scss';
 

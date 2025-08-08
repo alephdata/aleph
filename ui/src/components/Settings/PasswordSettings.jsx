@@ -7,12 +7,15 @@ import {
   InputGroup,
   Intent,
 } from '@blueprintjs/core';
-import { Dialog } from 'react-ftm';
+import { Dialog } from '/src/react-ftm/index.ts';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentRole } from 'selectors';
-import { updateRole } from 'actions';
-import { showSuccessToast, showWarningToast } from 'react-ftm/utils';
+import { selectCurrentRole } from '/src/selectors.js';
+import { updateRole } from '/src/actions/index.js';
+import {
+  showSuccessToast,
+  showWarningToast,
+} from '/src/react-ftm/utils/index.ts';
 
 export default function PasswordSettings() {
   const dispatch = useDispatch();

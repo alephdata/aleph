@@ -3,9 +3,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { EntitySet, ErrorSection, QueryInfiniteLoad } from 'components/common';
-import { queryEntitySets } from 'actions';
-import EntitySetIndexItem from 'components/EntitySet/EntitySetIndexItem';
+import {
+  EntitySet,
+  ErrorSection,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import { queryEntitySets } from '/src/actions/index.js';
+import EntitySetIndexItem from '/src/components/EntitySet/EntitySetIndexItem';
 
 const messages = defineMessages({
   no_diagram: {

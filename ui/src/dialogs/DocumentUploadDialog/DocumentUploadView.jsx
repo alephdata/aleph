@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Button, Checkbox, Classes, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
-import { FileSize } from 'react-ftm';
+import { FileSize } from '/src/react-ftm/index.ts';
 import c from 'classnames';
 
-import convertPathsToTree from 'util/convertPathsToTree';
+import convertPathsToTree from '/src/util/convertPathsToTree.js';
 
 import './DocumentUploadView.scss';
 

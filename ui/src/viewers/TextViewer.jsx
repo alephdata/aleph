@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Pre } from '@blueprintjs/core';
 
-import { Skeleton } from 'components/common';
-import insertHighlights from 'util/insertHighlights';
-import convertHighlightsToReactElements from 'util/convertHighlightsToReactElements';
+import { Skeleton } from '/src/components/common/index.jsx';
+import insertHighlights from '/src/util/insertHighlights.js';
+import convertHighlightsToReactElements from '/src/util/convertHighlightsToReactElements.js';
 
 import './TextViewer.scss';
 
@@ -44,7 +44,7 @@ class TextViewer extends PureComponent {
 
   highlightedText() {
     const { document } = this.props;
-    let text = document.getFirst('bodyText');
+    const text = document.getFirst('bodyText');
 
     if (!document.highlight) {
       return text;

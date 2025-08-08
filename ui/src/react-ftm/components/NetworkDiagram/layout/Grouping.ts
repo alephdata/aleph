@@ -1,5 +1,5 @@
-import { Vertex } from './Vertex';
-import { GraphLayout } from './GraphLayout';
+import type { Vertex } from './Vertex';
+import type { GraphLayout } from './GraphLayout';
 import { Rectangle } from './Rectangle';
 
 interface IGroupingData {

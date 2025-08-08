@@ -1,5 +1,8 @@
-import { Entity, Property as FTMProperty } from '@alephdata/followthemoney';
-import { Property } from 'react-ftm/types';
+import type {
+  Entity,
+  Property as FTMProperty,
+} from '@alephdata/followthemoney';
+import { Property } from '/src/react-ftm/types';
 
 export const sortEntities = (
   a: Entity,

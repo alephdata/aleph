@@ -12,9 +12,9 @@ import {
 } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { CheckboxList, Schema } from 'components/common';
-import DateFacet from 'components/Facet/DateFacet';
+import withRouter from '/src/app/withRouter.jsx';
+import { CheckboxList, Schema } from '/src/components/common/index.jsx';
+import DateFacet from '/src/components/Facet/DateFacet';
 
 import './Facet.scss';
 
@@ -181,15 +181,13 @@ class Facet extends Component {
           <span className="FacetName">{label}</span>
 
           {isFiltered && (
-            <>
-              <span className={c('FilterCount', Classes.TEXT_MUTED)}>
-                <FormattedMessage
-                  id="search.facets.filtersSelected"
-                  defaultMessage="{count} selected"
-                  values={{ count: intl.formatNumber(count) }}
-                />
-              </span>
-            </>
+            <span className={c('FilterCount', Classes.TEXT_MUTED)}>
+              <FormattedMessage
+                id="search.facets.filtersSelected"
+                defaultMessage="{count} selected"
+                values={{ count: intl.formatNumber(count) }}
+              />
+            </span>
           )}
 
           {!isDate && isOpen && (

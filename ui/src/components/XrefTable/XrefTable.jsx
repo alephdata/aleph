@@ -4,10 +4,13 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { ErrorSection, EntityDecisionHotkeys } from 'components/common';
-import { showWarningToast } from 'app/toast';
-import { pairwiseJudgement } from 'actions';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  ErrorSection,
+  EntityDecisionHotkeys,
+} from '/src/components/common/index.jsx';
+import { showWarningToast } from '/src/app/toast';
+import { pairwiseJudgement } from '/src/actions/index.js';
 import XrefTableRow from './XrefTableRow';
 
 import './XrefTable.scss';

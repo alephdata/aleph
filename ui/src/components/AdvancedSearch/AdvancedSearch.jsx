@@ -2,7 +2,7 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import queryString from 'query-string';
 import {
   Button,
@@ -19,9 +19,9 @@ import {
   FIELDS,
   composeQueryText,
   parseQueryText,
-} from 'components/AdvancedSearch/util';
-import AdvancedSearchMultiField from 'components/AdvancedSearch/AdvancedSearchMultiField';
-import Query from 'app/Query';
+} from '/src/components/AdvancedSearch/util';
+import AdvancedSearchMultiField from '/src/components/AdvancedSearch/AdvancedSearchMultiField';
+import Query from '/src/app/Query';
 
 import './AdvancedSearch.scss';
 

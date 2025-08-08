@@ -1,10 +1,10 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import TimelineItemCreateButton from './TimelineItemCreateButton';
 import TimelineZoomLevelSwitch from './TimelineZoomLevelSwitch';
-import { FeedbackButton } from 'components/common';
+import { FeedbackButton } from '/src/components/common/index.jsx';
 import {
   selectIsEmpty,
   selectIsZoomEnabled,

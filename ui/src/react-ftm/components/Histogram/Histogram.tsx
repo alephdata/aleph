@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Colors } from '@blueprintjs/core';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
+import { injectIntl, type WrappedComponentProps } from 'react-intl';
 import {
   BarChart,
   Bar,
@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import c from 'classnames';
-import Numeric from 'react-ftm/types/Numeric';
+import Numeric from '/src/react-ftm/types/Numeric.tsx';
 
 import './Histogram.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchField from 'components/SearchField/SearchField';
+import SearchField from '/src/components/SearchField/SearchField';
 import Facet from './Facet';
 
 import './Facets.scss';

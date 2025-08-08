@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import queryString from 'query-string';
-import ensureArray from 'util/ensureArray';
-import { getGroupField } from 'components/SearchField/util';
+import ensureArray from '/src/util/ensureArray.js';
+import { getGroupField } from '/src/components/SearchField/util.js';
 
 class Query {
   // State of a particular API query. This doesn't need to be specific to any one
@@ -58,7 +58,7 @@ class Query {
     if (!this.has(name)) {
       return missing;
     }
-    return parseInt(this.getString(name), 10);
+    return Number.parseInt(this.getString(name), 10);
   }
 
   getBool(name, missing = false) {

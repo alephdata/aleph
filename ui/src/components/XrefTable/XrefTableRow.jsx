@@ -6,9 +6,9 @@ import {
   Skeleton,
   JudgementButtons,
   Score,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
-import EntityCompare from 'components/Entity/EntityCompare';
+import EntityCompare from '/src/components/Entity/EntityCompare';
 
 class XrefTableRow extends Component {
   renderSkeleton() {

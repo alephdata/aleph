@@ -2,25 +2,23 @@ import React, { lazy, Suspense } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import AudioViewer from 'viewers/AudioViewer';
-import DefaultViewer from 'viewers/DefaultViewer';
-import TableViewer from 'viewers/TableViewer';
-import TextViewer from 'viewers/TextViewer';
-import HtmlViewer from 'viewers/HtmlViewer';
-import ImageViewer from 'viewers/ImageViewer';
-import FolderViewer from 'viewers/FolderViewer';
-import EmailViewer from 'viewers/EmailViewer';
-import VideoViewer from 'viewers/VideoViewer';
-import ArticleViewer from 'viewers/ArticleViewer';
-import withRouter from 'app/withRouter';
-import { SectionLoading } from 'components/common';
-import { selectEntityDirectionality } from 'selectors';
+import AudioViewer from '/src/viewers/AudioViewer.jsx';
+import DefaultViewer from '/src/viewers/DefaultViewer.jsx';
+import TableViewer from '/src/viewers/TableViewer.jsx';
+import TextViewer from '/src/viewers/TextViewer.jsx';
+import HtmlViewer from '/src/viewers/HtmlViewer.jsx';
+import ImageViewer from '/src/viewers/ImageViewer.jsx';
+import FolderViewer from '/src/viewers/FolderViewer.jsx';
+import EmailViewer from '/src/viewers/EmailViewer.jsx';
+import VideoViewer from '/src/viewers/VideoViewer.jsx';
+import ArticleViewer from '/src/viewers/ArticleViewer.jsx';
+import withRouter from '/src/app/withRouter.jsx';
+import { SectionLoading } from '/src/components/common/index.jsx';
+import { selectEntityDirectionality } from '/src/selectors.js';
 
 import './DocumentViewMode.scss';
 
-const PdfViewer = lazy(() =>
-  import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer')
-);
+const PdfViewer = lazy(() => import('/src/viewers/PdfViewer.jsx'));
 
 export class DocumentViewMode extends React.Component {
   renderContent() {

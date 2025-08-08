@@ -3,12 +3,12 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import Screen from 'components/Screen/Screen';
-import Dashboard from 'components/Dashboard/Dashboard';
-import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
-import InvestigationCreateButton from 'components/Toolbar/InvestigationCreateButton';
-import { investigationsQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import Screen from '/src/components/Screen/Screen';
+import Dashboard from '/src/components/Dashboard/Dashboard';
+import CollectionIndex from '/src/components/CollectionIndex/CollectionIndex';
+import InvestigationCreateButton from '/src/components/Toolbar/InvestigationCreateButton';
+import { investigationsQuery } from '/src/queries.js';
 
 const messages = defineMessages({
   title: {

@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { showErrorToast } from 'src/app/toast';
+import { showErrorToast } from '/src/app/toast.js';
 
 import './DocumentUploadForm.scss';
 

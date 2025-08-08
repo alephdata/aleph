@@ -1,5 +1,5 @@
-import { endpoint } from 'src/app/api';
-import Query from 'app/Query';
+import { endpoint } from '/src/app/api.js';
+import Query from '/src/app/Query';
 import asyncActionCreator from './asyncActionCreator';
 
 export const fetchExports = asyncActionCreator(

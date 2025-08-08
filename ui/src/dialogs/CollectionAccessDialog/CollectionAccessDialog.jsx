@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import {
   updateCollectionPermissions,
   fetchCollectionPermissions,
-} from 'actions';
-import { selectCollectionPermissions } from 'selectors';
-import { Role } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
-import { showSuccessToast, showWarningToast } from 'app/toast';
+} from '/src/actions/index.js';
+import { selectCollectionPermissions } from '/src/selectors.js';
+import { Role } from '/src/components/common/index.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
 
 import './CollectionAccessDialog.scss';
 

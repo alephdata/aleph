@@ -6,11 +6,11 @@ import truncateText from 'truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { fetchCollection, queryCollections } from 'actions';
-import { selectCollection, selectCollectionsResult } from 'selectors';
-import { Skeleton, SelectWrapper } from 'components/common';
-import CollectionStatus from 'components/Collection/CollectionStatus';
-import getCollectionLink from 'util/getCollectionLink';
+import { fetchCollection, queryCollections } from '/src/actions/index.js';
+import { selectCollection, selectCollectionsResult } from '/src/selectors.js';
+import { Skeleton, SelectWrapper } from '/src/components/common/index.jsx';
+import CollectionStatus from '/src/components/Collection/CollectionStatus';
+import getCollectionLink from '/src/util/getCollectionLink.js';
 
 import './Collection.scss';
 

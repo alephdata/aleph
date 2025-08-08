@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import c from 'classnames';
 import { FormattedDate } from 'react-intl';
 import {
@@ -8,7 +8,7 @@ import {
   addMonths,
   addYears,
 } from 'date-fns';
-import { TimelineChartZoomLevel } from '../types';
+import type { TimelineChartZoomLevel } from '../types';
 
 import './TimelineChartLabels.scss';
 

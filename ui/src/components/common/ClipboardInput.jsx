@@ -3,7 +3,7 @@ import { Button, InputGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { showSuccessToast } from 'app/toast';
+import { showSuccessToast } from '/src/app/toast';
 
 const messages = defineMessages({
   success: {

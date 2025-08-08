@@ -11,12 +11,12 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import withRouter from 'app/withRouter';
-import { queryEntitySets } from 'actions';
-import { collectionEntitySetsQuery } from 'queries';
-import { selectEntitySetsResult } from 'selectors';
-import { Count, EntitySet } from 'components/common';
-import EntitySetIndex from 'components/EntitySet/EntitySetIndex';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryEntitySets } from '/src/actions/index.js';
+import { collectionEntitySetsQuery } from '/src/queries.js';
+import { selectEntitySetsResult } from '/src/selectors.js';
+import { Count, EntitySet } from '/src/components/common/index.jsx';
+import EntitySetIndex from '/src/components/EntitySet/EntitySetIndex';
 
 import './EntitySetSelectorSection.scss';
 

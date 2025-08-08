@@ -1,7 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Button, Intent, Classes } from '@blueprintjs/core';
-import { showWarningToast } from 'app/toast';
+import { showWarningToast } from '/src/app/toast';
 import c from 'classnames';
 
 const messages = defineMessages({

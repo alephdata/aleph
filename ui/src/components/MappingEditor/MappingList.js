@@ -115,8 +115,8 @@ class MappingList {
     const { keys, properties, schema } = mapping;
 
     if (schema.isEdge) {
-      let sourceKeys = [],
-        targetKeys = [];
+      let sourceKeys = [];
+      let targetKeys = [];
       const { source, target } = schema.edge;
 
       if (properties[source]) {

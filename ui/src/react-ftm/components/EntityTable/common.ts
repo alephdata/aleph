@@ -1,8 +1,8 @@
-import { Entity } from '@alephdata/followthemoney';
-import { WrappedComponentProps } from 'react-intl';
+import type { Entity } from '@alephdata/followthemoney';
+import type { WrappedComponentProps } from 'react-intl';
 
-import { EntityManager } from 'react-ftm/components/common';
-import { EntityChanges } from 'react-ftm/components/common/types';
+import type { EntityManager } from '/src/react-ftm/components/common/index.ts';
+import type { EntityChanges } from '/src/react-ftm/components/common/types/index.tsx';
 
 export interface IEntityTableCommonProps extends WrappedComponentProps {
   entityManager: EntityManager;

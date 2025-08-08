@@ -1,14 +1,14 @@
-@import '~@blueprintjs/core/src/blueprint.scss';
-@import '~@blueprintjs/table/lib/css/table.css';
-@import '~@blueprintjs/icons/src/blueprint-icons.scss';
-@import '~@blueprintjs/select/src/blueprint-select.scss';
-@import '~@blueprintjs/popover2/lib/css/blueprint-popover2.css';
-@import './variables.scss';
-@import './tables.scss';
-@import './layouts.scss';
-@import './blueprint-overrides.scss';
-@import 'app/mixins.scss';
-@import 'app/utils.scss';
+@import '/node_modules/@blueprintjs/core/src/blueprint.scss';
+@import '/node_modules/@blueprintjs/table/lib/css/table.css';
+@import '/node_modules/@blueprintjs/icons/src/blueprint-icons.scss';
+@import '/node_modules/@blueprintjs/select/src/blueprint-select.scss';
+@import '/node_modules/@blueprintjs/popover2/lib/css/blueprint-popover2.css';
+@import '/src/app/variables.scss';
+@import '/src/app/tables.scss';
+@import '/src/app/layouts.scss';
+@import '/src/app/blueprint-overrides.scss';
+@import '/src/app/mixins.scss';
+@import '/src/app/utils.scss';
 
 html {
   height: 100%;

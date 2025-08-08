@@ -29,7 +29,8 @@ const cleanDateQParam = (value) => {
 
 const timestampToLabel = (timestamp, granularity, locale) => {
   const dateObj = new Date(timestamp);
-  let label, tooltipLabel;
+  let label;
+  let tooltipLabel;
 
   if (granularity === 'month') {
     label = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dateObj);
@@ -67,8 +68,8 @@ const filterDateIntervals = ({ field, query, intervals, useDefaultBounds }) => {
   const gt = gtRaw && moment(gtRaw);
   const lt = ltRaw && moment(ltRaw);
 
-  let gtOutOfRange,
-    ltOutOfRange = false;
+  let gtOutOfRange = false;
+  let ltOutOfRange = false;
   const filteredIntervals = intervals.filter(({ id }) => {
     if (gt && gt.isAfter(id)) {
       gtOutOfRange = true;

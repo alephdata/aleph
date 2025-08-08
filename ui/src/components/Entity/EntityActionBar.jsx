@@ -11,8 +11,12 @@ import {
 } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 import c from 'classnames';
-import { ResultText, SearchBox, UpdateStatus } from 'components/common';
-import { selectEntitiesResult } from 'selectors';
+import {
+  ResultText,
+  SearchBox,
+  UpdateStatus,
+} from '/src/components/common/index.jsx';
+import { selectEntitiesResult } from '/src/selectors.js';
 
 import './EntityActionBar.scss';
 

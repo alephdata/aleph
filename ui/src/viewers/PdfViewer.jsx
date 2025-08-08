@@ -5,14 +5,14 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import Query from 'app/Query';
-import { PagingButtons } from 'components/Toolbar';
-import { SectionLoading, Skeleton } from 'components/common';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult } from 'selectors';
-import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import PdfViewerPage from 'viewers/PdfViewerPage';
+import withRouter from '/src/app/withRouter.jsx';
+import Query from '/src/app/Query';
+import { PagingButtons } from '/src/components/Toolbar';
+import { SectionLoading, Skeleton } from '/src/components/common/index.jsx';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult } from '/src/selectors.js';
+import normalizeDegreeValue from '/src/util/normalizeDegreeValue.js';
+import PdfViewerPage from '/src/viewers/PdfViewerPage.jsx';
 
 import './PdfViewer.scss';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -125,7 +125,7 @@ export class PdfViewer extends Component {
     const scrollBarWidth = 20;
     const PdfViewerElement = window.document.getElementById('PdfViewer');
     const width = PdfViewerElement
-      ? parseInt(
+      ? Number.parseInt(
           PdfViewerElement.getBoundingClientRect().width - scrollBarWidth,
           10
         )
@@ -147,23 +147,17 @@ export class PdfViewer extends Component {
   }
 
   fetchComponents() {
-    import(/* webpackChunkName:'pdf-lib' */ 'react-pdf').then(
-      ({ Document, Page, pdfjs }) => {
-        // Webpack will copy `pdf.worker.min.js` to the build directory and automatically
-        // include a file hash in the file name to handle browser cache invalidation.
-        // See: https://github.com/wojtekmaj/react-pdf#import-worker-recommended
-        // See: https://webpack.js.org/guides/asset-modules/#url-assets
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          // The leading `!!` disables all configured loaders that are usually applied for
-          // JS files as the worker file is already bundled and optimized for distribution.
-          // See: https://webpack.js.org/concepts/loaders/#inline
-          '!!pdfjs-dist/build/pdf.worker.min.js',
-          import.meta.url
-        ).toString();
+    import('react-pdf').then(({ Document, Page, pdfjs }) => {
+      // Vite will copy `pdf.worker.min.js` to the build directory and automatically
+      // include a file hash in the file name to handle browser cache invalidation.
+      // See: https://github.com/wojtekmaj/react-pdf#import-worker-recommended
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.js',
+        import.meta.url
+      ).toString();
 
-        this.setState({ components: { Document, Page } });
-      }
-    );
+      this.setState({ components: { Document, Page } });
+    });
   }
 
   renderPdf() {
@@ -243,8 +237,8 @@ export class PdfViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
-  const page = parseInt(hashQuery.page, 10) || 1;
-  const rotate = hashQuery.rotate && parseInt(hashQuery.rotate, 10);
+  const page = Number.parseInt(hashQuery.page, 10) || 1;
+  const rotate = hashQuery.rotate && Number.parseInt(hashQuery.rotate, 10);
 
   const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)

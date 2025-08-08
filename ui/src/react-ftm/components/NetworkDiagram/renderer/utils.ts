@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout';
+import type * as React from 'react';
+import { Point } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 export function getRefMatrix(
   ref: React.RefObject<SVGGraphicsElement>

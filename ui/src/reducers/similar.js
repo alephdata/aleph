@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { querySimilar } from 'actions';
-import { resultObjects } from 'reducers/util';
+import { querySimilar } from '/src/actions/index.js';
+import { resultObjects } from '/src/reducers/util.js';
 
 const initialState = {};
 

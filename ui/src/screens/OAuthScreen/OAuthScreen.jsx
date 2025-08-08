@@ -2,13 +2,13 @@ import React from 'react';
 import queryString from 'query-string';
 import { Navigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { loginWithToken } from 'actions/sessionActions';
+import { loginWithToken } from '/src/actions/sessionActions.js';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, DialogBody } from '@blueprintjs/core';
-import { RoleBlockedMessage } from 'components/common';
+import { RoleBlockedMessage } from '/src/components/common/index.jsx';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 
 class OAuthScreen extends React.Component {
   componentDidMount() {

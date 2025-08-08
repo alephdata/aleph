@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import withRouter from 'app/withRouter';
-import { selectModel } from 'selectors';
-import { collectionSearchQuery } from 'queries';
-import { Schema as VLSchema, SchemaSelect } from 'react-ftm';
-import CollectionView from 'components/Collection/CollectionView';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import withRouter from '/src/app/withRouter.jsx';
+import { selectModel } from '/src/selectors.js';
+import { collectionSearchQuery } from '/src/queries.js';
+import { Schema as VLSchema, SchemaSelect } from '/src/react-ftm/index.ts';
+import CollectionView from '/src/components/Collection/CollectionView';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
 
 function SchemaLink({ collection, location, schema, ...rest }) {
   const viewProps = { collection };

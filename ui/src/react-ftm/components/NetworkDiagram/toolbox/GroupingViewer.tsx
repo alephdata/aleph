@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import { Icon } from '@blueprintjs/core';
-import { Entity } from '@alephdata/followthemoney';
-import { ColorPicker } from 'react-ftm/editors';
-import { Grouping } from 'react-ftm/components/NetworkDiagram/layout';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { EntityList } from 'react-ftm/components/common/EntityList';
+import type { Entity } from '@alephdata/followthemoney';
+import { ColorPicker } from '/src/react-ftm/editors/index.tsx';
+import type { Grouping } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { EntityList } from '/src/react-ftm/components/common/EntityList.tsx';
 
 import './GroupingViewer.scss';
 

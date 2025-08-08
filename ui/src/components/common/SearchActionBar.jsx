@@ -3,9 +3,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { AnchorButton, ControlGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import { ResultText } from 'components/common';
-import ExportDialog from 'dialogs/ExportDialog/ExportDialog';
-import { DialogToggleButton } from 'components/Toolbar';
+import { ResultText } from '/src/components/common/index.jsx';
+import ExportDialog from '/src/dialogs/ExportDialog/ExportDialog.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
 
 import './SearchActionBar.scss';
 

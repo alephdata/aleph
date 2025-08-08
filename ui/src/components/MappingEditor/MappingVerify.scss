@@ -1,4 +1,4 @@
-@import 'app/variables.scss';
+@import '/src/app/variables.scss';
 
 .MappingVerify {
   &__item {
@@ -46,6 +46,6 @@
   }
 
   &__literalEdit {
-    margin: 0 -$aleph-grid-size * 0.5 !important;
+    margin: 0 (-$aleph-grid-size * 0.5) !important;
   }
 }

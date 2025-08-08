@@ -1,4 +1,4 @@
-@import 'app/variables.scss';
+@import '/src/app/variables.scss';
 
 .Count {
   .#{$bp-ns}-tab[aria-disabled='true'] & {

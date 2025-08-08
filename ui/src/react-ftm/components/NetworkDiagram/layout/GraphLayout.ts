@@ -1,12 +1,12 @@
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { Vertex } from './Vertex';
 import { Edge } from './Edge';
 import { Grouping } from './Grouping';
-import { Point } from './Point';
+import type { Point } from './Point';
 import { Rectangle } from './Rectangle';
 import { forceLayout } from '.';
-import { ISettingsData, Settings } from './Settings';
-import { GraphConfig } from 'react-ftm/components/NetworkDiagram/GraphConfig';
+import { type ISettingsData, Settings } from './Settings';
+import type { GraphConfig } from '/src/react-ftm/components/NetworkDiagram/GraphConfig.ts';
 
 export interface IGraphLayoutData {
   vertices: Array<any>;

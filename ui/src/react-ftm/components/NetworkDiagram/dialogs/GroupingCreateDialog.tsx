@@ -3,10 +3,10 @@ import { defineMessages } from 'react-intl';
 import { Classes, ControlGroup, InputGroup } from '@blueprintjs/core';
 import {
   GraphContext,
-  IGraphContext,
-} from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { Dialog } from 'react-ftm/components/common';
-import { Grouping } from 'react-ftm/components/NetworkDiagram/layout';
+  type IGraphContext,
+} from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { Dialog } from '/src/react-ftm/components/common/index.ts';
+import { Grouping } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 
 const messages = defineMessages({
   title: {

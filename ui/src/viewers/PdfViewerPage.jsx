@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { PagingButtons } from 'components/Toolbar';
-import { queryEntities } from 'actions';
-import { selectEntitiesResult, selectEntity } from 'selectors';
-import TextViewer from 'viewers/TextViewer';
+import { PagingButtons } from '/src/components/Toolbar';
+import { queryEntities } from '/src/actions/index.js';
+import { selectEntitiesResult, selectEntity } from '/src/selectors.js';
+import TextViewer from '/src/viewers/TextViewer.jsx';
 
 class PdfViewerPage extends Component {
   componentDidMount() {

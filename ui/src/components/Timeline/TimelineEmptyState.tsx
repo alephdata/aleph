@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { NonIdealState, NonIdealStateProps } from '@blueprintjs/core';
+import { NonIdealState, type NonIdealStateProps } from '@blueprintjs/core';
 
 type TimelineEmptyStateProps = {
   action?: NonIdealStateProps['action'];

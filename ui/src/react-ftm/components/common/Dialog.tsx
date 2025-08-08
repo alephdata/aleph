@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dialog as BpDialog, IconName, Spinner } from '@blueprintjs/core';
+import { Dialog as BpDialog, type IconName, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import './Dialog.scss';

@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Params, Navigate, Route, useParams } from 'react-router-dom';
+import type { FC } from 'react';
+import { type Params, Navigate, Route, useParams } from 'react-router-dom';
 
 type RedirectProps = {
   to: string | ((params: Params) => string);

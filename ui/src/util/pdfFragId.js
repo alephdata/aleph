@@ -13,7 +13,8 @@ function parseParameterString(parameterString) {
   const [parameter, valueString] = parameterString.split('=');
   const paramObject = { parameter: parameter.toLowerCase(), valueString };
   if (parameter === 'nameddest') paramObject.name = valueString;
-  if (parameter === 'page') paramObject.pagenum = parseInt(valueString, 10);
+  if (parameter === 'page')
+    paramObject.pagenum = Number.parseInt(valueString, 10);
   if (parameter === 'zoom') {
     const [scale, left, top] = valueString.split(',');
     Object.assign(paramObject, { scale, left, top });

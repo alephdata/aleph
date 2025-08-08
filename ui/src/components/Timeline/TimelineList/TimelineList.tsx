@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 import TimelineListItem from './TimelineListItem';

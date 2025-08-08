@@ -8,9 +8,9 @@ function hexToRgb(hex: string): null | RgbColor {
   }
 
   return {
-    r: parseInt(matches[1], 16),
-    g: parseInt(matches[2], 16),
-    b: parseInt(matches[3], 16),
+    r: Number.parseInt(matches[1], 16),
+    g: Number.parseInt(matches[2], 16),
+    b: Number.parseInt(matches[3], 16),
   };
 }
 

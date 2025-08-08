@@ -1,4 +1,4 @@
-import { Date, FileSize, URL } from 'react-ftm';
+import { Date, FileSize, URL } from '/src/react-ftm/index.ts';
 
 import Country from './Country';
 import Numeric from './Numeric';
