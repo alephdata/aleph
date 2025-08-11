@@ -32,6 +32,7 @@ import { setRecentlyViewedItem } from 'app/storage';
 import withRouter from 'app/withRouter';
 
 import 'components/common/ItemOverview.scss';
+import { EntityAddToButton } from 'components/Toolbar/EntityAddToButton';
 
 const messages = defineMessages({
   add_to: {
@@ -121,6 +122,11 @@ class EntityScreen extends Component {
                 entities: [entity],
                 showTimelines: entity.schema.isA('Interval'),
               }}
+            />
+            <EntityAddToButton
+              entity={[entity]}
+              collection={entity.collection}
+              schema={entity.schema}
             />
             <EntityDeleteButton
               entities={[entity]}
