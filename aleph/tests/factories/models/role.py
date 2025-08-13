@@ -12,5 +12,5 @@ class RoleFactory(factory.alchemy.SQLAlchemyModelFactory):
     type = Role.USER
     name = factory.Faker("name")
     email = factory.Faker("email")
-    api_key = factory.Faker("uuid4")
+    api_key_digest = factory.Faker("uuid4")
     foreign_id = factory.Faker("uuid4")
