@@ -2,5 +2,17 @@ FROM ghcr.io/alephdata/aleph-ui:${ALEPH_TAG:-latest} AS builder
 RUN npm run build
 
 FROM nginx:alpine
+
+# connect-src 'self' - Required for API requests and loading files from archive
+# script-src 'self' - Required for UI JS assets
+# style-src 'self' - Required for UI CSS assets
+# style-src 'unsafe-inline' - Some UI features use inline styles
+# font-src 'self' - Blueprint icons are loaded as a webfont
+# img-src 'self' - Required to load UI image assets and to display image source files
+# media-src 'self' - Required to display audio/video source files
+ENV ALEPH_CONTENT_SECURITY_POLICY="default-src 'none'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; media-src 'self'; form-action 'self'; frame-ancestors 'none';"
+
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY aleph.conf.template /etc/nginx/templates/aleph.conf.template
+
 COPY --from=builder /alephui/build /assets
