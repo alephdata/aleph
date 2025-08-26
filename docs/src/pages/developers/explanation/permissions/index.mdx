@@ -1,0 +1,44 @@
+---
+layout: '@layouts/DevelopersLayout.astro'
+title: Permissions
+---
+
+# Permissions
+
+<p class="lead">Aleph allows you to grant permissions to users and user groups, for example to view a dataset or investigation. This article describes the permissions model implemented in Aleph and its trade-offs.</p>
+
+## Overview
+
+Permissions are handled at the [collection](/developers/reference/glossary#collection) level. That means you can grant a user or user group access to an entire collection, but you can’t grant more granular permissions (such as accessing only a particular file inside of a collection).
+
+There are two permission levels: read access and write access.
+
+* Users with **read access** can view everything in a collection, including metadata, entities, files, network diagrams, and the permissions of other users.
+
+* Additionally, users with **write access** can also edit collection metadata and contents. For example, they can upload files and edit collection settings. They can also grant or remove permissions for other users.
+
+## User groups
+
+You can grant permissions not only to individual users but also to user groups. If you grant a user group permissions, all users in that group will have the corresponding access level. If you later add a user to the group, they’ll automatically gain access to all the collections accessible to that group. Converseley, if you remove a user from a group, they’ll lose access to those collections (unless the user was also granted permissions individually).
+
+## Admins
+
+When creating a user, you can specify whether they should be an admin user. Admin users automatically have read and write access to every collection, even if they haven’t been granted access directly or via a user group.
+
+Certain actions are restricted to admins. For example, only admins can convert an investigation to a dataset or make a dataset publicly accessible.
+
+## Limitations and known issues
+
+### Limited permission levels
+
+Aleph only supports two permission levels: read access and write access. This keeps the implementation relatively simply, avoiding the complexity of a fully-featured permissions model. However, it has also led to a few unintuitive workarounds.
+
+For example, Aleph has a streaming API endpoint. This API endpoint allows users to enumerate all entities in a collection or even all entities in Aleph. Intuitively, streaming is a read-only operation. However, Aleph still requires users to have write access to a collection or to be an admin to use the streaming endpoint.
+
+The reason for this is that streaming entities can consume significant system resources. Therefore, it makes sense to limit which users can stream entities. As Aleph’s permissions model is limited to two permission levels, the only way to limit access (that doesn’t require implementing a more flexible permissions model) is to limit streaming to users with write access or admin priviliges. Still, it’s clear that this behavior will be unexpected to most users.
+
+### Limited tools to manage user groups
+
+While Aleph allows you to grant permissions to user groups, it does not provide a UI to create or remove groups or manage the members of a group. Instead, Aleph supports integrations with [identity providers](/developers/how-to/operations/identity-provider) allowing you to manage group members externally.
+
+However, Aleph’s management CLI has limited support for managing user groups and group members.
