@@ -149,7 +149,8 @@
             { "slug": "/developers/explanation/ingest-pipeline" },
             { "slug": "/developers/explanation/entity-extraction" },
             { "slug": "/developers/explanation/search" },
-            { "slug": "/developers/explanation/cross-referencing" }
+            { "slug": "/developers/explanation/cross-referencing" },
+            { "slug": "/developers/explanation/permissions" }
           ]
         },
         {
