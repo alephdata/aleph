@@ -92,7 +92,7 @@ export class DocumentUploadForm extends PureComponent {
             defaultMessage="If you need to upload a large amount of files (100+) consider {link}."
             values={{
               link: (
-                <a href="https://docs.aleph.occrp.org/developers/alephclient/#importing-all-files-from-a-directory">
+                <a href="https://docs.aleph.occrp.org/developers/how-to/data/upload-directory/">
                   alephclient
                 </a>
               ),
