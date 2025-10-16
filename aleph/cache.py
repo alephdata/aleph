@@ -70,7 +70,7 @@ class Cache(object):
             log.info("Flush: %s", key)
             keys.append(key)
             if len(keys) > 0 and len(keys) % 1000 == 0:
-                self.kv.delete(*keys)
+                self.kv.unlink(*keys)
                 keys = []
         if len(keys) > 0:
-            self.kv.delete(*keys)
+            self.kv.unlink(*keys)
