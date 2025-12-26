@@ -132,6 +132,17 @@ class CollectionInfo extends PureComponent {
         <div className="CollectionInfo__item">
           <div className="key text-muted">
             <FormattedMessage
+              id="collection.created_at"
+              defaultMessage="Created"
+            />
+          </div>
+          <div className="value" itemProp="dateCreated">
+            <Date value={collection.created_at} />
+          </div>
+        </div>
+        <div className="CollectionInfo__item">
+          <div className="key text-muted">
+            <FormattedMessage
               id="collection.updated_at"
               defaultMessage="Metadata updated"
             />
