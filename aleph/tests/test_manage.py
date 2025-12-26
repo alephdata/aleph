@@ -73,7 +73,7 @@ class ManageTestCase(TestCase):
         )
         assert result.exit_code == 0
         assert result.output.startswith("User created")
-        assert "API Key:" in result.output
+        assert "ID:" in result.output
 
         roles = Role.query.all()
         emails = [role.email for role in roles]

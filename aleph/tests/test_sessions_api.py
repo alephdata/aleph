@@ -129,13 +129,13 @@ class SessionsApiTestCase(TestCase):
             "email": self.role.email,
             "password": secret,
         }
-        assert self.role.api_key is None
+        assert self.role.api_key_digest is None
 
         res = self.client.post("/api/2/sessions/login", data=data)
         assert res.status_code == 200
 
         db.session.refresh(self.role)
-        assert self.role.api_key is None
+        assert self.role.api_key_digest is None
 
 
 class SessionsApiOAuthTestCase(TestCase):

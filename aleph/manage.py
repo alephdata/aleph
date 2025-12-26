@@ -25,7 +25,6 @@ from aleph.queues import get_active_dataset_status
 from aleph.index.admin import delete_index
 from aleph.logic.api_keys import (
     reset_api_key_expiration as _reset_api_key_expiration,
-    hash_plaintext_api_keys as _hash_plaintext_api_keys,
 )
 from aleph.index.entities import iter_proxies
 from aleph.logic.collections import create_collection, update_collection
@@ -416,7 +415,7 @@ def retry_exports_():
 def createuser(email, password=None, name=None, admin=False):
     """Create a user and show their API key."""
     role = create_user(email, name, password, is_admin=admin)
-    print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
+    print(f"User created. ID: {role.id}")
 
 
 @cli.command()
@@ -599,9 +598,3 @@ def evilshit():
 def reset_api_key_expiration():
     """Reset the expiration date of all legacy, non-expiring API keys."""
     _reset_api_key_expiration()
-
-
-@cli.command()
-def hash_plaintext_api_keys():
-    """Hash legacy plaintext API keys."""
-    _hash_plaintext_api_keys()
