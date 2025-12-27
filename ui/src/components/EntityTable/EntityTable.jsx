@@ -21,6 +21,7 @@ import { showErrorToast, showSuccessToast } from 'app/toast';
 import getEntityLink from 'util/getEntityLink';
 
 import './EntityTable.scss';
+import { EntityAddToButton } from 'components/Toolbar/EntityAddToButton';
 
 const messages = defineMessages({
   search_placeholder: {
@@ -275,6 +276,12 @@ export class EntityTable extends Component {
               showTimelines: schema.getTemporalStartProperties().length > 0,
             }}
           />
+          <EntityAddToButton
+            entities={selectedEntities}
+            collection={collection}
+            onSuccess={this.clearSelection}
+            schema={schema}
+            />
           <EntityDeleteButton
             entities={selectedEntities}
             onSuccess={this.clearSelection}
