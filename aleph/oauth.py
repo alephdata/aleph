@@ -41,10 +41,16 @@ def _parse_access_token(provider, oauth_token):
         return jwk_set.find_by_kid(header.get("kid"))
 
     metadata = provider.load_server_metadata()
-    algs = metadata.get("id_token_signing_alg_values_supported", ["RS256"])
+    # Use a wider range of supported algorithms for better compatibility
+    algs = metadata.get("id_token_signing_alg_values_supported", ["RS256", "HS256", "ES256"])
     jwt = JsonWebToken(algs)
     claims = {"exp": {"essential": True}}
-    return jwt.decode(token, key=load_key, claims_options=claims)
+    try:
+        return jwt.decode(token, key=load_key, claims_options=claims)
+    except Exception as e:
+        # If decoding fails, log the error and return empty dict
+        log.warning("Failed to decode access token: %r", e)
+        return {}
 
 
 def _get_groups(provider, oauth_token, id_token):
@@ -83,12 +89,37 @@ def _get_groups(provider, oauth_token, id_token):
 def handle_oauth(provider, oauth_token):
     from aleph.model import Role, RoleBlockedError
 
-    token = provider.parse_id_token(oauth_token)
-    if token is None:
-        raise OAuthError()
+    # Extract ID token directly if it's available
+    id_token_value = oauth_token.get("id_token")
+    if id_token_value:
+        try:
+            # In Authlib 1.6.0, parse_id_token requires a nonce parameter
+            token = provider.parse_id_token(oauth_token, nonce=None)
+        except Exception as e:
+            log.warning("Failed to parse ID token: %r", e)
+            # Extract claims directly from the access token instead
+            token = _parse_access_token(provider, oauth_token)
+    else:
+        # If no ID token is available, use the access token
+        token = _parse_access_token(provider, oauth_token)
+
+    if not token:
+        raise OAuthError("No valid token found")
+
     name = token.get("name", token.get("given_name"))
     email = token.get("email", token.get("upn"))
-    role_id = "%s:%s" % (SETTINGS.OAUTH_HANDLER, token.get("sub", email))
+    # Fallback to preferred_username if email is not available
+    if not email:
+        email = token.get("preferred_username")
+
+    if not name and not email:
+        raise OAuthError("No user information found in token")
+
+    subject = token.get("sub", email)
+    if not subject:
+        raise OAuthError("No subject identifier found in token")
+
+    role_id = "%s:%s" % (SETTINGS.OAUTH_HANDLER, subject)
     role = Role.by_foreign_id(role_id)
     if SETTINGS.OAUTH_MIGRATE_SUB and role is None:
         role = Role.by_email(email)
