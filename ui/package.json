@@ -101,7 +101,7 @@
     "@types/d3-scale": "^4.0.9",
     "@types/dagre": "^0.7.52",
     "@types/google-libphonenumber": "^7.4.24",
-    "@types/jest": "^28.1.4",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.3",
     "@types/numeral": "^2.0.5",
