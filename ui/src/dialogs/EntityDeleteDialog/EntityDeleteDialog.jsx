@@ -4,11 +4,11 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { Entity } from 'components/common';
-import { showErrorToast, showSuccessToast } from 'app/toast';
-import getCollectionLink from 'util/getCollectionLink';
-import getEntityLink from 'util/getEntityLink';
+import withRouter from '/src/app/withRouter.jsx';
+import { Entity } from '/src/components/common/index.jsx';
+import { showErrorToast, showSuccessToast } from '/src/app/toast';
+import getCollectionLink from '/src/util/getCollectionLink.js';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './EntityDeleteDialog.scss';
 

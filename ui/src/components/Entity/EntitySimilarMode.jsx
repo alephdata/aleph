@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Callout } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { querySimilar } from 'actions';
-import { selectSimilarResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { querySimilar } from '/src/actions/index.js';
+import { selectSimilarResult } from '/src/selectors.js';
 import {
   ErrorSection,
   QueryInfiniteLoad,
@@ -16,11 +16,11 @@ import {
   Skeleton,
   EntityDecisionHotkeys,
   EntityDecisionRow,
-} from 'components/common';
-import EntityCompare from 'components/Entity/EntityCompare';
-import { entitySimilarQuery } from 'queries';
-import { pairwiseJudgement } from 'actions';
-import { showWarningToast } from 'app/toast';
+} from '/src/components/common/index.jsx';
+import EntityCompare from '/src/components/Entity/EntityCompare';
+import { entitySimilarQuery } from '/src/queries.js';
+import { pairwiseJudgement } from '/src/actions/index.js';
+import { showWarningToast } from '/src/app/toast';
 
 const messages = defineMessages({
   empty: {

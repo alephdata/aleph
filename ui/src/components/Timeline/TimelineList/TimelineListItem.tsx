@@ -1,12 +1,12 @@
-import { CSSProperties, forwardRef } from 'react';
+import { type CSSProperties, forwardRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Icon, IconSize } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import c from 'classnames';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { useTimelineItemKeyboardNavigation } from '../util';
 import TimelineItemCaption from '../TimelineItemCaption';
-import { reduceTranslucentColor } from 'util/reduceTranslucentColor';
+import { reduceTranslucentColor } from '/src/util/reduceTranslucentColor.js';
 
 import './TimelineListItem.scss';
 

@@ -1,5 +1,5 @@
-import { endpoint } from 'app/api';
-import asyncActionCreator from 'actions/asyncActionCreator';
+import { endpoint } from '/src/app/api';
+import asyncActionCreator from '/src/actions/asyncActionCreator.js';
 
 export const fetchMetadata = asyncActionCreator(
   () => async () => {

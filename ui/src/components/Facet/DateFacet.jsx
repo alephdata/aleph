@@ -9,18 +9,18 @@ import {
 } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Card, Icon, Intent, Spinner } from '@blueprintjs/core';
-import { Histogram } from 'react-ftm';
+import { Histogram } from '/src/react-ftm/index.ts';
 import moment from 'moment';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   DEFAULT_START_INTERVAL,
   filterDateIntervals,
   formatDateQParam,
   timestampToLabel,
   isDateIntervalUncertain,
-} from 'components/Facet/util';
-import { selectEntitiesResult, selectLocale } from 'selectors';
+} from '/src/components/Facet/util';
+import { selectEntitiesResult, selectLocale } from '/src/selectors.js';
 
 import './DateFacet.scss';
 

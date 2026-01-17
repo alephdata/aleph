@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import {
   EditableProperty as VLEditableProperty,
   Property as VLProperty,
-} from 'react-ftm';
+} from '/src/react-ftm/index.ts';
 import { Button } from '@blueprintjs/core';
 
-import { Entity } from 'components/common';
-import { selectLocale, selectModel } from 'selectors';
+import { Entity } from '/src/components/common/index.jsx';
+import { selectLocale, selectModel } from '/src/selectors.js';
 
 import './Property.scss';
 

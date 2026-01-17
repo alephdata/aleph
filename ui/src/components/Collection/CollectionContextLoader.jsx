@@ -2,11 +2,18 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { collectionXrefFacetsQuery } from 'queries';
-import { fetchCollection, queryCollectionXref, forceMutate } from 'actions';
-import { selectCollection, selectCollectionXrefResult } from 'selectors';
-import timestamp from 'util/timestamp';
+import withRouter from '/src/app/withRouter.jsx';
+import { collectionXrefFacetsQuery } from '/src/queries.js';
+import {
+  fetchCollection,
+  queryCollectionXref,
+  forceMutate,
+} from '/src/actions/index.js';
+import {
+  selectCollection,
+  selectCollectionXrefResult,
+} from '/src/selectors.js';
+import timestamp from '/src/util/timestamp.js';
 
 class CollectionContextLoader extends PureComponent {
   constructor(props) {

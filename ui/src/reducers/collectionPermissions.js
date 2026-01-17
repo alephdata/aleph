@@ -3,12 +3,12 @@ import { createReducer } from 'redux-act';
 import {
   fetchCollectionPermissions,
   updateCollectionPermissions,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   objectLoadStart,
   objectLoadError,
   objectLoadComplete,
-} from 'reducers/util';
+} from '/src/reducers/util.js';
 
 const initialState = {};
 

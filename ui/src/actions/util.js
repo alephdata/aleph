@@ -1,4 +1,4 @@
-import { endpoint } from 'app/api';
+import { endpoint } from '/src/app/api';
 
 // function reloadQuery(query, result) {
 //   /* When the redux store is being mutated (see reducers/mutate),

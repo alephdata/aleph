@@ -4,8 +4,8 @@ import {
   queryEntitySetItems,
   updateEntitySetItemMutate,
   updateEntitySetItemNoMutate,
-} from 'actions';
-import { objectLoadComplete, resultObjects } from 'reducers/util';
+} from '/src/actions/index.js';
+import { objectLoadComplete, resultObjects } from '/src/reducers/util.js';
 
 const initialState = {};
 

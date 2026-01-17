@@ -6,19 +6,23 @@ import queryString from 'query-string';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonGroup, ControlGroup } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
-import Screen from 'components/Screen/Screen';
-import EntityHeading from 'components/Entity/EntityHeading';
-import EntityProperties from 'components/Entity/EntityProperties';
-import ProfileViews from 'components/Profile/ProfileViews';
-import LoadingScreen from 'components/Screen/LoadingScreen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
-import ProfileCallout from 'components/Profile/ProfileCallout';
-import { DialogToggleButton } from 'components/Toolbar';
-import { Breadcrumbs, DualPane, Schema } from 'components/common';
-import getEntityLink from 'util/getEntityLink';
+import withRouter from '/src/app/withRouter.jsx';
+import Screen from '/src/components/Screen/Screen';
+import EntityHeading from '/src/components/Entity/EntityHeading';
+import EntityProperties from '/src/components/Entity/EntityProperties';
+import ProfileViews from '/src/components/Profile/ProfileViews';
+import LoadingScreen from '/src/components/Screen/LoadingScreen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import EntitySetDeleteDialog from '/src/dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog.jsx';
+import ProfileCallout from '/src/components/Profile/ProfileCallout';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import {
+  Breadcrumbs,
+  DualPane,
+  Schema,
+} from '/src/components/common/index.jsx';
+import getEntityLink from '/src/util/getEntityLink.js';
 import {
   fetchProfile,
   fetchProfileTags,
@@ -26,7 +30,7 @@ import {
   querySimilar,
   queryProfileExpand,
   queryEntitySetItems,
-} from 'actions';
+} from '/src/actions/index.js';
 import {
   selectProfile,
   selectProfileView,
@@ -34,12 +38,12 @@ import {
   selectSimilarResult,
   selectProfileExpandResult,
   selectEntitySetItemsResult,
-} from 'selectors';
+} from '/src/selectors.js';
 import {
   profileSimilarQuery,
   profileReferencesQuery,
   entitySetItemsQuery,
-} from 'queries';
+} from '/src/queries.js';
 
 const messages = defineMessages({
   delete: {

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import c from 'classnames';
 import { compose } from 'redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import EntitySearchResultsRow from './EntitySearchResultsRow';
-import { ErrorSection, SortableTH } from 'components/common';
-import SearchField from 'components/SearchField/SearchField';
+import { ErrorSection, SortableTH } from '/src/components/common/index.jsx';
+import SearchField from '/src/components/SearchField/SearchField';
 
 import './EntitySearchResults.scss';
 

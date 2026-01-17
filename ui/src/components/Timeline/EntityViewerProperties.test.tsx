@@ -1,6 +1,6 @@
 import { render, screen } from 'testUtils';
 import userEvent from '@testing-library/user-event';
-import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
+import { type Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import EntityViewerProperties from './EntityViewerProperties';
 
 const defaultProps = {

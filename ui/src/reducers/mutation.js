@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import timestamp from 'util/timestamp';
+import timestamp from '/src/util/timestamp.js';
 
 import {
   forceMutate,
@@ -24,7 +24,7 @@ import {
   deleteBookmark,
   loginWithToken,
   logout,
-} from 'actions';
+} from '/src/actions/index.js';
 
 const initialState = {
   global: timestamp(),

@@ -3,7 +3,7 @@ import { Classes, MenuItem } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { selectMetadata } from 'selectors';
+import { selectMetadata } from '/src/selectors.js';
 
 class AppItem extends PureComponent {
   render() {

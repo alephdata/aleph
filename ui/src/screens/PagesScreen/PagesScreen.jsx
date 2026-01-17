@@ -2,15 +2,15 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { isLangRtl } from 'react-ftm';
+import { isLangRtl } from '/src/react-ftm/index.ts';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import Screen from 'components/Screen/Screen';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import { AppItem, LinkMenuItem } from 'components/common';
-import { selectPages, selectPage } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import Screen from '/src/components/Screen/Screen';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import { AppItem, LinkMenuItem } from '/src/components/common/index.jsx';
+import { selectPages, selectPage } from '/src/selectors.js';
 
 import './PagesScreen.scss';
 import getPageLink from '../../util/getPageLink';

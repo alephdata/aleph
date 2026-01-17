@@ -1,9 +1,9 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import DocumentManager from 'components/Document/DocumentManager';
-import { folderDocumentsQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import DocumentManager from '/src/components/Document/DocumentManager';
+import { folderDocumentsQuery } from '/src/queries.js';
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;

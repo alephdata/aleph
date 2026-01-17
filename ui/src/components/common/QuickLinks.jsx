@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from 'components/common';
+import { Skeleton } from '/src/components/common/index.jsx';
 
 import './QuickLinks.scss';
 

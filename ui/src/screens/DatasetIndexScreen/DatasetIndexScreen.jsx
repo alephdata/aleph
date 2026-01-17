@@ -3,14 +3,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { getGroupField } from 'components/SearchField/util';
-import { selectCollectionsResult } from 'selectors';
-import { DualPane, SignInCallout } from 'components/common';
-import Facets from 'components/Facet/Facets';
-import Screen from 'components/Screen/Screen';
-import CollectionIndex from 'components/CollectionIndex/CollectionIndex';
-import { datasetsQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import { getGroupField } from '/src/components/SearchField/util';
+import { selectCollectionsResult } from '/src/selectors.js';
+import { DualPane, SignInCallout } from '/src/components/common/index.jsx';
+import Facets from '/src/components/Facet/Facets';
+import Screen from '/src/components/Screen/Screen';
+import CollectionIndex from '/src/components/CollectionIndex/CollectionIndex';
+import { datasetsQuery } from '/src/queries.js';
 
 import './DatasetIndexScreen.scss';
 

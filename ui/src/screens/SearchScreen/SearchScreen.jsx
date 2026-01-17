@@ -3,13 +3,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { selectEntitiesResult } from 'selectors';
-import { triggerQueryExport } from 'src/actions';
-import { SignInCallout } from 'components/common';
-import FacetedEntitySearch from 'components/EntitySearch/FacetedEntitySearch';
-import Screen from 'components/Screen/Screen';
-import { entitiesQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import { selectEntitiesResult } from '/src/selectors.js';
+import { triggerQueryExport } from '/src/actions/index.js';
+import { SignInCallout } from '/src/components/common/index.jsx';
+import FacetedEntitySearch from '/src/components/EntitySearch/FacetedEntitySearch';
+import Screen from '/src/components/Screen/Screen';
+import { entitiesQuery } from '/src/queries.js';
 
 import './SearchScreen.scss';
 

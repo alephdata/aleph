@@ -2,16 +2,16 @@ import {
   defaultModel,
   Entity,
   Model,
-  Namespace,
-  Schema,
-  IEntityDatum,
+  type Namespace,
+  type Schema,
+  type IEntityDatum,
 } from '@alephdata/followthemoney';
 
-import {
+import type {
   EntityChanges,
   EntityChangeUpdate,
-} from 'react-ftm/components/common/types';
-import { matchText } from 'react-ftm/utils';
+} from '/src/react-ftm/components/common/types/index.tsx';
+import { matchText } from '/src/react-ftm/utils/index.ts';
 
 export interface IEntityManagerProps {
   model?: Model;

@@ -6,9 +6,14 @@ import { Link } from 'react-router-dom';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { fetchEntity } from 'actions';
-import { selectEntity } from 'selectors';
-import { Date, Entity, Skeleton, Schema } from 'src/components/common';
+import { fetchEntity } from '/src/actions/index.js';
+import { selectEntity } from '/src/selectors.js';
+import {
+  Date,
+  Entity,
+  Skeleton,
+  Schema,
+} from '/src/components/common/index.jsx';
 
 import './MappingIndexItem.scss';
 

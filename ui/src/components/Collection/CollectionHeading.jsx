@@ -2,7 +2,11 @@ import React, { PureComponent } from 'react';
 import c from 'classnames';
 import { Classes } from '@blueprintjs/core';
 
-import { Category, Collection, Skeleton } from 'components/common';
+import {
+  Category,
+  Collection,
+  Skeleton,
+} from '/src/components/common/index.jsx';
 
 import './CollectionHeading.scss';
 

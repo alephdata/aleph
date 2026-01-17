@@ -1,5 +1,5 @@
-import { Point, Rectangle } from './layout';
-import { GraphConfig } from './GraphConfig';
+import { Point, type Rectangle } from './layout';
+import type { GraphConfig } from './GraphConfig';
 
 export class Viewport {
   private static readonly BASE_SIZE = 100;

@@ -8,9 +8,9 @@ import {
   SpinnerSize,
 } from '@blueprintjs/core';
 
-import { modes } from 'react-ftm/components/NetworkDiagram/utils';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
-import { Count, Schema } from 'react-ftm/types';
+import { modes } from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
+import { Count, Schema } from '/src/react-ftm/types/index.tsx';
 
 import './VertexMenu.scss';
 

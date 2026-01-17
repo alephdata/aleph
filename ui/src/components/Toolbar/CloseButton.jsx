@@ -2,7 +2,7 @@ import React from 'react';
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 
 export class CloseButton extends React.Component {
   constructor(props) {

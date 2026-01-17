@@ -5,11 +5,11 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { AnchorButton, Classes, Intent } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import Query from 'app/Query';
-import NotificationList from 'components/Notification/NotificationList';
-import InvestigationQuickLinks from 'components/Investigation/InvestigationQuickLinks';
-import { selectCollection, selectNotificationsResult } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import Query from '/src/app/Query';
+import NotificationList from '/src/components/Notification/NotificationList';
+import InvestigationQuickLinks from '/src/components/Investigation/InvestigationQuickLinks';
+import { selectCollection, selectNotificationsResult } from '/src/selectors.js';
 
 import './InvestigationOverview.scss';
 

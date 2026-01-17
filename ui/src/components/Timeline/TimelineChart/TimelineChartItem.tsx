@@ -1,12 +1,17 @@
-import { CSSProperties, forwardRef, MouseEventHandler, useRef } from 'react';
+import {
+  type CSSProperties,
+  forwardRef,
+  type MouseEventHandler,
+  useRef,
+} from 'react';
 import c from 'classnames';
 import { differenceInDays, addDays } from 'date-fns';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import {
   isScrolledIntoView,
   useTimelineItemKeyboardNavigation,
   useTimelineItemSelectedChange,
-  TimelineItem,
+  type TimelineItem,
   mergeRefs,
 } from '../util';
 import TimelineItemCaption from '../TimelineItemCaption';

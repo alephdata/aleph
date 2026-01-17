@@ -10,19 +10,18 @@
     "@blueprintjs/popover2": "^1.13.9",
     "@blueprintjs/select": "^4.9.21",
     "@blueprintjs/table": "^4.10.8",
-    "@formatjs/intl-locale": "^3.3.4",
-    "@formatjs/intl-pluralrules": "^5.2.6",
-    "@formatjs/intl-relativetimeformat": "^11.2.6",
     "@formatjs/intl-utils": "^3.8.4",
     "axios": "^0.30.0",
     "bezier-js": "^6.1.4",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",
     "crypto": "npm:crypto-browserify@3.12.0",
+    "crypto-browserify": "^3.12.1",
     "d3-force": "^3.0.0",
     "d3-scale": "^4.0.2",
     "dagre": "^0.8.5",
     "date-fns": "^4.1.0",
+    "filesize": "^10.1.6",
     "google-libphonenumber": "^3.2.40",
     "http-proxy-middleware": "^3.0.5",
     "js-file-download": "^0.4.9",
@@ -60,39 +59,22 @@
     "browserify-sign": "<=4.2.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "lint": "eslint --ext js,jsx,ts,tsx src --max-warnings 0",
-    "test": "craco test",
-    "eject": "craco eject",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
-    "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss}'",
+    "start": "vite",
+    "build": "vite build",
+    "lint": "biome lint ./src",
+    "lint:fix": "biome lint --write ./src",
+    "format": "biome format --write ./src",
+    "format:check": "biome format ./src",
     "translate": "npm run messages && npm run compile-translations && npm run concat-translations",
     "messages": "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx,ts,tsx}' --ignore 'src/**/*.d.ts'",
     "compile-translations": "formatjs compile-folder i18n/translations/raw i18n/translations/compiled",
     "concat-translations": "node i18n/concatTranslations.js"
   },
-  "proxy": "http://api:5000/",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "jest": {
     "transformIgnorePatterns": []
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 5 chrome version",
-      "last 5 firefox version",
-      "last 5 safari version"
-    ]
-  },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
+    "@biomejs/biome": "^1.9.4",
     "@formatjs/cli": "^6.2.0",
     "@testing-library/jest-dom": "^6.1.3",
     "@testing-library/react": "^12.1.5",
@@ -107,8 +89,8 @@
     "@types/numeral": "^2.0.5",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.1",
-    "prettier": "^3.0.3",
-    "react-scripts": "^5.0.1",
-    "sass": "^1.68.0"
+    "@vitejs/plugin-react": "^4.4.1",
+    "sass": "^1.68.0",
+    "vite": "^6.3.4"
   }
 }

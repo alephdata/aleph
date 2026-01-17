@@ -3,9 +3,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 
-import { DialogToggleButton } from 'components/Toolbar';
-import EntitySetEditDialog from 'dialogs/EntitySetEditDialog/EntitySetEditDialog';
-import EntitySetDeleteDialog from 'dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import EntitySetEditDialog from '/src/dialogs/EntitySetEditDialog/EntitySetEditDialog.jsx';
+import EntitySetDeleteDialog from '/src/dialogs/EntitySetDeleteDialog/EntitySetDeleteDialog.jsx';
 
 import './EntitySetManageMenu.scss';
 

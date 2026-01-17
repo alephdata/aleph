@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
 import truncateText from 'truncate';
 
-import { Schema } from 'components/common';
+import { Schema } from '/src/components/common/index.jsx';
 
 import './MappingLabel.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { wordList } from 'react-ftm/utils';
+import { wordList } from '/src/react-ftm/utils';
 
 interface ILabelProps {
   code: string;
@@ -26,7 +26,7 @@ interface IListProps {
 
 class List extends React.Component<IListProps> {
   render() {
-    const { codes, truncate = Infinity, ...props } = this.props;
+    const { codes, truncate = Number.POSITIVE_INFINITY, ...props } = this.props;
     if (!codes) return null;
 
     let names: Array<any> = codes.map((code) => (

@@ -1,7 +1,7 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { type FC, useState, useEffect, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, Intent, Classes } from '@blueprintjs/core';
-import { Model, Schema, Entity } from '@alephdata/followthemoney';
+import type { Model, Schema, Entity } from '@alephdata/followthemoney';
 import TimelineItemCreateForm from './TimelineItemCreateForm';
 import { useFormValidity } from './util';
 

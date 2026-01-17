@@ -9,9 +9,9 @@ import {
   injectIntl,
 } from 'react-intl';
 
-import { Skeleton, Tag, ErrorSection } from 'components/common';
-import { selectEntityTags, selectModel } from 'selectors';
-import getValueLink from 'util/getValueLink';
+import { Skeleton, Tag, ErrorSection } from '/src/components/common/index.jsx';
+import { selectEntityTags, selectModel } from '/src/selectors.js';
+import getValueLink from '/src/util/getValueLink.js';
 
 import './EntityTagsMode.scss';
 

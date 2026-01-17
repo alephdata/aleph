@@ -8,18 +8,18 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { DialogToggleButton } from 'components/Toolbar';
-import DocumentUploadDialog from 'dialogs/DocumentUploadDialog/DocumentUploadDialog';
-import DocumentFolderDialog from 'dialogs/DocumentFolderDialog/DocumentFolderDialog';
-import EntityActionBar from 'components/Entity/EntityActionBar';
-import EntityDeleteButton from 'components/Toolbar/EntityDeleteButton';
-import EntitySearch from 'components/EntitySearch/EntitySearch';
-import { ErrorSection } from 'components/common';
-import { getGroupField } from 'components/SearchField/util';
-import getEntityLink from 'util/getEntityLink';
-import { selectEntitiesResult, selectModel } from 'selectors';
-import { deleteEntity, queryEntities } from 'actions';
+import withRouter from '/src/app/withRouter.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import DocumentUploadDialog from '/src/dialogs/DocumentUploadDialog/DocumentUploadDialog.jsx';
+import DocumentFolderDialog from '/src/dialogs/DocumentFolderDialog/DocumentFolderDialog.jsx';
+import EntityActionBar from '/src/components/Entity/EntityActionBar';
+import EntityDeleteButton from '/src/components/Toolbar/EntityDeleteButton';
+import EntitySearch from '/src/components/EntitySearch/EntitySearch';
+import { ErrorSection } from '/src/components/common/index.jsx';
+import { getGroupField } from '/src/components/SearchField/util';
+import getEntityLink from '/src/util/getEntityLink.js';
+import { selectEntitiesResult, selectModel } from '/src/selectors.js';
+import { deleteEntity, queryEntities } from '/src/actions/index.js';
 
 import './DocumentManager.scss';
 

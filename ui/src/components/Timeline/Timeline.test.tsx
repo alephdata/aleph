@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { render, screen, within, act, waitFor } from 'testUtils';
 import userEvent from '@testing-library/user-event';
 import { Colors } from '@blueprintjs/core';
-import { Entity, Model, defaultModel } from '@alephdata/followthemoney';
+import { type Entity, Model, defaultModel } from '@alephdata/followthemoney';
 import Timeline from './Timeline';
 import TimelineActions from './TimelineActions';
 import { TimelineContextProvider } from './context';

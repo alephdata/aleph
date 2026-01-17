@@ -55,7 +55,7 @@ export const expireRecentlyViewed = () => {
   // you can then remove everying that is expired and stop before
   // iterating the entire list of entries.
   for (const item in recentlyViewed) {
-    const itemDate = new Date(parseInt(recentlyViewed[item], 10));
+    const itemDate = new Date(Number.parseInt(recentlyViewed[item], 10));
 
     if (itemDate < expiryDate) {
       delete recentlyViewed[item];

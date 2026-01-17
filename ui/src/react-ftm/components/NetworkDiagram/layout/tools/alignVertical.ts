@@ -6,8 +6,11 @@ import {
   forceX,
 } from 'd3-force';
 import { scaleLinear } from 'd3-scale';
-import { Point, Edge } from 'react-ftm/components/NetworkDiagram/layout';
-import { IPositioningProps, getPositionFromSimulation } from './common';
+import {
+  Point,
+  type Edge,
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import { type IPositioningProps, getPositionFromSimulation } from './common';
 import getForceData from './getForceData';
 
 const alignVertical = (props: IPositioningProps): any => {

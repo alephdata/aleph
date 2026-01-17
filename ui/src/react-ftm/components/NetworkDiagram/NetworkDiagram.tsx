@@ -1,45 +1,52 @@
 import * as React from 'react';
 import c from 'classnames';
-import { Entity, Schema } from '@alephdata/followthemoney';
+import type { Entity, Schema } from '@alephdata/followthemoney';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
-import { defineMessages, injectIntl, WrappedComponentProps } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+  type WrappedComponentProps,
+} from 'react-intl';
 
 import {
   EdgeCreateDialog,
   EntityCreateDialog,
-  EntityManager,
-} from 'react-ftm/components/common';
-import { GraphConfig } from 'react-ftm/components/NetworkDiagram/GraphConfig';
-import { GraphRenderer } from 'react-ftm/components/NetworkDiagram/renderer';
+  type EntityManager,
+} from '/src/react-ftm/components/common/index.ts';
+import type { GraphConfig } from '/src/react-ftm/components/NetworkDiagram/GraphConfig.ts';
+import { GraphRenderer } from '/src/react-ftm/components/NetworkDiagram/renderer/index.ts';
 import {
   Edge,
   GraphLayout,
   Rectangle,
   Point,
   Settings,
-  Vertex,
-} from 'react-ftm/components/NetworkDiagram/layout';
-import { Viewport } from 'react-ftm/components/NetworkDiagram/Viewport';
-import { GraphContext } from 'react-ftm/components/NetworkDiagram/GraphContext';
+  type Vertex,
+} from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import type { Viewport } from '/src/react-ftm/components/NetworkDiagram/Viewport.ts';
+import { GraphContext } from '/src/react-ftm/components/NetworkDiagram/GraphContext.ts';
 import {
   Sidebar,
   TableView,
   Toolbar,
   VertexMenu,
-} from 'react-ftm/components/NetworkDiagram/toolbox';
-import { History } from 'react-ftm/components/NetworkDiagram/History';
+} from '/src/react-ftm/components/NetworkDiagram/toolbox/index.ts';
+import { History } from '/src/react-ftm/components/NetworkDiagram/History.ts';
 import {
   GroupingCreateDialog,
   SettingsDialog,
-} from 'react-ftm/components/NetworkDiagram/dialogs';
-import { EdgeType } from 'react-ftm/types';
-import { EntityChanges } from 'react-ftm/components/common/types';
+} from '/src/react-ftm/components/NetworkDiagram/dialogs/index.ts';
+import type { EdgeType } from '/src/react-ftm/types/index.tsx';
+import type { EntityChanges } from '/src/react-ftm/components/common/types/index.ts';
 import {
   filterVerticesByText,
   modes,
-} from 'react-ftm/components/NetworkDiagram/utils';
-import { showSuccessToast, showWarningToast } from 'react-ftm/utils';
+} from '/src/react-ftm/components/NetworkDiagram/utils/index.ts';
+import {
+  showSuccessToast,
+  showWarningToast,
+} from '/src/react-ftm/utils/index.ts';
 
 import './NetworkDiagram.scss';
 

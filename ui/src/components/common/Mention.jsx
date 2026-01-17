@@ -5,11 +5,11 @@ import { Classes, Tag as BpTag } from '@blueprintjs/core';
 import { Tooltip2 as Tooltip } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { Count, Property, Tag } from 'components/common';
-import wordList from 'util/wordList';
-import ensureArray from 'util/ensureArray';
-import getValueLink from 'util/getValueLink';
-import { selectValueCount, selectMetadata } from 'selectors';
+import { Count, Property, Tag } from '/src/components/common/index.jsx';
+import wordList from '/src/util/wordList.js';
+import ensureArray from '/src/util/ensureArray.js';
+import getValueLink from '/src/util/getValueLink.js';
+import { selectValueCount, selectMetadata } from '/src/selectors.js';
 
 import './Mention.scss';
 

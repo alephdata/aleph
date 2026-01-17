@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isLangRtl } from 'react-ftm';
+import { isLangRtl } from '/src/react-ftm/index.ts';
 import { Position } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { selectLocale } from 'selectors';
+import { selectLocale } from '/src/selectors.js';
 
 const SelectWrapper = ({ locale, ...rest }) => (
   <Select

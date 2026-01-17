@@ -1,5 +1,10 @@
 import { defineMessages } from 'react-intl';
-import { Entity, Schema, Property, Values } from '@alephdata/followthemoney';
+import type {
+  Entity,
+  Schema,
+  Property,
+  Values,
+} from '@alephdata/followthemoney';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
 export const validationMessages = defineMessages({

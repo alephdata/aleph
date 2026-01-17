@@ -1,5 +1,5 @@
-import { Rectangle } from 'react-ftm/components/NetworkDiagram/layout';
-import { IPositioningProps } from './common';
+import { Rectangle } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
+import type { IPositioningProps } from './common';
 
 const getForceData = ({
   vertices,

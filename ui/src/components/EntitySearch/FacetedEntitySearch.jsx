@@ -14,17 +14,21 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { triggerQueryExport } from 'src/actions';
-import { setSearchConfig, getSearchConfig } from 'app/storage';
-import { getGroupField } from 'components/SearchField/util';
-import { DualPane, ErrorSection, HotkeysContainer } from 'components/common';
-import EntitySearch from 'components/EntitySearch/EntitySearch';
-import SearchActionBar from 'components/common/SearchActionBar';
-import Facets from 'components/Facet/Facets';
-import SearchFieldSelect from 'components/SearchField/SearchFieldSelect';
-import QueryTags from 'components/QueryTags/QueryTags';
-import togglePreview from 'util/togglePreview';
+import withRouter from '/src/app/withRouter.jsx';
+import { triggerQueryExport } from '/src/actions/index.js';
+import { setSearchConfig, getSearchConfig } from '/src/app/storage';
+import { getGroupField } from '/src/components/SearchField/util';
+import {
+  DualPane,
+  ErrorSection,
+  HotkeysContainer,
+} from '/src/components/common/index.jsx';
+import EntitySearch from '/src/components/EntitySearch/EntitySearch';
+import SearchActionBar from '/src/components/common/SearchActionBar';
+import Facets from '/src/components/Facet/Facets';
+import SearchFieldSelect from '/src/components/SearchField/SearchFieldSelect';
+import QueryTags from '/src/components/QueryTags/QueryTags';
+import togglePreview from '/src/util/togglePreview.js';
 
 import './FacetedEntitySearch.scss';
 

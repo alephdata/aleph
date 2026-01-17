@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
-import withRouter from 'app/withRouter';
-import { csvContextLoader, SectionLoading } from 'components/common';
-import { DialogToggleButton } from 'components/Toolbar';
-import MappingImportDialog from 'dialogs/MappingImportDialog/MappingImportDialog';
-import { fetchEntityMapping } from 'actions';
-import { selectEntityMapping } from 'selectors';
-import { MappingEditor, MappingStatus } from 'components/MappingEditor/.';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  csvContextLoader,
+  SectionLoading,
+} from '/src/components/common/index.jsx';
+import { DialogToggleButton } from '/src/components/Toolbar';
+import MappingImportDialog from '/src/dialogs/MappingImportDialog/MappingImportDialog.jsx';
+import { fetchEntityMapping } from '/src/actions/index.js';
+import { selectEntityMapping } from '/src/selectors.js';
+import { MappingEditor, MappingStatus } from '/src/components/MappingEditor/.';
 
 import './EntityMappingMode.scss';
 

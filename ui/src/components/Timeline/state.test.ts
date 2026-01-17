@@ -1,5 +1,5 @@
 import { Model, defaultModel } from '@alephdata/followthemoney';
-import { reducer, State } from './state';
+import { reducer, type State } from './state';
 
 const model = new Model(defaultModel);
 const entity = model.getEntity({

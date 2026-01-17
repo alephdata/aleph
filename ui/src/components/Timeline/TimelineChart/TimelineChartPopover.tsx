@@ -1,6 +1,6 @@
-import { FC, HTMLProps, useEffect, useState, useRef } from 'react';
-import { Popover2, Popover2TargetProps } from '@blueprintjs/popover2';
-import { Entity } from '@alephdata/followthemoney';
+import { type FC, type HTMLProps, useEffect, useState, useRef } from 'react';
+import { Popover2, type Popover2TargetProps } from '@blueprintjs/popover2';
+import type { Entity } from '@alephdata/followthemoney';
 import TimelineItemCaption from '../TimelineItemCaption';
 
 import './TimelineChartPopover.scss';

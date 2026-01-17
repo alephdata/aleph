@@ -3,12 +3,15 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { ErrorSection, QueryInfiniteLoad } from 'components/common';
-import { queryNotifications } from 'actions';
-import { selectNotificationsResult } from 'selectors';
-import Notification from 'components/Notification/Notification';
-import NotificationListFilter from 'components/Notification/NotificationListFilter';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  ErrorSection,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import { queryNotifications } from '/src/actions/index.js';
+import { selectNotificationsResult } from '/src/selectors.js';
+import Notification from '/src/components/Notification/Notification';
+import NotificationListFilter from '/src/components/Notification/NotificationListFilter';
 
 import './NotificationList.scss';
 

@@ -6,7 +6,7 @@ import {
   ExportLink,
   FileSize,
   RelativeTime,
-} from 'src/components/common';
+} from '/src/components/common/index.jsx';
 
 import './Export.scss';
 

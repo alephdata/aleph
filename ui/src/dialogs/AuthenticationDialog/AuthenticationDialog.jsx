@@ -10,18 +10,18 @@ import {
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { endpoint } from 'app/api';
-import { showResponseToast } from 'app/toast';
+import { endpoint } from '/src/app/api';
+import { showResponseToast } from '/src/app/toast';
 import {
   PasswordAuthLogin,
   PasswordAuthSignup,
-} from 'components/auth/PasswordAuth';
-import { RoleBlockedMessage } from 'components/common';
+} from '/src/components/auth/PasswordAuth';
+import { RoleBlockedMessage } from '/src/components/common/index.jsx';
 import {
   loginWithPassword as loginWithPasswordAction,
   loginWithToken as loginWithTokenAction,
-} from 'actions/sessionActions';
-import { selectMetadata } from 'selectors';
+} from '/src/actions/sessionActions.js';
+import { selectMetadata } from '/src/selectors.js';
 
 import './AuthenticationDialog.scss';
 

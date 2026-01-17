@@ -1,6 +1,6 @@
 import { createAction } from 'redux-act';
-import asyncActionCreator from './asyncActionCreator';
-import { endpoint } from 'app/api';
+import asyncActionCreator from '/src/actions/asyncActionCreator.js';
+import { endpoint } from '/src/app/api.js';
 
 export const loginWithToken = createAction('LOGIN');
 

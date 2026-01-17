@@ -1,23 +1,22 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
-import { isLangRtl } from 'react-ftm';
+import { isLangRtl } from '/src/react-ftm/index.ts';
 import { inRange } from 'lodash';
-import { logout } from 'actions/sessionActions';
-import { selectLocale } from 'selectors';
-import Router from './Router';
-import Translator from './Translator';
-import initializeIconRenderer from './initializeIconRenderer';
-import { expireRecentlyViewed } from './storage';
+import { logout } from '/src/actions/sessionActions.js';
+import { selectLocale } from '/src/selectors.js';
+import Router from '/src/app/Router.jsx';
+import Translator from '/src/app/Translator.jsx';
+import initializeIconRenderer from '/src/app/initializeIconRenderer.jsx';
+import { expireRecentlyViewed } from '/src/app/storage.js';
 
 // TODO Initialise store here instead of in store.js (which should just export
 // createStore).
-import store from './store';
+import store from '/src/app/store.js';
 
 // TODO Initialise endpoint in here instead of api.js. And then pass it down as
 // context, like Provider passes down the store? Or use redux-axios-middleware?
-import { endpoint } from './api';
+import { endpoint } from '/src/app/api.js';
 
 import './App.scss';
 

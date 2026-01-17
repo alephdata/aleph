@@ -1,21 +1,21 @@
 import {
-  FC,
-  FormEvent,
+  type FC,
+  type FormEvent,
   useState,
   forwardRef,
-  FormEventHandler,
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  ForwardedRef,
+  type FormEventHandler,
+  type ChangeEventHandler,
+  type KeyboardEventHandler,
+  type ForwardedRef,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Model,
-  Schema,
+  type Model,
+  type Schema,
   Entity,
-  Property,
-  Value,
-  Values,
+  type Property,
+  type Value,
+  type Values,
 } from '@alephdata/followthemoney';
 import type {
   EntityProperties,
@@ -27,7 +27,7 @@ import {
   reformatDateString,
   DATETIME_REGEX,
 } from './util';
-import { SchemaSelect, EntitySelect } from 'react-ftm';
+import { SchemaSelect, EntitySelect } from '/src/react-ftm/index.ts';
 import { Button, Alignment, FormGroup, InputGroup } from '@blueprintjs/core';
 
 import './TimelineItemCreateForm.scss';

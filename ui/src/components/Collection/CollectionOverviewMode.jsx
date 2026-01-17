@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
-import CollectionMetadataPanel from 'components/Collection/CollectionMetadataPanel';
-import CollectionStatisticsGroup from 'components/Collection/CollectionStatisticsGroup';
-import InvestigationOverview from 'components/Investigation/InvestigationOverview';
-import { ErrorSection } from 'components/common';
-import { selectCollection } from 'selectors';
+import CollectionMetadataPanel from '/src/components/Collection/CollectionMetadataPanel';
+import CollectionStatisticsGroup from '/src/components/Collection/CollectionStatisticsGroup';
+import InvestigationOverview from '/src/components/Investigation/InvestigationOverview';
+import { ErrorSection } from '/src/components/common/index.jsx';
+import { selectCollection } from '/src/selectors.js';
 
 import './CollectionOverviewMode.scss';
 

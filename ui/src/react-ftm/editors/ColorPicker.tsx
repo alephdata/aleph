@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
+import {
+  injectIntl,
+  defineMessages,
+  type WrappedComponentProps,
+} from 'react-intl';
 import c from 'classnames';
 import { Colors, Icon } from '@blueprintjs/core';
 import {

@@ -2,12 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Classes, Menu, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count, Skeleton, AppItem, LinkMenuItem } from 'components/common';
+import {
+  Count,
+  Skeleton,
+  AppItem,
+  LinkMenuItem,
+} from '/src/components/common/index.jsx';
 
-import withRouter from 'app/withRouter';
-import { queryRoles } from 'actions';
-import { groupsQuery } from 'queries';
-import { selectRolesResult, selectCurrentRole } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { queryRoles } from '/src/actions/index.js';
+import { groupsQuery } from '/src/queries.js';
+import { selectRolesResult, selectCurrentRole } from '/src/selectors.js';
 
 import './Dashboard.scss';
 

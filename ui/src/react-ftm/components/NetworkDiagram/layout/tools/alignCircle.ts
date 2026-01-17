@@ -4,7 +4,7 @@ import {
   forceSimulation,
   forceRadial,
 } from 'd3-force';
-import { IPositioningProps, getPositionFromSimulation } from './common';
+import { type IPositioningProps, getPositionFromSimulation } from './common';
 import getForceData from './getForceData';
 
 const alignCircle = (props: IPositioningProps): any => {

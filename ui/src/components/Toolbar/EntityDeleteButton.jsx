@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Count } from 'components/common';
-import EntityDeleteDialog from 'dialogs/EntityDeleteDialog/EntityDeleteDialog';
+import { Count } from '/src/components/common/index.jsx';
+import EntityDeleteDialog from '/src/dialogs/EntityDeleteDialog/EntityDeleteDialog.jsx';
 
 const messages = defineMessages({
   delete: {

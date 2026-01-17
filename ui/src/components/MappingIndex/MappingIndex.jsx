@@ -3,12 +3,15 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import { ErrorSection, QueryInfiniteLoad } from 'components/common';
-import { queryMappings } from 'actions';
-import { selectMappingsResult } from 'selectors';
-import MappingIndexItem from 'components/MappingIndex/MappingIndexItem';
-import getEntityLink from 'util/getEntityLink';
+import withRouter from '/src/app/withRouter.jsx';
+import {
+  ErrorSection,
+  QueryInfiniteLoad,
+} from '/src/components/common/index.jsx';
+import { queryMappings } from '/src/actions/index.js';
+import { selectMappingsResult } from '/src/selectors.js';
+import MappingIndexItem from '/src/components/MappingIndex/MappingIndexItem';
+import getEntityLink from '/src/util/getEntityLink.js';
 
 import './MappingIndex.scss';
 

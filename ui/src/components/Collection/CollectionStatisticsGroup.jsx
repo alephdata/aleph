@@ -2,10 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionDateHistogram from './CollectionDateHistogram';
-import { selectCollection } from 'selectors';
+import { selectCollection } from '/src/selectors.js';
 
 import './CollectionStatisticsGroup.scss';
 

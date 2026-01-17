@@ -4,10 +4,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { updateEntitySet } from 'actions';
-import { showSuccessToast, showWarningToast } from 'app/toast';
-import { EntitySet } from 'components/common';
-import FormDialog from 'dialogs/common/FormDialog';
+import { updateEntitySet } from '/src/actions/index.js';
+import { showSuccessToast, showWarningToast } from '/src/app/toast';
+import { EntitySet } from '/src/components/common/index.jsx';
+import FormDialog from '/src/dialogs/common/FormDialog.jsx';
 
 const messages = defineMessages({
   save: {

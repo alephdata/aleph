@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Classes, Drawer, DrawerSize } from '@blueprintjs/core';
 import BookmarksList from './BookmarksList';

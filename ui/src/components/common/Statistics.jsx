@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import c from 'classnames';
 import { Link } from 'react-router-dom';
-import { Numeric, Skeleton } from 'components/common';
+import { Numeric, Skeleton } from '/src/components/common/index.jsx';
 
 import { Button, Classes } from '@blueprintjs/core';
 

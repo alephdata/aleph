@@ -8,9 +8,9 @@ import {
   InputGroup,
 } from '@blueprintjs/core';
 
-import withRouter from 'app/withRouter';
-import normalizeDegreeValue from 'util/normalizeDegreeValue';
-import { FeedbackButton } from 'components/common';
+import withRouter from '/src/app/withRouter.jsx';
+import normalizeDegreeValue from '/src/util/normalizeDegreeValue.js';
+import { FeedbackButton } from '/src/components/common/index.jsx';
 
 import './PagingButtons.scss';
 

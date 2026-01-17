@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import c from 'classnames';
 import {
   eachDayOfInterval,
@@ -6,7 +6,7 @@ import {
   differenceInDays,
   addDays,
 } from 'date-fns';
-import { TimelineChartZoomLevel } from '../types';
+import type { TimelineChartZoomLevel } from '../types';
 
 import './TimelineChartGrid.scss';
 

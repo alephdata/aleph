@@ -7,8 +7,8 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { selectEntitiesResult, selectSchema } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import { selectEntitiesResult, selectSchema } from '/src/selectors.js';
 import {
   Collection,
   Entity,
@@ -17,10 +17,10 @@ import {
   QueryInfiniteLoad,
   Schema,
   Skeleton,
-} from 'components/common';
-import EntityProperties from 'components/Entity/EntityProperties';
-import ensureArray from 'util/ensureArray';
-import { queryEntities } from 'actions/index';
+} from '/src/components/common/index.jsx';
+import EntityProperties from '/src/components/Entity/EntityProperties';
+import ensureArray from '/src/util/ensureArray.js';
+import { queryEntities } from '/src/actions/index.js';
 import EntityActionBar from './EntityActionBar';
 
 const messages = defineMessages({
@@ -196,7 +196,7 @@ class EntityReferencesMode extends React.Component {
           query={query}
           onSearchSubmit={this.onSearchSubmit}
           searchPlaceholder={placeholder}
-        ></EntityActionBar>
+        />
         {result.total !== 0 && (
           <>
             <table className="data-table references-data-table">

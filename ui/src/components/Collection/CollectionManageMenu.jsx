@@ -3,9 +3,9 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { Button, Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 
-import CollectionEditDialog from 'dialogs/CollectionEditDialog/CollectionEditDialog';
-import CollectionAccessDialog from 'dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionDeleteDialog from 'dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
+import CollectionEditDialog from '/src/dialogs/CollectionEditDialog/CollectionEditDialog.jsx';
+import CollectionAccessDialog from '/src/dialogs/CollectionAccessDialog/CollectionAccessDialog.jsx';
+import CollectionDeleteDialog from '/src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog.jsx';
 import CollectionReingestAlert from './CollectionReingestAlert';
 import CollectionReindexAlert from './CollectionReindexAlert';
 

@@ -4,10 +4,10 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import AuthenticationDialog from 'dialogs/AuthenticationDialog/AuthenticationDialog';
-import EntityPreview from 'components/Entity/EntityPreview';
-import { selectSession, selectMetadata } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import AuthenticationDialog from '/src/dialogs/AuthenticationDialog/AuthenticationDialog.jsx';
+import EntityPreview from '/src/components/Entity/EntityPreview';
+import { selectSession, selectMetadata } from '/src/selectors.js';
 
 import './Screen.scss';
 

@@ -4,15 +4,15 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import withRouter from 'app/withRouter';
-import Screen from 'components/Screen/Screen';
-import CollectionHeading from 'components/Collection/CollectionHeading';
-import CollectionViews from 'components/Collection/CollectionViews';
-import CollectionWrapper from 'components/Collection/CollectionWrapper';
-import ErrorScreen from 'components/Screen/ErrorScreen';
-import collectionViewIds from 'components/Collection/collectionViewIds';
-import { SinglePane } from 'components/common';
-import { selectCollection } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import Screen from '/src/components/Screen/Screen';
+import CollectionHeading from '/src/components/Collection/CollectionHeading';
+import CollectionViews from '/src/components/Collection/CollectionViews';
+import CollectionWrapper from '/src/components/Collection/CollectionWrapper';
+import ErrorScreen from '/src/components/Screen/ErrorScreen';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
+import { SinglePane } from '/src/components/common/index.jsx';
+import { selectCollection } from '/src/selectors.js';
 
 export class CollectionScreen extends Component {
   render() {

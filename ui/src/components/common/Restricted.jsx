@@ -3,7 +3,7 @@ import { Position, Tag, Intent, Callout } from '@blueprintjs/core';
 import { Popover2 as Popover } from '@blueprintjs/popover2';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
-import { Role } from 'components/common';
+import { Role } from '/src/components/common/index.jsx';
 
 import './Restricted.scss';
 

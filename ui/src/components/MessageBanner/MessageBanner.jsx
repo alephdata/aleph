@@ -1,6 +1,6 @@
 import { Callout, Intent, Classes, Button } from '@blueprintjs/core';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { RelativeTime } from 'components/common';
+import { RelativeTime } from '/src/components/common/index.jsx';
 
 import './MessageBanner.scss';
 

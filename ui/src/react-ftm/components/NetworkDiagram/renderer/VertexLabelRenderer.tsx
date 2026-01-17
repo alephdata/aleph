@@ -2,8 +2,8 @@ import * as React from 'react';
 import truncateText from 'truncate';
 import { wrapLines } from '../utils';
 
-import { Date, Numeric, URL } from 'react-ftm/types';
-import { Point } from 'react-ftm/components/NetworkDiagram/layout/Point';
+import { Date, Numeric, URL } from '/src/react-ftm/types/index.tsx';
+import type { Point } from '/src/react-ftm/components/NetworkDiagram/layout/Point.ts';
 
 const labelTruncate = 30;
 const fontSize = 5;

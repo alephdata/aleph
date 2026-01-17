@@ -2,16 +2,16 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Namespace } from '@alephdata/followthemoney';
-import { EntityManager } from 'react-ftm';
+import { EntityManager } from '/src/react-ftm/index.ts';
 
-import withRouter from 'app/withRouter';
-import { entityExpandQuery, entitySuggestQuery } from 'queries';
+import withRouter from '/src/app/withRouter.jsx';
+import { entityExpandQuery, entitySuggestQuery } from '/src/queries.js';
 import {
   selectLocale,
   selectModel,
   selectEntitiesResult,
   selectEntityExpandResult,
-} from 'selectors';
+} from '/src/selectors.js';
 import {
   createEntity,
   deleteEntity,
@@ -21,8 +21,8 @@ import {
   queryEntities,
   queryEntityExpand,
   updateEntity,
-} from 'actions';
-import { UpdateStatus } from 'components/common';
+} from '/src/actions/index.js';
+import { UpdateStatus } from '/src/components/common/index.jsx';
 
 const entityEditorWrapper = (EditorComponent) => {
   const WrappedComponent = class extends React.Component {

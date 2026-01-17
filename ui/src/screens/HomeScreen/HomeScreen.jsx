@@ -8,7 +8,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
+import withRouter from '/src/app/withRouter.jsx';
 import {
   AnimatedCount,
   SearchBox,
@@ -16,11 +16,15 @@ import {
   Country,
   Schema,
   Statistics,
-} from 'components/common';
-import { fetchStatistics } from 'actions/index';
-import { selectMetadata, selectSession, selectStatistics } from 'selectors';
-import Screen from 'components/Screen/Screen';
-import wordList from 'util/wordList';
+} from '/src/components/common/index.jsx';
+import { fetchStatistics } from '/src/actions/index.js';
+import {
+  selectMetadata,
+  selectSession,
+  selectStatistics,
+} from '/src/selectors.js';
+import Screen from '/src/components/Screen/Screen';
+import wordList from '/src/util/wordList.js';
 
 import './HomeScreen.scss';
 

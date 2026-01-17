@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { isEntityRtl } from 'react-ftm';
+import { isEntityRtl } from '/src/react-ftm/index.ts';
 import { Model } from '@alephdata/followthemoney';
 
-import { loadState } from 'reducers/util';
-import { entityReferencesQuery, profileReferencesQuery } from 'queries';
-import { getRecentlyViewedItem } from 'app/storage';
+import { loadState } from '/src/reducers/util.js';
+import { entityReferencesQuery, profileReferencesQuery } from '/src/queries.js';
+import { getRecentlyViewedItem } from '/src/app/storage.js';
 
 function selectTimestamp(state, key = 'global') {
   return state.mutation[key] || state.mutation.global;

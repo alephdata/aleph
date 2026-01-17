@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Classes, Divider } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { ClipboardInput } from 'components/common';
+import { ClipboardInput } from '/src/components/common/index.jsx';
 
 import './CollectionReference.scss';
 

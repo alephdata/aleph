@@ -1,4 +1,4 @@
-import { GraphLayout } from 'react-ftm/components/NetworkDiagram/layout';
+import type { GraphLayout } from '/src/react-ftm/components/NetworkDiagram/layout/index.ts';
 import alignCircle from './alignCircle';
 import alignHorizontal from './alignHorizontal';
 import alignVertical from './alignVertical';

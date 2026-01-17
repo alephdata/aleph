@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
-import withRouter from 'app/withRouter';
-import { collectionSearchQuery } from 'queries';
-import { selectCollection, selectEntitiesResult } from 'selectors';
-import { queryEntities } from 'actions';
-import DateFacet from 'components/Facet/DateFacet';
-import getCollectionLink from 'util/getCollectionLink';
-import collectionViewIds from 'components/Collection/collectionViewIds';
+import withRouter from '/src/app/withRouter.jsx';
+import { collectionSearchQuery } from '/src/queries.js';
+import { selectCollection, selectEntitiesResult } from '/src/selectors.js';
+import { queryEntities } from '/src/actions/index.js';
+import DateFacet from '/src/components/Facet/DateFacet';
+import getCollectionLink from '/src/util/getCollectionLink.js';
+import collectionViewIds from '/src/components/Collection/collectionViewIds';
 
 class CollectionDateHistogram extends React.Component {
   constructor(props) {

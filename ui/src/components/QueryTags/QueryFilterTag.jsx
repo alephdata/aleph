@@ -10,7 +10,7 @@ import {
   Category,
   Collection,
   Entity,
-} from 'components/common';
+} from '/src/components/common/index.jsx';
 
 import './QueryFilterTag.scss';
 

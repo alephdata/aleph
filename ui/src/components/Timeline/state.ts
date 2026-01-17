@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { Entity } from '@alephdata/followthemoney';
+import type { Entity } from '@alephdata/followthemoney';
 import { differenceInYears } from 'date-fns';
 import type {
   Vertex,
@@ -129,7 +129,7 @@ export function reducer(state: State, action: Action): State {
   }
 
   if (type === 'CREATE_ENTITY') {
-    let newState = reducer(state, {
+    const newState = reducer(state, {
       type: 'UPDATE_ENTITY',
       payload: action.payload,
     });

@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { injectIntl, defineMessages, WrappedComponentProps } from 'react-intl';
+import {
+  injectIntl,
+  defineMessages,
+  type WrappedComponentProps,
+} from 'react-intl';
 import {
   Alignment,
   Button,
@@ -7,16 +11,16 @@ import {
   ControlGroup,
   InputGroup,
 } from '@blueprintjs/core';
-import {
+import type {
   Entity,
   Model,
   Schema as FTMSchema,
   Values,
 } from '@alephdata/followthemoney';
 
-import { EntitySelect, SchemaSelect } from 'react-ftm/editors';
-import { Schema } from 'react-ftm/types';
-import { Dialog } from 'react-ftm/components/common';
+import { EntitySelect, SchemaSelect } from '/src/react-ftm/editors/index.tsx';
+import { Schema } from '/src/react-ftm/types/index.tsx';
+import { Dialog } from '/src/react-ftm/components/common/index.js';
 
 import './EntityCreateDialog.scss';
 

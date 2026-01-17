@@ -1,4 +1,4 @@
-import { endpoint } from 'app/api';
+import { endpoint } from '/src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 
 export const ingestDocument = asyncActionCreator(

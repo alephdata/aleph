@@ -10,7 +10,7 @@ import {
   subMonths,
   subYears,
 } from 'date-fns';
-import { TimelineChartZoomLevel } from '../types';
+import type { TimelineChartZoomLevel } from '../types';
 
 /**
  * When a timelines has only very few events or the events cover only a very short time

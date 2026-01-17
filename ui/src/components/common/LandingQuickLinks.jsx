@@ -3,8 +3,8 @@ import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import withRouter from 'app/withRouter';
-import { QuickLinks } from 'components/common';
+import withRouter from '/src/app/withRouter.jsx';
+import { QuickLinks } from '/src/components/common/index.jsx';
 
 class LandingQuickLinks extends React.Component {
   render() {

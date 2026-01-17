@@ -1,10 +1,10 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import withRouter from 'app/withRouter';
-import DocumentManager from 'components/Document/DocumentManager';
-import { collectionDocumentsQuery } from 'queries';
-import { selectCollection } from 'selectors';
+import withRouter from '/src/app/withRouter.jsx';
+import DocumentManager from '/src/components/Document/DocumentManager';
+import { collectionDocumentsQuery } from '/src/queries.js';
+import { selectCollection } from '/src/selectors.js';
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, location } = ownProps;
