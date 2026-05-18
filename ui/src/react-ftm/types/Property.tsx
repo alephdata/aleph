@@ -18,6 +18,7 @@ import c from 'classnames';
 import {
   Country,
   Date,
+  Duration,
   Entity,
   FileSize,
   Language,
@@ -128,6 +129,10 @@ class PropertyValue extends React.PureComponent<IPropertyValueProps> {
 
     if (prop.name === 'fileSize') {
       return <FileSize value={+value} />;
+    }
+    if (prop.name === 'duration' && !isNaN(+value)) {
+      // ffprobe / mutagen-derived metadata is in seconds; render as h:mm:ss.
+      return <Duration value={+value} />;
     }
     if (prop.type.name === 'country') {
       return (

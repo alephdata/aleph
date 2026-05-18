@@ -7,6 +7,7 @@ export {
   default as Language,
   default as Topic,
 } from './EnumValue';
+export { default as Duration } from './Duration';
 export { default as FileSize } from './FileSize';
 export { default as Transliterate } from './Transliterate';
 export { default as MIMEType } from './MIMEType';
