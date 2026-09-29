@@ -204,7 +204,7 @@ services:
 
   # root user is access_key root password is secret key
   minio:
-    image: 'bitnami/minio:latest'
+    image: 'soldevelo/minio:latest'
     hostname: minio
     ports:
       - '127.0.0.1:9000:9000'
